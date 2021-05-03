@@ -23,8 +23,7 @@
                         <b-th>
                             <b-button
                                 variant="primary"
-                                v-b-modal.view-modal
-                                @click="viewSubmission(h.formUrl)"
+                                :href="formatURL(h.formUrl)" target="_blank"
                             >
                             <i class="bi bi-eye-fill" style="color:black;"></i>
                             View Submission
@@ -52,8 +51,7 @@
 <script lang="ts">
 import { Component, Prop, Vue} from 'vue-property-decorator';
 import FormViewSubmission from '../components/FormViewSubmission.vue';
-import {getFormIdandSubmissionId} from '../services/get-formio';
-import {getLocalDateTime} from '../services/utils';
+import {getLocalDateTime} from '../services/format-time';
 
 @Component({
   components: {
@@ -72,10 +70,18 @@ export default class TaskHistory extends Vue{
       return getLocalDateTime(date);
     }
 
-    viewSubmission(url: string) {
-      const {formId, submissionId} = getFormIdandSubmissionId(url);
-      this.fId = formId;
-      this.sId = submissionId;
+    // viewSubmission(url: string) {
+    //   const {formId, submissionId} = getFormIdandSubmissionId(url);
+    //   this.fId = formId;
+    //   this.sId = submissionId;
+    // }
+
+    formatURL (url: any) {
+      const currentUrl = window.location.protocol + '//' +  window.location.host
+      const a = document.createElement('a');
+      a.href = url
+      const processedUrl = url.replace(a.protocol + '//' + a.host, currentUrl)
+      return processedUrl
     }
 }
 </script>

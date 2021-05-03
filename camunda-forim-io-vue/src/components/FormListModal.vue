@@ -86,7 +86,7 @@
           >
           </Form>
         </b-modal>
-        <b-modal
+        <!-- <b-modal
           ref="modal-3"
           id="modal-multi-3"
           size="xl"
@@ -95,7 +95,7 @@
         >
         <FormViewSubmission :formid="formId" :submissionid="submissionId">
         </FormViewSubmission>
-        </b-modal>
+        </b-modal> -->
           </div>
 </template>
 
@@ -104,13 +104,12 @@ import '../styles/camundaFormIOFormList.scss'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import CamundaRest from '../services/camunda-rest'
 import { Form } from 'vue-formio';
-import FormViewSubmission from '../components/FormViewSubmission.vue';
+// import FormViewSubmission from '../components/FormViewSubmission.vue';
 import {formApplicationSubmit} from '../services/formsflowai-api';
 
 @Component({
   components: {
     Form,
-    FormViewSubmission
   }
 })
 export default class FormListModal extends Vue{
@@ -145,7 +144,7 @@ export default class FormListModal extends Vue{
 
   storeFormValue(val: string, title: string){
     this.$bvModal.hide('modal-multi-1')
-    const forms = localStorage.getItem('formIOApiUrl') + '/form/';
+    const forms = localStorage.getItem('formioApiUrl') + '/form/';
     this.formId = val;
     this.formValueId = forms.concat(val);
     this.formTitle = title;
@@ -165,7 +164,7 @@ export default class FormListModal extends Vue{
       {"formId": this.formId,"formSubmissionId": this.submissionId,
         "formUrl": this.formioUrl},
       this.token);
-    this.$bvModal.show('modal-multi-3');
+    this.$bvModal.show('modal-multi-1');
     this.$bvModal.hide('modal-multi-2');
   }
 
