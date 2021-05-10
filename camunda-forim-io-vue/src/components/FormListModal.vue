@@ -150,8 +150,8 @@ export default class FormListModal extends Vue{
   }
 
   backClick() {
-    this.$bvModal.show('modal-multi-1')
     this.$bvModal.hide('modal-multi-2')
+    this.$bvModal.show('modal-multi-1')
   }
 
   onSubmit(submission: any) {
@@ -167,15 +167,15 @@ export default class FormListModal extends Vue{
         this.token
       );
     }
-    this.$bvModal.show('modal-multi-1');
     this.$bvModal.hide('modal-multi-2');
+    this.$bvModal.show('modal-multi-1');
   }
 
   oncustomEventCallback = (customEvent: any) => {
     switch (customEvent.type) {
     case "customSubmitDone":
-      this.$bvModal.show('modal-multi-1');
       this.$bvModal.hide('modal-multi-2');
+      this.$bvModal.show('modal-multi-1');
       break;
     }
   };
