@@ -83,6 +83,7 @@
             submission=""
             options=""
             v-on:submit="onSubmit"
+            v-on:customEvent="oncustomEventCallback"
           >
           </Form>
         </b-modal>
@@ -104,7 +105,6 @@ import '../styles/camundaFormIOFormList.scss'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import CamundaRest from '../services/camunda-rest'
 import { Form } from 'vue-formio';
-// import FormViewSubmission from '../components/FormViewSubmission.vue';
 import {formApplicationSubmit} from '../services/formsflowai-api';
 
 @Component({
@@ -136,8 +136,7 @@ export default class FormListModal extends Vue{
     {
       this.formNumPages = Math.ceil(response.data.length/this.formperPage);
       this.formList = response.data.splice(
-        ((this.formcurrentPage - 1) * this.formperPage),
-        (this.formcurrentPage * this.formperPage)
+        ((this.formcurrentPage - 1) * this.formperPage), this.formperPage
       );
     });
   }
@@ -158,21 +157,31 @@ export default class FormListModal extends Vue{
   onSubmit(submission: any) {
     this.formId = submission.form;
     this.submissionId = submission._id;
-    this.formioUrl = localStorage.getItem("formsflow.ai.url") + '/form/' + this.formId +'/submission/' + this.submissionId
-    formApplicationSubmit(
-      localStorage.getItem("formsflow.ai.api.url") || "https://app2.aot-technologies.com/api",
-      {"formId": this.formId,"formSubmissionId": this.submissionId,
-        "formUrl": this.formioUrl},
-      this.token);
+
+    const formsflowAIApiUrl = localStorage.getItem("formsflow.ai.api.url")
+    if(typeof formsflowAIApiUrl!== 'undefined' && formsflowAIApiUrl!== null){
+      this.formioUrl = localStorage.getItem("formsflow.ai.url") + '/form/' + this.formId + '/submission/' + this.submissionId;
+      formApplicationSubmit(
+        formsflowAIApiUrl,
+        {"formId": this.formId, "formSubmissionId": this.submissionId, "formUrl": this.formioUrl},
+        this.token
+      );
+    }
     this.$bvModal.show('modal-multi-1');
     this.$bvModal.hide('modal-multi-2');
   }
 
+  oncustomEventCallback = (customEvent: any) => {
+    switch (customEvent.type) {
+    case "customSubmitDone":
+      this.$bvModal.show('modal-multi-1');
+      this.$bvModal.hide('modal-multi-2');
+      break;
+    }
+  };
+
   mounted() {
-    CamundaRest.listForms(this.token, this.bpmApiUrl).then((response) =>
-    {
-      this.formList = response.data;
-    });
+    this.formListItems();
   }
 }
 </script>
