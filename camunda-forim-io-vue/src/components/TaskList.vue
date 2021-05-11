@@ -577,6 +577,7 @@ getTaskProcessDiagramDetails(task: any) {
       this.bpmApiUrl
     )
       .then(() => {
+        this.task.assignee = this.userName;
         this.reloadCurrentTask();
       })
       .catch((error) => {
