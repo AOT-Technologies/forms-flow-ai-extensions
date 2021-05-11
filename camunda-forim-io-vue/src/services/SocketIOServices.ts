@@ -7,7 +7,6 @@ const engine = "/engine-rest";
 const socketUrl = "/forms-flow-bpm-socket";
 const BPM_BASE_URL_SOCKET_IO = localStorage.getItem('bpmApiUrl') ? localStorage.getItem('bpmApiUrl')?.replace(engine, socketUrl) : ''
 const token: any = localStorage.getItem('authToken');
-const WEBSOCKET_ENCRYPT_KEY: any = localStorage.getItem('websocketEncryptkey');
 
 
 const isConnected = ()=>{
