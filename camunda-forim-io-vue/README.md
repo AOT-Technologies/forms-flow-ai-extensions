@@ -44,3 +44,6 @@ Vue.use(FormsFlowStore, { store })
 Application History `view submission` using our component to view
 the Form.
 
+- Ensure you import the appropriate Vue component defined in [TaskList View]
+(src/views/TaskList.Vue) and do the environment configuration in the integrated solution.
+
