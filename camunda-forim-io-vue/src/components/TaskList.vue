@@ -145,7 +145,7 @@
                 <div>
                   <div v-if="editAssignee" class="cft-user-edit">
                     <div class='cft-assignee-change-box row'>
-                      <v-select :options="autoUserList" :reduce="user => user" v-model="userSelected" class="col-9 col-md-9"/>
+                      <v-select  @search="fetchOptions" :options="autoUserList" v-model="userSelected" class="col-9 col-md-9"/>
                       <span @click="onSetassignee" class="col-9 col-md-1">
                         <i class="bi bi-check"></i>
                       </span>
@@ -773,7 +773,11 @@ getTaskProcessDiagramDetails(task: any) {
     })
 
     CamundaRest.getUsers(this.token, this.bpmApiUrl).then((response) => {
-      this.autoUserList = response.data.map((e: { id: number }) => (e.id));
+      this.autoUserList = []
+      response.data.forEach((element: any) => {
+         this.autoUserList.push({ "code" : element.id, "label" : element.email })
+         
+      });
     });
     // we used two variables - taskId2 and taskIdValue because the router value from gettaskId is always passed from router,
     // so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
@@ -783,6 +787,16 @@ getTaskProcessDiagramDetails(task: any) {
     else {
       this.taskId2 = '';
     }
+  }
+
+  fetchOptions (search: any, loading: any) {
+    CamundaRest.getUsersByEmail(this.token, this.bpmApiUrl, search).then((response) => {
+      this.autoUserList = []
+      response.data.forEach((element: any) => {
+         this.autoUserList.push({ "code" : element.id, "label" : element.email })
+         
+      });
+    });
   }
 
   findTaskIdDetailsFromURLrouter(taskId: string, tasks: any) {

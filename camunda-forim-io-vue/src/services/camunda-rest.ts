@@ -87,7 +87,11 @@ const CamundaRest = {
   
   getProcessDiagramXML(bearerToken: any, processDefinitionId: string, CamundaUrl: any) {
     return bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/process-definition/${processDefinitionId}/xml`)
-  }
+  },
+
+  getUsersByEmail(bearerToken: string, CamundaUrl: string, emailSearch: string|null) {
+    return bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/user?emailLike=${emailSearch}`)
+  },
 }
 
 export default CamundaRest;
