@@ -7,7 +7,7 @@
         padding: 0;
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
-        font-size: 13px;
+        font-size: 12px;
     }
 
     .cft-filter{
@@ -54,10 +54,13 @@
     }
 
     .cftf-search-item-box {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 400;
         color: #155cb5;
-        // cursor: pointer;
+        cursor: pointer;
+        .nav-link {
+            padding: 0px;
+        }
     }
 
     .cftf-search-title {
@@ -82,7 +85,7 @@
     }
 
     .cft-name-value-container {
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 500;
         margin-left: 5px;
         display: block;
@@ -112,4 +115,5 @@
         text-align: left;
         font-size: 16px;
     }
+
 }

@@ -29,3 +29,21 @@ npm run build --report
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Things to look out when integrating
+
+- In the Vue project's `main.ts` file which you are integrating, add
+the following code to use our Vuex modules:
+
+```
+import FormsFlowStore from 'camunda-formio-tasklist-vue/src/store/index'
+Vue.use(FormsFlowStore, { store })
+```
+
+- Write a seperate router in integration project for defining routers for
+Application History `view submission` using our component to view
+the Form.
+
+- Ensure you import the appropriate Vue component defined in [TaskList View]
+(src/views/TaskList.Vue) and do the environment configuration in the integrated solution.
+

@@ -123,6 +123,7 @@ export default class FormListModal extends Vue{
   private formioUrl = '';
   private formTitle = ''
   private showForms = true
+  private formsflowAIApiUrl: any;
 
   @Prop({}) private token !: string;
   @Prop() private bpmApiUrl !: string;
@@ -158,11 +159,11 @@ export default class FormListModal extends Vue{
     this.formId = submission.form;
     this.submissionId = submission._id;
 
-    const formsflowAIApiUrl = localStorage.getItem("formsflow.ai.api.url")
-    if(typeof formsflowAIApiUrl!== 'undefined' && formsflowAIApiUrl!== null){
+    this.formsflowAIApiUrl = localStorage.getItem("formsflow.ai.api.url")
+    if(typeof this.formsflowAIApiUrl!== 'undefined' && this.formsflowAIApiUrl!== null){
       this.formioUrl = localStorage.getItem("formsflow.ai.url") + '/form/' + this.formId + '/submission/' + this.submissionId;
       formApplicationSubmit(
-        formsflowAIApiUrl,
+        this.formsflowAIApiUrl,
         {"formId": this.formId, "formSubmissionId": this.submissionId, "formUrl": this.formioUrl},
         this.token
       );
