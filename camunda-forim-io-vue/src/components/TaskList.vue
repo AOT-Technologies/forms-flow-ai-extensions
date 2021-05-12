@@ -145,7 +145,7 @@
                 <div>
                   <div v-if="editAssignee" class="cft-user-edit">
                     <div class='cft-assignee-change-box row'>
-                      <v-select :options="autoUserList" :reduce="user => user" v-model="userSelected" class="col-9 col-md-9"/>
+                      <v-select @search="fetchOptions" :options="autoUserList" v-model="userSelected" class="col-9 col-md-9"/>
                       <span @click="onSetassignee" class="col-9 col-md-1">
                         <i class="bi bi-check"></i>
                       </span>
@@ -244,7 +244,7 @@ import ExpandContract from './addons/ExpandContract.vue'
 import { Form } from 'vue-formio';
 import Header from './layout/Header.vue'
 import LeftSider from './layout/LeftSider.vue'
-import Modeler from 'bpmn-js/lib/Modeler';
+import BpmnViewer from 'bpmn-js';
 import {Payload} from '../services/TasklistTypes';
 import SocketIOService from '../services/SocketIOServices';
 import TaskHistory from '../components/TaskHistory.vue';
@@ -264,11 +264,11 @@ const serviceFlowModule = namespace('serviceFlowModule')
     formio: Form,
     DatePicker,
     TaskHistory,
-    Modeler,
     Header,
     LeftSider,
     vSelect,
-    ExpandContract
+    ExpandContract,
+    BpmnViewer
   },
 })
 export default class Tasklist extends Vue {
@@ -307,7 +307,7 @@ export default class Tasklist extends Vue {
   private setFollowup: any = [];
   private setDue: any = [];
   private setGroup = null;
-  private userSelected = null;
+  private userSelected: any = {};
   private showfrom = false;
   public perPage = 10;
   private tasklength = 0;
@@ -396,7 +396,7 @@ timedifference(date: Date) {
 
 toggleassignee()  {
   this.editAssignee = ! this.editAssignee;
-  this.userSelected = this.task.assignee;
+  this.userSelected['code'] = this.task.assignee;
 }
 
 onFormSubmitCallback() {
@@ -543,8 +543,15 @@ getTaskProcessDiagramDetails(task: any) {
     if(div){ 
       div.innerHTML = ""
     }
-    const modeler = new Modeler({ container: "#canvas" })
-    await modeler.importXML(this.xmlData);
+    const viewer = new BpmnViewer({
+      container: '#canvas'
+    });
+    try {
+      const { warnings } = await viewer.importXML(this.xmlData);
+      console.log('rendered');
+    } catch (err) {
+      console.log('error rendering', err);
+    }
   });
 }
 
@@ -597,7 +604,7 @@ getTaskProcessDiagramDetails(task: any) {
 
   onSetassignee() {
     CamundaRest.setassignee(this.token, this.task.id,
-      {"userId": this.userSelected},
+      {"userId": this.userSelected?.code },
       this.bpmApiUrl)
       .then(() => {
         this.reloadCurrentTask()
@@ -773,7 +780,11 @@ getTaskProcessDiagramDetails(task: any) {
     })
 
     CamundaRest.getUsers(this.token, this.bpmApiUrl).then((response) => {
-      this.autoUserList = response.data.map((e: { id: number }) => (e.id));
+      this.autoUserList = []
+      response.data.forEach((element: any) => {
+         this.autoUserList.push({ "code" : element.id, "label" : element.email })
+         
+      });
     });
     // we used two variables - taskId2 and taskIdValue because the router value from gettaskId is always passed from router,
     // so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
@@ -783,6 +794,16 @@ getTaskProcessDiagramDetails(task: any) {
     else {
       this.taskId2 = '';
     }
+  }
+
+  fetchOptions (search: any, loading: any) {
+    CamundaRest.getUsersByEmail(this.token, this.bpmApiUrl, search).then((response) => {
+      this.autoUserList = []
+      response.data.forEach((element: any) => {
+         this.autoUserList.push({ "code" : element.id, "label" : element.email })
+         
+      });
+    });
   }
 
   findTaskIdDetailsFromURLrouter(taskId: string, tasks: any) {
