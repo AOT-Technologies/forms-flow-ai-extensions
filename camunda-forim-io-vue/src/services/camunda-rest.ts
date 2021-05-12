@@ -90,8 +90,8 @@ const CamundaRest = {
   },
 
   getUsersByEmail(bearerToken: string, CamundaUrl: string, emailSearch: string|null) {
-    return bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/user?emailLike=${emailSearch}`)
-  },
+    return bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/user?emailLike=%${emailSearch}%`)
+  }
 }
 
 export default CamundaRest;
