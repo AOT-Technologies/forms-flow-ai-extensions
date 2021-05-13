@@ -548,9 +548,8 @@ getTaskProcessDiagramDetails(task: any) {
     });
     try {
       const { warnings } = await viewer.importXML(this.xmlData);
-      console.log('rendered');
     } catch (err) {
-      console.log('error rendering', err);
+      console.error('error rendering process diagram', err);
     }
   });
 }
@@ -799,7 +798,7 @@ getTaskProcessDiagramDetails(task: any) {
     }
   }
 
-  fetchOptions (search: any, loading: any) {
+  fetchOptions (search: any) {
     CamundaRest.getUsersByEmail(this.token, this.bpmApiUrl, search).then((response) => {
       this.autoUserList = []
       response.data.forEach((element: any) => {
