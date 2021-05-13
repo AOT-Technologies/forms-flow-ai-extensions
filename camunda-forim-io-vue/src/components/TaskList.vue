@@ -586,6 +586,7 @@ getTaskProcessDiagramDetails(task: any) {
       .then(() => {
         this.task.assignee = this.userName;
         this.reloadCurrentTask();
+        this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
       })
       .catch((error) => {
         console.error("Error", error);
@@ -593,7 +594,7 @@ getTaskProcessDiagramDetails(task: any) {
     this.editAssignee = false;
   }
 
-  onUnClaim() {				  
+  onUnClaim() {		  
     CamundaRest.unclaim(this.token, this.task.id, this.bpmApiUrl)
       .then(() => {
         this.reloadCurrentTask();
@@ -609,6 +610,7 @@ getTaskProcessDiagramDetails(task: any) {
       this.bpmApiUrl)
       .then(() => {
         this.reloadCurrentTask()
+        this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
       })
       .catch((error) => {
         console.error("Error", error);
