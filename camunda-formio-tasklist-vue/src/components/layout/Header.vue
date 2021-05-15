@@ -23,7 +23,6 @@
       </div>
       <FormListModal :token="token" :bpmApiUrl="bpmApiUrl"/>
       <div class="cft-first">
-        <!-- Sorting section -->
 				<div id="cftf-dpdown-container" class="mx-2">
 					<div class="cftf-dpdown-box mr-2" v-for="(sort, idx) in sortList" :key="sort.sortBy">
               <span v-if="sortList.length>1"
@@ -33,21 +32,14 @@
               >
                   <i class="bi bi-x"></i>
               </span>
-							<span
-               class="cftf-span-element"
-                @click="showUpdateSortOptions(idx)"
-              >{{sortList[idx]["label"]}}</span>
-              <div
-                v-if="showSortListDropdown[idx]"
-                class="cft-sort-items"
-              >
-                <div v-for="s in sortOptions" :key="s.sortBy"
-                 @click="updateSort(s,idx)"
-                 class="mb-2 cft-sort-element"
-                >
-                  {{s.label}}
-                </div>
-              </div>
+              <b-nav-item-dropdown :text=sortList[idx].label>
+                <b-dropdown-item-button
+                  v-for="s in sortOptions"
+                  :key="s.sortBy"
+                  @click="updateSort(s,idx)"
+                >{{s.label}}
+                </b-dropdown-item-button>
+              </b-nav-item-dropdown>
                 <a v-if="sort.sortOrder==='asc'" @click="toggleSort(idx)" href="#" title="Ascending">
                   <i class="bi bi-chevron-up cftf-arrow"></i>
                 </a>
