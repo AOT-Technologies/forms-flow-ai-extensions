@@ -25,6 +25,8 @@
       <div class="cft-first">
 				<div id="cftf-dpdown-container" class="mx-2">
 					<div class="cftf-dpdown-box mr-2" v-for="(sort, idx) in sortList" :key="sort.sortBy">
+          <b-row>
+              <b-col cols="1">
               <span v-if="sortList.length>1"
                 class="cftf-exit-button"
                 title="Remove Sorting" 
@@ -32,20 +34,29 @@
               >
                   <i class="bi bi-x"></i>
               </span>
+              </b-col>
+              <b-col cols="7">
               <b-nav-item-dropdown :text=sortList[idx].label>
-                <b-dropdown-item-button
-                  v-for="s in sortOptions"
-                  :key="s.sortBy"
-                  @click="updateSort(s,idx)"
-                >{{s.label}}
-                </b-dropdown-item-button>
+                <span v-if="sortOptions.length">
+                  <b-dropdown-item-button
+                    v-for="s in sortOptions"
+                    :key="s.sortBy"
+                    @click="updateSort(s,idx)"
+                  >{{s.label}}
+                  </b-dropdown-item-button>
+                </span>
+                <b-dropdown-item-button v-else>Sorry, no more fields to sortBy.</b-dropdown-item-button>
               </b-nav-item-dropdown>
+              </b-col>
+              <b-col cols="1">
                 <a v-if="sort.sortOrder==='asc'" @click="toggleSort(idx)" href="#" title="Ascending">
                   <i class="bi bi-chevron-up cftf-arrow"></i>
                 </a>
                 <a v-else @click="toggleSort(idx)"  href="#" title="Descending">
                   <i class="bi bi-chevron-down cftf-arrow"></i>
                 </a>
+              </b-col>
+          </b-row>
             </div>
           <i v-if="updateSortOptions.length===0"
            class="fa fa-plus fa-sm click-element cftf-add-sorting"
@@ -102,7 +113,7 @@ export default class Header extends Vue {
   private userList: Array<object> = [];
   private updateSortOptions: Array<object> = [];
   private setupdateSortListDropdownindex = 0;
-  private showSortListDropdown = [false, false, false, false, false, false];
+  // private showSortListDropdown = [false, false, false, false, false, false];
   private showaddNewSortListDropdown = false;
   
 @Watch('token')
@@ -152,6 +163,7 @@ addSort(sort: any) {
   this.sortList.push(sort);
   if (this.sortList.length === sortingList.length) {
     this.updateSortOptions = this.sortOptions;
+    this.sortOptions = [];
   } else {
     this.sortOptions = this.getOptions(this.sortList);
   }
@@ -168,26 +180,25 @@ addSort(sort: any) {
 
 showaddSortListOptions() {
   this.showaddNewSortListDropdown = !this.showaddNewSortListDropdown;
-  this.sortOptions = this.getOptions(this.sortList);
 }
 
-showUpdateSortOptions(index: number) {
-  for(let i =0; i<6;i++){
-    if(this.showSortListDropdown[i]===true){
-      this.showSortListDropdown[i] = false;
-    }
-  }
-  this.showSortListDropdown[index] = !this.showSortListDropdown[index];
-  this.sortOptions = this.getOptions(this.sortList);
-  this.setupdateSortListDropdownindex = index;
-}
+// showUpdateSortOptions(index: number) {
+//   for(let i =0; i<6;i++){
+//     if(this.showSortListDropdown[i]===true){
+//       this.showSortListDropdown[i] = false;
+//     }
+//   }
+//   this.showSortListDropdown[index] = !this.showSortListDropdown[index];
+//   this.sortOptions = this.getOptions(this.sortList);
+//   this.setupdateSortListDropdownindex = index;
+// }
 
 updateSort(sort: any, index: number) {
   this.sortList[index].label = sort.label;
   this.sortList[index].sortBy = sort.sortBy;
 
   this.sortOptions = this.getOptions(this.sortList);
-  this.showSortListDropdown[index] = false;
+  // this.showSortListDropdown[index] = false;
   this.payload["sorting"] = this.sortList;
   this.setFormsFlowTaskCurrentPage(1);
   this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
@@ -231,5 +242,10 @@ toggleSort(index: number) {
     maxResults: this.perPage
   })
 }
+
+mounted() {
+  this.sortOptions = this.getOptions(this.sortList);
+}
+
 }
 </script>
