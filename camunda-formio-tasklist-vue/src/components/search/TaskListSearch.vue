@@ -265,6 +265,9 @@ export default class TaskListSearch extends Vue {
   }
 
   updateSearchQueryElement(searchitem: any, index: number) {
+    if(searchitem.type === 'date') {
+      this.makeInputNull(index);
+    }
     if(this.selectedSearchQueries[index].type==='variables'){
       this.queryList = getDeletedVariableIndex(this.selectedSearchQueries[index] ,
         this.selectedSearchQueries,
