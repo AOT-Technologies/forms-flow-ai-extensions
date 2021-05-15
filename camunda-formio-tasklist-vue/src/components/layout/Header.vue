@@ -58,13 +58,13 @@
               </b-col>
           </b-row>
             </div>
-          <i v-if="updateSortOptions.length===0"
+          <!-- <i v-if="updateSortOptions.length===0"
            class="fa fa-plus fa-sm click-element cftf-add-sorting"
            @click="showaddSortListOptions"
-           title="Add sorting"></i>
+           title="Add sorting"></i> -->
           <TaskSortOptions
            :sortOptions="sortOptions"
-           :showSortListDropdown="showaddNewSortListDropdown"
+           :updateSortOptions="updateSortOptions"
            @add-sort="addSort"
           >
           </TaskSortOptions>
@@ -114,7 +114,7 @@ export default class Header extends Vue {
   private updateSortOptions: Array<object> = [];
   private setupdateSortListDropdownindex = 0;
   // private showSortListDropdown = [false, false, false, false, false, false];
-  private showaddNewSortListDropdown = false;
+  // private showaddNewSortListDropdown = false;
   
 @Watch('token')
   ontokenChange (newVal: string) {
@@ -175,12 +175,12 @@ addSort(sort: any) {
     firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
     maxResults: this.perPage
   })
-  this.showaddNewSortListDropdown = false;									  
+  // this.showaddNewSortListDropdown = false;									  
 }
 
-showaddSortListOptions() {
-  this.showaddNewSortListDropdown = !this.showaddNewSortListDropdown;
-}
+// showaddSortListOptions() {
+//   this.showaddNewSortListDropdown = !this.showaddNewSortListDropdown;
+// }
 
 // showUpdateSortOptions(index: number) {
 //   for(let i =0; i<6;i++){
