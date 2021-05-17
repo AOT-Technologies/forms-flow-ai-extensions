@@ -265,7 +265,10 @@ export default class TaskListSearch extends Vue {
   }
 
   updateSearchQueryElement(searchitem: any, index: number) {
-    if(searchitem.type === 'date') {
+    if(searchitem.type === 'date' && this.selectedSearchQueries[index].type!=='date') {
+      this.makeInputNull(index);
+    }
+    if(this.selectedSearchQueries[index].type==='date' && searchitem.type !== 'date') {
       this.makeInputNull(index);
     }
     if(this.selectedSearchQueries[index].type==='variables'){
@@ -282,11 +285,14 @@ export default class TaskListSearch extends Vue {
     }
     Vue.set(this.selectedSearchQueries, index, searchitem);
     this.operator[index] = this.selectedSearchQueries[index].compares[0];
-    if(this.selectedSearchQueries[index].type==='date'){
-      this.setSearchQueryValue(this.setDate[index], this.selectedSearchQueries[index], this.operator[index], index);
-    }
-    else{
-      this.setSearchQueryValue(this.searchValueItem[index], this.selectedSearchQueries[index], this.operator[index], index);
+    if(this.showSearchs[index]!=='a')
+    {
+      if(this.selectedSearchQueries[index].type==='date'){
+        this.setSearchQueryValue(this.setDate[index], this.selectedSearchQueries[index], this.operator[index], index);
+      }
+      else{
+        this.setSearchQueryValue(this.searchValueItem[index], this.selectedSearchQueries[index], this.operator[index], index);
+      }
     }
   }
 
