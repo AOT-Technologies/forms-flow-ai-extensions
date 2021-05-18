@@ -4,6 +4,11 @@
   "description": "Vue components to integrate formsflow.ai",
   "private": false,
   "main": "./dist/camunda-formio-tasklist-vue.common.js",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AOT-Technologies/forms-flow-ai-extensions.git"
+  },
   "author": "support@aot-technologies.com",
   "contributors": [
     "Shabeeb <faiz.shabeeb@aot-technologies.com> (https://github.com/shabeeb-aot)"
