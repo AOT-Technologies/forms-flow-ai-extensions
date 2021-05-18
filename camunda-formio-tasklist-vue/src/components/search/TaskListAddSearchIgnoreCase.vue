@@ -14,7 +14,9 @@
           </b-nav-item-dropdown>
         </b-col>
         <b-col cols="2">
+          <span class="cft-search-total" title="Total number of tasks.">
           {{ tasklength }}
+          </span>
         </b-col>
       </b-row>
       <span v-if="isVariableTypeInSelectedSearchQuery">

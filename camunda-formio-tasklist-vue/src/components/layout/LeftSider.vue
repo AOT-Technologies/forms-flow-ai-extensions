@@ -15,7 +15,7 @@
         <div @click="setselectedTask(task.id)" class="cft-select-task">
             <h5 class="cft-task-title" data-title='Task Name'>{{ task.name }}</h5>
             <b-row>
-              <b-col cols="7">
+              <b-col cols="6">
             <div class='cft-process-title' data-tile='Process Definition Name'>
                 {{
                 getProcessDataFromList(
@@ -26,7 +26,7 @@
                 }}
             </div>
               </b-col>
-              <b-col cols="5">
+              <b-col cols="6">
             <div class="cft-task-assignee" data-title="Task assignee">
                 {{ task.assignee }}
             </div>
