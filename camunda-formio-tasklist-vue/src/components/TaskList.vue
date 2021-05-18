@@ -784,7 +784,7 @@ getTaskProcessDiagramDetails(task: any) {
     CamundaRest.getUsers(this.token, this.bpmApiUrl).then((response) => {
       this.autoUserList = []
       response.data.forEach((element: any) => {
-         this.autoUserList.push({ "code" : element.id, "label" : element.email })
+        this.autoUserList.push({ "code" : element.id, "label" : element.email })
          
       });
     });
@@ -802,7 +802,7 @@ getTaskProcessDiagramDetails(task: any) {
     CamundaRest.getUsersByEmail(this.token, this.bpmApiUrl, search).then((response) => {
       this.autoUserList = []
       response.data.forEach((element: any) => {
-         this.autoUserList.push({ "code" : element.id, "label" : element.email })
+        this.autoUserList.push({ "code" : element.id, "label" : element.email })
          
       });
     });
