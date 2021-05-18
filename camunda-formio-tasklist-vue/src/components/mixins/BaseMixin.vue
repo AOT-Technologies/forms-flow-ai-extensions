@@ -1,6 +1,7 @@
 <script lang='ts'>
-import {Prop, Vue, Watch} from 'vue-property-decorator'
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 
+@Component
 export default class BaseMixin extends Vue {
     @Prop() private bpmApiUrl!: string;
     @Prop() private token!: string;
@@ -18,5 +19,7 @@ export default class BaseMixin extends Vue {
     ontokenChange (newVal: string) {
       localStorage.setItem("authToken", newVal);
     }
+
+    public test = 'hello';
 }
 </script>
