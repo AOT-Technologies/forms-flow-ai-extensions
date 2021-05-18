@@ -1,81 +1,75 @@
 <template> 
-<b-container fluid class="task-outer-container">
-  <div class="main-filters my-2 mb-1">
-    <div 
-      class="cft-filter-dropdown mx-2"
-    >
-        <b-nav-item-dropdown class="cft-nav-backgroup mr-0">
-          <template slot="button-content">
-             <i class="bi bi-filter-square"/>
-        </template>
-          <span v-if="filterList.length">
-            <b-dropdown-item v-for="(filter, idx) in filterList" 
-              :key="filter.id" 
-              href="#"
-              @click="togglefilter(filter, idx)"
-              :class="{'cft-filter-selected': idx == activefilter}"
-              >
-              {{filter.name}}
-            </b-dropdown-item>
-          </span>
-          <b-dropdown-item v-else >No Filters found</b-dropdown-item>
-        </b-nav-item-dropdown>
-      </div>
-      <FormListModal :token="token" :bpmApiUrl="bpmApiUrl"/>
-      <div class="cft-first">
-				<div id="cftf-dpdown-container" class="mx-2">
-					<div class="cftf-dpdown-box mr-2" v-for="(sort, idx) in sortList" :key="sort.sortBy">
-          <b-row>
+  <b-container fluid class="task-outer-container">
+    <div class="main-filters my-2 mb-1">
+      <div class="cft-filter-dropdown mx-2">
+          <b-nav-item-dropdown class="cft-nav-backgroup mr-0">
+            <template slot="button-content">
+              <i class="bi bi-filter-square"/>
+          </template>
+            <span v-if="filterList.length">
+              <b-dropdown-item v-for="(filter, idx) in filterList" 
+                :key="filter.id" 
+                href="#"
+                @click="togglefilter(filter, idx)"
+                :class="{'cft-filter-selected': idx == activefilter}"
+                >
+                {{filter.name}}
+              </b-dropdown-item>
+            </span>
+            <b-dropdown-item v-else >No Filters found</b-dropdown-item>
+          </b-nav-item-dropdown>
+        </div>
+        <FormListModal :token="token" :bpmApiUrl="bpmApiUrl"/>
+        <div class="cft-first">
+        <div id="cftf-dpdown-container" class="mx-2">
+          <div class="cftf-dpdown-box mr-2" v-for="(sort, idx) in sortList" :key="sort.sortBy">
+            <b-row>
               <b-col cols="1">
-              <span v-if="sortList.length>1"
-                class="cftf-exit-button"
-                title="Remove Sorting" 
-                @click="deleteSort(sort, idx)"
-              >
-                  <i class="bi bi-x"></i>
-              </span>
+                <span v-if="sortList.length>1"
+                  class="cftf-exit-button"
+                  title="Remove Sorting" 
+                  @click="deleteSort(sort, idx)"
+                >
+                    <i class="bi bi-x"></i>
+                </span>
               </b-col>
               <b-col cols="7">
-              <b-nav-item-dropdown :text=sortList[idx].label>
-                <span v-if="sortOptions.length">
-                  <b-dropdown-item-button
-                    v-for="s in sortOptions"
-                    :key="s.sortBy"
-                    @click="updateSort(s,idx)"
-                  >{{s.label}}
-                  </b-dropdown-item-button>
-                </span>
-                <b-dropdown-item-button v-else>Sorry, no more fields to sortBy.</b-dropdown-item-button>
-              </b-nav-item-dropdown>
+                <b-nav-item-dropdown :text=sortList[idx].label>
+                  <span v-if="sortOptions.length">
+                    <b-dropdown-item-button
+                      v-for="s in sortOptions"
+                      :key="s.sortBy"
+                      @click="updateSort(s,idx)"
+                    >{{s.label}}
+                    </b-dropdown-item-button>
+                  </span>
+                  <b-dropdown-item-button v-else>Sorry, no more fields to sortBy.</b-dropdown-item-button>
+                </b-nav-item-dropdown>
               </b-col>
               <b-col cols="1">
-                <a v-if="sort.sortOrder==='asc'" @click="toggleSort(idx)" href="#" title="Ascending">
-                  <i class="bi bi-chevron-up cftf-arrow"></i>
-                </a>
-                <a v-else @click="toggleSort(idx)"  href="#" title="Descending">
-                  <i class="bi bi-chevron-down cftf-arrow"></i>
-                </a>
+                  <a v-if="sort.sortOrder==='asc'" @click="toggleSort(idx)" href="#" title="Ascending">
+                    <i class="bi bi-chevron-up cftf-arrow"></i>
+                  </a>
+                  <a v-else @click="toggleSort(idx)"  href="#" title="Descending">
+                    <i class="bi bi-chevron-down cftf-arrow"></i>
+                  </a>
               </b-col>
-          </b-row>
-            </div>
-          <!-- <i v-if="updateSortOptions.length===0"
-           class="fa fa-plus fa-sm click-element cftf-add-sorting"
-           @click="showaddSortListOptions"
-           title="Add sorting"></i> -->
+            </b-row>
+          </div>
           <TaskSortOptions
-           :sortOptions="sortOptions"
-           :updateSortOptions="updateSortOptions"
-           @add-sort="addSort"
+          :sortOptions="sortOptions"
+          :updateSortOptions="updateSortOptions"
+          @add-sort="addSort"
           >
           </TaskSortOptions>
-          </div>
-		</div>					 
-  </div>
+        </div>
+      </div>
+    </div>
   </b-container>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   sortingList,
@@ -105,26 +99,17 @@ export default class Header extends Vue {
   @serviceFlowModule.Getter('getFormsFlowTaskCurrentPage') private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Mutation('setFormsFlowTaskCurrentPage') public setFormsFlowTaskCurrentPage: any;
 
-  // @Getter('getFormsFlowTaskCurrentPage') private getFormsFlowTaskCurrentPage: any;
-  private showfilter=false;
   private activefilter = 0;
   private sortList = TASK_FILTER_LIST_DEFAULT_PARAM;
   private sortOptions: Array<object> = [];
   private userList: Array<object> = [];
   private updateSortOptions: Array<object> = [];
   private setupdateSortListDropdownindex = 0;
-  // private showSortListDropdown = [false, false, false, false, false, false];
-  // private showaddNewSortListDropdown = false;
-  
+
 @Watch('token')
   ontokenChange (newVal: string) {
-  // updating token
     localStorage.setItem("authToken", newVal);
   }
-
-toggleshowfilter() {
-  this.showfilter = ! this.showfilter;
-}
 
 togglefilter(filter: any, index: number) {
   this.activefilter = index;
@@ -139,7 +124,6 @@ togglefilter(filter: any, index: number) {
     firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
     maxResults: this.perPage
   })
-  this.showfilter = false;
 }
 
 getOptions(options: any) {
@@ -175,30 +159,13 @@ addSort(sort: any) {
     firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
     maxResults: this.perPage
   })
-  // this.showaddNewSortListDropdown = false;									  
 }
-
-// showaddSortListOptions() {
-//   this.showaddNewSortListDropdown = !this.showaddNewSortListDropdown;
-// }
-
-// showUpdateSortOptions(index: number) {
-//   for(let i =0; i<6;i++){
-//     if(this.showSortListDropdown[i]===true){
-//       this.showSortListDropdown[i] = false;
-//     }
-//   }
-//   this.showSortListDropdown[index] = !this.showSortListDropdown[index];
-//   this.sortOptions = this.getOptions(this.sortList);
-//   this.setupdateSortListDropdownindex = index;
-// }
 
 updateSort(sort: any, index: number) {
   this.sortList[index].label = sort.label;
   this.sortList[index].sortBy = sort.sortBy;
 
   this.sortOptions = this.getOptions(this.sortList);
-  // this.showSortListDropdown[index] = false;
   this.payload["sorting"] = this.sortList;
   this.setFormsFlowTaskCurrentPage(1);
   this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});

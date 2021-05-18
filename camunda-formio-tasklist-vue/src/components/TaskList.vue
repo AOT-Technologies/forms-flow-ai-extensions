@@ -547,7 +547,7 @@ getTaskProcessDiagramDetails(task: any) {
       container: '#canvas'
     });
     try {
-      const { warnings } = await viewer.importXML(this.xmlData);
+      await viewer.importXML(this.xmlData);
     } catch (err) {
       console.error('error rendering process diagram', err);
     }
