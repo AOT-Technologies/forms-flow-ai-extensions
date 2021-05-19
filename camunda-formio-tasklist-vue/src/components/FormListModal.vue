@@ -102,7 +102,8 @@
 
 <script lang="ts">
 import '../styles/camundaFormIOFormList.scss'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
+import BaseMixin from './mixins/BaseMixin.vue';
 import CamundaRest from '../services/camunda-rest'
 import { Form } from 'vue-formio';
 import {formApplicationSubmit} from '../services/formsflowai-api';
@@ -112,7 +113,7 @@ import {formApplicationSubmit} from '../services/formsflowai-api';
     Form,
   }
 })
-export default class FormListModal extends Vue{
+export default class FormListModal extends Mixins(BaseMixin){
   private formList: Array<object> = []
   private formperPage=10
   private formNumPages=1
@@ -125,8 +126,6 @@ export default class FormListModal extends Vue{
   private showForms = true
   private formsflowAIApiUrl: any;
 
-  @Prop({}) private token !: string;
-  @Prop() private bpmApiUrl !: string;
 
   linkFormGen() {
     this.formListItems();

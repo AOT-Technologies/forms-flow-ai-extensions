@@ -3,8 +3,8 @@ import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 
 @Component
 export default class BaseMixin extends Vue {
-    @Prop() private bpmApiUrl!: string;
-    @Prop() private token!: string;
+    @Prop() protected readonly bpmApiUrl!: string;
+    @Prop() protected readonly token!: string;
     @Prop() private formIOResourceId!: string;
     @Prop() private formIOReviewerId!: string;
     @Prop() private formIOReviewer!: string;
