@@ -13,11 +13,11 @@
       <b-col xl="3" lg="3" md="12" class="cft-first" v-if="maxi">
         <LeftSider
           v-if="token  && bpmApiUrl"
-          :token="token"
+          :bpmApiUrl="bpmApiUrl"
           :formsflowaiApiUrl="formsflowaiApiUrl"
           :formIOApiUrl="formIOApiUrl"
-          :bpmApiUrl="bpmApiUrl"
           :tasks='tasks'
+          :token="token"
           :Lentask='tasklength'
           :perPage="perPage"
           :selectedfilterId="selectedfilterId"
@@ -231,13 +231,14 @@ import 'vue2-datepicker/index.css';
 import 'semantic-ui-css/semantic.min.css';
 import '../styles/user-styles.css'
 import '../styles/camundaFormIOTasklist.scss'
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   findFilterKeyOfAllTask,
   getTaskFromList,
   getUserName
 } from '../services/utils';
+import BaseMixin from './mixins/BaseMixin.vue';
 import BpmnViewer from 'bpmn-js';
 import CamundaRest from '../services/camunda-rest';
 import DatePicker from 'vue2-datepicker'
@@ -271,18 +272,18 @@ const serviceFlowModule = namespace('serviceFlowModule')
     BpmnViewer
   },
 })
-export default class Tasklist extends Vue {
-  @Prop() private bpmApiUrl!: string;
-  @Prop() private token!: string;
-  @Prop() private formIOResourceId!: string;
-  @Prop() private formIOReviewerId!: string;
-  @Prop() private formIOReviewer!: string;
-  @Prop() private formIOApiUrl!: string;
-  @Prop() private formsflowaiApiUrl!: string;
-  @Prop() private formsflowaiUrl!: string;
-  @Prop() private formIOUserRoles!: string;
+export default class Tasklist extends Mixins(BaseMixin) {
+  // @Prop() private bpmApiUrl!: string;
+  // @Prop() private token!: string;
+  // @Prop() private formIOResourceId!: string;
+  // @Prop() private formIOReviewerId!: string;
+  // @Prop() private formIOReviewer!: string;
+  // @Prop() private formIOApiUrl!: string;
+  // @Prop() private formsflowaiApiUrl!: string;
+  // @Prop() private formsflowaiUrl!: string;
+  // @Prop() private formIOUserRoles!: string;
   @Prop() private getTaskId!: string;
-  @Prop({default:'formflowai'}) private webSocketEncryptkey !: string
+  // @Prop({default:'formflowai'}) private webSocketEncryptkey !: string
   
 
   @serviceFlowModule.Getter('getFormsFlowTaskCurrentPage') private getFormsFlowTaskCurrentPage: any;

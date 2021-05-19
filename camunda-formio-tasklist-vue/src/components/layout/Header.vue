@@ -69,11 +69,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch} from 'vue-property-decorator'
+import { Component, Mixins, Prop} from 'vue-property-decorator'
 import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   sortingList,
 } from '../../services/utils';
+import BaseMixin from '../mixins/BaseMixin.vue';
 import FormListModal from '../FormListModal.vue';
 import {Payload} from '../../services/TasklistTypes';
 import TaskSortOptions from '../TaskListSortoptions.vue';
@@ -87,9 +88,7 @@ const serviceFlowModule = namespace('serviceFlowModule')
     TaskSortOptions
   }
 })
-export default class Header extends Vue {
-  @Prop() private bpmApiUrl!: string;
-  @Prop() private token!: string;
+export default class Header extends Mixins(BaseMixin) {
   @Prop() private perPage !: number;
   @Prop() private filterList !: Array<string>;
   @Prop() private selectedfilterId !: string;
@@ -139,6 +138,7 @@ export default class Header extends Vue {
     });
     return optionsArray;
   }
+
   addSort(sort: any) {
     this.sortList.push(sort);
     if (this.sortList.length === sortingList.length) {

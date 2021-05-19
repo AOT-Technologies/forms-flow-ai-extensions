@@ -70,7 +70,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Component, Mixins, Prop, Watch } from 'vue-property-decorator';
+import BaseMixin from '../mixins/BaseMixin.vue';
 import CamundaRest from '../../services/camunda-rest';
 import {Payload} from '../../services/TasklistTypes';
 import TaskListSearch from '../search/TaskListSearch.vue';
@@ -87,9 +88,7 @@ const serviceFlowModule = namespace('serviceFlowModule')
     TaskListSearch,
   },
 })
-export default class LeftSider extends Vue {
-  @Prop() private bpmApiUrl!: string;
-  @Prop() private token!: string;
+export default class LeftSider extends Mixins(BaseMixin) {
   @Prop() private tasks !: Array<object>;
   @Prop() private Lentask !: number;
   @Prop() private perPage !: number;
@@ -123,14 +122,14 @@ export default class LeftSider extends Vue {
     this.$root.$emit('call-fetchPaginatedTaskList', {filterId: this.selectedfilterId, requestData: this.payload, firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage, maxResults: this.perPage})
   }
 
-  checkPropsIsPassedAndSetValue() {
-    if (!this.bpmApiUrl || this.bpmApiUrl === "") {
-      console.warn("bpmApiUrl prop not Passed");
-    }
-    if (!this.token || this.token === "") {
-      console.warn("token prop not Passed");
-    }   
-  }
+  // checkPropsIsPassedAndSetValue() {
+  //   if (!this.bpmApiUrl || this.bpmApiUrl === "") {
+  //     console.warn("bpmApiUrl prop not Passed");
+  //   }
+  //   if (!this.token || this.token === "") {
+  //     console.warn("token prop not Passed");
+  //   }   
+  // }
 
   timedifference(date: Date) {
     return moment(date).fromNow();										
@@ -184,7 +183,7 @@ export default class LeftSider extends Vue {
       this.activeIndex = this.getFormsFlowactiveIndex
     }
     this.currentPage = this.getFormsFlowTaskCurrentPage
-    this.checkPropsIsPassedAndSetValue();
+    // this.checkPropsIsPassedAndSetValue();
     this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
 
     CamundaRest.getProcessDefinitions(this.token, this.bpmApiUrl).then(
