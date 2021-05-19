@@ -16,9 +16,9 @@ import { Component, Vue } from 'vue-property-decorator'
 export default class ExpandContract  extends Vue {
   private maxi = true
 
-    clickMaxi () {
-        this.maxi = !this.maxi
-        this.$root.$emit('call-managerScreen', {maxi: this.maxi});
-    }
+  clickMaxi () {
+    this.maxi = !this.maxi
+    this.$root.$emit('call-managerScreen', {maxi: this.maxi});
+  }
 }
 </script>
