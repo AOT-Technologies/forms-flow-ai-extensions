@@ -273,7 +273,7 @@ const serviceFlowModule = namespace('serviceFlowModule')
   },
 })
 export default class Tasklist extends Mixins(BaseMixin) {
-  @Prop() protected readonly getTaskId!: string;
+  @Prop() private getTaskId!: string;
 
   @serviceFlowModule.Getter('getFormsFlowTaskCurrentPage') private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Getter('getFormsFlowTaskId') private getFormsFlowTaskId: any;

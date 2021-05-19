@@ -122,15 +122,6 @@ export default class LeftSider extends Mixins(BaseMixin) {
     this.$root.$emit('call-fetchPaginatedTaskList', {filterId: this.selectedfilterId, requestData: this.payload, firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage, maxResults: this.perPage})
   }
 
-  // checkPropsIsPassedAndSetValue() {
-  //   if (!this.bpmApiUrl || this.bpmApiUrl === "") {
-  //     console.warn("bpmApiUrl prop not Passed");
-  //   }
-  //   if (!this.token || this.token === "") {
-  //     console.warn("token prop not Passed");
-  //   }   
-  // }
-
   timedifference(date: Date) {
     return moment(date).fromNow();										
   }													   
