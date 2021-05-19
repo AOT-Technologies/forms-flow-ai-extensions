@@ -106,113 +106,109 @@ export default class Header extends Vue {
   private updateSortOptions: Array<object> = [];
   private setupdateSortListDropdownindex = 0;
 
-@Watch('token')
-  ontokenChange (newVal: string) {
-    localStorage.setItem("authToken", newVal);
+
+  togglefilter(filter: any, index: number) {
+    this.activefilter = index;
+    this.$root.$emit('call-fetchTaskList', 
+      {filterId: filter.id, requestData: this.payload}
+    );
+    this.setFormsFlowTaskCurrentPage(1);
+    this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
+    this.$root.$emit('call-fetchPaginatedTaskList', {
+      filterId: filter.id,
+      requestData: this.payload,
+      firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
+      maxResults: this.perPage
+    })
   }
 
-togglefilter(filter: any, index: number) {
-  this.activefilter = index;
-  this.$root.$emit('call-fetchTaskList', 
-    {filterId: filter.id, requestData: this.payload}
-  );
-  this.setFormsFlowTaskCurrentPage(1);
-  this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
-  this.$root.$emit('call-fetchPaginatedTaskList', {
-    filterId: filter.id,
-    requestData: this.payload,
-    firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
-    maxResults: this.perPage
-  })
-}
-
-getOptions(options: any) {
-  const optionsArray: {
+  getOptions(options: any) {
+    const optionsArray: {
       sortOrder: string;
       label: string;
       sortBy: string;
     }[] = [];
-  sortingList.forEach((sortOption) => {
-    if (
-      !options.some(
-        (option: { sortBy: string }) => option.sortBy === sortOption.sortBy
-      )
-    ) {
-      optionsArray.push({ ...sortOption });
+    sortingList.forEach((sortOption) => {
+      if (
+        !options.some(
+          (option: { sortBy: string }) => option.sortBy === sortOption.sortBy
+        )
+      ) {
+        optionsArray.push({ ...sortOption });
+      }
+    });
+    return optionsArray;
+  }
+  addSort(sort: any) {
+    this.sortList.push(sort);
+    if (this.sortList.length === sortingList.length) {
+      this.updateSortOptions = this.sortOptions;
+      this.sortOptions = [];
+    } else {
+      this.sortOptions = this.getOptions(this.sortList);
     }
-  });
-  return optionsArray;
-}
-addSort(sort: any) {
-  this.sortList.push(sort);
-  if (this.sortList.length === sortingList.length) {
-    this.updateSortOptions = this.sortOptions;
-    this.sortOptions = [];
-  } else {
+    this.setFormsFlowTaskCurrentPage(1);
+    this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
+    this.$root.$emit('call-fetchPaginatedTaskList', {
+      filterId: this.selectedfilterId,
+      requestData: this.payload,
+      firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
+      maxResults: this.perPage
+    })
+  }
+
+  updateSort(sort: any, index: number) {
+    this.sortList[index].label = sort.label;
+    this.sortList[index].sortBy = sort.sortBy;
+
+    this.sortOptions = this.getOptions(this.sortList);
+    this.payload["sorting"] = this.sortList;
+    this.setFormsFlowTaskCurrentPage(1);
+    this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
+    this.$root.$emit('call-fetchPaginatedTaskList', {
+      filterId: this.selectedfilterId,
+      requestData: this.payload,
+      firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
+      maxResults: this.perPage
+    })
+  }
+
+  deleteSort(sort: any, index: number) {
+    this.sortList.splice(index, 1);
+    this.updateSortOptions = [];
+    this.sortOptions = this.getOptions(this.sortList);
+    this.payload["sorting"] = this.sortList;
+    this.setFormsFlowTaskCurrentPage(1);
+    this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
+    this.$root.$emit('call-fetchPaginatedTaskList', {
+      filterId: this.selectedfilterId,
+      requestData: this.payload,
+      firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
+      maxResults: this.perPage
+    })
+  }
+
+  toggleSort(index: number) {
+    if (this.sortList[index].sortOrder === "asc")
+      this.sortList[index].sortOrder = "desc";
+  
+    else {
+      this.sortList[index].sortOrder = "asc";
+    }
+    this.payload["sorting"] = this.sortList;
+    this.setFormsFlowTaskCurrentPage(1);
+    this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
+    this.$root.$emit('call-fetchPaginatedTaskList', {
+      filterId: this.selectedfilterId,
+      requestData: this.payload,
+      firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
+      maxResults: this.perPage
+    })
+  }
+
+  mounted() {
     this.sortOptions = this.getOptions(this.sortList);
   }
-  this.setFormsFlowTaskCurrentPage(1);
-  this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
-  this.$root.$emit('call-fetchPaginatedTaskList', {
-    filterId: this.selectedfilterId,
-    requestData: this.payload,
-    firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
-    maxResults: this.perPage
-  })
-}
-
-updateSort(sort: any, index: number) {
-  this.sortList[index].label = sort.label;
-  this.sortList[index].sortBy = sort.sortBy;
-
-  this.sortOptions = this.getOptions(this.sortList);
-  this.payload["sorting"] = this.sortList;
-  this.setFormsFlowTaskCurrentPage(1);
-  this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
-  this.$root.$emit('call-fetchPaginatedTaskList', {
-    filterId: this.selectedfilterId,
-    requestData: this.payload,
-    firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
-    maxResults: this.perPage
-  })
-}
-
-deleteSort(sort: any, index: number) {
-  this.sortList.splice(index, 1);
-  this.updateSortOptions = [];
-  this.sortOptions = this.getOptions(this.sortList);
-  this.payload["sorting"] = this.sortList;
-  this.setFormsFlowTaskCurrentPage(1);
-  this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
-  this.$root.$emit('call-fetchPaginatedTaskList', {
-    filterId: this.selectedfilterId,
-    requestData: this.payload,
-    firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
-    maxResults: this.perPage
-  })
-}
-
-toggleSort(index: number) {
-  if (this.sortList[index].sortOrder === "asc")
-    this.sortList[index].sortOrder = "desc";
-  
-  else {
-    this.sortList[index].sortOrder = "asc";
-  }
-  this.payload["sorting"] = this.sortList;
-  this.setFormsFlowTaskCurrentPage(1);
-  this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
-  this.$root.$emit('call-fetchPaginatedTaskList', {
-    filterId: this.selectedfilterId,
-    requestData: this.payload,
-    firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
-    maxResults: this.perPage
-  })
-}
-
-mounted() {
-  this.sortOptions = this.getOptions(this.sortList);
-}
 
 }
 </script>

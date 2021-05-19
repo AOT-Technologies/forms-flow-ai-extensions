@@ -112,7 +112,7 @@ export default class LeftSider extends Vue {
   private sList: any;
   private currentPage = 1;
 
-@Watch('currentPage')
+  @Watch('currentPage')
   onPageChange(newVal: number) {
     this.payload["firstResult"] = (newVal-1)*this.perPage
     this.payload["maxResults"] = this.perPage
@@ -123,94 +123,94 @@ export default class LeftSider extends Vue {
     this.$root.$emit('call-fetchPaginatedTaskList', {filterId: this.selectedfilterId, requestData: this.payload, firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage, maxResults: this.perPage})
   }
 
-checkPropsIsPassedAndSetValue() {
-  if (!this.bpmApiUrl || this.bpmApiUrl === "") {
-    console.warn("bpmApiUrl prop not Passed");
-  }
-  if (!this.token || this.token === "") {
-    console.warn("token prop not Passed");
-  }   
-}
-
-timedifference(date: Date) {
-  return moment(date).fromNow();										
-}													   
-
-getProcessDataFromList(processList: any[], processId: string, dataKey: string) {
-  const process = processList.find((process) => process.id === processId);
-  return process && process[dataKey];
-}
-
-setselectedTask(taskId: string) {
-  this.setFormsFlowTaskId(taskId)
-  this.$root.$emit('call-fetchData', {selectedTaskId: taskId})
-}
-
-getExactDate(date: Date) {
-  return getFormattedDateAndTime(date);
-}
-
-toggle(index: number) {
-  this.activeIndex = index;
-  this.setFormsFlowactiveIndex(this.activeIndex)			  
-}
-
-updateTasklistResult(queryList: object) {
-  const requiredParams = {...{sorting:this.payload["sorting"]},...queryList}
-  if(!isEqual(this.payload, requiredParams)){
-    this.$root.$emit('call-fetchTaskList', 
-      {filterId: this.selectedfilterId, requestData: cloneDeep(requiredParams)}
-    );
-    this.$root.$emit('call-fetchPaginatedTaskList', 
-      {filterId: this.selectedfilterId,
-        requestData: cloneDeep(requiredParams),
-        firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
-        maxResults: this.perPage
-      })
-  }
-}
-
-mounted() {
-  this.$root.$on('call-pagination', () => {
-    this.resetPaginationStore()
-  })
-  this.$root.$on('update-pagination-currentpage', (para: any) => {
-    this.currentPage = para.page;
-  })
-  this.$root.$on('update-activeIndex-pagination', (para: any) => {
-    this.activeIndex = para.activeindex;
-  })
-  if (this.getFormsFlowactiveIndex > 0) {
-    this.activeIndex = this.getFormsFlowactiveIndex
-  }
-  this.currentPage = this.getFormsFlowTaskCurrentPage
-  this.checkPropsIsPassedAndSetValue();
-  this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
-
-  CamundaRest.getProcessDefinitions(this.token, this.bpmApiUrl).then(
-    (response) => {
-      this.getProcessDefinitions = response.data;
+  checkPropsIsPassedAndSetValue() {
+    if (!this.bpmApiUrl || this.bpmApiUrl === "") {
+      console.warn("bpmApiUrl prop not Passed");
     }
-  );
-}
-
-resetPaginationStore() {
-  if ((this.getFormsFlowactiveIndex < 9)) {
-    this.setFormsFlowactiveIndex(this.getFormsFlowactiveIndex+1)
-    this.activeIndex = this.getFormsFlowactiveIndex
-  } else if (this.getFormsFlowactiveIndex === 9) {
-    this.setFormsFlowactiveIndex(0)
-    this.activeIndex = 0
-    this.setFormsFlowTaskCurrentPage(this.getFormsFlowTaskCurrentPage+1)
-    this.currentPage = this.getFormsFlowTaskCurrentPage
+    if (!this.token || this.token === "") {
+      console.warn("token prop not Passed");
+    }   
   }
-}
 
-beforeDestroy() {
-  this.$root.$off('call-pagination')
-  this.$root.$off('update-pagination-currentpage')
-  this.$root.$off('update-activeIndex-pagination')
-}
+  timedifference(date: Date) {
+    return moment(date).fromNow();										
+  }													   
+
+  getProcessDataFromList(processList: any[], processId: string, dataKey: string) {
+    const process = processList.find((process) => process.id === processId);
+    return process && process[dataKey];
+  }
+
+  setselectedTask(taskId: string) {
+    this.setFormsFlowTaskId(taskId)
+    this.$root.$emit('call-fetchData', {selectedTaskId: taskId})
+  }
+
+  getExactDate(date: Date) {
+    return getFormattedDateAndTime(date);
+  }
+
+  toggle(index: number) {
+    this.activeIndex = index;
+    this.setFormsFlowactiveIndex(this.activeIndex)			  
+  }
+
+  updateTasklistResult(queryList: object) {
+    const requiredParams = {...{sorting:this.payload["sorting"]},...queryList}
+    if(!isEqual(this.payload, requiredParams)){
+      this.$root.$emit('call-fetchTaskList', 
+        {filterId: this.selectedfilterId, requestData: cloneDeep(requiredParams)}
+      );
+      this.$root.$emit('call-fetchPaginatedTaskList', 
+        {filterId: this.selectedfilterId,
+          requestData: cloneDeep(requiredParams),
+          firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
+          maxResults: this.perPage
+        })
+    }
+  }
+
+  mounted() {
+    this.$root.$on('call-pagination', () => {
+      this.resetPaginationStore()
+    })
+    this.$root.$on('update-pagination-currentpage', (para: any) => {
+      this.currentPage = para.page;
+    })
+    this.$root.$on('update-activeIndex-pagination', (para: any) => {
+      this.activeIndex = para.activeindex;
+    })
+    if (this.getFormsFlowactiveIndex > 0) {
+      this.activeIndex = this.getFormsFlowactiveIndex
+    }
+    this.currentPage = this.getFormsFlowTaskCurrentPage
+    this.checkPropsIsPassedAndSetValue();
+    this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
+
+    CamundaRest.getProcessDefinitions(this.token, this.bpmApiUrl).then(
+      (response) => {
+        this.getProcessDefinitions = response.data;
+      }
+    );
+  }
+
+  resetPaginationStore() {
+    if ((this.getFormsFlowactiveIndex < 9)) {
+      this.setFormsFlowactiveIndex(this.getFormsFlowactiveIndex+1)
+      this.activeIndex = this.getFormsFlowactiveIndex
+    } else if (this.getFormsFlowactiveIndex === 9) {
+      this.setFormsFlowactiveIndex(0)
+      this.activeIndex = 0
+      this.setFormsFlowTaskCurrentPage(this.getFormsFlowTaskCurrentPage+1)
+      this.currentPage = this.getFormsFlowTaskCurrentPage
+    }
+  }
+
+  beforeDestroy() {
+    this.$root.$off('call-pagination')
+    this.$root.$off('update-pagination-currentpage')
+    this.$root.$off('update-activeIndex-pagination')
+  }
 
 }
 </script>
