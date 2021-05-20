@@ -2,7 +2,7 @@
 <b-navbar >
     <b-nav-form>
     <b-button @click="clickMaxi" variant="light" size="sm"> 
-        <i v-if="maxi" class="bi bi-arrows-angle-expand"></i>
+        <i v-if="maximize" class="bi bi-arrows-angle-expand"></i>
         <i v-else class="bi bi-arrows-angle-contract"></i>
     </b-button>
     </b-nav-form>
@@ -10,15 +10,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator';
+import TaskListMixin from  '../mixins/TaskListMixin.vue';
 
 @Component
-export default class ExpandContract  extends Vue {
-  private maxi = true
+export default class ExpandContract  extends Mixins(TaskListMixin) {
 
   clickMaxi () {
-    this.maxi = !this.maxi
-    this.$root.$emit('call-managerScreen', {maxi: this.maxi});
+    this.maximize = !this.maximize
+    this.$root.$emit('call-managerScreen', {maxi: this.maximize});
   }
 }
 </script>
