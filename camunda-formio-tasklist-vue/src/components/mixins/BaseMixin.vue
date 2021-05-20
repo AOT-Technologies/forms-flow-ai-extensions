@@ -19,7 +19,7 @@ export default class BaseMixin extends Vue {
       localStorage.setItem("authToken", newVal);
     }
 
-    checkProps() {
+    checkProps () {
       if (!this.bpmApiUrl || this.bpmApiUrl === "") {
         console.warn("bpmApiUrl prop not Passed");
       }

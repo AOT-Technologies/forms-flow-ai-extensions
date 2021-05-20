@@ -1,10 +1,12 @@
 <script lang='ts'>
-import {Component, Mixins} from 'vue-property-decorator';
+import {Component, Mixins, Vue} from 'vue-property-decorator';
 import BaseMixin from './BaseMixin.vue';
 
-@Component
+@Component({
+  'name': 'TaskListMixin'
+})
 export default class TaskListMixin extends Mixins(BaseMixin) {
 
-    
+  public maximize = true;
 }
 </script>
