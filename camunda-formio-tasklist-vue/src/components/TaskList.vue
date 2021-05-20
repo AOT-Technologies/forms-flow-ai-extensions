@@ -24,7 +24,7 @@
           :payload="payload"
         />
       </b-col>
-      <b-col v-if="getFormsFlowTaskId" :lg="maxi ? 9 : 12" md="12">
+      <b-col v-if="(getFormsFlowTaskId && task)" :lg="maxi ? 9 : 12" md="12">
         <ExpandContract/>
         <div class="cft-service-task-details">
           <b-row class="ml-0 task-header task-header-title" data-title="Task Name">
@@ -471,7 +471,6 @@ export default class Tasklist extends Mixins(BaseMixin, TaskListMixin) {
     })
   }
 
-
   getTaskProcessDiagramDetails(task: any) {
     CamundaRest.getProcessDiagramXML(
       this.token,
@@ -480,19 +479,25 @@ export default class Tasklist extends Mixins(BaseMixin, TaskListMixin) {
     ).then(async (res) => {
       this.xmlData = res.data.bpmn20Xml;
       const div = document.getElementById('canvas');
-      if(div){ 
+
+      if(div){
         div.innerHTML = ""
       }
       const viewer = new BpmnViewer({
         container: '#canvas'
       });
+
       try {
-        await viewer.importXML(this.xmlData);
+        const { warnings } = await viewer.importXML(this.xmlData);
+        viewer.get('canvas').zoom('fit-viewport');
+
+        console.log(warnings);
       } catch (err) {
         console.error('error rendering process diagram', err);
       }
     });
   }
+
 
   oncustomEventCallback = (customEvent: any) => {
     switch (customEvent.type) {
@@ -667,6 +672,9 @@ export default class Tasklist extends Mixins(BaseMixin, TaskListMixin) {
   }
 
   mounted() {
+    this.setFormsFlowTaskCurrentPage(1)
+    this.setFormsFlowTaskId('')
+    this.setFormsFlowactiveIndex(0)
     this.$root.$on('call-fetchData', (para: any) => {
       this.editAssignee = false
       this.setFormsFlowTaskId(para.selectedTaskId);
