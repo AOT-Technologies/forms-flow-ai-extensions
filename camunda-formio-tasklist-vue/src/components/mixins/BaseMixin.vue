@@ -1,5 +1,5 @@
 <script lang='ts'>
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
 
 @Component
 export default class BaseMixin extends Vue {
@@ -42,10 +42,10 @@ export default class BaseMixin extends Vue {
         console.warn("formsflow.ai URL prop not passed");
       }
       if(!this.webSocketEncryptkey || this.webSocketEncryptkey === ""){
-        console.warn('WEBSOCKET_ENCRYPT_KEY prop not passed')
+        console.warn('WEBSOCKET_ENCRYPT_KEY prop not passed');
       }
 
-      const decodeToken = JSON.parse(atob(this.token.split('.')[1]))
+      const decodeToken = JSON.parse(atob(this.token.split('.')[1]));
       const engine = "/engine-rest";
       localStorage.setItem("bpmApiUrl", this.bpmApiUrl + engine);
       localStorage.setItem("authToken", this.token);
@@ -53,8 +53,7 @@ export default class BaseMixin extends Vue {
       localStorage.setItem("formsflow.ai.url", currentUrl);
       localStorage.setItem("formsflow.ai.api.url", this.formsflowaiApiUrl);
       localStorage.setItem("formioApiUrl", this.formIOApiUrl);
-      localStorage.setItem("UserDetails", JSON.stringify(decodeToken))
-  
+      localStorage.setItem("UserDetails", JSON.stringify(decodeToken)); 
     }
 }
 </script>
