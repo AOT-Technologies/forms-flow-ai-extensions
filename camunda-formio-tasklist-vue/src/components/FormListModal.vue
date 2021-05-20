@@ -169,14 +169,14 @@ export default class FormListModal extends Vue{
       );
     }
     this.$bvModal.hide('modal-multi-2');
-    this.$bvModal.show('modal-multi-1');
+    // this.$bvModal.show('modal-multi-1');
   }
 
   oncustomEventCallback = (customEvent: any) => {
     switch (customEvent.type) {
     case "customSubmitDone":
       this.$bvModal.hide('modal-multi-2');
-      this.$bvModal.show('modal-multi-1');
+      // this.$bvModal.show('modal-multi-1');
       break;
     }
   };
