@@ -223,15 +223,15 @@
 </template>
 
 <script lang="ts">
-import "vue-select/src/scss/vue-select.scss";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'font-awesome/scss/font-awesome.scss';
 import 'formiojs/dist/formio.full.min.css'
 import 'vue2-datepicker/index.css';
+import 'vue-select/src/scss/vue-select.scss';
 import 'semantic-ui-css/semantic.min.css';
-import '../styles/user-styles.css'
-import '../styles/camundaFormIOTasklist.scss'
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import '../styles/user-styles.css';
+import '../styles/camundaFormIOTasklist.scss';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   findFilterKeyOfAllTask,
@@ -240,11 +240,11 @@ import {
 } from '../services/utils';
 import BpmnViewer from 'bpmn-js';
 import CamundaRest from '../services/camunda-rest';
-import DatePicker from 'vue2-datepicker'
-import ExpandContract from './addons/ExpandContract.vue'
+import DatePicker from 'vue2-datepicker';
+import ExpandContract from './addons/ExpandContract.vue';
 import { Form } from 'vue-formio';
-import Header from './layout/Header.vue'
-import LeftSider from './layout/LeftSider.vue'
+import Header from './layout/Header.vue';
+import LeftSider from './layout/LeftSider.vue';
 import {Payload} from '../services/TasklistTypes';
 import SocketIOService from '../services/SocketIOServices';
 import TaskHistory from '../components/TaskHistory.vue';
@@ -253,8 +253,8 @@ import {getFormDetails} from '../services/get-formio';
 import {getISODateTime} from '../services/format-time';
 import {getformHistoryApi} from '../services/formsflowai-api';
 import moment from 'moment';
-import { namespace } from 'vuex-class'
-import vSelect from 'vue-select'
+import { namespace } from 'vuex-class';
+import vSelect from 'vue-select';
 
 const serviceFlowModule = namespace('serviceFlowModule')
 
@@ -338,7 +338,6 @@ export default class Tasklist extends Vue {
   
 @Watch('token')
   ontokenChange (newVal: string) {
-  // updating token
     localStorage.setItem("authToken", newVal);
   }
 
@@ -368,10 +367,10 @@ checkPropsIsPassedAndSetValue() {
   if(!this.webSocketEncryptkey || this.webSocketEncryptkey === ""){
     console.warn('WEBSOCKET_ENCRYPT_KEY prop not passed')
   }
-  if(this.getTaskId) {
+  if ((this.getTaskId) &&(this.getTaskId !== '')) {
     this.taskIdValue = this.getTaskId;
   }
-  if(!this.getTaskId) {
+  if(!this.getTaskId || this.getTaskId === '') {
     const routeparams = this.$route?.query?.taskId;
     if(typeof(routeparams) ==='string' && this.$route.query.taskId) {
       this.taskIdValue = routeparams;
@@ -502,9 +501,6 @@ getTaskFormIODetails(taskId: string) {
       this.submissionId = submissionId;
       this.formId = formId;
     }
-    // else {
-    //   console.warn("Form details missing")
-    // }
     this.showfrom = true;
   });
 }
@@ -525,9 +521,6 @@ getTaskHistoryDetails(taskId: string) {
           this.taskHistoryList = r.data.applications;
         })
     }
-    // else {
-    //   console.warn("The selected task has no applicationid")
-    // }
   })
 }
 
@@ -657,7 +650,6 @@ getTaskProcessDiagramDetails(task: any) {
       task
     )
       .then(() => {
-        console.warn("Updated follow up date");
         this.reloadCurrentTask();
       })
       .catch((error) => {
@@ -796,8 +788,7 @@ getTaskProcessDiagramDetails(task: any) {
          
       });
     });
-    // we used two variables - taskId2 and taskIdValue because the router value from gettaskId is always passed from router,
-    // so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
+//We used two variables - taskId2 and taskIdValue because the router value from gettaskId is always constant,so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
     if((this.taskId2 !== this.taskIdValue)) {
       this.taskId2 = this.taskIdValue;
     }

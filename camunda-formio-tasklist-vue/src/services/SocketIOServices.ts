@@ -1,6 +1,6 @@
+import AES from 'crypto-js/aes';
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
-import AES from 'crypto-js/aes';
 
 let stompClient: any = null;
 const engine = "/engine-rest";
@@ -18,7 +18,8 @@ const connect = (encryptKey: any, reloadCallback: any)=>{
   const socketUrl=`${BPM_BASE_URL_SOCKET_IO}?accesstoken=${accessToken}`;
   const socket = new SockJS(socketUrl);
   stompClient = Stomp.over(socket);
-  stompClient.connect({}, function(frame: any){
+  stompClient.debug = null;
+  stompClient.connect({}, function(){
     if(isConnected()){
       stompClient.subscribe('/topic/task-event', function(output: any){
         const taskUpdate = JSON.parse(output.body);
