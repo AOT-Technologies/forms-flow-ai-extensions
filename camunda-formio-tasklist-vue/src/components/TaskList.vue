@@ -342,7 +342,7 @@ export default class Tasklist extends Vue {
   }
 
 
-checkPropsIsPassedAndSetValue() {
+checkPropsIsPassedAndSetValue () {
   if (!this.bpmApiUrl || this.bpmApiUrl === "") {
     console.warn("bpmApiUrl prop not Passed");
   }
@@ -389,23 +389,23 @@ checkPropsIsPassedAndSetValue() {
   this.userName = getUserName()
 }
 
-timedifference(date: Date) {
+timedifference (date: Date) {
   return moment(date).fromNow();
 }
 
-toggleassignee()  {
+toggleassignee ()  {
   this.editAssignee = ! this.editAssignee;
   this.userSelected['code'] = this.task.assignee;
 }
 
-onFormSubmitCallback() {
+onFormSubmitCallback () {
   if (this.task.id) {
     this.onBPMTaskFormSubmit(this.task.id);
     this.reloadTasks();					   
   }					  
 }
 
-addGroup() {
+addGroup () {
   CamundaRest.createTaskGroupByID(
     this.token,
     this.task.id,
@@ -417,7 +417,7 @@ addGroup() {
     this.setGroup = null;
   });
 }
-async getGroupDetails() {
+async getGroupDetails () {
   const grouplist = await CamundaRest.getTaskGroupByID(this.token, this.task.id, this.bpmApiUrl);
   this.groupList = grouplist.data;
   this.groupListItems = [];
@@ -429,7 +429,7 @@ async getGroupDetails() {
     this.groupListNames = this.groupListItems;
   }
 }
-deleteGroup(groupid: string) {		 
+deleteGroup (groupid: string) {		 
   CamundaRest.deleteTaskGroupByID(this.token, this.task.id, this.bpmApiUrl, {
     groupId: groupid,
     type: "candidate",
@@ -439,7 +439,7 @@ deleteGroup(groupid: string) {
   });
 }
 
-onBPMTaskFormSubmit(taskId: string) {
+onBPMTaskFormSubmit (taskId: string) {
   const formRequestFormat = {
     variables: {
       formUrl: {
@@ -465,7 +465,7 @@ onBPMTaskFormSubmit(taskId: string) {
 }
 
 
-getBPMTaskDetail(taskId: string) {
+getBPMTaskDetail (taskId: string) {
   CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl).then(
     (result) => {
       this.task = result.data;
@@ -482,7 +482,7 @@ getBPMTaskDetail(taskId: string) {
 }
 
 
-getTaskFormIODetails(taskId: string) {
+getTaskFormIODetails (taskId: string) {
   this.showfrom = false;
   CamundaRest.getVariablesByTaskId(
     this.token,
@@ -506,7 +506,7 @@ getTaskFormIODetails(taskId: string) {
 }
 
 
-getTaskHistoryDetails(taskId: string) {
+getTaskHistoryDetails (taskId: string) {
   this.applicationId = '';
   this.taskHistoryList = [];
   CamundaRest.getVariablesByTaskId(
@@ -525,7 +525,7 @@ getTaskHistoryDetails(taskId: string) {
 }
 
 
-getTaskProcessDiagramDetails(task: any) {
+getTaskProcessDiagramDetails (task: any) {
   CamundaRest.getProcessDiagramXML(
     this.token,
     task.processDefinitionId,
@@ -533,7 +533,7 @@ getTaskProcessDiagramDetails(task: any) {
   ).then(async (res) => {
     this.xmlData = res.data.bpmn20Xml;
     const div = document.getElementById('canvas');
-
+    console.log(this.xmlData);
     if(div){
       div.innerHTML = ""
     }
@@ -563,17 +563,17 @@ getTaskProcessDiagramDetails(task: any) {
     }
   };
 
-  reloadTasks() {
+  reloadTasks () {
     this.setFormsFlowTaskId("");
     this.fetchPaginatedTaskList(this.selectedfilterId, this.payload, (this.getFormsFlowTaskCurrentPage-1)*this.perPage, this.perPage);
   }
 
-  reloadCurrentTask() {
+  reloadCurrentTask () {
     this.getBPMTaskDetail(this.task.id);
     this.fetchPaginatedTaskList(this.selectedfilterId, this.payload, (this.getFormsFlowTaskCurrentPage-1)*this.perPage, this.perPage);
   }
 
-  onClaim() {
+  onClaim () {
     CamundaRest.claim(
       this.token,
       this.task.id,
@@ -591,7 +591,7 @@ getTaskProcessDiagramDetails(task: any) {
     this.editAssignee = false;
   }
 
-  onUnClaim() {		  
+  onUnClaim () {		  
     CamundaRest.unclaim(this.token, this.task.id, this.bpmApiUrl)
       .then(() => {
         this.reloadCurrentTask();
@@ -601,7 +601,7 @@ getTaskProcessDiagramDetails(task: any) {
       });
   }
 
-  onSetassignee() {
+  onSetassignee () {
     CamundaRest.setassignee(this.token, this.task.id,
       {"userId": this.userSelected?.code },
       this.bpmApiUrl)
@@ -615,7 +615,7 @@ getTaskProcessDiagramDetails(task: any) {
     this.toggleassignee();
   }
 
-  fetchTaskList(filterId: string, requestData: object) {
+  fetchTaskList (filterId: string, requestData: object) {
     CamundaRest.filterTaskList(
       this.token,
       filterId,
@@ -628,7 +628,7 @@ getTaskProcessDiagramDetails(task: any) {
   }
 
   
-  fetchPaginatedTaskList(filterId: string, requestData: object, first: number, max: number) {
+  fetchPaginatedTaskList (filterId: string, requestData: object, first: number, max: number) {
     this.selectedfilterId = filterId;
     CamundaRest.filterTaskListPagination(
       this.token,
@@ -642,7 +642,7 @@ getTaskProcessDiagramDetails(task: any) {
     });
   }
 
-  updateTaskDatedetails(taskId: string, task: any) {
+  updateTaskDatedetails (taskId: string, task: any) {
     CamundaRest.updateTasksByID(
       this.token,
       taskId,
@@ -657,7 +657,7 @@ getTaskProcessDiagramDetails(task: any) {
       });
   }
 
-  updateFollowUpDate() {
+  updateFollowUpDate () {
     const referenceobject = this.task;
     try{
       referenceobject['followUp'] = getISODateTime(this.setFollowup[
@@ -670,7 +670,7 @@ getTaskProcessDiagramDetails(task: any) {
     }
   }
 
-  updateDueDate() {
+  updateDueDate () {
     const referenceobject = this.task;
     try{
       referenceobject['due'] = getISODateTime(this.setDue[
@@ -683,7 +683,7 @@ getTaskProcessDiagramDetails(task: any) {
     }
   }
 
-  removeDueDate() {
+  removeDueDate () {
     const referenceobject = this.task;
     try{
       this.setDue[
@@ -697,7 +697,7 @@ getTaskProcessDiagramDetails(task: any) {
     }
   }
 
-  removeFollowupDate() {
+  removeFollowupDate () {
     const referenceobject = this.task;
     try{
       referenceobject["followUp"] = null;
@@ -711,7 +711,7 @@ getTaskProcessDiagramDetails(task: any) {
     }
   }
 
-  fetchTaskData(taskId: string) {
+  fetchTaskData (taskId: string) {
     this.task = getTaskFromList(this.tasks, taskId);
     this.getBPMTaskDetail(taskId);
     CamundaRest.getVariablesByProcessId(
@@ -724,7 +724,7 @@ getTaskProcessDiagramDetails(task: any) {
     this.getTaskProcessDiagramDetails(this.task);
   }
 
-  mounted() {
+  mounted () {
     this.setFormsFlowTaskCurrentPage(1)
     this.setFormsFlowTaskId('')
     this.setFormsFlowactiveIndex(0)
@@ -788,7 +788,7 @@ getTaskProcessDiagramDetails(task: any) {
          
       });
     });
-//We used two variables - taskId2 and taskIdValue because the router value from gettaskId is always constant,so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
+    //We used two variables - taskId2 and taskIdValue because the router value from gettaskId is always constant,so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
     if((this.taskId2 !== this.taskIdValue)) {
       this.taskId2 = this.taskIdValue;
     }
@@ -807,10 +807,10 @@ getTaskProcessDiagramDetails(task: any) {
     });
   }
 
-  findTaskIdDetailsFromURLrouter(taskId: string, tasks: any) {
+  findTaskIdDetailsFromURLrouter (taskId: string, tasks: any) {
     this.task = getTaskFromList(tasks, taskId);
     this.setFormsFlowTaskId(this.taskIdValue);
-    const pos = tasks.map(function(e: any) {
+    const pos = tasks.map(function (e: any) {
       return e.id;
     }).indexOf(this.taskIdValue)
     this.setFormsFlowactiveIndex(pos%this.perPage);
@@ -821,7 +821,7 @@ getTaskProcessDiagramDetails(task: any) {
   }
  
  
-  updated() {
+  updated () {
     if((this.fulltasks.length) && (this.taskId2 !== '')){
       this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
       this.getBPMTaskDetail(this.taskId2);
@@ -832,7 +832,7 @@ getTaskProcessDiagramDetails(task: any) {
     }
   }
 
-  beforeDestroy() {
+  beforeDestroy () {
     SocketIOService.disconnect();
     this.$root.$off('call-fetchData')
     this.$root.$off('call-fetchPaginatedTaskList')
