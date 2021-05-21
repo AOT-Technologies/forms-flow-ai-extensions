@@ -251,11 +251,11 @@ import {
 } from '../services/utils';
 import BpmnViewer from 'bpmn-js';
 import CamundaRest from '../services/camunda-rest';
-import DatePicker from 'vue2-datepicker'
-import ExpandContract from './addons/ExpandContract.vue'
+import DatePicker from 'vue2-datepicker';
+import ExpandContract from './addons/ExpandContract.vue';
 import { Form } from 'vue-formio';
-import Header from './layout/Header.vue'
-import LeftSider from './layout/LeftSider.vue'
+import Header from './layout/Header.vue';
+import LeftSider from './layout/LeftSider.vue';
 import {Payload} from '../services/TasklistTypes';
 import SocketIOService from '../services/SocketIOServices';
 import TaskHistory from '../components/TaskHistory.vue';
@@ -265,8 +265,8 @@ import {getFormDetails} from '../services/get-formio';
 import {getISODateTime} from '../services/format-time';
 import {getformHistoryApi} from '../services/formsflowai-api';
 import moment from 'moment';
-import { namespace } from 'vuex-class'
-import vSelect from 'vue-select'
+import { namespace } from 'vuex-class';
+import vSelect from 'vue-select';
 
 const serviceFlowModule = namespace('serviceFlowModule')
 
