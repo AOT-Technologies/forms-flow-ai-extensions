@@ -320,14 +320,11 @@
 .cft-process-title[data-title]:hover:after,
 .cft-task-title[data-title]:hover:after,
 .cft-priority[data-title]:hover:after,
-.cft-user-close[data-title]:hover:after,
-.cft-user-span[data-title]:hover:after,
 .cft-groups[data-title]:hover:after,
 .cft-task-assignee[data-title]:hover:after,
 .cft-process-name[data-title]:hover:after,
 .task-header-title[data-title]:hover:after,
-.cft-due-date[data-title]:hover:after,
-.cft-remove-user[data-title]:hover:after {
+.cft-due-date[data-title]:hover:after {
   font-size: 12px;
   content: attr(data-title);
   padding: 4px 8px;
