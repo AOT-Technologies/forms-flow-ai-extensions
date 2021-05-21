@@ -15,6 +15,7 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     "vue/no-unused-components": "warn",
+    'space-before-function-paren': 1,
     "sort-imports": "warn",
     camelcase: "warn",
     "vue/valid-template-root": "warn",
