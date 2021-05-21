@@ -57,11 +57,11 @@ private formcurrentPage=1
 @Prop({}) private token !: string;
 @Prop() private bpmApiUrl !: string;
 
-linkFormGen() {
+linkFormGen () {
   this.formListItems();
 }
 
-formListItems() {
+formListItems () {
   CamundaRest.listForms(this.token, this.bpmApiUrl).then((response) =>
   {
     this.formNumPages = Math.ceil(response.data.length/this.formperPage);
@@ -72,7 +72,7 @@ formListItems() {
   });
 }
 
-mounted() {
+mounted () {
   CamundaRest.listForms(this.token, this.bpmApiUrl).then((response) =>
   {
     this.formList = response.data;

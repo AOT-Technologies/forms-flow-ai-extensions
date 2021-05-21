@@ -13,11 +13,11 @@
       <b-col xl="3" lg="3" md="12" class="cft-first" v-if="maximize">
         <LeftSider
           v-if="token  && bpmApiUrl"
-          :bpmApiUrl="bpmApiUrl"
+          :token="token"
           :formsflowaiApiUrl="formsflowaiApiUrl"
           :formIOApiUrl="formIOApiUrl"
+          :bpmApiUrl="bpmApiUrl"
           :tasks='tasks'
-          :token="token"
           :Lentask='tasklength'
           :perPage="perPage"
           :selectedfilterId="selectedfilterId"
@@ -76,21 +76,17 @@
               </b-col>
               <b-col cols="12" md="3">
                 <div
+                    id='groups'
                     v-b-modal.AddGroupModal
-                    v-if="groupListNames"
-                    class="cft-groups"
-                    data-title="groups"
                 >
-                <i class="bi bi-grid-3x3-gap-fill"></i>
-                    {{ String(groupListNames) }}
-                </div>				 
-                <div
-                  v-b-modal.AddGroupModal
-                  class="cft-groups"
-                  data-title="groups"
-                  v-else
-                >
-                  <i class="bi bi-grid-3x3-gap-fill"></i> Add Groups
+                  <i class="bi bi-grid-3x3-gap-fill"></i>
+                    <span v-if="groupListNames">
+                        {{ String(groupListNames) }}
+                    </span>
+                    <span v-else>Add Groups</span>
+                  <b-tooltip target="groups" triggers="hover">
+                    <b>Groups</b>
+                  </b-tooltip>
                 </div>
                 <b-modal
                   id="AddGroupModal"
@@ -154,20 +150,35 @@
                       </span>
                     </div>
                   </div>
-                  <div class="cft-user-details" v-else @click="toggleassignee"> 
+                  <div class="cft-user-details" v-else>
+                  <b-tooltip target="setAssignee" triggers="hover">
+                    Click to change <b>assignee</b>
+                  </b-tooltip>
+                  <span id='setAssignee'>
                     <i class="bi bi-person-fill cft-person-fill" />
-                    <span class="cft-user-span" data-title="Click to change assignee">
+                    <span class="cft-user-span" @click="toggleassignee">
                     {{task.assignee}}
                     </span>
-                    <i class="fa fa-times ml-1 cft-remove-user"  data-title="Reset assignee" @click="onUnClaim" />
+                  </span>
+                  <b-tooltip target="resetAssignee" triggers="hover">
+                    Reset <b>Assignee</b>
+                  </b-tooltip>
+                  <span id="resetAssignee">
+                    <i class="fa fa-times ml-1" @click="onUnClaim" />
+                  </span>
                   </div>
                 </div>
               </b-col>
               <b-col v-else cols="12" md="2">
-                <div @click="onClaim" data-title="Set assignee">
-                  <i class="bi bi-person-fill" />
-                  Claim
+                <div @click="onClaim">
+                  <span id='claimAssignee'>
+                    <i class="bi bi-person-fill" />
+                    Claim
+                  </span>
                 </div>
+                <b-tooltip target="claimAssignee" triggers="hover">
+                    Claim a <b>task</b>
+                </b-tooltip>
               </b-col>
             </b-row>
             <div class="height-100">
@@ -240,11 +251,11 @@ import {
 } from '../services/utils';
 import BpmnViewer from 'bpmn-js';
 import CamundaRest from '../services/camunda-rest';
-import DatePicker from 'vue2-datepicker';
-import ExpandContract from './addons/ExpandContract.vue';
+import DatePicker from 'vue2-datepicker'
+import ExpandContract from './addons/ExpandContract.vue'
 import { Form } from 'vue-formio';
-import Header from './layout/Header.vue';
-import LeftSider from './layout/LeftSider.vue';
+import Header from './layout/Header.vue'
+import LeftSider from './layout/LeftSider.vue'
 import {Payload} from '../services/TasklistTypes';
 import SocketIOService from '../services/SocketIOServices';
 import TaskHistory from '../components/TaskHistory.vue';
@@ -254,11 +265,11 @@ import {getFormDetails} from '../services/get-formio';
 import {getISODateTime} from '../services/format-time';
 import {getformHistoryApi} from '../services/formsflowai-api';
 import moment from 'moment';
-import { namespace } from 'vuex-class';
-import vSelect from 'vue-select';
-
+import { namespace } from 'vuex-class'
+import vSelect from 'vue-select'
 
 const serviceFlowModule = namespace('serviceFlowModule')
+
 
 @Component({
   components: {
@@ -282,7 +293,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   @serviceFlowModule.Mutation('setFormsFlowTaskCurrentPage') public setFormsFlowTaskCurrentPage: any
   @serviceFlowModule.Mutation('setFormsFlowTaskId') public setFormsFlowTaskId: any
   @serviceFlowModule.Mutation('setFormsFlowactiveIndex') public setFormsFlowactiveIndex: any
-  
+
 
   private tasks: Array<object> = [];
   private fulltasks: Array<object> = [];
@@ -322,18 +333,19 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private taskIdValue = '';
   private taskId2 = '';
   private userName: any = ''
+  
 
   checkPropsIsPassedAndSetValue () {
-    if ((this.getTaskId) &&(this.getTaskId !== '')) {
+    if(this.getTaskId) {
       this.taskIdValue = this.getTaskId;
     }
-    if(!this.getTaskId || this.getTaskId === '') {
+    if(!this.getTaskId) {
       const routeparams = this.$route?.query?.taskId;
       if(typeof(routeparams) ==='string' && this.$route.query.taskId) {
         this.taskIdValue = routeparams;
       }
-      this.userName = getUserName()
     }
+    this.userName = getUserName()
   }
 
   timedifference (date: Date) {
@@ -428,6 +440,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.getGroupDetails();
   }
 
+
   getTaskFormIODetails (taskId: string) {
     this.showfrom = false;
     CamundaRest.getVariablesByTaskId(
@@ -451,6 +464,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
+
   getTaskHistoryDetails (taskId: string) {
     this.applicationId = '';
     this.taskHistoryList = [];
@@ -469,6 +483,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     })
   }
 
+
   getTaskProcessDiagramDetails (task: any) {
     CamundaRest.getProcessDiagramXML(
       this.token,
@@ -477,7 +492,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     ).then(async (res) => {
       this.xmlData = res.data.bpmn20Xml;
       const div = document.getElementById('canvas');
-
       if(div){
         div.innerHTML = ""
       }
@@ -488,14 +502,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       try {
         const { warnings } = await viewer.importXML(this.xmlData);
         viewer.get('canvas').zoom('fit-viewport');
-
         console.log(warnings);
       } catch (err) {
         console.error('error rendering process diagram', err);
       }
     });
   }
-
 
   oncustomEventCallback = (customEvent: any) => {
     switch (customEvent.type) {
@@ -526,7 +538,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     )
       .then(() => {
-        this.task.assignee = this.userName;
         this.reloadCurrentTask();
         this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
       })
@@ -551,7 +562,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       {"userId": this.userSelected?.code },
       this.bpmApiUrl)
       .then(() => {
-        this.reloadCurrentTask()
+        this.reloadCurrentTask();
         this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
       })
       .catch((error) => {
@@ -674,7 +685,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.setFormsFlowTaskId('')
     this.setFormsFlowactiveIndex(0)
     this.$root.$on('call-fetchData', (para: any) => {
-      this.editAssignee = false //Is it really required for each case?
+      this.editAssignee = false
       this.setFormsFlowTaskId(para.selectedTaskId);
       this.fetchTaskData(this.getFormsFlowTaskId)
     })
@@ -692,7 +703,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.$root.$on('call-managerScreen', (para: any) => {
       this.maximize = para.maxi
     })
-    this.checkProps();
+
     this.checkPropsIsPassedAndSetValue();
     authenticateFormio(
       this.formIOResourceId,

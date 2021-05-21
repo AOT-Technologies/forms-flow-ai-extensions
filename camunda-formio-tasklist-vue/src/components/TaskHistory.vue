@@ -66,7 +66,7 @@ export default class TaskHistory extends Vue{
     private fId = ''
     private sId = ''
 
-    getExactDate(date: Date) {
+    getExactDate (date: Date) {
       return getLocalDateTime(date);
     }
 

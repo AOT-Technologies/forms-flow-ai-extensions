@@ -19,7 +19,7 @@ export default class TaskListSearchType extends Vue {
 
   private queryType = 'ALL';
 
-  changeQueryType() {
+  changeQueryType () {
     this.queryType==="ALL"? (this.queryType= "ANY") : this.queryType = "ALL"
     this.$root.$emit('call-updateSearchQueryType', {queryType: this.queryType})
   }

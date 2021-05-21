@@ -1,5 +1,6 @@
 <script lang='ts'>
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
+import {engine} from '../../services/constants';
 
 @Component
 export default class BaseMixin extends Vue {
@@ -46,8 +47,7 @@ export default class BaseMixin extends Vue {
       }
 
       const decodeToken = JSON.parse(atob(this.token.split('.')[1]));
-      const engine = "/engine-rest";
-      localStorage.setItem("bpmApiUrl", this.bpmApiUrl + engine);
+      localStorage.setItem("bpmApiUrl", `${this.bpmApiUrl}/${engine}`);
       localStorage.setItem("authToken", this.token);
       const currentUrl = window.location.protocol + '//' +  window.location.host
       localStorage.setItem("formsflow.ai.url", currentUrl);
