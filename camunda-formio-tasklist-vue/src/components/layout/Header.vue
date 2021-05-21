@@ -30,17 +30,17 @@
                   title="Remove Sorting" 
                   @click="deleteSort(sort, idx)"
                 >
-                    <i class="bi bi-x"></i>
+                    <i class="fa fa-times"></i>
                 </span>
               </b-col>
               <b-col cols="7">
                 <b-nav-item-dropdown :text=sortList[idx].label>
                   <span v-if="sortOptions.length">
                     <b-dropdown-item-button
-                      v-for="s in sortOptions"
-                      :key="s.sortBy"
-                      @click="updateSort(s,idx)"
-                    >{{s.label}}
+                      v-for="sort in sortOptions"
+                      :key="sort.sortBy"
+                      @click="updateSort(sort,idx)"
+                    >{{sort.label}}
                     </b-dropdown-item-button>
                   </span>
                   <b-dropdown-item-button v-else>Sorry, no more fields to sortBy.</b-dropdown-item-button>
@@ -48,10 +48,10 @@
               </b-col>
               <b-col cols="1">
                   <a v-if="sort.sortOrder==='asc'" @click="toggleSort(idx)" href="#" title="Ascending">
-                    <i class="bi bi-chevron-up cftf-arrow"></i>
+                    <i class="fa fa-chevron-up cftf-arrow" aria-hidden="true"></i>
                   </a>
                   <a v-else @click="toggleSort(idx)"  href="#" title="Descending">
-                    <i class="bi bi-chevron-down cftf-arrow"></i>
+                    <i class="fa fa-chevron-down cft-arrow" aria-hidden="true"></i>
                   </a>
               </b-col>
             </b-row>
