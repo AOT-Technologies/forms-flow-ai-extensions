@@ -240,11 +240,11 @@ import {
 } from '../services/utils';
 import BpmnViewer from 'bpmn-js';
 import CamundaRest from '../services/camunda-rest';
-import DatePicker from 'vue2-datepicker'
-import ExpandContract from './addons/ExpandContract.vue'
+import DatePicker from 'vue2-datepicker';
+import ExpandContract from './addons/ExpandContract.vue';
 import { Form } from 'vue-formio';
-import Header from './layout/Header.vue'
-import LeftSider from './layout/LeftSider.vue'
+import Header from './layout/Header.vue';
+import LeftSider from './layout/LeftSider.vue';
 import {Payload} from '../services/TasklistTypes';
 import SocketIOService from '../services/SocketIOServices';
 import TaskHistory from '../components/TaskHistory.vue';
@@ -254,8 +254,8 @@ import {getFormDetails} from '../services/get-formio';
 import {getISODateTime} from '../services/format-time';
 import {getformHistoryApi} from '../services/formsflowai-api';
 import moment from 'moment';
-import { namespace } from 'vuex-class'
-import vSelect from 'vue-select'
+import { namespace } from 'vuex-class';
+import vSelect from 'vue-select';
 
 
 const serviceFlowModule = namespace('serviceFlowModule')
@@ -324,16 +324,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private userName: any = ''
 
   checkPropsIsPassedAndSetValue () {
-    if(this.getTaskId) {
+    if ((this.getTaskId) &&(this.getTaskId !== '')) {
       this.taskIdValue = this.getTaskId;
     }
-    if(!this.getTaskId) {
+    if(!this.getTaskId || this.getTaskId === '') {
       const routeparams = this.$route?.query?.taskId;
       if(typeof(routeparams) ==='string' && this.$route.query.taskId) {
         this.taskIdValue = routeparams;
       }
+      this.userName = getUserName()
     }
-    this.userName = getUserName()
   }
 
   timedifference (date: Date) {
@@ -428,7 +428,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.getGroupDetails();
   }
 
-
   getTaskFormIODetails (taskId: string) {
     this.showfrom = false;
     CamundaRest.getVariablesByTaskId(
@@ -451,7 +450,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.showfrom = true;
     });
   }
-
 
   getTaskHistoryDetails (taskId: string) {
     this.applicationId = '';
@@ -735,7 +733,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
          
       });
     });
-    // we used two variables - taskId2 and taskIdValue because the router value from gettaskId is always constant,so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
+    //We used two variables - taskId2 and taskIdValue because the router value from gettaskId is always constant,so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
     if((this.taskId2 !== this.taskIdValue)) {
       this.taskId2 = this.taskIdValue;
     }
