@@ -52,16 +52,16 @@ export default class TaskListAddSearchIgnoreCase extends Vue {
     private activeSearchItem = 0;
     private searchList = this.searchListElements;
 
-    setActiveSearchItem(index: number) {
+    setActiveSearchItem (index: number) {
       this.activeSearchItem = index;
     }
 
     @Emit()
-    addToSelectedSearchQuery(item: any) {
+    addToSelectedSearchQuery (item: any) {
       return item
     }
 
-    callTaskVariablesEndApi() {
+    callTaskVariablesEndApi () {
       this.QList['variableNamesIgnoreCase'] = false;
       this.QList['variableValuesIgnoreCase'] = false;
       for(const variablevalue in this.variablesEndType) {

@@ -22,7 +22,7 @@ export default class TaskSortOptions extends Vue {
     @Prop() private updateSortOptions !: any;
 
     @Emit()
-    addSort(sort: any){
+    addSort (sort: any){
       return sort
     }
 

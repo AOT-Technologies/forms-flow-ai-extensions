@@ -113,7 +113,7 @@ export default class LeftSider extends Vue {
   private currentPage = 1;
 
 @Watch('currentPage')
-  onPageChange(newVal: number) {
+  onPageChange (newVal: number) {
     this.payload["firstResult"] = (newVal-1)*this.perPage
     this.payload["maxResults"] = this.perPage
     if (this.currentPage !== this.getFormsFlowTaskCurrentPage) {
@@ -123,7 +123,7 @@ export default class LeftSider extends Vue {
     this.$root.$emit('call-fetchPaginatedTaskList', {filterId: this.selectedfilterId, requestData: this.payload, firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage, maxResults: this.perPage})
   }
 
-checkPropsIsPassedAndSetValue() {
+checkPropsIsPassedAndSetValue () {
   if (!this.bpmApiUrl || this.bpmApiUrl === "") {
     console.warn("bpmApiUrl prop not Passed");
   }
@@ -132,30 +132,30 @@ checkPropsIsPassedAndSetValue() {
   }   
 }
 
-timedifference(date: Date) {
+timedifference (date: Date) {
   return moment(date).fromNow();										
 }													   
 
-getProcessDataFromList(processList: any[], processId: string, dataKey: string) {
+getProcessDataFromList (processList: any[], processId: string, dataKey: string) {
   const process = processList.find((process) => process.id === processId);
   return process && process[dataKey];
 }
 
-setselectedTask(taskId: string) {
+setselectedTask (taskId: string) {
   this.setFormsFlowTaskId(taskId)
   this.$root.$emit('call-fetchData', {selectedTaskId: taskId})
 }
 
-getExactDate(date: Date) {
+getExactDate (date: Date) {
   return getFormattedDateAndTime(date);
 }
 
-toggle(index: number) {
+toggle (index: number) {
   this.activeIndex = index;
   this.setFormsFlowactiveIndex(this.activeIndex)			  
 }
 
-updateTasklistResult(queryList: object) {
+updateTasklistResult (queryList: object) {
   const requiredParams = {...{sorting:this.payload["sorting"]},...queryList}
   if(!isEqual(this.payload, requiredParams)){
     this.$root.$emit('call-fetchTaskList', 
@@ -170,7 +170,7 @@ updateTasklistResult(queryList: object) {
   }
 }
 
-mounted() {
+mounted () {
   this.$root.$on('call-pagination', () => {
     this.resetPaginationStore()
   })
@@ -194,7 +194,7 @@ mounted() {
   );
 }
 
-resetPaginationStore() {
+resetPaginationStore () {
   if ((this.getFormsFlowactiveIndex < 9)) {
     this.setFormsFlowactiveIndex(this.getFormsFlowactiveIndex+1)
     this.activeIndex = this.getFormsFlowactiveIndex
@@ -206,7 +206,7 @@ resetPaginationStore() {
   }
 }
 
-beforeDestroy() {
+beforeDestroy () {
   this.$root.$off('call-pagination')
   this.$root.$off('update-pagination-currentpage')
   this.$root.$off('update-activeIndex-pagination')

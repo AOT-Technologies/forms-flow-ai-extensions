@@ -128,11 +128,11 @@ export default class FormListModal extends Vue{
   @Prop({}) private token !: string;
   @Prop() private bpmApiUrl !: string;
 
-  linkFormGen() {
+  linkFormGen () {
     this.formListItems();
   }
 
-  formListItems() {
+  formListItems () {
     CamundaRest.listForms(this.token, this.bpmApiUrl).then((response) =>
     {
       this.formNumPages = Math.ceil(response.data.length/this.formperPage);
@@ -142,7 +142,7 @@ export default class FormListModal extends Vue{
     });
   }
 
-  storeFormValue(val: string, title: string){
+  storeFormValue (val: string, title: string){
     this.$bvModal.hide('modal-multi-1')
     const forms = localStorage.getItem('formioApiUrl') + '/form/';
     this.formId = val;
@@ -150,12 +150,12 @@ export default class FormListModal extends Vue{
     this.formTitle = title;
   }
 
-  backClick() {
+  backClick () {
     this.$bvModal.hide('modal-multi-2')
     this.$bvModal.show('modal-multi-1')
   }
 
-  onSubmit(submission: any) {
+  onSubmit (submission: any) {
     this.formId = submission.form;
     this.submissionId = submission._id;
 
@@ -181,7 +181,7 @@ export default class FormListModal extends Vue{
     }
   };
 
-  mounted() {
+  mounted () {
     this.formListItems();
   }
 }

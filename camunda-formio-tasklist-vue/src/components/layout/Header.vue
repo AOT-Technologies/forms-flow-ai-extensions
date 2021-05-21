@@ -111,7 +111,7 @@ export default class Header extends Vue {
     localStorage.setItem("authToken", newVal);
   }
 
-togglefilter(filter: any, index: number) {
+togglefilter (filter: any, index: number) {
   this.activefilter = index;
   this.$root.$emit('call-fetchTaskList', 
     {filterId: filter.id, requestData: this.payload}
@@ -126,7 +126,7 @@ togglefilter(filter: any, index: number) {
   })
 }
 
-getOptions(options: any) {
+getOptions (options: any) {
   const optionsArray: {
       sortOrder: string;
       label: string;
@@ -143,7 +143,7 @@ getOptions(options: any) {
   });
   return optionsArray;
 }
-addSort(sort: any) {
+addSort (sort: any) {
   this.sortList.push(sort);
   if (this.sortList.length === sortingList.length) {
     this.updateSortOptions = this.sortOptions;
@@ -161,7 +161,7 @@ addSort(sort: any) {
   })
 }
 
-updateSort(sort: any, index: number) {
+updateSort (sort: any, index: number) {
   this.sortList[index].label = sort.label;
   this.sortList[index].sortBy = sort.sortBy;
 
@@ -177,7 +177,7 @@ updateSort(sort: any, index: number) {
   })
 }
 
-deleteSort(sort: any, index: number) {
+deleteSort (sort: any, index: number) {
   this.sortList.splice(index, 1);
   this.updateSortOptions = [];
   this.sortOptions = this.getOptions(this.sortList);
@@ -192,7 +192,7 @@ deleteSort(sort: any, index: number) {
   })
 }
 
-toggleSort(index: number) {
+toggleSort (index: number) {
   if (this.sortList[index].sortOrder === "asc")
     this.sortList[index].sortOrder = "desc";
   
@@ -210,7 +210,7 @@ toggleSort(index: number) {
   })
 }
 
-mounted() {
+mounted () {
   this.sortOptions = this.getOptions(this.sortList);
 }
 
