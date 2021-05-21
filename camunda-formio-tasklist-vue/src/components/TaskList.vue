@@ -154,20 +154,35 @@
                       </span>
                     </div>
                   </div>
-                  <div class="cft-user-details" v-else @click="toggleassignee"> 
+                  <div class="cft-user-details" v-else>
+                  <b-tooltip target="setAssignee" triggers="hover">
+                    Click to change <b>assignee</b>
+                  </b-tooltip>
+                  <span id='setAssignee'>
                     <i class="bi bi-person-fill cft-person-fill" />
-                    <span class="cft-user-span" data-title="Click to change assignee">
+                    <span class="cft-user-span" @click="toggleassignee">
                     {{task.assignee}}
                     </span>
-                    <i class="fa fa-times ml-1 cft-remove-user"  data-title="Reset assignee" @click="onUnClaim" />
+                  </span>
+                  <b-tooltip target="resetAssignee" triggers="hover">
+                    Reset <b>Assignee</b>
+                  </b-tooltip>
+                  <span id="resetAssignee">
+                    <i class="fa fa-times ml-1" @click="onUnClaim" />
+                  </span>
                   </div>
                 </div>
               </b-col>
               <b-col v-else cols="12" md="2">
-                <div @click="onClaim" data-title="Set assignee">
-                  <i class="bi bi-person-fill" />
-                  Claim
+                <div @click="onClaim">
+                  <span id='claimAssignee'>
+                    <i class="bi bi-person-fill" />
+                    Claim
+                  </span>
                 </div>
+                <b-tooltip target="claimAssignee" triggers="hover">
+                    Claim a <b>task</b>
+                </b-tooltip>
               </b-col>
             </b-row>
             <div class="height-100">
@@ -533,7 +548,6 @@ getTaskProcessDiagramDetails (task: any) {
   ).then(async (res) => {
     this.xmlData = res.data.bpmn20Xml;
     const div = document.getElementById('canvas');
-    console.log(this.xmlData);
     if(div){
       div.innerHTML = ""
     }
@@ -544,7 +558,6 @@ getTaskProcessDiagramDetails (task: any) {
     try {
       const { warnings } = await viewer.importXML(this.xmlData);
       viewer.get('canvas').zoom('fit-viewport');
-
       console.log(warnings);
     } catch (err) {
       console.error('error rendering process diagram', err);
@@ -581,7 +594,6 @@ getTaskProcessDiagramDetails (task: any) {
       this.bpmApiUrl
     )
       .then(() => {
-        this.task.assignee = this.userName;
         this.reloadCurrentTask();
         this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
       })
@@ -606,7 +618,7 @@ getTaskProcessDiagramDetails (task: any) {
       {"userId": this.userSelected?.code },
       this.bpmApiUrl)
       .then(() => {
-        this.reloadCurrentTask()
+        this.reloadCurrentTask();
         this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
       })
       .catch((error) => {
