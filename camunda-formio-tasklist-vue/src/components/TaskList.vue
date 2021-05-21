@@ -76,21 +76,17 @@
               </b-col>
               <b-col cols="12" md="3">
                 <div
+                    id='groups'
                     v-b-modal.AddGroupModal
-                    v-if="groupListNames"
-                    class="cft-groups"
-                    data-title="groups"
                 >
-                <i class="bi bi-grid-3x3-gap-fill"></i>
-                    {{ String(groupListNames) }}
-                </div>				 
-                <div
-                  v-b-modal.AddGroupModal
-                  class="cft-groups"
-                  data-title="groups"
-                  v-else
-                >
-                  <i class="bi bi-grid-3x3-gap-fill"></i> Add Groups
+                  <i class="bi bi-grid-3x3-gap-fill"></i>
+                    <span v-if="groupListNames">
+                        {{ String(groupListNames) }}
+                    </span>
+                    <span v-else>Add Groups</span>
+                  <b-tooltip target="groups" triggers="hover">
+                    <b>Groups</b>
+                  </b-tooltip>
                 </div>
                 <b-modal
                   id="AddGroupModal"

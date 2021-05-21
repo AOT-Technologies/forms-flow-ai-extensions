@@ -320,11 +320,9 @@
 .cft-process-title[data-title]:hover:after,
 .cft-task-title[data-title]:hover:after,
 .cft-priority[data-title]:hover:after,
-.cft-groups[data-title]:hover:after,
 .cft-task-assignee[data-title]:hover:after,
 .cft-process-name[data-title]:hover:after,
-.task-header-title[data-title]:hover:after,
-.cft-due-date[data-title]:hover:after {
+.task-header-title[data-title]:hover:after {
   font-size: 12px;
   content: attr(data-title);
   padding: 4px 8px;
@@ -356,21 +354,7 @@
 .task-name{
   height: 20px;
 }
-.cft-groups[data-title]:hover:after
-{
- 
-  width: 25%;
-  left: 0rem;
-  font-weight: 400;
-  font-size: 16px;
-}
-.cft-due-date[data-title]:hover:after{
-  width: 70%;
-  left: 0rem;
-  font-weight: 400;
-  font-size: 12px;
-  height: 20px;
-}
+
 .cft-task-assignee[data-title]:hover:after {
   width: 80%;
 }
