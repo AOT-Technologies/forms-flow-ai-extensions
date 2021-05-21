@@ -19,9 +19,9 @@ const connect = (encryptKey: any, reloadCallback: any)=>{
   const socket = new SockJS(socketUrl);
   stompClient = Stomp.over(socket);
   stompClient.debug = null;
-  stompClient.connect({}, function(){
+  stompClient.connect({}, function (){
     if(isConnected()){
-      stompClient.subscribe('/topic/task-event', function(output: any){
+      stompClient.subscribe('/topic/task-event', function (output: any){
         const taskUpdate = JSON.parse(output.body);
         reloadCallback(taskUpdate.id, taskUpdate?.eventName);
       });

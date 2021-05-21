@@ -27,7 +27,7 @@ export default class FormViewSubmission extends Vue {
   private fId = ''
   private sId = ''
 
-  checkLocalStorageValue(){
+  checkLocalStorageValue (){
     const formioApiUrl = localStorage.getItem('formioApiUrl')
 
     if(typeof formioApiUrl!== 'undefined' && formioApiUrl!== null){
@@ -35,7 +35,7 @@ export default class FormViewSubmission extends Vue {
     }
   }
 
-  mounted() {
+  mounted () {
     this.formUrl = window.location.href;
     this.checkLocalStorageValue();
 
