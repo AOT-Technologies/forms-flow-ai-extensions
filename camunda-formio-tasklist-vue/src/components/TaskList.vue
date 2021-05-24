@@ -92,8 +92,7 @@
                   id="AddGroupModal"
                   ref="modal"
                   title="Manage Groups"
-                  ok-title="Close"
-                  ok-only
+                  :hide-footer=true
                 >
                   <div class="modal-text">
                     <i class="bi bi-exclamation-circle"></i>
@@ -334,7 +333,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private taskId2 = '';
   private userName: any = ''
   
-
   checkPropsIsPassedAndSetValue () {
     if(this.getTaskId) {
       this.taskIdValue = this.getTaskId;
@@ -376,6 +374,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.setGroup = null;
     });
   }
+
   async getGroupDetails () {
     const grouplist = await CamundaRest.getTaskGroupByID(this.token, this.task.id, this.bpmApiUrl);
     this.groupList = grouplist.data;
@@ -388,6 +387,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.groupListNames = this.groupListItems;
     }
   }
+
   deleteGroup (groupid: string) {		 
     CamundaRest.deleteTaskGroupByID(this.token, this.task.id, this.bpmApiUrl, {
       groupId: groupid,
@@ -423,7 +423,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       });
   }
 
-
   getBPMTaskDetail (taskId: string) {
     CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl).then(
       (result) => {
@@ -439,7 +438,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
     this.getGroupDetails();
   }
-
 
   getTaskFormIODetails (taskId: string) {
     this.showfrom = false;
@@ -464,7 +462,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-
   getTaskHistoryDetails (taskId: string) {
     this.applicationId = '';
     this.taskHistoryList = [];
@@ -482,7 +479,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     })
   }
-
 
   getTaskProcessDiagramDetails (task: any) {
     CamundaRest.getProcessDiagramXML(
@@ -502,7 +498,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       try {
         const { warnings } = await viewer.importXML(this.xmlData);
         viewer.get('canvas').zoom('fit-viewport');
-        console.log(warnings);
       } catch (err) {
         console.error('error rendering process diagram', err);
       }
@@ -538,9 +533,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     )
       .then(() => {
-        this.editAssignee = false;
-        this.reloadCurrentTask();
-        this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
+        this.fetchTaskData(this.getFormsFlowTaskId);
+        this.fetchPaginatedTaskList(this.selectedfilterId, this.payload, (this.getFormsFlowTaskCurrentPage-1)*this.perPage, this.perPage);
       })
       .catch((error) => {
         console.error("Error", error);
@@ -562,8 +556,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       {"userId": this.userSelected?.code },
       this.bpmApiUrl)
       .then(() => {
-        this.reloadCurrentTask();
-        this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
+        this.fetchTaskData(this.getFormsFlowTaskId);
+        this.fetchPaginatedTaskList(this.selectedfilterId, this.payload, (this.getFormsFlowTaskCurrentPage-1)*this.perPage, this.perPage);
       })
       .catch((error) => {
         console.error("Error", error);
@@ -583,7 +577,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  
   fetchPaginatedTaskList (filterId: string, requestData: object, first: number, max: number) {
     this.selectedfilterId = filterId;
     CamundaRest.filterTaskListPagination(
