@@ -1,81 +1,90 @@
 <template>
-        <div class="cftf-form-conatiner">
-          <b-button class="cft-form-button" v-b-modal.modal-multi-1>
-              <h4 ref="btn-show"> <i class="fa fa-wpforms"></i> Forms</h4>
-          </b-button>
-            <b-modal
-              ref="modal-1"
-              id="modal-multi-1"
-              title="Forms"
-              size="xl"
-              no-close-on-backdrop
-              no-close-on-esc
-              ok-only
-              ok-title="Cancel"
-              ok-variant="danger"
-            >
+    <div class="cftf-form-conatiner">
+        <b-button class="cft-form-button" v-b-modal.modal-multi-1>
+            <h4 ref="btn-show"> <i class="fa fa-wpforms"></i> Forms</h4>
+        </b-button>
+        <b-modal
+          ref="modal-1"
+          id="modal-multi-1"
+          size="xl"
+          no-close-on-backdrop
+          no-close-on-esc
+          :hide-footer=true
+        >
+            <template #modal-header="{ close }">
+              <h5>FORM LIST</h5>
+              <b-button size="sm" variant="outline-danger" @click="close()">
+                <h5>Close <i class="fa fa-times"></i></h5>
+              </b-button>
+          </template>
           <div
             v-if="formList.length"
             class="overflow-auto"
           >
-            <b-table-simple
-              hover
-              small
-              caption-top
-              responsive
-              :bordered=true
-              :outlined=true
-              :per-page="formperPage"
-            >
-              <b-thead>
-                <b-tr>
-                  <b-th>Form Name</b-th>
-                  <b-th>Operations</b-th>
-                </b-tr>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="form in formList" :key="form.formId">
-                  <b-th> {{form.formName}}</b-th>
-                  <b-th>
-                    <b-button
-                      variant="primary"
-                      v-b-modal.modal-multi-2
-                      @click="storeFormValue(form.formId, form.formName)"
-                    >Submit New
-                    </b-button>
-                  </b-th>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
+              <b-table-simple
+                hover
+                small
+                caption-top
+                responsive
+                :bordered=true
+                :outlined=true
+                :per-page="formperPage"
+              >
+                  <b-thead>
+                    <b-tr>
+                      <b-th>Form Name</b-th>
+                      <b-th>Operations</b-th>
+                    </b-tr>
+                  </b-thead>
+                  <b-tbody>
+                    <b-tr v-for="form in formList" :key="form.formId">
+                      <b-th> {{form.formName}}</b-th>
+                      <b-th>
+                        <b-button
+                          variant="primary"
+                          v-b-modal.modal-multi-2
+                          @click="storeFormValue(form.formId, form.formName)"
+                        >Submit New
+                        </b-button>
+                      </b-th>
+                    </b-tr>
+                  </b-tbody>
+              </b-table-simple>
 
-                <b-pagination-nav
-                :link-gen="linkFormGen"
-                :number-of-pages="formNumPages"
-                v-model="formcurrentPage"
-                class="cft-form-list-paginate"
+              <b-pagination-nav
+              :link-gen="linkFormGen"
+              :number-of-pages="formNumPages"
+              v-model="formcurrentPage"
+              class="cft-form-list-paginate"
               />
           </div>
           <div v-else>
             <b-list-group-item>
               <b-row class="cft-not-selected mt-2 ml-1 row">
-                <i class="bi bi-exclamation-circle-fill" scale="1"></i>
+                <i class="fa fa-exclamation-circle"></i>
                 <p>No Form found in the list.</p>
               </b-row>
             </b-list-group-item>
           </div>
-              </b-modal>
+        </b-modal>
         <b-modal
           ref="modal-2"
           id="modal-multi-2"
           size="xl"
-          title="SUBMIT FORM"
           no-close-on-backdrop
           no-close-on-esc
-          ok-only
-          ok-title="Cancel"
-          ok-variant="danger"
+          scrollable
+          :hide-footer=true
         >
-          <i class="bi bi-arrow-left" @click="backClick"></i>
+          <template #modal-header="{ close }">
+              <b-button variant="link" @click="backClick">
+                  <h5><i class="fa fa-chevron-left"></i>Back</h5>
+              </b-button>
+              <h5>SUBMIT FORM</h5>
+              <b-button size="sm" variant="outline-danger" @click="close()">
+                  <h5>Close <i class="fa fa-times"></i></h5>
+              </b-button>
+          </template>
           <h4>{{formTitle}}</h4>
           <Form 
             :src="formValueId"
