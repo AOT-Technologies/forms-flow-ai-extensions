@@ -538,13 +538,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     )
       .then(() => {
+        this.editAssignee = false;
         this.reloadCurrentTask();
         this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
       })
       .catch((error) => {
         console.error("Error", error);
       });
-    this.editAssignee = false;
   }
 
   onUnClaim () {		  
