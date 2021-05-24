@@ -92,8 +92,7 @@
                   id="AddGroupModal"
                   ref="modal"
                   title="Manage Groups"
-                  ok-title="Close"
-                  ok-only
+                  :hide-footer=true
                 >
                   <div class="modal-text">
                     <i class="bi bi-exclamation-circle"></i>
@@ -502,7 +501,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       try {
         const { warnings } = await viewer.importXML(this.xmlData);
         viewer.get('canvas').zoom('fit-viewport');
-        console.log(warnings);
       } catch (err) {
         console.error('error rendering process diagram', err);
       }
@@ -538,8 +536,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     )
       .then(() => {
-        this.reloadCurrentTask();
-        this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
+        this.fetchTaskData(this.getFormsFlowTaskId);
+        this.fetchPaginatedTaskList(this.selectedfilterId, this.payload, (this.getFormsFlowTaskCurrentPage-1)*this.perPage, this.perPage);
       })
       .catch((error) => {
         console.error("Error", error);
@@ -562,8 +560,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       {"userId": this.userSelected?.code },
       this.bpmApiUrl)
       .then(() => {
-        this.reloadCurrentTask();
-        this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
+        this.fetchTaskData(this.getFormsFlowTaskId);
+        this.fetchPaginatedTaskList(this.selectedfilterId, this.payload, (this.getFormsFlowTaskCurrentPage-1)*this.perPage, this.perPage);
       })
       .catch((error) => {
         console.error("Error", error);
