@@ -1,7 +1,7 @@
 <template> 
 <span>
     <TaskListSearch
-    @update-task-list="updateTasklistResult"
+    @update-task-list="onSearchUpdateTasklistResult"
     :tasklength="Lentask"
     />
     <b-list-group class="cft-list-container" v-if="tasks && tasks.length">
@@ -145,7 +145,7 @@ toggle (index: number) {
   this.setFormsFlowactiveIndex(this.activeIndex)			  
 }
 
-updateTasklistResult (queryList: object) {
+onSearchUpdateTasklistResult (queryList: object) {
   const requiredParams = {...{sorting:this.payload["sorting"]},...queryList}
   if(!isEqual(this.payload, requiredParams)){
     this.$root.$emit('call-fetchTaskList', 
