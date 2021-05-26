@@ -1,73 +1,69 @@
 <template> 
   <b-container fluid class="task-outer-container">
     <div class="main-filters my-2 mb-1">
-        <div class="cft-filter-dropdown mx-2">
+      <div class="cft-filter-dropdown mx-2">
           <b-nav-item-dropdown class="cft-nav-backgroup mr-0">
-              <template slot="button-content">
-                  <i class="bi bi-filter-square"/>
-              </template>
-              <span v-if="filterList.length">
-                <b-dropdown-item v-for="(filter, idx) in filterList" 
-                  :key="filter.id" 
-                  href="#"
-                  @click="togglefilter(filter, idx)"
-                  :class="{'cft-filter-selected': idx == activefilter}"
-                  >
-                  {{filter.name}}
-                </b-dropdown-item>
-              </span>
-              <b-dropdown-item v-else >No Filters found</b-dropdown-item>
+            <template slot="button-content">
+              <i class="bi bi-filter-square"/>
+          </template>
+            <span v-if="filterList.length">
+              <b-dropdown-item v-for="(filter, idx) in filterList" 
+                :key="filter.id" 
+                href="#"
+                @click="togglefilter(filter, idx)"
+                :class="{'cft-filter-selected': idx == activefilter}"
+                >
+                {{filter.name}}
+              </b-dropdown-item>
+            </span>
+            <b-dropdown-item v-else >No Filters found</b-dropdown-item>
           </b-nav-item-dropdown>
         </div>
-        
         <FormListModal :token="token" :bpmApiUrl="bpmApiUrl"/>
-
+        <div class="cft-first">
         <div id="cftf-dpdown-container" class="mx-2">
-            <div class="cftf-dpdown-box mr-2"
-               v-for="(sort, idx) in sortList"
-               :key="sort.sortBy"
-            >
+          <div class="cftf-dpdown-box mr-2" v-for="(sort, idx) in sortList" :key="sort.sortBy">
             <b-row>
-                <b-col cols="1">
-                    <span v-if="sortList.length>1"
-                      class="cftf-exit-button"
-                      title="Remove Sorting" 
-                      @click="deleteSort(sort, idx)"
-                    >
-                        <i class="fa fa-times"></i>
-                    </span>
-                </b-col>
-                <b-col cols="7">
-                    <b-nav-item-dropdown :text=sortList[idx].label>
-                      <span v-if="sortOptions.length">
-                        <b-dropdown-item-button
-                          v-for="sort in sortOptions"
-                          :key="sort.sortBy"
-                          @click="updateSort(sort,idx)"
-                        >{{sort.label}}
-                        </b-dropdown-item-button>
-                      </span>
-                      <b-dropdown-item-button v-else>
-                          Sorry, no more fields to sortBy.
-                      </b-dropdown-item-button>
-                    </b-nav-item-dropdown>
-                </b-col>
-                <b-col cols="1">
-                    <a v-if="sort.sortOrder==='asc'" @click="toggleSort(idx)" href="#" title="Ascending">
-                      <i class="fa fa-chevron-up" aria-hidden="true"></i>
-                    </a>
-                    <a v-else @click="toggleSort(idx)"  href="#" title="Descending">
-                      <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                    </a>
-                </b-col>
+              <b-col cols="1">
+                <span v-if="sortList.length>1"
+                  class="cftf-exit-button"
+                  title="Remove Sorting" 
+                  @click="deleteSort(sort, idx)"
+                >
+                    <i class="fa fa-times"></i>
+                </span>
+              </b-col>
+              <b-col cols="7">
+                <b-nav-item-dropdown :text=sortList[idx].label>
+                  <span v-if="sortOptions.length">
+                    <b-dropdown-item-button
+                      v-for="sort in sortOptions"
+                      :key="sort.sortBy"
+                      @click="updateSort(sort,idx)"
+                    >{{sort.label}}
+                    </b-dropdown-item-button>
+                  </span>
+                  <b-dropdown-item-button v-else>Sorry, no more fields to sortBy.</b-dropdown-item-button>
+                </b-nav-item-dropdown>
+              </b-col>
+              <b-col cols="1">
+                  <a v-if="sort.sortOrder==='asc'" @click="toggleSort(idx)" href="#" title="Ascending">
+                    <i class="fa fa-chevron-up cftf-arrow" aria-hidden="true"></i>
+                  </a>
+                  <a v-else @click="toggleSort(idx)"  href="#" title="Descending">
+                    <i class="fa fa-chevron-down cft-arrow" aria-hidden="true"></i>
+                  </a>
+              </b-col>
             </b-row>
           </div>
           <TaskSortOptions
           :sortOptions="sortOptions"
           :updateSortOptions="updateSortOptions"
           @add-sort="addSort"
-          />
+          >
+          </TaskSortOptions>
         </div>
+      </div>
     </div>
   </b-container>
 </template>

@@ -374,7 +374,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.setGroup = null;
     });
   }
-
+  
   async getGroupDetails () {
     const grouplist = await CamundaRest.getTaskGroupByID(this.token, this.task.id, this.bpmApiUrl);
     this.groupList = grouplist.data;
@@ -387,7 +387,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.groupListNames = this.groupListItems;
     }
   }
-
+  
   deleteGroup (groupid: string) {		 
     CamundaRest.deleteTaskGroupByID(this.token, this.task.id, this.bpmApiUrl, {
       groupId: groupid,
@@ -439,6 +439,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.getGroupDetails();
   }
 
+
   getTaskFormIODetails (taskId: string) {
     this.showfrom = false;
     CamundaRest.getVariablesByTaskId(
@@ -461,6 +462,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.showfrom = true;
     });
   }
+
 
   getTaskHistoryDetails (taskId: string) {
     this.applicationId = '';
@@ -768,7 +770,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
     
   }
- 
  
   updated () {
     if((this.fulltasks.length) && (this.taskId2 !== '')){
