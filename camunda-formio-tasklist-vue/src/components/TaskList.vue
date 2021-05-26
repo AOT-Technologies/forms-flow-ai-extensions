@@ -101,9 +101,14 @@
                 <b-modal
                   id="AddGroupModal"
                   ref="modal"
-                  title="Manage Groups"
                   :hide-footer="true"
                 >
+                  <template #modal-header="{ close }">
+                    <h5>MANAGE GROUPS</h5>
+                    <b-button size="sm" variant="outline-danger" @click="close()">
+                      <h5>Close <i class="fa fa-times"></i></h5>
+                    </b-button>
+                  </template>
                   <div class="modal-text">
                     <i class="bi bi-exclamation-circle"></i>
                     You can add a group by typing a group ID into the input
@@ -129,19 +134,19 @@
                           v-on:keyup.enter="addGroup"
                         ></b-form-input>
                       </b-col>
-                      <b-row>
-                        <b-col v-if="groupList.length">
-                          <ul v-for="g in groupList" :key="g.groupId">
-                            <div class="mt-1">
-                              <i
-                                class="fa fa-times mr-2 click-element"
-                                @click="deleteGroup(g.groupId)"
-                              ></i>
-                              <span>{{ g.groupId }}</span>
-                            </div>
-                          </ul>
-                        </b-col>
-                      </b-row>
+                    </b-row>
+                    <b-row>
+                      <b-col v-if="groupList.length">
+                        <ul v-for="g in groupList" :key="g.groupId">
+                          <div class="mt-1">
+                            <i
+                              class="fa fa-times mr-2 click-element"
+                              @click="deleteGroup(g.groupId)"
+                            ></i>
+                            <span>{{ g.groupId }}</span>
+                          </div>
+                        </ul>
+                      </b-col>
                     </b-row>
                   </div>
                 </b-modal>
@@ -285,6 +290,7 @@ import { getformHistoryApi } from "../services/formsflowai-api";
 import moment from "moment";
 import { namespace } from "vuex-class";
 import vSelect from "vue-select";
+import unionBy from "lodash/unionBy";
 
 const serviceFlowModule = namespace("serviceFlowModule");
 
@@ -355,10 +361,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   };
   private taskHistoryList: Array<object> = [];
   private autoUserList: any = [];
+  private emailUserSearchList: any = [];
   private taskIdValue = "";
   private taskId2 = "";
   private userName: any = "";
-  private memberGroups = "formsflow/formsflow-reviewer";
 
   checkPropsIsPassedAndSetValue () {
     if (this.getTaskId) {
@@ -396,7 +402,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       type: "candidate",
     }).then(() => {
       this.getGroupDetails();
-      this.reloadCurrentTask();
+      // this.reloadCurrentTask();
       this.setGroup = null;
     });
   }
@@ -424,7 +430,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       type: "candidate",
     }).then(() => {
       this.getGroupDetails();
-      this.reloadCurrentTask();
+      // this.reloadCurrentTask();
     });
   }
 
@@ -524,7 +530,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       });
 
       try {
-        const { warnings } = await viewer.importXML(this.xmlData);
+        await viewer.importXML(this.xmlData);
         viewer.get("canvas").zoom("fit-viewport");
       } catch (err) {
         console.error("error rendering process diagram", err);
@@ -728,7 +734,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.getTaskProcessDiagramDetails(this.task);
   }
 
-  mounted () {
+  async mounted () {
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
     this.setFormsFlowactiveIndex(0);
@@ -810,16 +816,19 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     );
 
-    CamundaRest.getReviewerUsers(
-      this.token,
-      this.bpmApiUrl,
-      this.memberGroups
-    ).then((response) => {
-      this.autoUserList = [];
-      response.data.forEach((element: any) => {
-        this.autoUserList.push({ code: element.id, label: element.email });
-      });
-    });
+    const reviewer = await CamundaRest.getUsersByMemberGroups(this.token, this.bpmApiUrl, "formsflow/formsflow-reviewer");
+    const reviewerList =  reviewer.data.map((element: any) => {
+      return ({ code: element.id, label: element.email });
+    })
+
+    const designer = await CamundaRest.getUsersByMemberGroups(this.token, this.bpmApiUrl, "formsflow/formsflow-designer");
+    const designerList = designer.data.map((element: any) => {
+      return ({code: element.id, label: element.email})
+    })
+
+    this.autoUserList = unionBy(reviewerList, designerList, 'code');
+    console.log("auto User-->", this.autoUserList);
+
     //We used two variables - taskId2 and taskIdValue because the router value from gettaskId is always constant,so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
     if (this.taskId2 !== this.taskIdValue) {
       this.taskId2 = this.taskIdValue;
