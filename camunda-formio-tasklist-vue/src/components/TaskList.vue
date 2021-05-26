@@ -333,7 +333,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private taskId2 = '';
   private userName: any = ''
   
-
   checkPropsIsPassedAndSetValue () {
     if(this.getTaskId) {
       this.taskIdValue = this.getTaskId;
@@ -375,6 +374,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.setGroup = null;
     });
   }
+  
   async getGroupDetails () {
     const grouplist = await CamundaRest.getTaskGroupByID(this.token, this.task.id, this.bpmApiUrl);
     this.groupList = grouplist.data;
@@ -387,6 +387,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.groupListNames = this.groupListItems;
     }
   }
+  
   deleteGroup (groupid: string) {		 
     CamundaRest.deleteTaskGroupByID(this.token, this.task.id, this.bpmApiUrl, {
       groupId: groupid,
@@ -421,7 +422,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         console.error("Error", error);
       });
   }
-
 
   getBPMTaskDetail (taskId: string) {
     CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl).then(
@@ -482,7 +482,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     })
   }
 
-
   getTaskProcessDiagramDetails (task: any) {
     CamundaRest.getProcessDiagramXML(
       this.token,
@@ -542,7 +541,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       .catch((error) => {
         console.error("Error", error);
       });
-    this.editAssignee = false;
   }
 
   onUnClaim () {		  
@@ -581,7 +579,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  
   fetchPaginatedTaskList (filterId: string, requestData: object, first: number, max: number) {
     this.selectedfilterId = filterId;
     CamundaRest.filterTaskListPagination(
@@ -773,7 +770,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
     
   }
- 
  
   updated () {
     if((this.fulltasks.length) && (this.taskId2 !== '')){

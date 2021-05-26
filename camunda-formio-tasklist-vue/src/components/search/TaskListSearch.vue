@@ -14,115 +14,22 @@
           v-for="(query, index) in selectedSearchQueries"
           :key="query.label + index"
         >
-        <b-row>
-          <b-col cols="1">
-            <i class="fa fa-times cftf-x" @click="deleteSearchQueryElement(query,index)"></i>
-          </b-col>
-          <b-col cols="5">
-            <b-nav-item-dropdown :text=query.label>
-              <b-dropdown-item-button
-                v-for="updateSearch in searchListElements"
-                :key="updateSearch.label"
-                @click="updateSearchQueryElement(updateSearch, index)"
-              >
-                {{updateSearch.label}}
-              </b-dropdown-item-button>
-            </b-nav-item-dropdown>
-          </b-col>
-          <b-col cols="5">
-          <span v-if="query.type === 'variables'"> 
-            <span>: </span>     
-            <span
-              v-if="showVariableValue[index] === 'a'"
-              @click="updatevariableinput(index)"
-              title="Property"
-            > ?? </span>
-            <span v-if="showVariableValue[index]==='i'" title="Property">
-              <span>
-              <span
-                @click="showVariableValueItem(index)"
-              >
-                <i class="bi bi-check cft-approve-box"></i>
-              </span>
-              <i class="bi bi-x cft-reject-box" @click="showVariableValueItem(index)"></i
-              ></span>
-              <b-form-input
-                v-model="searchVariableValue[index]"
-                v-on:keyup.enter="showVariableValueItem(index)"
-              />
-            </span>
-            </span>
-            <span
-              class="cft-search-cursor"
-              v-if="showVariableValue[index] === 's'&&query.type === 'variables'"
-              @click="updatevariableinput(index)"
-            >
-              {{ searchVariableValue[index] }}
-            </span>
-          </b-col>
-        </b-row>
+          <TaskSearchItem
+            :query='query'
+            :index='index'
+            :searchListElements='searchListElements'
+            :setDate='setDate'
+            :searchValueItem='searchValueItem '
+            :searchVariableValue='searchVariableValue'
+            :showSearchs='showSearchs'
+            :showVariableValue='showVariableValue'
+            :operator='operator'
+            @updatevariableinput='updatevariableinput'
+            @show-VariableValue-Item='showVariableValueItem'
+            @update-search-value='updatesearchinput'
+            @show-search-value='showsearchValueItem'
+          />
 
-        <b-row align-h="end">
-          <b-col cols="2">
-          <b-nav-item-dropdown :text=operator[index]>
-            <b-dropdown-item-button
-            v-for="x in query.compares"
-            :key="x"
-            @click="updateSearchQueryOperators(x, index)"
-            >
-            {{x}}
-            </b-dropdown-item-button>
-          </b-nav-item-dropdown>
-          </b-col>
-          <b-col cols="9">
-            <div class="cft-rhs-container">
-              <span
-                v-if="showSearchs[index] === 'a'"
-                @click="updatesearchinput(index)"
-                class="cft-search-cursor"
-              >??</span>
-              <span v-if="showSearchs[index] === 'i' &&query.type==='date'">
-                <b-form-datepicker
-                size="sm"
-                v-model="setDate[index]"
-                @input="
-                  setSearchQueryValue(setDate[index], query, operator[index], index); 
-                  showsearchValueItem(index); 
-                "
-                >
-                </b-form-datepicker>
-              </span>
-              <span v-if="showSearchs[index] === 's'&& query.type ==='date'" @click="updatesearchinput(index)">
-                {{ formatDate(setDate[index]) }}
-              </span>
-              <span v-if="showSearchs[index] === 'i' && query.type !=='date'">
-              <span class="cft-icon-actions">
-                <span @click="
-                    setSearchQueryValue(searchValueItem[index], query, operator[index], index);
-                    showsearchValueItem(index);
-                  "
-                >
-                  <i class="bi bi-check cft-approve-box"></i>
-                </span>
-                <i class="bi bi-x cft-reject-box" @click="showsearchValueItem(index)"></i
-              ></span>
-              <b-form-input
-                v-model="searchValueItem[index]"
-                v-on:keyup.enter="
-                  setSearchQueryValue(searchValueItem[index], query, operator[index], index);
-                  showsearchValueItem(index);
-                "
-              />
-              </span>
-              <span
-                v-if="showSearchs[index] === 's' && query.type !=='date'"
-                @click="updatesearchinput(index)"
-              >
-                {{ searchValueItem[index] }}
-              </span>
-            </div>
-          </b-col>
-        </b-row>
         </b-col>
       </div>
       <TaskListAddSearchIgnoreCase
@@ -146,18 +53,20 @@ import {
   searchValueObject,
   taskSearchFilters,
 } from "../../services/search-constants";
-import {getFormattedDateAndTime, getISODateTime} from '../../services/format-time';
 import TaskListAddSearchIgnoreCase from './TaskListAddSearchIgnoreCase.vue';
 import TaskListSearchType from './TaskListSearchType.vue';
+import TaskSearchItem from './TaskSearchItem.vue';
+import {getISODateTime} from '../../services/format-time';
 
 @Component({
   components: {
     TaskListAddSearchIgnoreCase,
     TaskListSearchType,
+    TaskSearchItem
   }
 })
 export default class TaskListSearch extends Vue {
-  @Prop({}) private tasklength!: number;
+  @Prop({default: 0}) private tasklength!: number;
 
   private searchListElements: any = taskSearchFilters;
   private queryType = "ALL";
@@ -211,9 +120,6 @@ export default class TaskListSearch extends Vue {
     Vue.set(this.showVariableValue, index, "s")
   }
 
-  formatDate (date: Date) {
-    return getFormattedDateAndTime(date);
-  }
 
   addToSelectedSearchQuery (item: any) {
     this.selectedSearchQueries.push(item);
@@ -261,7 +167,7 @@ export default class TaskListSearch extends Vue {
         this.isVariableTypeInSelectedSearchQuery = true;
       }
     }
-    this.updateTasklistResult()
+    this.onSearchUpdateTasklistResult()
   }
 
   updateSearchQueryElement (searchitem: any, index: number) {
@@ -309,13 +215,13 @@ export default class TaskListSearch extends Vue {
           "operator": getVariableOperator(operator),
           "value": this.searchValueItem[idx]
         })
-        this.updateTasklistResult();
+        this.onSearchUpdateTasklistResult();
       }
       break;
     }
     case FilterSearchTypes.DATE: {
       this.queryList[Vindex] = getISODateTime(item);
-      this.updateTasklistResult();
+      this.onSearchUpdateTasklistResult();
       break;
     }
     case FilterSearchTypes.STRING:
@@ -325,7 +231,7 @@ export default class TaskListSearch extends Vue {
       } else {
         this.queryList[Vindex] = item;
       }
-      this.updateTasklistResult();
+      this.onSearchUpdateTasklistResult();
       break;
     }
     default:
@@ -333,7 +239,7 @@ export default class TaskListSearch extends Vue {
   }
 
   @Emit('update-task-list')
-  updateTasklistResult (){
+  onSearchUpdateTasklistResult (){
     if(this.queryType === "ALL") {
       return this.queryList
     }
@@ -343,23 +249,43 @@ export default class TaskListSearch extends Vue {
   }
 
   mounted () {
-    this.updateTasklistResult();
+    this.onSearchUpdateTasklistResult();
     
+    this.$root.$on('call-deleteSearchQueryElement', (para: any) => {
+      this.deleteSearchQueryElement(para.query, para.index);
+    })
+
     this.$root.$on('call-updateSearchQueryType', (para: any) => {
       this.queryType = para.queryType;
-      console.log(this.queryList);
-      this.updateTasklistResult();
+      this.onSearchUpdateTasklistResult();
     })
 
     this.$root.$on('call-updateTaskList', (para: any) => {
       this.queryList = para.queryList;
-      this.updateTasklistResult();
+      this.onSearchUpdateTasklistResult();
     })
+
+    this.$root.$on('call-updateSearchQueryElement', (para: any) => {
+      this.updateSearchQueryElement(para.updateSearch, para.index);
+    })
+
+    this.$root.$on('call-updateSearchQueryOperators', (para: any) => {
+      this.updateSearchQueryOperators(para.operator, para.index);
+    })
+
+    this.$root.$on('call-setSearchQueryValue', (para: any) => {
+      this.setSearchQueryValue(para.item, para.query, para.operator, para.idx);
+    })
+
   }
 
   beforeDestroy () {
-    this.$root.$off('call-updateSearchQueryType')
+    this.$root.$off('call-deleteSearchQueryElement');
+    this.$root.$off('call-updateSearchQueryElement');
+    this.$root.$off('call-updateSearchQueryType');
+    this.$root.$off('call-updateSearchQueryOperators');
     this.$root.$off('call-updateTaskList');
+    this.$root.$off('call-setSearchQueryValue');
   }
 }
 </script>

@@ -224,6 +224,22 @@
   
   .cftf-dpdown-box {
     margin-top: 5px;
+    .fa-chevron-down {
+        color: #212529;
+    }
+
+    .fa-chevron-up {
+        color: #212529;
+    }
+
+    .fa-plus {
+        color: #212529;
+    }
+
+    .nav-link {
+        color: #212529;
+    }
+
   }
   .cft-dpdown-inner-container{
     display: flex;
@@ -260,10 +276,14 @@
   }
   
   .cftf-add-sorting {
-    padding-top: 5px;
+    color: #212529;
+    padding: 5px;
     margin-top: 5px;
     position: relative;
-    float: left;
+
+    .nav-link {
+      color: #212529;
+    }
   }
 
   .cft-sort-element {
