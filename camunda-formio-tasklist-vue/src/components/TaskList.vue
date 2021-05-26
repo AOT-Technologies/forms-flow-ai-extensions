@@ -1,7 +1,7 @@
 <template> 
 <b-container fluid class="task-outer-container">
   <Header
-  v-if="token  && bpmApiUrl && maxi"
+  v-if="token  && bpmApiUrl && maximize"
   :token="token"
   :bpmApiUrl="bpmApiUrl"
   :filterList="filterList"
@@ -10,7 +10,7 @@
   :payload="payload"
   />
     <b-row class="cft-service-task-list mt-1">
-      <b-col xl="3" lg="3" md="12" class="cft-first" v-if="maxi">
+      <b-col xl="3" lg="3" md="12" class="cft-first" v-if="maximize">
         <LeftSider
           v-if="token  && bpmApiUrl"
           :token="token"
@@ -24,7 +24,7 @@
           :payload="payload"
         />
       </b-col>
-      <b-col v-if="(getFormsFlowTaskId && task)" :lg="maxi ? 9 : 12" md="12">
+      <b-col v-if="(getFormsFlowTaskId && task)" :lg="maximize ? 9 : 12" md="12">
         <ExpandContract/>
         <div class="cft-service-task-details">
           <b-row class="ml-0 task-header task-header-title" data-title="Task Name">
@@ -92,8 +92,7 @@
                   id="AddGroupModal"
                   ref="modal"
                   title="Manage Groups"
-                  ok-title="Close"
-                  ok-only
+                  :hide-footer=true
                 >
                   <div class="modal-text">
                     <i class="bi bi-exclamation-circle"></i>
@@ -242,7 +241,7 @@ import 'vue-select/src/scss/vue-select.scss';
 import 'semantic-ui-css/semantic.min.css';
 import '../styles/user-styles.css';
 import '../styles/camundaFormIOTasklist.scss';
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Component, Mixins, Prop } from 'vue-property-decorator'
 import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   findFilterKeyOfAllTask,
@@ -259,6 +258,7 @@ import LeftSider from './layout/LeftSider.vue';
 import {Payload} from '../services/TasklistTypes';
 import SocketIOService from '../services/SocketIOServices';
 import TaskHistory from '../components/TaskHistory.vue';
+import TaskListMixin from './mixins/TaskListMixin.vue';
 import {authenticateFormio} from '../services/formio-token';
 import {getFormDetails} from '../services/get-formio';
 import {getISODateTime} from '../services/format-time';
@@ -282,29 +282,16 @@ const serviceFlowModule = namespace('serviceFlowModule')
     BpmnViewer
   },
 })
-export default class Tasklist extends Vue {
-  @Prop() private bpmApiUrl!: string;
-  @Prop() private token!: string;
-  @Prop() private formIOResourceId!: string;
-  @Prop() private formIOReviewerId!: string;
-  @Prop() private formIOReviewer!: string;
-  @Prop() private formIOApiUrl!: string;
-  @Prop() private formsflowaiApiUrl!: string;
-  @Prop() private formsflowaiUrl!: string;
-  @Prop() private formIOUserRoles!: string;
+export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
-  @Prop({default:'formflowai'}) private webSocketEncryptkey !: string
-  
 
   @serviceFlowModule.Getter('getFormsFlowTaskCurrentPage') private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Getter('getFormsFlowTaskId') private getFormsFlowTaskId: any;
   @serviceFlowModule.Getter('getFormsFlowactiveIndex') private getFormsFlowactiveIndex: any;
 
-
   @serviceFlowModule.Mutation('setFormsFlowTaskCurrentPage') public setFormsFlowTaskCurrentPage: any
   @serviceFlowModule.Mutation('setFormsFlowTaskId') public setFormsFlowTaskId: any
   @serviceFlowModule.Mutation('setFormsFlowactiveIndex') public setFormsFlowactiveIndex: any
-  
 
 
   private tasks: Array<object> = [];
@@ -344,222 +331,181 @@ export default class Tasklist extends Vue {
   private autoUserList: any = []
   private taskIdValue = '';
   private taskId2 = '';
-  private maxi = true
   private userName: any = ''
   
-@Watch('token')
-  ontokenChange (newVal: string) {
-    localStorage.setItem("authToken", newVal);
-  }
 
-
-checkPropsIsPassedAndSetValue () {
-  if (!this.bpmApiUrl || this.bpmApiUrl === "") {
-    console.warn("bpmApiUrl prop not Passed");
-  }
-  if (!this.token || this.token === "") {
-    console.warn("token prop not Passed");
-  }
-  if (!this.formIOResourceId || this.formIOResourceId === "") {
-    console.warn("formIOResourceId prop not passed");
-  }
-  if (!this.formIOReviewerId || this.formIOReviewerId === "") {
-    console.warn("formIOReviewerId prop not passed");
-  }
-  if (!this.formIOApiUrl || this.formIOApiUrl === "") {
-    console.warn("formIOApiUrl prop not passed");
-  }
-  if (!this.formsflowaiApiUrl || this.formsflowaiApiUrl === "") {
-    console.warn("formsflow.ai API url prop not passed");
-  }
-  if (!this.formsflowaiUrl || this.formsflowaiUrl === "") {
-    console.warn("formsflow.ai URL prop not passed");
-  }
-  if(!this.webSocketEncryptkey || this.webSocketEncryptkey === ""){
-    console.warn('WEBSOCKET_ENCRYPT_KEY prop not passed')
-  }
-  if ((this.getTaskId) &&(this.getTaskId !== '')) {
-    this.taskIdValue = this.getTaskId;
-  }
-  if(!this.getTaskId || this.getTaskId === '') {
-    const routeparams = this.$route?.query?.taskId;
-    if(typeof(routeparams) ==='string' && this.$route.query.taskId) {
-      this.taskIdValue = routeparams;
+  checkPropsIsPassedAndSetValue () {
+    if(this.getTaskId) {
+      this.taskIdValue = this.getTaskId;
     }
+    if(!this.getTaskId) {
+      const routeparams = this.$route?.query?.taskId;
+      if(typeof(routeparams) ==='string' && this.$route.query.taskId) {
+        this.taskIdValue = routeparams;
+      }
+    }
+    this.userName = getUserName()
   }
-  const decodeToken = JSON.parse(atob(this.token.split('.')[1]))
-  const engine = "/engine-rest";
-  localStorage.setItem("bpmApiUrl", this.bpmApiUrl + engine);
-  localStorage.setItem("authToken", this.token);
-  const currentUrl = window.location.protocol + '//' +  window.location.host
-  localStorage.setItem("formsflow.ai.url", currentUrl);
-  localStorage.setItem("formsflow.ai.api.url", this.formsflowaiApiUrl);
-  localStorage.setItem("formioApiUrl", this.formIOApiUrl);
-  localStorage.setItem("UserDetails", JSON.stringify(decodeToken))
-  
-  this.userName = getUserName()
-}
 
-timedifference (date: Date) {
-  return moment(date).fromNow();
-}
-
-toggleassignee ()  {
-  this.editAssignee = ! this.editAssignee;
-  this.userSelected['code'] = this.task.assignee;
-}
-
-onFormSubmitCallback () {
-  if (this.task.id) {
-    this.onBPMTaskFormSubmit(this.task.id);
-    this.reloadTasks();					   
-  }					  
-}
-
-addGroup () {
-  CamundaRest.createTaskGroupByID(
-    this.token,
-    this.task.id,
-    this.bpmApiUrl,
-    { userId: null, groupId: this.setGroup, type: "candidate" }
-  ).then(() => {
-    this.getGroupDetails();
-    this.reloadCurrentTask();
-    this.setGroup = null;
-  });
-}
-async getGroupDetails () {
-  const grouplist = await CamundaRest.getTaskGroupByID(this.token, this.task.id, this.bpmApiUrl);
-  this.groupList = grouplist.data;
-  this.groupListItems = [];
-  this.groupListNames = null;
-  for (const group of grouplist.data) {
-    this.groupListItems.push(group.groupId);
+  timedifference (date: Date) {
+    return moment(date).fromNow();
   }
-  if (this.groupListItems.length) {
-    this.groupListNames = this.groupListItems;
-  }
-}
-deleteGroup (groupid: string) {		 
-  CamundaRest.deleteTaskGroupByID(this.token, this.task.id, this.bpmApiUrl, {
-    groupId: groupid,
-    type: "candidate",
-  }).then(() => {
-    this.getGroupDetails();
-    this.reloadCurrentTask();
-  });
-}
 
-onBPMTaskFormSubmit (taskId: string) {
-  const formRequestFormat = {
-    variables: {
-      formUrl: {
-        value: this.formioUrl,
-      },
-      applicationId: {
-        value: this.applicationId,
-      },
-    },
-  };
-  CamundaRest.formTaskSubmit(
-    this.token,
-    taskId,
-    formRequestFormat,
-    this.bpmApiUrl
-  )
-    .then(() => {
+  toggleassignee ()  {
+    this.editAssignee = ! this.editAssignee;
+    this.userSelected['code'] = this.task.assignee;
+  }
+
+  onFormSubmitCallback () {
+    if (this.task.id) {
+      this.onBPMTaskFormSubmit(this.task.id);
+      this.reloadTasks();					   
+    }					  
+  }
+
+  addGroup () {
+    CamundaRest.createTaskGroupByID(
+      this.token,
+      this.task.id,
+      this.bpmApiUrl,
+      { userId: null, groupId: this.setGroup, type: "candidate" }
+    ).then(() => {
+      this.getGroupDetails();
       this.reloadCurrentTask();
-    })
-    .catch((error) => {
-      console.error("Error", error);
+      this.setGroup = null;
     });
-}
+  }
+  async getGroupDetails () {
+    const grouplist = await CamundaRest.getTaskGroupByID(this.token, this.task.id, this.bpmApiUrl);
+    this.groupList = grouplist.data;
+    this.groupListItems = [];
+    this.groupListNames = null;
+    for (const group of grouplist.data) {
+      this.groupListItems.push(group.groupId);
+    }
+    if (this.groupListItems.length) {
+      this.groupListNames = this.groupListItems;
+    }
+  }
+  deleteGroup (groupid: string) {		 
+    CamundaRest.deleteTaskGroupByID(this.token, this.task.id, this.bpmApiUrl, {
+      groupId: groupid,
+      type: "candidate",
+    }).then(() => {
+      this.getGroupDetails();
+      this.reloadCurrentTask();
+    });
+  }
 
-
-getBPMTaskDetail (taskId: string) {
-  CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl).then(
-    (result) => {
-      this.task = result.data;
-      CamundaRest.getProcessDefinitionById(
-        this.token,
-        this.task.processDefinitionId,
-        this.bpmApiUrl
-      ).then((res) => {
-        this.taskProcess = res.data.name;
+  onBPMTaskFormSubmit (taskId: string) {
+    const formRequestFormat = {
+      variables: {
+        formUrl: {
+          value: this.formioUrl,
+        },
+        applicationId: {
+          value: this.applicationId,
+        },
+      },
+    };
+    CamundaRest.formTaskSubmit(
+      this.token,
+      taskId,
+      formRequestFormat,
+      this.bpmApiUrl
+    )
+      .then(() => {
+        this.reloadCurrentTask();
+      })
+      .catch((error) => {
+        console.error("Error", error);
       });
-    }		   
-  );
-  this.getGroupDetails();
-}
+  }
 
 
-getTaskFormIODetails (taskId: string) {
-  this.showfrom = false;
-  CamundaRest.getVariablesByTaskId(
-    this.token,
-    taskId,
-    this.bpmApiUrl
-  ).then((result) => {
-    if(result.data["formUrl"]?.value)
-    {
-      this.formioUrl = result.data["formUrl"].value;
-      const { formioUrl, formId, submissionId } = getFormDetails(
-        this.formioUrl,
-        this.formIOApiUrl
-      );
-
-      this.formioUrl = formioUrl;
-      this.submissionId = submissionId;
-      this.formId = formId;
-    }
-    this.showfrom = true;
-  });
-}
+  getBPMTaskDetail (taskId: string) {
+    CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl).then(
+      (result) => {
+        this.task = result.data;
+        CamundaRest.getProcessDefinitionById(
+          this.token,
+          this.task.processDefinitionId,
+          this.bpmApiUrl
+        ).then((res) => {
+          this.taskProcess = res.data.name;
+        });
+      }		   
+    );
+    this.getGroupDetails();
+  }
 
 
-getTaskHistoryDetails (taskId: string) {
-  this.applicationId = '';
-  this.taskHistoryList = [];
-  CamundaRest.getVariablesByTaskId(
-    this.token,
-    taskId,
-    this.bpmApiUrl
-  ).then((result) => {
-    if(result.data && result.data["applicationId"]?.value) {
-      this.applicationId = result.data["applicationId"].value;
-      getformHistoryApi(this.formsflowaiApiUrl, result.data["applicationId"].value, this.token)
-        .then((r)=> {
-          this.taskHistoryList = r.data.applications;
-        })
-    }
-  })
-}
+  getTaskFormIODetails (taskId: string) {
+    this.showfrom = false;
+    CamundaRest.getVariablesByTaskId(
+      this.token,
+      taskId,
+      this.bpmApiUrl
+    ).then((result) => {
+      if(result.data["formUrl"]?.value)
+      {
+        this.formioUrl = result.data["formUrl"].value;
+        const { formioUrl, formId, submissionId } = getFormDetails(
+          this.formioUrl,
+          this.formIOApiUrl
+        );
 
-
-getTaskProcessDiagramDetails (task: any) {
-  CamundaRest.getProcessDiagramXML(
-    this.token,
-    task.processDefinitionId,
-    this.bpmApiUrl
-  ).then(async (res) => {
-    this.xmlData = res.data.bpmn20Xml;
-    const div = document.getElementById('canvas');
-    if(div){
-      div.innerHTML = ""
-    }
-    const viewer = new BpmnViewer({
-      container: '#canvas'
+        this.formioUrl = formioUrl;
+        this.submissionId = submissionId;
+        this.formId = formId;
+      }
+      this.showfrom = true;
     });
+  }
 
-    try {
-      const { warnings } = await viewer.importXML(this.xmlData);
-      viewer.get('canvas').zoom('fit-viewport');
-      console.log(warnings);
-    } catch (err) {
-      console.error('error rendering process diagram', err);
-    }
-  });
-}
+
+  getTaskHistoryDetails (taskId: string) {
+    this.applicationId = '';
+    this.taskHistoryList = [];
+    CamundaRest.getVariablesByTaskId(
+      this.token,
+      taskId,
+      this.bpmApiUrl
+    ).then((result) => {
+      if(result.data && result.data["applicationId"]?.value) {
+        this.applicationId = result.data["applicationId"].value;
+        getformHistoryApi(this.formsflowaiApiUrl, result.data["applicationId"].value, this.token)
+          .then((r)=> {
+            this.taskHistoryList = r.data.applications;
+          })
+      }
+    })
+  }
+
+
+  getTaskProcessDiagramDetails (task: any) {
+    CamundaRest.getProcessDiagramXML(
+      this.token,
+      task.processDefinitionId,
+      this.bpmApiUrl
+    ).then(async (res) => {
+      this.xmlData = res.data.bpmn20Xml;
+      const div = document.getElementById('canvas');
+      if(div){
+        div.innerHTML = ""
+      }
+      const viewer = new BpmnViewer({
+        container: '#canvas'
+      });
+
+      try {
+        const { warnings } = await viewer.importXML(this.xmlData);
+        viewer.get('canvas').zoom('fit-viewport');
+      } catch (err) {
+        console.error('error rendering process diagram', err);
+      }
+    });
+  }
 
   oncustomEventCallback = (customEvent: any) => {
     switch (customEvent.type) {
@@ -590,8 +536,8 @@ getTaskProcessDiagramDetails (task: any) {
       this.bpmApiUrl
     )
       .then(() => {
-        this.reloadCurrentTask();
-        this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
+        this.fetchTaskData(this.getFormsFlowTaskId);
+        this.fetchPaginatedTaskList(this.selectedfilterId, this.payload, (this.getFormsFlowTaskCurrentPage-1)*this.perPage, this.perPage);
       })
       .catch((error) => {
         console.error("Error", error);
@@ -614,8 +560,8 @@ getTaskProcessDiagramDetails (task: any) {
       {"userId": this.userSelected?.code },
       this.bpmApiUrl)
       .then(() => {
-        this.reloadCurrentTask();
-        this.$root.$emit('call-fetchData', {selectedTaskId: this.getFormsFlowTaskId})
+        this.fetchTaskData(this.getFormsFlowTaskId);
+        this.fetchPaginatedTaskList(this.selectedfilterId, this.payload, (this.getFormsFlowTaskCurrentPage-1)*this.perPage, this.perPage);
       })
       .catch((error) => {
         console.error("Error", error);
@@ -753,7 +699,7 @@ getTaskProcessDiagramDetails (task: any) {
     })
 
     this.$root.$on('call-managerScreen', (para: any) => {
-      this.maxi = para.maxi
+      this.maximize = para.maxi
     })
 
     this.checkPropsIsPassedAndSetValue();

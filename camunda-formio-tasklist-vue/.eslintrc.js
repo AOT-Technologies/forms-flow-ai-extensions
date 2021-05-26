@@ -12,7 +12,7 @@ module.exports = {
     ecmaVersion: 2020
   },
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-console': 'warn',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     "vue/no-unused-components": "warn",
     'space-before-function-paren': 1,

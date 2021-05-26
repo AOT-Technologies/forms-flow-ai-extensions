@@ -1,7 +1,5 @@
+import {engine, formExt} from '../services/constants';
 import {bpmAxios} from '../services/axios';
-
-const engine = 'engine-rest'
-const engineExt = 'engine-rest-ext'
 
 const CamundaRest = {   
 
@@ -82,7 +80,7 @@ const CamundaRest = {
   },
 
   listForms (bearerToken: any, CamundaUrl: any) {
-    return bpmAxios(bearerToken, CamundaUrl).get(`/${engineExt}/form`)
+    return bpmAxios(bearerToken, CamundaUrl).get(`/${formExt}/form`)
   },
   
   getProcessDiagramXML (bearerToken: any, processDefinitionId: string, CamundaUrl: any) {

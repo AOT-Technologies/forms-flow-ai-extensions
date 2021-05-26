@@ -30,17 +30,17 @@
                   title="Remove Sorting" 
                   @click="deleteSort(sort, idx)"
                 >
-                    <i class="bi bi-x"></i>
+                    <i class="fa fa-times"></i>
                 </span>
               </b-col>
               <b-col cols="7">
                 <b-nav-item-dropdown :text=sortList[idx].label>
                   <span v-if="sortOptions.length">
                     <b-dropdown-item-button
-                      v-for="s in sortOptions"
-                      :key="s.sortBy"
-                      @click="updateSort(s,idx)"
-                    >{{s.label}}
+                      v-for="sort in sortOptions"
+                      :key="sort.sortBy"
+                      @click="updateSort(sort,idx)"
+                    >{{sort.label}}
                     </b-dropdown-item-button>
                   </span>
                   <b-dropdown-item-button v-else>Sorry, no more fields to sortBy.</b-dropdown-item-button>
@@ -48,10 +48,10 @@
               </b-col>
               <b-col cols="1">
                   <a v-if="sort.sortOrder==='asc'" @click="toggleSort(idx)" href="#" title="Ascending">
-                    <i class="bi bi-chevron-up cftf-arrow"></i>
+                    <i class="fa fa-chevron-up cftf-arrow" aria-hidden="true"></i>
                   </a>
                   <a v-else @click="toggleSort(idx)"  href="#" title="Descending">
-                    <i class="bi bi-chevron-down cftf-arrow"></i>
+                    <i class="fa fa-chevron-down cft-arrow" aria-hidden="true"></i>
                   </a>
               </b-col>
             </b-row>
@@ -69,11 +69,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch} from 'vue-property-decorator'
+import { Component, Mixins, Prop} from 'vue-property-decorator'
 import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   sortingList,
 } from '../../services/utils';
+import BaseMixin from '../mixins/BaseMixin.vue';
 import FormListModal from '../FormListModal.vue';
 import {Payload} from '../../services/TasklistTypes';
 import TaskSortOptions from '../TaskListSortoptions.vue';
@@ -87,9 +88,7 @@ const serviceFlowModule = namespace('serviceFlowModule')
     TaskSortOptions
   }
 })
-export default class Header extends Vue {
-  @Prop() private bpmApiUrl!: string;
-  @Prop() private token!: string;
+export default class Header extends Mixins(BaseMixin) {
   @Prop() private perPage !: number;
   @Prop() private filterList !: Array<string>;
   @Prop() private selectedfilterId !: string;
@@ -106,113 +105,110 @@ export default class Header extends Vue {
   private updateSortOptions: Array<object> = [];
   private setupdateSortListDropdownindex = 0;
 
-@Watch('token')
-  ontokenChange (newVal: string) {
-    localStorage.setItem("authToken", newVal);
+
+  togglefilter (filter: any, index: number) {
+    this.activefilter = index;
+    this.$root.$emit('call-fetchTaskList', 
+      {filterId: filter.id, requestData: this.payload}
+    );
+    this.setFormsFlowTaskCurrentPage(1);
+    this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
+    this.$root.$emit('call-fetchPaginatedTaskList', {
+      filterId: filter.id,
+      requestData: this.payload,
+      firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
+      maxResults: this.perPage
+    })
   }
 
-togglefilter (filter: any, index: number) {
-  this.activefilter = index;
-  this.$root.$emit('call-fetchTaskList', 
-    {filterId: filter.id, requestData: this.payload}
-  );
-  this.setFormsFlowTaskCurrentPage(1);
-  this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
-  this.$root.$emit('call-fetchPaginatedTaskList', {
-    filterId: filter.id,
-    requestData: this.payload,
-    firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
-    maxResults: this.perPage
-  })
-}
-
-getOptions (options: any) {
-  const optionsArray: {
+  getOptions (options: any) {
+    const optionsArray: {
       sortOrder: string;
       label: string;
       sortBy: string;
     }[] = [];
-  sortingList.forEach((sortOption) => {
-    if (
-      !options.some(
-        (option: { sortBy: string }) => option.sortBy === sortOption.sortBy
-      )
-    ) {
-      optionsArray.push({ ...sortOption });
+    sortingList.forEach((sortOption) => {
+      if (
+        !options.some(
+          (option: { sortBy: string }) => option.sortBy === sortOption.sortBy
+        )
+      ) {
+        optionsArray.push({ ...sortOption });
+      }
+    });
+    return optionsArray;
+  }
+
+  addSort (sort: any) {
+    this.sortList.push(sort);
+    if (this.sortList.length === sortingList.length) {
+      this.updateSortOptions = this.sortOptions;
+      this.sortOptions = [];
+    } else {
+      this.sortOptions = this.getOptions(this.sortList);
     }
-  });
-  return optionsArray;
-}
-addSort (sort: any) {
-  this.sortList.push(sort);
-  if (this.sortList.length === sortingList.length) {
-    this.updateSortOptions = this.sortOptions;
-    this.sortOptions = [];
-  } else {
+    this.setFormsFlowTaskCurrentPage(1);
+    this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
+    this.$root.$emit('call-fetchPaginatedTaskList', {
+      filterId: this.selectedfilterId,
+      requestData: this.payload,
+      firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
+      maxResults: this.perPage
+    })
+  }
+
+  updateSort (sort: any, index: number) {
+    this.sortList[index].label = sort.label;
+    this.sortList[index].sortBy = sort.sortBy;
+
+    this.sortOptions = this.getOptions(this.sortList);
+    this.payload["sorting"] = this.sortList;
+    this.setFormsFlowTaskCurrentPage(1);
+    this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
+    this.$root.$emit('call-fetchPaginatedTaskList', {
+      filterId: this.selectedfilterId,
+      requestData: this.payload,
+      firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
+      maxResults: this.perPage
+    })
+  }
+
+  deleteSort (sort: any, index: number) {
+    this.sortList.splice(index, 1);
+    this.updateSortOptions = [];
+    this.sortOptions = this.getOptions(this.sortList);
+    this.payload["sorting"] = this.sortList;
+    this.setFormsFlowTaskCurrentPage(1);
+    this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
+    this.$root.$emit('call-fetchPaginatedTaskList', {
+      filterId: this.selectedfilterId,
+      requestData: this.payload,
+      firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
+      maxResults: this.perPage
+    })
+  }
+
+  toggleSort (index: number) {
+    if (this.sortList[index].sortOrder === "asc")
+      this.sortList[index].sortOrder = "desc";
+  
+    else {
+      this.sortList[index].sortOrder = "asc";
+    }
+    this.payload["sorting"] = this.sortList;
+    this.setFormsFlowTaskCurrentPage(1);
+    this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
+    this.$root.$emit('call-fetchPaginatedTaskList', {
+      filterId: this.selectedfilterId,
+      requestData: this.payload,
+      firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
+      maxResults: this.perPage
+    })
+  }
+
+  mounted () {
     this.sortOptions = this.getOptions(this.sortList);
   }
-  this.setFormsFlowTaskCurrentPage(1);
-  this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
-  this.$root.$emit('call-fetchPaginatedTaskList', {
-    filterId: this.selectedfilterId,
-    requestData: this.payload,
-    firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
-    maxResults: this.perPage
-  })
-}
-
-updateSort (sort: any, index: number) {
-  this.sortList[index].label = sort.label;
-  this.sortList[index].sortBy = sort.sortBy;
-
-  this.sortOptions = this.getOptions(this.sortList);
-  this.payload["sorting"] = this.sortList;
-  this.setFormsFlowTaskCurrentPage(1);
-  this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
-  this.$root.$emit('call-fetchPaginatedTaskList', {
-    filterId: this.selectedfilterId,
-    requestData: this.payload,
-    firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
-    maxResults: this.perPage
-  })
-}
-
-deleteSort (sort: any, index: number) {
-  this.sortList.splice(index, 1);
-  this.updateSortOptions = [];
-  this.sortOptions = this.getOptions(this.sortList);
-  this.payload["sorting"] = this.sortList;
-  this.setFormsFlowTaskCurrentPage(1);
-  this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
-  this.$root.$emit('call-fetchPaginatedTaskList', {
-    filterId: this.selectedfilterId,
-    requestData: this.payload,
-    firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
-    maxResults: this.perPage
-  })
-}
-
-toggleSort (index: number) {
-  if (this.sortList[index].sortOrder === "asc")
-    this.sortList[index].sortOrder = "desc";
-  
-  else {
-    this.sortList[index].sortOrder = "asc";
-  }
-  this.payload["sorting"] = this.sortList;
-  this.setFormsFlowTaskCurrentPage(1);
-  this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
-  this.$root.$emit('call-fetchPaginatedTaskList', {
-    filterId: this.selectedfilterId,
-    requestData: this.payload,
-    firstResult: (this.getFormsFlowTaskCurrentPage-1)*this.perPage,
-    maxResults: this.perPage
-  })
-}
-
-mounted () {
-  this.sortOptions = this.getOptions(this.sortList);
-}
 
 }
 </script>
