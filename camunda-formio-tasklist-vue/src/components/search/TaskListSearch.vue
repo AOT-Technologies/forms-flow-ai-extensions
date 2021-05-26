@@ -21,7 +21,7 @@
             :setDate='setDate'
             :searchValueItem='searchValueItem '
             :searchVariableValue='searchVariableValue'
-            :showSearchs='showSearchs'
+            :showSearchstate='showSearchstate'
             :showVariableValue='showVariableValue'
             :operator='operator'
             @updatevariableinput='updatevariableinput'
@@ -74,7 +74,7 @@ export default class TaskListSearch extends Vue {
   private searchValueItem: any = [];
   private searchVariableValue: any = [];
   private operator: Array<string> = [];
-  private showSearchs: Array<string> = []; //3 states - a, i, s
+  private showSearchstate: Array<string> = []; //3 states - a, i, s
   private showVariableValue: Array<string> = [];
   private queryList: any = {
     "taskVariables": [],
@@ -100,15 +100,15 @@ export default class TaskListSearch extends Vue {
 
   updatesearchinput (index: number) {
     this.searchValueItem[index] = '';
-    Vue.set(this.showSearchs, index, "i");
+    Vue.set(this.showSearchstate, index, "i");
   }
 
   showsearchValueItem (index: number) {
-    Vue.set(this.showSearchs, index, "s");
+    Vue.set(this.showSearchstate, index, "s");
   }
 
   makeInputNull (index: number) {
-    Vue.set(this.showSearchs, index, "a");
+    Vue.set(this.showSearchstate, index, "a");
   }
 
   updatevariableinput (index: number) {
@@ -125,7 +125,7 @@ export default class TaskListSearch extends Vue {
     this.selectedSearchQueries.push(item);
     if (this.selectedSearchQueries === []) {
       this.operator[0] = item["compares"][0];
-      this.showSearchs[0] = "a";
+      this.showSearchstate[0] = "a";
       this.showVariableValue[0] = "a";
       if(item.type==="variables"){
         this.isVariableTypeInSelectedSearchQuery = true;
@@ -133,7 +133,7 @@ export default class TaskListSearch extends Vue {
     } 
     else {
       this.operator[this.selectedSearchQueries.length - 1] = item["compares"][0];
-      this.showSearchs[this.selectedSearchQueries.length - 1] = "a";
+      this.showSearchstate[this.selectedSearchQueries.length - 1] = "a";
       this.showVariableValue[this.selectedSearchQueries.length - 1] = "a";
       if(item.type==="variables"){
         this.isVariableTypeInSelectedSearchQuery = true;
@@ -191,7 +191,7 @@ export default class TaskListSearch extends Vue {
     }
     Vue.set(this.selectedSearchQueries, index, searchitem);
     this.operator[index] = this.selectedSearchQueries[index].compares[0];
-    if(this.showSearchs[index]!=='a')
+    if(this.showSearchstate[index]!=='a')
     {
       if(this.selectedSearchQueries[index].type==='date'){
         this.setSearchQueryValue(this.setDate[index], this.selectedSearchQueries[index], this.operator[index], index);

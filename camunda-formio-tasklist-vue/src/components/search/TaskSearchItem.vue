@@ -65,11 +65,11 @@
           <b-col cols="9">
             <div class="cft-rhs-container">
               <span
-                v-if="showSearchs[index] === 'a'"
+                v-if="showSearchstate[index] === 'a'"
                 @click="updatesearchinput(index)"
                 class="cft-search-cursor"
               >??</span>
-              <span v-if="showSearchs[index] === 'i' &&query.type==='date'">
+              <span v-if="showSearchstate[index] === 'i' &&query.type==='date'">
                 <b-form-datepicker
                 size="sm"
                 v-model="setDate[index]"
@@ -80,10 +80,10 @@
                 >
                 </b-form-datepicker>
               </span>
-              <span v-if="showSearchs[index] === 's'&& query.type ==='date'" @click="updatesearchinput(index)">
+              <span v-if="showSearchstate[index] === 's'&& query.type ==='date'" @click="updatesearchinput(index)">
                 {{ formatDate(setDate[index]) }}
               </span>
-              <span v-if="showSearchs[index] === 'i' && query.type !=='date'">
+              <span v-if="showSearchstate[index] === 'i' && query.type !=='date'">
               <span class="cft-icon-actions">
                 <span @click="
                     setSearchQueryValue(searchValueItem[index], query, operator[index], index);
@@ -103,7 +103,7 @@
               />
               </span>
               <span
-                v-if="showSearchs[index] === 's' && query.type !=='date'"
+                v-if="showSearchstate[index] === 's' && query.type !=='date'"
                 @click="updatesearchinput(index)"
               >
                 {{ searchValueItem[index] }}
@@ -128,7 +128,7 @@ export default class TaskSearchItem extends Vue {
     @Prop({default: []}) private searchVariableValue !: any;
     @Prop({default: []}) private searchValueItem !: any;
     @Prop({default: []}) private setDate !: Array<string>;
-    @Prop({default: []}) private showSearchs!: Array<string>;
+    @Prop({default: []}) private showSearchstate!: Array<string>;
     @Prop({default: []}) private showVariableValue!: Array<string>;
     @Prop({default: []}) private operator!: Array<string>;
 
