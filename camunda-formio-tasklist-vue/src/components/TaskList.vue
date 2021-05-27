@@ -29,19 +29,25 @@
         <ExpandContract />
         <div class="cft-service-task-details">
           <b-row
-            class="ml-0 task-header task-header-title"
-            data-title="Task Name"
+            class="ml-0 cft-task-header task-header-title"
+            v-b-tooltip.hover
+            title="Task Name"
           >
             {{ task.name }}
           </b-row>
           <br />
-          <b-row class="ml-0 task-name">
-            <span class="cft-process-name" data-title="Process Name">{{
-              taskProcess
-            }}</span></b-row
+          <b-row
+            class="ml-0 cft-task-name"
+            v-b-tooltip.hover
+            title="Process Name"
           >
+            {{ taskProcess }}
+          </b-row>
           <br />
-          <b-row class="ml-0 cft-application-id" data-title="application ID"
+          <b-row
+            class="ml-0 cft-application-id"
+            v-b-tooltip.hover
+            title="Application Id"
             >Application ID # {{ applicationId }}
           </b-row>
 
@@ -98,14 +104,14 @@
                     <b>Groups</b>
                   </b-tooltip>
                 </div>
-                <b-modal
-                  id="AddGroupModal"
-                  ref="modal"
-                  :hide-footer="true"
-                >
+                <b-modal id="AddGroupModal" ref="modal" :hide-footer="true">
                   <template #modal-header="{ close }">
                     <h5>MANAGE GROUPS</h5>
-                    <b-button size="sm" variant="outline-danger" @click="close()">
+                    <b-button
+                      size="sm"
+                      variant="outline-danger"
+                      @click="close()"
+                    >
                       <h5>Close <i class="fa fa-times"></i></h5>
                     </b-button>
                   </template>
@@ -404,7 +410,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       type: "candidate",
     }).then(() => {
       this.getGroupDetails();
-      // this.reloadCurrentTask();
       this.setGroup = null;
     });
   }
@@ -432,7 +437,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       type: "candidate",
     }).then(() => {
       this.getGroupDetails();
-      // this.reloadCurrentTask();
     });
   }
 
@@ -818,10 +822,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     );
 
-    const reviewer = await CamundaRest.getUsersByMemberGroups(this.token, this.bpmApiUrl, "formsflow/formsflow-reviewer");
-    this.reviewerUserList =  reviewer.data.map((element: any) => {
-      return ({ code: element.id, label: element.email });
-    })
+    const reviewer = await CamundaRest.getUsersByMemberGroups(
+      this.token,
+      this.bpmApiUrl,
+      "formsflow/formsflow-reviewer"
+    );
+    this.reviewerUserList = reviewer.data.map((element: any) => {
+      return { code: element.id, label: element.email };
+    });
 
     this.autoUserList = this.reviewerUserList;
 
@@ -846,12 +854,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       (response) => {
         this.emailUserSearchList = [];
         response.data.forEach((element: any) => {
-          this.emailUserSearchList.push({ code: element.id, label: element.email });
-          console.log(this.emailUserSearchList);
-          console.log(this.reviewerUserList)
+          this.emailUserSearchList.push({
+            code: element.id,
+            label: element.email,
+          });
 
-          this.autoUserList = intersectionBy(this.emailUserSearchList, this.reviewerUserList, 'code');
-          console.log("Intersetion list =--", this.autoUserList);
+          this.autoUserList = intersectionBy(
+            this.emailUserSearchList,
+            this.reviewerUserList,
+            "code"
+          );
         });
       }
     );

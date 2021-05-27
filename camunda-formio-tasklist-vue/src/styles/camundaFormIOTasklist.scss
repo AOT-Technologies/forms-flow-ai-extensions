@@ -47,16 +47,13 @@
     min-height: 80vh;
   }
 
-  .task-header {
+  .cft-task-header {
     font-size: 30px;
     font-weight: 600;
     color: #212529;
     padding-top: 5px;
-  }
-  .task-name {
-    font-size: 20px;
-    font-weight: 400;
-    color: #212529;
+    cursor: pointer;
+    width: 20%;
   }
 
   .cft-selected {
@@ -332,9 +329,7 @@
 .cft-process-title[data-title]:hover:after,
 .cft-task-title[data-title]:hover:after,
 .cft-priority[data-title]:hover:after,
-.cft-task-assignee[data-title]:hover:after,
-.cft-process-name[data-title]:hover:after,
-.task-header-title[data-title]:hover:after {
+.cft-task-assignee[data-title]:hover:after {
   font-size: 12px;
   content: attr(data-title);
   padding: 4px 8px;
@@ -361,10 +356,17 @@
 .cft-application-id{
   display: block;
   height: auto;
-  width:40%;
+  width:20%;
+  cursor: pointer;
 }
-.task-name{
+
+.cft-task-name{
   height: 20px;
+  width: 40%;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 400;
+  color: #212529;
 }
 
 .cft-task-assignee[data-title]:hover:after {
