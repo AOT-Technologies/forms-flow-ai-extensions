@@ -42,6 +42,8 @@
               <b-col cols="7">
                 <b-nav-item-dropdown
                   :text="sortList[idx].label"
+                  v-b-tooltip.hover
+                  title="Click to change the field to sortBy"
                   :no-caret=true
                 >
                   <span v-if="sortOptions.length">
