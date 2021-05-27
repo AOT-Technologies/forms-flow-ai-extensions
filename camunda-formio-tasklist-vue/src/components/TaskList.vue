@@ -287,10 +287,11 @@ import { authenticateFormio } from "../services/formio-token";
 import { getFormDetails } from "../services/get-formio";
 import { getISODateTime } from "../services/format-time";
 import { getformHistoryApi } from "../services/formsflowai-api";
+import intersectionBy from "lodash/intersectionBy";
 import moment from "moment";
 import { namespace } from "vuex-class";
 import vSelect from "vue-select";
-import unionBy from "lodash/unionBy";
+// import { intersectionBy } from 'lodash';
 
 const serviceFlowModule = namespace("serviceFlowModule");
 
@@ -362,6 +363,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private taskHistoryList: Array<object> = [];
   private autoUserList: any = [];
   private emailUserSearchList: any = [];
+  private reviewerUserList: any = [];
   private taskIdValue = "";
   private taskId2 = "";
   private userName: any = "";
@@ -817,17 +819,19 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
 
     const reviewer = await CamundaRest.getUsersByMemberGroups(this.token, this.bpmApiUrl, "formsflow/formsflow-reviewer");
-    const reviewerList =  reviewer.data.map((element: any) => {
+    this.reviewerUserList =  reviewer.data.map((element: any) => {
       return ({ code: element.id, label: element.email });
     })
 
-    const designer = await CamundaRest.getUsersByMemberGroups(this.token, this.bpmApiUrl, "formsflow/formsflow-designer");
-    const designerList = designer.data.map((element: any) => {
-      return ({code: element.id, label: element.email})
-    })
+    this.autoUserList = this.reviewerUserList;
 
-    this.autoUserList = unionBy(reviewerList, designerList, 'code');
-    console.log("auto User-->", this.autoUserList);
+    // const designer = await CamundaRest.getUsersByMemberGroups(this.token, this.bpmApiUrl, "formsflow/formsflow-designer");
+    // const designerList = designer.data.map((element: any) => {
+    //   return ({code: element.id, label: element.email})
+    // })
+
+    // this.autoUserList = unionBy(reviewerList, designerList, 'code');
+    // console.log("auto User-->", this.autoUserList);
 
     //We used two variables - taskId2 and taskIdValue because the router value from gettaskId is always constant,so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
     if (this.taskId2 !== this.taskIdValue) {
@@ -840,9 +844,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   fetchOptions (search: any) {
     CamundaRest.getUsersByEmail(this.token, this.bpmApiUrl, search).then(
       (response) => {
-        this.autoUserList = [];
+        this.emailUserSearchList = [];
         response.data.forEach((element: any) => {
-          this.autoUserList.push({ code: element.id, label: element.email });
+          this.emailUserSearchList.push({ code: element.id, label: element.email });
+          console.log(this.emailUserSearchList);
+          console.log(this.reviewerUserList)
+
+          this.autoUserList = intersectionBy(this.emailUserSearchList, this.reviewerUserList, 'code');
+          console.log("Intersetion list =--", this.autoUserList);
         });
       }
     );
