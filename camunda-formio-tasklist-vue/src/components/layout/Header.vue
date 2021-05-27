@@ -29,11 +29,11 @@
             :key="sort.sortBy"
           >
             <b-row>
-              <b-col cols="1">
+              <b-col cols="1" v-b-tooltip.hover
+                  title="Remove Sorting Field">
                 <span
                   v-if="sortList.length > 1"
                   class="cftf-exit-button"
-                  title="Remove Sorting"
                   @click="deleteSort(sort, idx)"
                 >
                   <i class="fa fa-times"></i>
@@ -43,7 +43,7 @@
                 <b-nav-item-dropdown
                   :text="sortList[idx].label"
                   v-b-tooltip.hover
-                  title="Click to change the field to sortBy"
+                  title="Click To Change Field for Sorting"
                   :no-caret=true
                 >
                   <span v-if="sortOptions.length">
@@ -59,7 +59,8 @@
                   >
                 </b-nav-item-dropdown>
               </b-col>
-              <b-col cols="1">
+              <b-col cols="1" v-b-tooltip.hover
+                  title="Toggle Sort Order">
                 <a
                   v-if="sort.sortOrder === 'asc'"
                   @click="toggleSort(idx)"

@@ -1,7 +1,7 @@
 <template>
   <b-nav-item-dropdown v-if="updateSortOptions.length === 0" :no-caret="true"
     v-b-tooltip.hover
-    title="Add a new field to sortBy"
+    title="Add New Field For Sorting"
   >
     <template slot="button-content">
       <i class="fa fa-plus fa-sm click-element cftf-add-sorting" />
