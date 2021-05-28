@@ -142,10 +142,10 @@
                     <div class='cft-assignee-change-box row'>
                       <v-select @search="fetchOptions" :options="autoUserList" v-model="userSelected" class="col-9 col-md-9"/>
                       <span @click="onSetassignee" class="col-9 col-md-1">
-                        <i class="bi bi-check"></i>
+                        <i class="bi bi-check assignee-tickmark-icon"></i>
                       </span>
                       <span @click="toggleassignee" class="col-9 col-md-1">
-                        <i class="fa fa-times ml-1"></i>
+                        <i class="fa fa-times ml-1 assignee-cancel-icon"></i>
                       </span>
                     </div>
                   </div>
