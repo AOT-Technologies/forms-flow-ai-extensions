@@ -191,7 +191,7 @@
                       spinner-type="none"
                       aria-busy="true"
                     >
-                    <!-- don't remove custom-formio-class class -->
+                    <!-- don't remove form-render class -->
                       <formio
                         :src="formioUrl"
                         :options="
@@ -199,7 +199,7 @@
                         "
                         v-on:submit="onFormSubmitCallback"
                         v-on:customEvent="oncustomEventCallback"
-                        class="custom-formio-class"
+                        class="form-render"
                       ></formio>
                     </b-overlay>
                   </div>
