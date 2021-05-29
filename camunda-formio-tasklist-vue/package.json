@@ -29,7 +29,6 @@
     "bpmn-js": "^8.6.0",
     "crypto-js": "4.0.0",
     "font-awesome": "^4.7.0",
-    "formiojs": "^4.13.1",
     "jsonwebtoken": "^8.5.1",
     "lodash.isequal": "^4.5.0",
     "moment": "^2.29.1",

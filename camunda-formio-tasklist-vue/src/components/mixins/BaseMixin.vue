@@ -13,6 +13,7 @@ export default class BaseMixin extends Vue {
     @Prop() protected readonly formsflowaiApiUrl!: string;
     @Prop() protected readonly formsflowaiUrl!: string;
     @Prop() protected readonly formIOUserRoles!: string;
+    @Prop() protected readonly userName!: string;
     @Prop({default:'formflowai'}) public webSocketEncryptkey !: string;
 
     @Watch('token')

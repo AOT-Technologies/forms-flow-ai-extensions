@@ -248,7 +248,6 @@ import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   findFilterKeyOfAllTask,
   getTaskFromList,
-  getUserName
 } from '../services/utils';
 import BpmnViewer from 'bpmn-js';
 import CamundaRest from '../services/camunda-rest';
@@ -333,7 +332,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private autoUserList: any = []
   private taskIdValue = '';
   private taskId2 = '';
-  private userName: any = ''
   
   checkPropsIsPassedAndSetValue () {
     if(this.getTaskId) {
@@ -345,7 +343,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.taskIdValue = routeparams;
       }
     }
-    this.userName = getUserName()
   }
 
   timedifference (date: Date) {
@@ -701,6 +698,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.maximize = para.maxi
     })
 
+    this.checkProps();
     this.checkPropsIsPassedAndSetValue();
     authenticateFormio(
       this.formIOResourceId,
