@@ -25,5 +25,6 @@ module.exports = {
     "prefer-promise-reject-errors": "warn",
     "no-unused-vars": "warn",
     "no-undef": "warn",
+    "@typescript-eslint/no-inferrable-types": "off",
   }
 }

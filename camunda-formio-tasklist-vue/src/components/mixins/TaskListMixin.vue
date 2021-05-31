@@ -7,6 +7,7 @@ import BaseMixin from './BaseMixin.vue';
 })
 export default class TaskListMixin extends Mixins(BaseMixin) {
 
-  public maximize = true;
+  public maximize: boolean = true;
+  public userName: string| null = null;
 }
 </script>
