@@ -3,7 +3,6 @@
     <CamundaTasklist
       :bpmApiUrl="configs.BPM_URL"
       :token="configs.token"
-      :userName="configs.userName"
       :formIOApiUrl= "configs.FORM_IO_API_URL"
       :formIOResourceId = "configs.FORM_IO_RESOURCE_ID"
       :formIOReviewerId = "configs.FORM_IO_REVIEWER_ID"
@@ -36,7 +35,6 @@ export default class TaskList extends Vue {
     "FORM_IO_RESOURCE_ID": "Set Formio Resource ID",
     "FORM_IO_REVIEWER_ID": "Set Formio Reviewer ID",
     "FORM_IO_REVIEWER": "Set Formio Reviewer Name",
-    "userName" : "Set userName",
     "FORM_FLOW_API_URL":"Set formsflow.ai API URL",
     "FORM_FLOW_URL":"Set formsflow.ai Project URL",
     "SERVICEFLOW_ENABLED": true,

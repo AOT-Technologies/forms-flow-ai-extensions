@@ -157,23 +157,19 @@
                   </div>
                 </b-modal>
               </b-col>
-              <b-col v-if="task.assignee" cols="12" :md="editAssignee ? 3 : 2">
-                <div v-if="editAssignee" class="cft-user-edit">
-                  <div class="cft-assignee-change-box row">
-                    <v-select
-                      @search="fetchOptions"
-                      :options="autoUserList"
-                      v-model="userSelected"
-                      class="col-9 col-md-9"
-                    />
-                    <span @click="onSetassignee" class="col-9 col-md-1">
-                      <i class="bi bi-check"></i>
-                    </span>
-                    <span @click="toggleassignee" class="col-9 col-md-1">
-                      <i class="fa fa-times ml-1"></i>
-                    </span>
+              <b-col v-if="task.assignee" cols="12" :md="editAssignee ? 3: 2">
+                <div>
+                  <div v-if="editAssignee" class="cft-user-edit">
+                    <div class='cft-assignee-change-box row'>
+                      <v-select @search="fetchOptions" :options="autoUserList" v-model="userSelected" class="col-9 col-md-9"/>
+                      <span @click="onSetassignee" class="col-9 col-md-1">
+                        <i class="bi bi-check assignee-tickmark-icon"></i>
+                      </span>
+                      <span @click="toggleassignee" class="col-9 col-md-1">
+                        <i class="fa fa-times ml-1 assignee-cancel-icon"></i>
+                      </span>
+                    </div>
                   </div>
-                </div>
                 <div class="cft-user-details" v-else>
                   <b-tooltip target="setAssignee" triggers="hover">
                     Click to change <b>assignee</b>
@@ -191,6 +187,7 @@
                     <i class="fa fa-times ml-1" @click="onUnClaim" />
                   </span>
                 </div>
+              </div>
               </b-col>
               <b-col v-else cols="12" md="2">
                 <div @click="onClaim">
@@ -204,46 +201,42 @@
                 </b-tooltip>
               </b-col>
             </b-row>
-          </div>
-
-          <div class="height-100">
-            <b-tabs pills class="height-100" content-class="mt-3">
-              <b-tab title="Form" active>
-                <div v-if="showfrom" class="ml-4 mr-4">
-                  <b-overlay
-                    :show="task.assignee !== userName"
-                    variant="light"
-                    opacity="0.75"
-                    spinner-type="none"
-                    aria-busy="true"
-                  >
-                    <formio
-                      :src="formioUrl"
-                      :options="
-                        task.assignee === userName
-                          ? options
-                          : { readOnly: true }
-                      "
-                      v-on:submit="onFormSubmitCallback"
-                      v-on:customEvent="oncustomEventCallback"
-                    ></formio>
-                  </b-overlay>
-                </div>
-              </b-tab>
-              <b-tab title="History">
-                <TaskHistory
-                  :taskHistoryList="taskHistoryList"
-                  :applicationId="applicationId"
-                />
-              </b-tab>
-              <b-tab
-                class="cft-diagram-container"
-                id="diagramContainer"
-                title="Diagram"
-              >
-                <div class="diagram-full-screen" id="canvas"></div>
-              </b-tab>
-            </b-tabs>
+            <div class="height-100">
+              <b-tabs pills class="height-100" content-class="mt-3">
+                <b-tab title="Form" active>
+                  <div v-if="showfrom" class="ml-4 mr-4">
+                    <b-overlay
+                      :show="task.assignee !== userName"
+                      variant="light"
+                      opacity="0.75"
+                      spinner-type="none"
+                      aria-busy="true"
+                    >
+                    <!-- don't remove form-render class -->
+                      <formio
+                        :src="formioUrl"
+                        :options="
+                          task.assignee !== userName ? { readOnly: true } : options 
+                        "
+                        v-on:submit="onFormSubmitCallback"
+                        v-on:customEvent="oncustomEventCallback"
+                        class="form-render"
+                      ></formio>
+                    </b-overlay>
+                  </div>
+                </b-tab>
+                <b-tab title="History">
+                  <TaskHistory :taskHistoryList='taskHistoryList' :applicationId="applicationId"/>
+                </b-tab>
+                <b-tab
+                  class="cft-diagram-container"
+                  id="diagramContainer"
+                  title="Diagram"
+                >
+                  <div class="diagram-full-screen" id="canvas"></div>
+                </b-tab>
+              </b-tabs>
+            </div>
           </div>
         </div>
       </b-col>
@@ -367,13 +360,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     maxResults: this.perPage,
   };
   private taskHistoryList: Array<object> = [];
-  private autoUserList: any = [];
-  private emailUserSearchList: any = [];
-  private reviewerUserList: any = [];
-  private taskIdValue = "";
-  private taskId2 = "";
-  private userName: any = "";
-
+  private autoUserList: any = []
+  private taskIdValue = '';
+  private taskId2 = '';
+  
   checkPropsIsPassedAndSetValue () {
     if (this.getTaskId) {
       this.taskIdValue = this.getTaskId;
@@ -769,6 +759,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.maximize = para.maxi;
     });
 
+    this.checkProps();
     this.checkPropsIsPassedAndSetValue();
     authenticateFormio(
       this.formIOResourceId,
@@ -822,16 +813,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     );
 
-    const reviewer = await CamundaRest.getUsersByMemberGroups(
-      this.token,
-      this.bpmApiUrl,
-      "formsflow/formsflow-reviewer"
-    );
-    this.reviewerUserList = reviewer.data.map((element: any) => {
-      return { code: element.id, label: element.email };
-    });
+    // const reviewer = await CamundaRest.getUsersByMemberGroups(
+    //   this.token,
+    //   this.bpmApiUrl,
+    //   "formsflow/formsflow-reviewer"
+    // );
+    // this.reviewerUserList = reviewer.data.map((element: any) => {
+    //   return { code: element.id, label: element.email };
+    // });
 
-    this.autoUserList = this.reviewerUserList;
+    // this.autoUserList = this.reviewerUserList;
 
     // const designer = await CamundaRest.getUsersByMemberGroups(this.token, this.bpmApiUrl, "formsflow/formsflow-designer");
     // const designerList = designer.data.map((element: any) => {
@@ -849,24 +840,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  fetchOptions (search: any) {
-    CamundaRest.getUsersByEmail(this.token, this.bpmApiUrl, search).then(
-      (response) => {
-        this.emailUserSearchList = [];
-        response.data.forEach((element: any) => {
-          this.emailUserSearchList.push({
-            code: element.id,
-            label: element.email,
-          });
 
-          this.autoUserList = intersectionBy(
-            this.emailUserSearchList,
-            this.reviewerUserList,
-            "code"
-          );
-        });
-      }
-    );
+  fetchOptions (search: any) {
+    CamundaRest.getUsersByEmail(this.token, this.bpmApiUrl, search).then((response) => {
+      this.autoUserList = []
+      response.data.forEach((element: any) => {
+        this.autoUserList.push({ "code" : element.id, "label" : element.email })
+         
+      });
+    });
   }
 
   findTaskIdDetailsFromURLrouter (taskId: string, tasks: any) {
