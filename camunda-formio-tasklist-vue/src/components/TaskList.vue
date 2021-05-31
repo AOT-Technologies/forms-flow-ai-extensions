@@ -195,7 +195,7 @@
                       <formio
                         :src="formioUrl"
                         :options="
-                          task.assignee === userName ? options : { readOnly: true }
+                          task.assignee !== userName ? { readOnly: true } : options 
                         "
                         v-on:submit="onFormSubmitCallback"
                         v-on:customEvent="oncustomEventCallback"
@@ -248,6 +248,7 @@ import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   findFilterKeyOfAllTask,
   getTaskFromList,
+  getUserName
 } from '../services/utils';
 import BpmnViewer from 'bpmn-js';
 import CamundaRest from '../services/camunda-rest';
@@ -308,9 +309,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private setGroup = null;
   private userSelected: any = {};
   private showfrom = false;
-  public perPage = 10;
-  private tasklength = 0;
-  private options = {noAlerts: false,i18n: {
+  public perPage: number = 10;
+  private tasklength: number = 0;
+  private options: object = {noAlerts: false,i18n: {
     en: {error: "Please fix the errors before submitting again.",},},
   };
   private filterList = [];
@@ -343,6 +344,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.taskIdValue = routeparams;
       }
     }
+    this.userName = getUserName();
   }
 
   timedifference (date: Date) {
