@@ -195,7 +195,7 @@
                       <formio
                         :src="formioUrl"
                         :options="
-                          task.assignee === userName ? options : { readOnly: true }
+                          task.assignee !== userName ? { readOnly: true } : options 
                         "
                         v-on:submit="onFormSubmitCallback"
                         v-on:customEvent="oncustomEventCallback"
@@ -248,6 +248,7 @@ import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   findFilterKeyOfAllTask,
   getTaskFromList,
+  getUserName
 } from '../services/utils';
 import BpmnViewer from 'bpmn-js';
 import CamundaRest from '../services/camunda-rest';
@@ -343,6 +344,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.taskIdValue = routeparams;
       }
     }
+    this.userName = getUserName();
   }
 
   timedifference (date: Date) {
