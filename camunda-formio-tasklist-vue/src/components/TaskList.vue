@@ -27,17 +27,28 @@
       <b-col v-if="(getFormsFlowTaskId && task)" :lg="maximize ? 9 : 12" md="12">
         <ExpandContract/>
         <div class="cft-service-task-details">
-          <b-row class="ml-0 task-header task-header-title" data-title="Task Name">
-            {{ task.name }}</b-row
+          <b-row
+            class="ml-0 cft-task-header task-header-title"
+            v-b-tooltip.hover
+            title="Task Name"
           >
+            {{ task.name }}
+          </b-row>
           <br />
-          <b-row class="ml-0 task-name">
-            <span class="cft-process-name" data-title="Process Name">{{ taskProcess }}</span></b-row
+          <b-row
+            class="ml-0 cft-task-name"
+            v-b-tooltip.hover
+            title="Process Name"
           >
+            {{ taskProcess }}
+          </b-row>
           <br />
-          <b-row class="ml-0 cft-application-id" data-title="application ID"
-            >Application ID # {{ applicationId }}</b-row
-          >
+          <b-row
+            class="ml-0 cft-application-id"
+            v-b-tooltip.hover
+            title="Application Id"
+            >Application ID # {{ applicationId }}
+          </b-row>
           <div class="cft-actionable-container">
             <b-row class="cft-actionable">
               <b-col v-if='task.followUp' cols="12" md="3">
