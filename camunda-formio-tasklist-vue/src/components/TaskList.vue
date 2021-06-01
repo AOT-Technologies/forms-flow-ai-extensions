@@ -331,16 +331,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   private tasks: Array<object> = [];
   private fulltasks: Array<object> = [];
-  private taskProcess: string | null = null;
+  private taskProcess: string| null = null;
   private formId: string = "";
-  private submissionId: string | null = null;
+  private submissionId: string = "";
   private formioUrl: string = "";
   private task: any;
   private setFollowup: any = [];
   private setDue: any = [];
   private setGroup = null;
   private userSelected: any = {};
-  private showfrom = false;
+  private showfrom: boolean = false;
   public perPage: number = 10;
   private tasklength: number = 0;
   private editFormoptions: object = {
@@ -350,14 +350,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     },
   };
   private readFormOptions: object = { readOnly: true };
-  private filterList = [];
-  private editAssignee = false;
-  private applicationId = "";
-  private groupList = [];
+  private filterList: Array<object> = [];
+  private editAssignee: boolean = false;
+  private applicationId: string = "";
+  private groupList: Array<object> = [];
   private groupListNames: Array<string> | null = null;
   private groupListItems: string[] = [];
-  private userEmail = "external";
-  private selectedfilterId = "";
+  private userEmail: string = "external";
+  private selectedfilterId: string = "";
   private xmlData!: string;
   private payload: Payload = {
     active: true,
@@ -368,7 +368,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private taskHistoryList: Array<object> = [];
   private autoUserList: any = [];
   private taskIdValue: string = "";
-  private taskId2: any;
+  private taskId2: string = "";
 
   checkPropsIsPassedAndSetValue () {
     if (this.getTaskId) {
