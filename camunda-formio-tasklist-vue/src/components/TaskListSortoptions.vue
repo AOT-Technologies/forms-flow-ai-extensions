@@ -1,5 +1,7 @@
 <template>
-  <b-nav-item-dropdown v-if="updateSortOptions.length === 0" :no-caret="true"
+  <b-nav-item-dropdown
+    v-if="updateSortOptions.length === 0"
+    :no-caret="true"
     v-b-tooltip.hover
     title="Add New Field For Sorting"
   >

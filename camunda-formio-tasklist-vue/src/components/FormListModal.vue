@@ -121,15 +121,14 @@ import { formApplicationSubmit } from "../services/formsflowai-api";
 })
 export default class FormListModal extends Mixins(BaseMixin) {
   private formList: Array<object> = [];
-  private formperPage = 10;
-  private formNumPages = 1;
-  private formcurrentPage = 1;
-  private formValueId = "";
-  private formId = "";
-  private submissionId = "";
-  private formioUrl = "";
-  private formTitle = "";
-  private showForms = true;
+  private formperPage: number = 10;
+  private formNumPages: number = 1;
+  private formcurrentPage: number = 1;
+  private formValueId: string| null = null;
+  private formId: string| null = null;
+  private submissionId: string| null = null;
+  private formioUrl: string | null = null;
+  private formTitle: string = "";
   private formsflowAIApiUrl: any;
 
   linkFormGen () {
