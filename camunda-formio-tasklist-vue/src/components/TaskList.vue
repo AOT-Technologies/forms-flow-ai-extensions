@@ -220,8 +220,8 @@
                         :src="formioUrl"
                         :options="
                           task.assignee !== userName
-                            ? { readOnly: true }
-                            : options
+                            ? readFormOptions
+                            : editFormoptions
                         "
                         v-on:submit="onFormSubmitCallback"
                         v-on:customEvent="oncustomEventCallback"
@@ -343,12 +343,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private showfrom = false;
   public perPage: number = 10;
   private tasklength: number = 0;
-  private options: object = {
+  private editFormoptions: object = {
     noAlerts: false,
     i18n: {
       en: { error: "Please fix the errors before submitting again." },
     },
   };
+  private readFormOptions: object = { readOnly: true };
   private filterList = [];
   private editAssignee = false;
   private applicationId = "";
@@ -726,15 +727,17 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   fetchTaskData (taskId: string) {
     this.task = getTaskFromList(this.tasks, taskId);
-    this.getBPMTaskDetail(taskId);
-    CamundaRest.getVariablesByProcessId(
-      this.token,
-      this.task.processInstanceId,
-      this.bpmApiUrl
-    );
-    this.getTaskFormIODetails(taskId);
-    this.getTaskHistoryDetails(taskId);
-    this.getTaskProcessDiagramDetails(this.task);
+    if(this.task) {
+      this.getBPMTaskDetail(taskId);
+      CamundaRest.getVariablesByProcessId(
+        this.token,
+        this.task.processInstanceId,
+        this.bpmApiUrl
+      );
+      this.getTaskFormIODetails(taskId);
+      this.getTaskHistoryDetails(taskId);
+      this.getTaskProcessDiagramDetails(this.task);
+    }
   }
 
   mounted () {
