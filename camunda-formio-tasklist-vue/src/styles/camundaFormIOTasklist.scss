@@ -440,7 +440,6 @@ li {
 .assignee-cancel-icon {
   font-size: 1.4em;
 }
-}
 
 //TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
 
@@ -454,4 +453,6 @@ li {
 
 [data-tooltip]:after {
   opacity: 0 !important;
+}
+
 }
