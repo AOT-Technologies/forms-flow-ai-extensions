@@ -91,8 +91,8 @@ const CamundaRest = {
     return bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/process-definition/${processDefinitionId}/xml`)
   },
 
-  getUsersByEmail (bearerToken: string, CamundaUrl: string, emailSearch: string|null) {
-    return bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/user?emailLike=%${emailSearch}%`)
+  getUsersByLastName (bearerToken: string, CamundaUrl: string, lastName: string|null, group: string) {
+    return bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/user?lastNameLike=%${lastName}%&memberOfGroup=${group}`)
   }
 }
 

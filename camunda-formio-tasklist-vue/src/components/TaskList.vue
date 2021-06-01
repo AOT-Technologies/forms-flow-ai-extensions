@@ -823,12 +823,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     );
 
-    CamundaRest.getUsers(this.token, this.bpmApiUrl).then((response) => {
-      this.autoUserList = [];
-      response.data.forEach((element: any) => {
-        this.autoUserList.push({ code: element.id, label: element.email });
-      });
-    });
+    // CamundaRest.getUsers(this.token, this.bpmApiUrl).then((response) => {
+    //   this.autoUserList = [];
+    //   response.data.forEach((element: any) => {
+    //     this.autoUserList.push({ code: element.id, label: element.email });
+    //   });
+    // });
     //We used two variables - taskId2 and taskIdValue because the router value from gettaskId is always constant,so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
     if (this.taskId2 !== this.taskIdValue) {
       this.taskId2 = this.taskIdValue;
@@ -838,11 +838,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   fetchOptions (search: any) {
-    CamundaRest.getUsersByEmail(this.token, this.bpmApiUrl, search).then(
+    CamundaRest.getUsersByLastName(this.token, this.bpmApiUrl, search, 'formsflow/formsflow-reviewer').then(
       (response) => {
         this.autoUserList = [];
         response.data.forEach((element: any) => {
-          this.autoUserList.push({ code: element.id, label: element.email });
+          this.autoUserList.push({ code: element.id, label: `${element.firstName} ${element.lastName} - (${element.id})` });
         });
       }
     );
