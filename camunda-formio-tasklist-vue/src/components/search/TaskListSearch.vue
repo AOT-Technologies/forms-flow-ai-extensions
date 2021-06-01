@@ -64,7 +64,7 @@ export default class TaskListSearch extends Vue {
   @Prop({ default: 0 }) private tasklength!: number;
 
   private searchListElements: any = taskSearchFilters;
-  private queryType = "ALL";
+  private queryType: string = "ALL";
   private selectedSearchQueries: any = [];
   private searchValueItem: any = [];
   private searchVariableValue: any = [];
@@ -75,7 +75,7 @@ export default class TaskListSearch extends Vue {
     taskVariables: [],
     processVariables: [],
   };
-  private isVariableTypeInSelectedSearchQuery = false;
+  private isVariableTypeInSelectedSearchQuery: boolean = false;
   private setDate: Array<string> = [];
 
   updateSearchQueryOperators (operator: any, index: number) {

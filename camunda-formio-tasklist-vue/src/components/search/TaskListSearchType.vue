@@ -12,7 +12,7 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class TaskListSearchType extends Vue {
-  private queryType = "ALL";
+  private queryType: string = "ALL";
 
   changeQueryType () {
     this.queryType === "ALL"
