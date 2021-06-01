@@ -309,9 +309,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private setGroup = null;
   private userSelected: any = {};
   private showfrom = false;
-  public perPage = 10;
-  private tasklength = 0;
-  private options = {noAlerts: false,i18n: {
+  public perPage: number = 10;
+  private tasklength: number = 0;
+  private options: object = {noAlerts: false,i18n: {
     en: {error: "Please fix the errors before submitting again.",},},
   };
   private filterList = [];
