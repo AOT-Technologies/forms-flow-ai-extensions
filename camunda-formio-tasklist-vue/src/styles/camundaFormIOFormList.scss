@@ -28,19 +28,6 @@
     width: 100%;
   }
 
-  //TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
-
-  [data-tooltip]:before {
-    visibility: unset !important;
-    position: initial !important;
-    box-shadow: none !important;
-    opacity: 1 !important;
-    cursor:pointer !important;
-  }
-
-  [data-tooltip]:after {
-    opacity: 0 !important;
-  }
 }
 
 .cft-form-submission {
@@ -62,3 +49,16 @@ justify-content: center;
 margin-top: 15px;
 }
 
+  //TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
+
+  [data-tooltip]:before {
+    visibility: unset !important;
+    position: initial !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+    cursor:pointer !important;
+  }
+
+  [data-tooltip]:after {
+    opacity: 0 !important;
+  }
