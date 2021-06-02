@@ -58,8 +58,8 @@ export default class TaskHistory extends Vue {
   @Prop({ default: [] }) private taskHistoryList!: Array<object>;
   @Prop() private applicationId!: string;
 
-  private fId = "";
-  private sId = "";
+  private fId: string = "";
+  private sId: string = "";
 
   getExactDate (date: Date) {
     return getLocalDateTime(date);

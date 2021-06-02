@@ -63,10 +63,10 @@ export default class TaskListAddSearchIgnoreCase extends Vue {
   @Prop() private tasklength!: number;
   @Prop() private searchListElements!: any;
 
-  private variablesEndType = [];
-  private QList = this.queryList;
-  private activeSearchItem = 0;
-  private searchList = this.searchListElements;
+  private variablesEndType: Array<any> = [];
+  private QList: any = this.queryList;
+  private activeSearchItem: number = 0;
+  private searchList: any = this.searchListElements;
 
   setActiveSearchItem (index: number) {
     this.activeSearchItem = index;
