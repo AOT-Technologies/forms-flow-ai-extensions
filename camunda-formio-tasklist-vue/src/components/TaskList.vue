@@ -28,21 +28,27 @@
         <ExpandContract />
         <div class="cft-service-task-details">
           <b-row
-            class="ml-0 task-header task-header-title"
-            data-title="Task Name"
+            class="ml-0 cft-task-header task-header-title"
+            v-b-tooltip.hover
+            title="Task Name"
           >
-            {{ task.name }}</b-row
-          >
+            {{ task.name }}
+          </b-row>
           <br />
-          <b-row class="ml-0 task-name">
-            <span class="cft-process-name" data-title="Process Name">{{
-              taskProcess
-            }}</span></b-row
+          <b-row
+            class="ml-0 cft-task-name"
+            v-b-tooltip.hover
+            title="Process Name"
           >
+            {{ taskProcess }}
+          </b-row>
           <br />
-          <b-row class="ml-0 cft-application-id" data-title="application ID"
-            >Application ID # {{ applicationId }}</b-row
-          >
+          <b-row
+            class="ml-0 cft-application-id"
+            v-b-tooltip.hover
+            title="Application Id"
+            >Application ID # {{ applicationId }}
+          </b-row>
           <div class="cft-actionable-container">
             <b-row class="cft-actionable">
               <b-col v-if="task.followUp" cols="12" md="3">
@@ -96,12 +102,17 @@
                     <b>Groups</b>
                   </b-tooltip>
                 </div>
-                <b-modal
-                  id="AddGroupModal"
-                  ref="modal"
-                  title="Manage Groups"
-                  :hide-footer="true"
-                >
+                <b-modal id="AddGroupModal" ref="modal" :hide-footer="true">
+                  <template #modal-header="{ close }">
+                    <h5>MANAGE GROUPS</h5>
+                    <b-button
+                      size="sm"
+                      variant="outline-danger"
+                      @click="close()"
+                    >
+                      <h5>Close <i class="fa fa-times"></i></h5>
+                    </b-button>
+                  </template>
                   <div class="modal-text">
                     <i class="bi bi-exclamation-circle"></i>
                     You can add a group by typing a group ID into the input
@@ -209,8 +220,8 @@
                         :src="formioUrl"
                         :options="
                           task.assignee !== userName
-                            ? { readOnly: true }
-                            : options
+                            ? readFormOptions
+                            : editFormoptions
                         "
                         v-on:submit="onFormSubmitCallback"
                         v-on:customEvent="oncustomEventCallback"
@@ -320,7 +331,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   private tasks: Array<object> = [];
   private fulltasks: Array<object> = [];
-  private taskProcess: string| null = null;
+  private taskProcess: string | null = null;
   private formId: string = "";
   private submissionId: string = "";
   private formioUrl: string = "";
@@ -332,12 +343,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private showfrom: boolean = false;
   public perPage: number = 10;
   private tasklength: number = 0;
-  private options: object = {
+  private editFormoptions: object = {
     noAlerts: false,
     i18n: {
       en: { error: "Please fix the errors before submitting again." },
     },
   };
+  private readFormOptions: object = { readOnly: true };
   private filterList: Array<object> = [];
   private editAssignee: boolean = false;
   private applicationId: string = "";
@@ -472,7 +484,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
       (result) => {
         if (result.data["formUrl"]?.value) {
-          this.formioUrl = result.data["formUrl"].value;
+          this.formioUrl = result.data["formUrl"]?.value;
           const { formioUrl, formId, submissionId } = getFormDetails(
             this.formioUrl,
             this.formIOApiUrl
@@ -715,15 +727,17 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   fetchTaskData (taskId: string) {
     this.task = getTaskFromList(this.tasks, taskId);
-    this.getBPMTaskDetail(taskId);
-    CamundaRest.getVariablesByProcessId(
-      this.token,
-      this.task.processInstanceId,
-      this.bpmApiUrl
-    );
-    this.getTaskFormIODetails(taskId);
-    this.getTaskHistoryDetails(taskId);
-    this.getTaskProcessDiagramDetails(this.task);
+    if (this.task) {
+      this.getBPMTaskDetail(taskId);
+      CamundaRest.getVariablesByProcessId(
+        this.token,
+        this.task.processInstanceId,
+        this.bpmApiUrl
+      );
+      this.getTaskFormIODetails(taskId);
+      this.getTaskHistoryDetails(taskId);
+      this.getTaskProcessDiagramDetails(this.task);
+    }
   }
 
   mounted () {

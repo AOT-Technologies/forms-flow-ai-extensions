@@ -65,7 +65,7 @@
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.2",
     "typescript": "4.2.3",
-    "vue-template-compiler": "^2.6.12"
+    "vue-template-compiler": "2.6.12"
   },
   "files": [
     "dist/*",
