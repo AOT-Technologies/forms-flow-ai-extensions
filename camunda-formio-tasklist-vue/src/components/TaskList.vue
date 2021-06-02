@@ -163,6 +163,7 @@
                         @search="fetchOptions"
                         :options="autoUserList"
                         v-model="userSelected"
+                        placeholder="Search by Lastname"
                         class="col-9 col-md-9"
                       >
                       </v-select>
@@ -315,6 +316,7 @@ const serviceFlowModule = namespace("serviceFlowModule");
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
+  @Prop({ default: "lastName" }) userListType!: string;
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -332,7 +334,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   private tasks: Array<object> = [];
   private fulltasks: Array<object> = [];
-  private taskProcess: string| null = null;
+  private taskProcess: string | null = null;
   private formId: string = "";
   private submissionId: string = "";
   private formioUrl: string = "";
@@ -728,7 +730,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   fetchTaskData (taskId: string) {
     this.task = getTaskFromList(this.tasks, taskId);
-    if(this.task) {
+    if (this.task) {
       this.getBPMTaskDetail(taskId);
       CamundaRest.getVariablesByProcessId(
         this.token,
@@ -827,7 +829,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     CamundaRest.getUsers(this.token, this.bpmApiUrl).then((response) => {
       this.autoUserList = [];
       response.data.forEach((element: any) => {
-        this.autoUserList.push({ code: element.id, label: element.email });
+        this.autoUserList.push({
+          userName: element.id,
+          email: element.email,
+          fullName: `${element.firstName} ${element.lastName}`,
+          lastNameSearch: `${element.lastName} (${element.id})`,
+          fullNameSearch: `${element.firstName} ${element.lastName} (${element.id})`
+        });
       });
     });
     //We used two variables - taskId2 and taskIdValue because the router value from gettaskId is always constant,so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
@@ -839,14 +847,20 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   fetchOptions (search: any) {
-    CamundaRest.getUsersByLastName(this.token, this.bpmApiUrl, search, 'formsflow/formsflow-reviewer').then(
-      (response) => {
-        this.autoUserList = [];
-        response.data.forEach((element: any) => {
-          this.autoUserList.push({ code: element.id, label: `${element.firstName} ${element.lastName} - (${element.id})` });
+    CamundaRest.getUsersByLastName(
+      this.token,
+      this.bpmApiUrl,
+      search,
+      "formsflow/formsflow-reviewer"
+    ).then((response) => {
+      this.autoUserList = [];
+      response.data.forEach((element: any) => {
+        this.autoUserList.push({
+          code: element.id,
+          label: `${element.firstName} ${element.lastName} - (${element.id})`,
         });
-      }
-    );
+      });
+    });
   }
 
   findTaskIdDetailsFromURLrouter (taskId: string, tasks: any) {
