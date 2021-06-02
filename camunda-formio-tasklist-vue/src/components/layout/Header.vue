@@ -2,9 +2,11 @@
   <b-container fluid class="task-outer-container">
     <div class="main-filters my-2 mb-1">
       <div class="cft-filter-dropdown mx-2">
-        <b-nav-item-dropdown class="cft-nav-backgroup mr-0">
+        <b-nav-item-dropdown class="cft-nav-backgroup mr-0" :no-caret="true">
           <template slot="button-content">
-            <i class="bi bi-filter-square" />
+          <span>
+            <h4 class="cft-filter-header"><i class="fa fa-wpforms"/> Filters</h4>
+          </span>
           </template>
           <span v-if="filterList.length">
             <b-dropdown-item
