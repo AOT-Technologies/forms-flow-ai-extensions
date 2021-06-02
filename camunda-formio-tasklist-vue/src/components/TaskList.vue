@@ -331,7 +331,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   private tasks: Array<object> = [];
   private fulltasks: Array<object> = [];
-  private taskProcess: string| null = null;
+  private taskProcess: string | null = null;
   private formId: string = "";
   private submissionId: string = "";
   private formioUrl: string = "";
@@ -727,7 +727,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   fetchTaskData (taskId: string) {
     this.task = getTaskFromList(this.tasks, taskId);
-    if(this.task) {
+    if (this.task) {
       this.getBPMTaskDetail(taskId);
       CamundaRest.getVariablesByProcessId(
         this.token,

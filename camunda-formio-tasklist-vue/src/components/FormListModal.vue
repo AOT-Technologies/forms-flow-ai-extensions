@@ -124,9 +124,9 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private formperPage: number = 10;
   private formNumPages: number = 1;
   private formcurrentPage: number = 1;
-  private formValueId: string| null = null;
-  private formId: string| null = null;
-  private submissionId: string| null = null;
+  private formValueId: string | null = null;
+  private formId: string | null = null;
+  private submissionId: string | null = null;
   private formioUrl: string | null = null;
   private formTitle: string = "";
   private formsflowAIApiUrl: any;
