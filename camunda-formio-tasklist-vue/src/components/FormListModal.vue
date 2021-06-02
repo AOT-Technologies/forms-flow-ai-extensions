@@ -78,7 +78,7 @@
         >
           <template #modal-header="{ close }">
               <b-button variant="link" @click="backClick">
-                  <h5><i class="fa fa-chevron-left"></i>Back</h5>
+                  <h5><i class="fa fa-chevron-left"></i> Back</h5>
               </b-button>
               <h5>SUBMIT FORM</h5>
               <b-button size="sm" variant="outline-danger" @click="close()">

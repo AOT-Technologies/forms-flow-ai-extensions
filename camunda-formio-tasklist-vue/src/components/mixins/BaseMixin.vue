@@ -49,7 +49,7 @@ export default class BaseMixin extends Vue {
       const decodeToken = JSON.parse(atob(this.token.split('.')[1]));
       localStorage.setItem("bpmApiUrl", `${this.bpmApiUrl}/${engine}`);
       localStorage.setItem("authToken", this.token);
-      const currentUrl = window.location.protocol + '//' +  window.location.host
+      const currentUrl = `${window.location.protocol}//${window.location.host}`;
       localStorage.setItem("formsflow.ai.url", currentUrl);
       localStorage.setItem("formsflow.ai.api.url", this.formsflowaiApiUrl);
       localStorage.setItem("formioApiUrl", this.formIOApiUrl);
