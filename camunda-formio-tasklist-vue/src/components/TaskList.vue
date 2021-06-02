@@ -164,7 +164,8 @@
                         :options="autoUserList"
                         v-model="userSelected"
                         class="col-9 col-md-9"
-                      />
+                      >
+                      </v-select>
                       <span @click="onSetassignee" class="col-9 col-md-1">
                         <i class="bi bi-check assignee-tickmark-icon"></i>
                       </span>
@@ -335,7 +336,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private formId: string = "";
   private submissionId: string = "";
   private formioUrl: string = "";
-  private task: any;
+  private task: any = {};
   private setFollowup: any = [];
   private setDue: any = [];
   private setGroup = null;
@@ -823,12 +824,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     );
 
-    // CamundaRest.getUsers(this.token, this.bpmApiUrl).then((response) => {
-    //   this.autoUserList = [];
-    //   response.data.forEach((element: any) => {
-    //     this.autoUserList.push({ code: element.id, label: element.email });
-    //   });
-    // });
+    CamundaRest.getUsers(this.token, this.bpmApiUrl).then((response) => {
+      this.autoUserList = [];
+      response.data.forEach((element: any) => {
+        this.autoUserList.push({ code: element.id, label: element.email });
+      });
+    });
     //We used two variables - taskId2 and taskIdValue because the router value from gettaskId is always constant,so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
     if (this.taskId2 !== this.taskIdValue) {
       this.taskId2 = this.taskIdValue;

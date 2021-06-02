@@ -2,7 +2,7 @@
   <div v-if="token">
     <CamundaTasklist
       :bpmApiUrl="configs.BPM_URL"
-      :token="configs.token"
+      :token="token"
       :formIOApiUrl= "configs.FORM_IO_API_URL"
       :formIOResourceId = "configs.FORM_IO_RESOURCE_ID"
       :formIOReviewerId = "configs.FORM_IO_REVIEWER_ID"
@@ -17,8 +17,10 @@
   </div>
 </template>
 
+
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import axios from 'axios';
 import CamundaTasklist from '@/components/TaskList.vue'
 // import configMap from '../utils/config-helper'
 @Component({
@@ -29,22 +31,58 @@ import CamundaTasklist from '@/components/TaskList.vue'
 export default class TaskList extends Vue {
   @Prop() private getTaskId!: string;
   public  configs = {
-    "token": "Bearer Token",
-    "BPM_URL": "Set Camunda URL",
-    "FORM_IO_API_URL": "Set FormIO Project URL",
-    "FORM_IO_RESOURCE_ID": "Set Formio Resource ID",
-    "FORM_IO_REVIEWER_ID": "Set Formio Reviewer ID",
-    "FORM_IO_REVIEWER": "Set Formio Reviewer Name",
-    "FORM_FLOW_API_URL":"Set formsflow.ai API URL",
-    "FORM_FLOW_URL":"Set formsflow.ai Project URL",
+    "BPM_URL": "https://bpm2.aot-technologies.com/camunda",
+    "FORM_IO_API_URL": "https://forms2.aot-technologies.com",
+    "FORM_IO_RESOURCE_ID": "5ff402c9f565ca0976bf6322",
+    "FORM_IO_REVIEWER_ID": "5ff402c9f565ca0976bf6322",
+    "FORM_IO_REVIEWER": "formsflow-reviewer",
+    "FORM_FLOW_API_URL":"http://207.216.46.114:5000",
+    "FORM_FLOW_URL":"http://localhost:4000",
     "SERVICEFLOW_ENABLED": true,
-    "FORMIO_ROLES" : "Set FORMIO User ROLES"
+    "FORMIO_ROLES" : ["formsflow-reviewer"]
   }
 
-    public isServiceFLowEnabled = true
-    mounted () {
-      this.isServiceFLowEnabled = true
+  public isServiceFLowEnabled = true
+  public jwttoken: any = false
+
+
+  get token () {
+    return this.jwttoken
+  }
+  
+  async getToken () {    
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
     }
+    const params = new URLSearchParams()
+    params.append('grant_type', 'password')
+    params.append('username', 'sumathi')
+    params.append('password', 'aot123')
+    params.append('client_id', 'forms-flow-web')
+
+    const url = "https://iam.aot-technologies.com/auth/realms/forms-flow-ai-test/protocol/openid-connect/token"
+    await axios.post(url, params, config)
+      .then((result: any) => {
+        // Do somthing
+        console.log(result,'<<<<<<================res=====', result.data.access_token)
+        this.jwttoken =  result.data.access_token;
+      })
+  }
+
+  created () {
+    this.getToken();
+  }
+
+
+  mounted () {
+    // this.token = sessionStorage.getItem('token')
+    console.log("taskId---->",this.getTaskId)
+    this.isServiceFLowEnabled = true
+    this.getToken()
+    //this.token()
+  }
 }
 </script>
 
