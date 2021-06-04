@@ -134,8 +134,9 @@ const CamundaRest = {
   },
 
   getUsers (bearerToken: string, CamundaUrl: string) {
-    return bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/user`);
+    return bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/user`)
   },
+
 
   getUsersByMemberGroups (
     bearerToken: string,

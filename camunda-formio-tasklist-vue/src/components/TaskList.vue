@@ -829,6 +829,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     CamundaRest.getUsers(this.token, this.bpmApiUrl).then((response) => {
       this.autoUserList = [];
       response.data.forEach((element: any) => {
+<<<<<<< HEAD
         this.autoUserList.push({
           userName: element.id,
           email: element.email,
@@ -836,6 +837,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           lastNameSearch: `${element.lastName} (${element.id})`,
           fullNameSearch: `${element.firstName} ${element.lastName} (${element.id})`
         });
+=======
+        this.autoUserList.push({ code: element.id, label: element.email });
+>>>>>>> f357a15d4e10f2845b186582dcacc0dd9a4e2af4
       });
     });
     //We used two variables - taskId2 and taskIdValue because the router value from gettaskId is always constant,so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
