@@ -55,7 +55,7 @@
                 <span>
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.followUp) }}
-                  <i class="bi bi-x-circle" @click="removeFollowupDate"></i>
+                  <i class="fa fa-times-circle" @click="removeFollowupDate"></i>
                 </span>
               </b-col>
               <b-col v-else cols="12" md="3">
@@ -75,7 +75,8 @@
                 <span>
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.due) }}
-                  <i class="bi bi-x-circle" @click="removeDueDate"></i>
+                  <i class="fa fa-times-circle" @click="removeDueDate"></i>
+                  <!-- <i class="fa fa-circle-xmark" @click="removeDueDate"></i> -->
                 </span>
               </b-col>
               <b-col v-else cols="12" md="3">
@@ -93,7 +94,7 @@
               </b-col>
               <b-col cols="12" md="3">
                 <div id="groups" v-b-modal.AddGroupModal>
-                  <i class="bi bi-grid-3x3-gap-fill"></i>
+                  <i class="fa fa-th mr-1"></i>
                   <span v-if="groupListNames">
                     {{ String(groupListNames) }}
                   </span>
@@ -114,7 +115,7 @@
                     </b-button>
                   </template>
                   <div class="modal-text">
-                    <i class="bi bi-exclamation-circle"></i>
+                    <i class="fa fa-exclamation-circle"></i>
                     You can add a group by typing a group ID into the input
                     field and afterwards clicking the button with the plus sign.
                     <b-row class="mt-3 mb-3">
@@ -126,7 +127,7 @@
                         >
                           <span>Add a group</span>
                           <span>
-                            <i class="bi bi-plus"></i>
+                            <i class="ml-2 fa fa-plus"></i>
                           </span>
                         </b-button>
                       </b-col>
@@ -168,7 +169,7 @@
                       >
                       </v-select>
                       <span @click="onSetassignee" class="col-9 col-md-1">
-                        <i class="bi bi-check assignee-tickmark-icon"></i>
+                        <i class="fa fa-check assignee-tickmark-icon"></i>
                       </span>
                       <span @click="toggleassignee" class="col-9 col-md-1">
                         <i class="fa fa-times ml-1 assignee-cancel-icon"></i>
@@ -180,7 +181,7 @@
                       Click to change <b>assignee</b>
                     </b-tooltip>
                     <span id="setAssignee">
-                      <i class="bi bi-person-fill cft-person-fill" />
+                      <i class="fa fa-user cft-person-fill" />
                       <span class="cft-user-span" @click="toggleassignee">
                         {{ task.assignee }}
                       </span>
@@ -197,7 +198,7 @@
               <b-col v-else cols="12" md="2">
                 <div @click="onClaim">
                   <span id="claimAssignee">
-                    <i class="bi bi-person-fill" />
+                    <i class="fa fa-user" />
                     Claim
                   </span>
                 </div>
@@ -254,7 +255,7 @@
         <ExpandContract />
         <b-row class="cft-not-selected mt-2 ml-1 row">
           <i
-            class="bi bi-exclamation-circle-fill"
+            class="fa fa-exclamation-circle-fill"
             variant="secondary"
             scale="1"
           ></i>
