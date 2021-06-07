@@ -195,7 +195,7 @@
                       <formio
                         :src="formioUrl"
                         :options="
-                          task.assignee === userName ? options : { readOnly: true }
+                          task.assignee !== userName ? { readOnly: true } : options 
                         "
                         
                         v-on:submit="onFormSubmitCallback"
@@ -310,9 +310,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private setGroup = null;
   private userSelected: any = {};
   private showfrom = false;
-  public perPage = 10;
-  private tasklength = 0;
-  private options = {noAlerts: false,i18n: {
+  public perPage: number = 10;
+  private tasklength: number = 0;
+  private options: object = {noAlerts: false,i18n: {
     en: {error: "Please fix the errors before submitting again.",},},
   };
   private filterList = [];
@@ -334,7 +334,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private autoUserList: any = []
   private taskIdValue = '';
   private taskId2 = '';
-  private userName: any = ''
   
   checkPropsIsPassedAndSetValue () {
     if(this.getTaskId) {
@@ -346,7 +345,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.taskIdValue = routeparams;
       }
     }
-    this.userName = getUserName()
+    this.userName = getUserName();
   }
 
   timedifference (date: Date) {
@@ -702,6 +701,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.maximize = para.maxi
     })
 
+    this.checkProps();
     this.checkPropsIsPassedAndSetValue();
     authenticateFormio(
       this.formIOResourceId,
