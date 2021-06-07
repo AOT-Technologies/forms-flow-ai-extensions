@@ -62,6 +62,10 @@ const CamundaRest = {
   getUsers (bearerToken: string, CamundaUrl: string) {
     return bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/user`)
   },
+
+  getUsersByMemberGroups (bearerToken: string, CamundaUrl: string, group: string) {
+    return bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/user?memberOfGroup=${group}`)
+  },
   
   filterList (bearerToken: string, CamundaUrl: string) {
     return bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/filter?resourceType=Task&itemCount=false&sortBy=name&sortOrder=asc`)
