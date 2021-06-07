@@ -51,14 +51,14 @@
           </b-row>
           <div class="cft-actionable-container">
             <b-row class="cft-actionable">
-              <b-col v-if="task.followUp" cols="12" md="3">
+              <b-col class="align-self-center" v-if="task.followUp" cols="12" md="3">
                 <span>
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.followUp) }}
                   <i class="bi bi-x-circle" @click="removeFollowupDate"></i>
                 </span>
               </b-col>
-              <b-col v-else cols="12" md="3">
+              <b-col class="align-self-center" v-else cols="12" md="3">
                 <DatePicker
                   type="datetime"
                   placeholder="Set Follow-up date"
@@ -71,14 +71,14 @@
                   @change="updateFollowUpDate"
                 ></DatePicker>
               </b-col>
-              <b-col v-if="task.due" cols="12" md="3">
+              <b-col class="align-self-center" v-if="task.due" cols="12" md="3">
                 <span>
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.due) }}
                   <i class="bi bi-x-circle" @click="removeDueDate"></i>
                 </span>
               </b-col>
-              <b-col v-else cols="12" md="3">
+              <b-col class="align-self-center" v-else cols="12" md="3">
                 <DatePicker
                   type="datetime"
                   placeholder="Set Due Date"
@@ -91,7 +91,7 @@
                   @change="updateDueDate"
                 ></DatePicker>
               </b-col>
-              <b-col cols="12" md="3">
+              <b-col class="align-self-center" cols="12" md="3">
                 <div id="groups" v-b-modal.AddGroupModal>
                   <i class="bi bi-grid-3x3-gap-fill"></i>
                   <span v-if="groupListNames">
@@ -156,40 +156,37 @@
                 </b-modal>
               </b-col>
               <b-col v-if="task.assignee" cols="12" :md="editAssignee ? 3 : 2">
-                <div>
-                  <div v-if="editAssignee" class="cft-user-edit">
-                    <div class="cft-assignee-change-box row">
-                      <v-select
-                        @search="fetchOptions"
-                        :options="autoUserList"
-                        v-model="userSelected"
-                        class="col-9 col-md-9"
-                      />
-                      <span @click="onSetassignee" class="col-9 col-md-1">
-                        <i class="bi bi-check assignee-tickmark-icon"></i>
-                      </span>
-                      <span @click="toggleassignee" class="col-9 col-md-1">
-                        <i class="fa fa-times ml-1 assignee-cancel-icon"></i>
-                      </span>
+                <div v-if="editAssignee" class="cft-user-edit">
+                  <div class="cft-assignee-change-box row">
+                    <div class="row col-9 col-md-9 icon-right-side">
+                      <i @click="onSetassignee" class="bi bi-check assignee-tickmark-icon icon-border"></i>
+                      <i @click="toggleassignee"  class="fa fa-times assignee-cancel-icon icon-border"></i>
+                      <!-- </span> -->
                     </div>
+                    <v-select
+                      @search="fetchOptions"
+                      :options="autoUserList"
+                      v-model="userSelected"
+                      class="col-9 col-md-9"
+                    />
                   </div>
-                  <div class="cft-user-details" v-else>
-                    <b-tooltip target="setAssignee" triggers="hover">
-                      Click to change <b>assignee</b>
-                    </b-tooltip>
-                    <span id="setAssignee">
-                      <i class="bi bi-person-fill cft-person-fill" />
-                      <span class="cft-user-span" @click="toggleassignee">
-                        {{ task.assignee }}
-                      </span>
+                </div>
+                <div class="cft-user-details" v-else>
+                  <b-tooltip target="setAssignee" triggers="hover">
+                    Click to change <b>assignee</b>
+                  </b-tooltip>
+                  <span id="setAssignee">
+                    <i class="bi bi-person-fill cft-person-fill" />
+                    <span class="cft-user-span" @click="toggleassignee">
+                      {{ task.assignee }}
                     </span>
-                    <b-tooltip target="resetAssignee" triggers="hover">
-                      Reset <b>Assignee</b>
-                    </b-tooltip>
-                    <span id="resetAssignee">
-                      <i class="fa fa-times ml-1" @click="onUnClaim" />
-                    </span>
-                  </div>
+                  </span>
+                  <b-tooltip target="resetAssignee" triggers="hover">
+                    Reset <b>Assignee</b>
+                  </b-tooltip>
+                  <span id="resetAssignee">
+                    <i class="fa fa-times ml-1" @click="onUnClaim" />
+                  </span>
                 </div>
               </b-col>
               <b-col v-else cols="12" md="2">
