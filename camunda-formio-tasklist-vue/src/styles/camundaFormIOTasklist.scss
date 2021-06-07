@@ -47,16 +47,13 @@
     min-height: 80vh;
   }
 
-  .task-header {
+  .cft-task-header {
     font-size: 30px;
     font-weight: 600;
     color: #212529;
     padding-top: 5px;
-  }
-  .task-name {
-    font-size: 20px;
-    font-weight: 400;
-    color: #212529;
+    cursor: pointer;
+    width: auto;
   }
 
   .cft-selected {
@@ -332,9 +329,7 @@
 .cft-process-title[data-title]:hover:after,
 .cft-task-title[data-title]:hover:after,
 .cft-priority[data-title]:hover:after,
-.cft-task-assignee[data-title]:hover:after,
-.cft-process-name[data-title]:hover:after,
-.task-header-title[data-title]:hover:after {
+.cft-task-assignee[data-title]:hover:after {
   font-size: 12px;
   content: attr(data-title);
   padding: 4px 8px;
@@ -361,10 +356,17 @@
 .cft-application-id{
   display: block;
   height: auto;
-  width:40%;
+  width:20%;
+  cursor: pointer;
 }
-.task-name{
+
+.cft-task-name{
   height: 20px;
+  width: 30%;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 400;
+  color: #212529;
 }
 
 .cft-task-assignee[data-title]:hover:after {
@@ -432,6 +434,9 @@ li {
 .cft-nav-backgroup, .cft-nav-backgroup:hover
 {
   background-color: #1a5a96;
+  border: #38598a !important;
+}
+.cft-filter-header {
   color: white;
 }
 .assignee-tickmark-icon {
@@ -440,4 +445,30 @@ li {
 .assignee-cancel-icon {
   font-size: 1.4em;
 }
+
+//TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
+
+[data-tooltip]:before {
+  visibility: unset !important;
+  position: initial !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  cursor:pointer !important;
+  // content is overiding as  empty string in integrated system, 
+  // below coded added to fix the issue in integrated system
+  content: "\f059"  !important;
+}
+
+[data-tooltip]:after {
+  opacity: 0 !important;
+}
+  
+.icon-right-side {
+  left: 8.3em;
+}
+.icon-border {
+  padding: 0.20rem 0.15rem !important;
+  border: 1px solid rgb(184, 184, 184) !important;
+}
+
 }
