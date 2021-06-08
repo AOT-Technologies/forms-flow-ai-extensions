@@ -55,7 +55,7 @@
                 <span>
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.followUp) }}
-                  <i class="bi bi-x-circle" @click="removeFollowupDate"></i>
+                  <i class="fa fa-circle-xmark" @click="removeFollowupDate"></i>
                 </span>
               </b-col>
               <b-col class="align-self-center" v-else cols="12" md="3">
@@ -75,7 +75,7 @@
                 <span>
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.due) }}
-                  <i class="bi bi-x-circle" @click="removeDueDate"></i>
+                  <i class="fa fa-circle-xmark" @click="removeDueDate"></i>
                 </span>
               </b-col>
               <b-col class="align-self-center" v-else cols="12" md="3">
@@ -93,7 +93,7 @@
               </b-col>
               <b-col class="align-self-center" cols="12" md="3">
                 <div id="groups" v-b-modal.AddGroupModal>
-                  <i class="bi bi-grid-3x3-gap-fill"></i>
+                  <i class="fa fa-group"></i>
                   <span v-if="groupListNames">
                     {{ String(groupListNames) }}
                   </span>
@@ -114,7 +114,7 @@
                     </b-button>
                   </template>
                   <div class="modal-text">
-                    <i class="bi bi-exclamation-circle"></i>
+                    <i class="fa fa-circle-exclamation"></i>
                     You can add a group by typing a group ID into the input
                     field and afterwards clicking the button with the plus sign.
                     <b-row class="mt-3 mb-3">
@@ -126,7 +126,7 @@
                         >
                           <span>Add a group</span>
                           <span>
-                            <i class="bi bi-plus"></i>
+                            <i class="fa fa-plus"></i>
                           </span>
                         </b-button>
                       </b-col>
@@ -159,7 +159,7 @@
                 <div v-if="editAssignee" class="cft-user-edit">
                   <div class="cft-assignee-change-box row">
                     <div class="row col-9 col-md-9 icon-right-side">
-                      <i @click="onSetassignee" class="bi bi-check assignee-tickmark-icon icon-border"></i>
+                      <i @click="onSetassignee" class="fa fa-check assignee-tickmark-icon icon-border"></i>
                       <i @click="toggleassignee"  class="fa fa-times assignee-cancel-icon icon-border"></i>
                       <!-- </span> -->
                     </div>
@@ -176,7 +176,7 @@
                     Click to change <b>assignee</b>
                   </b-tooltip>
                   <span id="setAssignee">
-                    <i class="bi bi-person-fill cft-person-fill" />
+                    <i class="fa fa-user cft-person-fill" />
                     <span class="cft-user-span" @click="toggleassignee">
                       {{ task.assignee }}
                     </span>
@@ -192,7 +192,7 @@
               <b-col v-else cols="12" md="2">
                 <div @click="onClaim">
                   <span id="claimAssignee">
-                    <i class="bi bi-person-fill" />
+                    <i class="fa fa-user" />
                     Claim
                   </span>
                 </div>
@@ -249,7 +249,7 @@
         <ExpandContract />
         <b-row class="cft-not-selected mt-2 ml-1 row">
           <i
-            class="bi bi-exclamation-circle-fill"
+            class="fa fa-circle-exclamation"
             variant="secondary"
             scale="1"
           ></i>
@@ -261,7 +261,6 @@
 </template>
 
 <script lang="ts">
-import "bootstrap-icons/font/bootstrap-icons.css";
 import "font-awesome/scss/font-awesome.scss";
 import "formiojs/dist/formio.full.min.css";
 import "vue2-datepicker/index.css";

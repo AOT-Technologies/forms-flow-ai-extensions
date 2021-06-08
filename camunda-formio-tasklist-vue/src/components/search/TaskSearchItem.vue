@@ -31,10 +31,10 @@
           <span v-if="showVariableValue[index] === 'i'" title="Property">
             <span>
               <span @click="showVariableValueItem(index)">
-                <i class="bi bi-check cft-approve-box"></i>
+                <i class="fa fa-check cft-approve-box"></i>
               </span>
               <i
-                class="bi bi-x cft-reject-box"
+                class="fa fa-times cft-reject-box"
                 @click="showVariableValueItem(index)"
               ></i
             ></span>
@@ -109,10 +109,10 @@
                   showsearchValueItem(index);
                 "
               >
-                <i class="bi bi-check cft-approve-box"></i>
+                <i class="fa fa-check cft-approve-box"></i>
               </span>
               <i
-                class="bi bi-x cft-reject-box"
+                class="fa fa-times cft-reject-box"
                 @click="showsearchValueItem(index)"
               ></i
             ></span>

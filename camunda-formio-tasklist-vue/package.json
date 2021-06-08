@@ -24,7 +24,6 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
-    "bootstrap-icons": "^1.4.0",
     "bootstrap-vue": "^2.21.2",
     "bpmn-js": "^8.6.0",
     "crypto-js": "4.0.0",
