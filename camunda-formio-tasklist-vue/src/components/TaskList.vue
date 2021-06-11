@@ -51,7 +51,12 @@
           </b-row>
           <div class="cft-actionable-container">
             <b-row class="cft-actionable">
-              <b-col class="align-self-center" v-if="task.followUp" cols="12" md="3">
+              <b-col
+                class="align-self-center"
+                v-if="task.followUp"
+                cols="12"
+                md="3"
+              >
                 <span>
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.followUp) }}
@@ -160,8 +165,14 @@
                 <div v-if="editAssignee" class="cft-user-edit">
                   <div class="cft-assignee-change-box row">
                     <div class="row col-9 col-md-9 icon-right-side">
-                      <i @click="onSetassignee" class="bi bi-check assignee-tickmark-icon icon-border"></i>
-                      <i @click="toggleassignee"  class="fa fa-times assignee-cancel-icon icon-border"></i>
+                      <i
+                        @click="onSetassignee"
+                        class="bi bi-check assignee-tickmark-icon icon-border"
+                      ></i>
+                      <i
+                        @click="toggleassignee"
+                        class="fa fa-times assignee-cancel-icon icon-border"
+                      ></i>
                       <!-- </span> -->
                     </div>
                     <v-select
@@ -177,7 +188,7 @@
                     Click to change <b>assignee</b>
                   </b-tooltip>
                   <span id="setAssignee">
-                    <i class="bi bi-person-fill cft-person-fill" />
+                    <i class="fa fa-user cft-person-fill" />
                     <span class="cft-user-span" @click="toggleassignee">
                       {{ task.assignee }}
                     </span>
@@ -262,7 +273,6 @@
 </template>
 
 <script lang="ts">
-import "bootstrap-icons/font/bootstrap-icons.css";
 import "font-awesome/scss/font-awesome.scss";
 import "formiojs/dist/formio.full.min.css";
 import "vue2-datepicker/index.css";
@@ -275,7 +285,7 @@ import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   findFilterKeyOfAllTask,
   getTaskFromList,
-  getUserName,
+  getUserName
 } from "../services/utils";
 import BpmnViewer from "bpmn-js";
 import CamundaRest from "../services/camunda-rest";
@@ -294,6 +304,7 @@ import { getISODateTime } from "../services/format-time";
 import { getformHistoryApi } from "../services/formsflowai-api";
 import moment from "moment";
 import { namespace } from "vuex-class";
+import { reviewerGroup } from "../services/constants";
 import vSelect from "vue-select";
 
 const serviceFlowModule = namespace("serviceFlowModule");
@@ -307,8 +318,8 @@ const serviceFlowModule = namespace("serviceFlowModule");
     LeftSider,
     vSelect,
     ExpandContract,
-    BpmnViewer,
-  },
+    BpmnViewer
+  }
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
@@ -345,8 +356,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private editFormoptions: object = {
     noAlerts: false,
     i18n: {
-      en: { error: "Please fix the errors before submitting again." },
-    },
+      en: { error: "Please fix the errors before submitting again." }
+    }
   };
   private readFormOptions: object = { readOnly: true };
   private filterList: Array<object> = [];
@@ -362,7 +373,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     active: true,
     sorting: TASK_FILTER_LIST_DEFAULT_PARAM,
     firstResult: 0,
-    maxResults: this.perPage,
+    maxResults: this.perPage
   };
   private taskHistoryList: Array<object> = [];
   private autoUserList: any = [];
@@ -402,7 +413,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     CamundaRest.createTaskGroupByID(this.token, this.task.id, this.bpmApiUrl, {
       userId: null,
       groupId: this.setGroup,
-      type: "candidate",
+      type: "candidate"
     }).then(() => {
       this.getGroupDetails();
       this.reloadCurrentTask();
@@ -430,7 +441,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   deleteGroup (groupid: string) {
     CamundaRest.deleteTaskGroupByID(this.token, this.task.id, this.bpmApiUrl, {
       groupId: groupid,
-      type: "candidate",
+      type: "candidate"
     }).then(() => {
       this.getGroupDetails();
       this.reloadCurrentTask();
@@ -441,12 +452,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const formRequestFormat = {
       variables: {
         formUrl: {
-          value: this.formioUrl,
+          value: this.formioUrl
         },
         applicationId: {
-          value: this.applicationId,
-        },
-      },
+          value: this.applicationId
+        }
+      }
     };
     CamundaRest.formTaskSubmit(
       this.token,
@@ -457,31 +468,29 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       .then(() => {
         this.reloadCurrentTask();
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("Error", error);
       });
   }
 
   getBPMTaskDetail (taskId: string) {
-    CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl).then(
-      (result) => {
-        this.task = result.data;
-        CamundaRest.getProcessDefinitionById(
-          this.token,
-          this.task.processDefinitionId,
-          this.bpmApiUrl
-        ).then((res) => {
-          this.taskProcess = res.data.name;
-        });
-      }
-    );
+    CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl).then(result => {
+      this.task = result.data;
+      CamundaRest.getProcessDefinitionById(
+        this.token,
+        this.task.processDefinitionId,
+        this.bpmApiUrl
+      ).then(res => {
+        this.taskProcess = res.data.name;
+      });
+    });
     this.getGroupDetails();
   }
 
   getTaskFormIODetails (taskId: string) {
     this.showfrom = false;
     CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
-      (result) => {
+      result => {
         if (result.data["formUrl"]?.value) {
           this.formioUrl = result.data["formUrl"]?.value;
           const { formioUrl, formId, submissionId } = getFormDetails(
@@ -502,14 +511,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.applicationId = "";
     this.taskHistoryList = [];
     CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
-      (result) => {
+      result => {
         if (result.data && result.data["applicationId"]?.value) {
           this.applicationId = result.data["applicationId"].value;
           getformHistoryApi(
             this.formsflowaiApiUrl,
             result.data["applicationId"].value,
             this.token
-          ).then((r) => {
+          ).then(r => {
             this.taskHistoryList = r.data.applications;
           });
         }
@@ -522,14 +531,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.token,
       task.processDefinitionId,
       this.bpmApiUrl
-    ).then(async (res) => {
+    ).then(async res => {
       this.xmlData = res.data.bpmn20Xml;
       const div = document.getElementById("canvas");
       if (div) {
         div.innerHTML = "";
       }
       const viewer = new BpmnViewer({
-        container: "#canvas",
+        container: "#canvas"
       });
 
       try {
@@ -588,7 +597,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.perPage
         );
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("Error", error);
       });
   }
@@ -598,7 +607,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       .then(() => {
         this.reloadCurrentTask();
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("Error", error);
       });
   }
@@ -619,7 +628,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.perPage
         );
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("Error", error);
       });
     this.toggleassignee();
@@ -631,7 +640,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       filterId,
       requestData,
       this.bpmApiUrl
-    ).then((result) => {
+    ).then(result => {
       this.fulltasks = result.data;
       this.tasklength = result.data.length;
     });
@@ -651,7 +660,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       first,
       max,
       this.bpmApiUrl
-    ).then((result) => {
+    ).then(result => {
       this.tasks = result.data;
     });
   }
@@ -661,7 +670,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       .then(() => {
         this.reloadCurrentTask();
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("Error", error);
       });
   }
@@ -777,7 +786,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.userEmail,
       this.formIOUserRoles
     );
-    CamundaRest.filterList(this.token, this.bpmApiUrl).then((response) => {
+    CamundaRest.filterList(this.token, this.bpmApiUrl).then(response => {
       this.filterList = response.data;
       this.selectedfilterId = findFilterKeyOfAllTask(
         this.filterList,
@@ -822,15 +831,19 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     );
 
-    CamundaRest.getUsers(this.token, this.bpmApiUrl).then((response) => {
+    CamundaRest.getUsersByMemberGroups(
+      this.token,
+      this.bpmApiUrl,
+      reviewerGroup
+    ).then(response => {
       this.autoUserList = [];
       response.data.forEach((element: any) => {
         this.autoUserList.push({
-          userName: element.id,
+          code: element.id,
           email: element.email,
           fullName: `${element.firstName} ${element.lastName}`,
           lastNameSearch: `${element.lastName} (${element.id})`,
-          fullNameSearch: `${element.firstName} ${element.lastName} (${element.id})`
+          label: `${element.lastName} ${element.firstName}`
         });
       });
     });
@@ -847,13 +860,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.token,
       this.bpmApiUrl,
       search,
-      "formsflow/formsflow-reviewer"
-    ).then((response) => {
+      reviewerGroup
+    ).then(response => {
       this.autoUserList = [];
       response.data.forEach((element: any) => {
         this.autoUserList.push({
           code: element.id,
-          label: `${element.firstName} ${element.lastName} - (${element.id})`,
+          label: `${element.lastName} ${element.firstName}`
         });
       });
     });
@@ -869,11 +882,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       .indexOf(this.taskIdValue);
     this.setFormsFlowactiveIndex(pos % this.perPage);
     this.$root.$emit("update-activeIndex-pagination", {
-      activeindex: this.getFormsFlowactiveIndex,
+      activeindex: this.getFormsFlowactiveIndex
     });
     this.setFormsFlowTaskCurrentPage(Math.floor(pos / this.perPage) + 1);
     this.$root.$emit("update-pagination-currentpage", {
-      page: this.getFormsFlowTaskCurrentPage,
+      page: this.getFormsFlowTaskCurrentPage
     });
   }
 
