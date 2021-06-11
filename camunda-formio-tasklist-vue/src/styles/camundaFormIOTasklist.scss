@@ -4,7 +4,7 @@
   text-align: left;
   font-size: 16px;
   font-family: Nunito Sans, SemiBold;
-  
+
   .bg-default {
     background-color: #38598a !important;
     border: #38598a !important;
@@ -41,7 +41,7 @@
     border-top: 1px solid #ced4da !important;
     padding-right: 25px;
     border-right: 2px solid #D0D0D0;
-  } 
+  }
 
   .cft-service-task-details {
     min-height: 80vh;
@@ -92,7 +92,7 @@
     justify-content: flex-end;
   }
 
-  .cft-filter-dropbtn 
+  .cft-filter-dropbtn
   {
     background-color: #1a5a96;
     color: white;
@@ -106,7 +106,7 @@
     justify-content: space-between;
   }
 
-  .cft-filter-dropdown 
+  .cft-filter-dropdown
   {
     position: relative;
   }
@@ -161,7 +161,7 @@
     color: #0b2d5f;;
   }
 
-  .cft-filter-dropdown-content 
+  .cft-filter-dropdown-content
   {
     font-size: large;
     display: block;
@@ -175,7 +175,7 @@
   .cft-list-container {
     margin-top: 5px;
   }
-  
+
   .cft-task-details-assign{
     display: flex;
     justify-content: space-between;
@@ -218,7 +218,7 @@
     color: #212529;
     }
   }
-  
+
   .cftf-dpdown-box {
     margin-top: 5px;
     .fa-chevron-down {
@@ -254,7 +254,7 @@
   .tab-content {
     height:100%;
   }
-  
+
   .vue-bpmn-diagram-container {
     height: 100%;
     width: 100%;
@@ -271,7 +271,7 @@
     cursor: pointer;
     margin-right: 0.25rem;
   }
-  
+
   .cftf-add-sorting {
     color: #212529;
     padding: 5px;
@@ -320,6 +320,7 @@
   }
   .height-100{
     min-height: 100%;
+    overflow-x: hidden;
   }
 
   .cft-priority{
@@ -454,15 +455,16 @@ li {
   box-shadow: none !important;
   opacity: 1 !important;
   cursor:pointer !important;
-  // content is overiding as  empty string in integrated system, 
+  // content is overiding as  empty string in integrated system,
   // below coded added to fix the issue in integrated system
   content: "\f059"  !important;
+  color: #2780e3;
 }
 
 [data-tooltip]:after {
   opacity: 0 !important;
 }
-  
+
 .icon-right-side {
   left: 8.3em;
 }
@@ -471,4 +473,17 @@ li {
   border: 1px solid rgb(184, 184, 184) !important;
 }
 
+.tooltip-inner {
+  background-color: white;
+  color: black;
+  box-shadow: 1px 1px 1px 1px;
+}
+
+.tooltip-inner a {
+  color: #2780e3;
+}
+.cft-actionable-container a{
+  color: #2780e3;
+  border-bottom-style: none;
+}
 }
