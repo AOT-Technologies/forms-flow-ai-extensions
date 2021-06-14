@@ -24,7 +24,6 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
-    "bootstrap-icons": "^1.4.0",
     "bootstrap-vue": "^2.21.2",
     "bpmn-js": "^8.6.0",
     "crypto-js": "4.0.0",
@@ -35,7 +34,7 @@
     "semantic-ui-css": "^2.4.1",
     "sockjs-client": "^1.5.1",
     "stompjs": "^2.3.3",
-    "vue": "2.6.12",
+    "vue": "2.6.14",
     "vue-formio": "^4.0.7",
     "vue-property-decorator": "^9.1.2",
     "vue-router": "3.5.1",
@@ -65,7 +64,7 @@
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.2",
     "typescript": "4.2.3",
-    "vue-template-compiler": "2.6.12"
+    "vue-template-compiler": "2.6.14"
   },
   "files": [
     "dist/*",

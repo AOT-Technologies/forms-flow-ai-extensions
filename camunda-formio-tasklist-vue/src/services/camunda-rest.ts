@@ -134,9 +134,8 @@ const CamundaRest = {
   },
 
   getUsers (bearerToken: string, CamundaUrl: string) {
-    return bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/user`)
+    return bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/user`);
   },
-
 
   getUsersByMemberGroups (
     bearerToken: string,
@@ -148,7 +147,48 @@ const CamundaRest = {
     );
   },
 
+  getUsersByFirstName (
+    bearerToken: string,
+    CamundaUrl: string,
+    firstName: string | null
+  ) {
+    return bpmAxios(bearerToken, CamundaUrl).get(
+      `/${engine}/user?firstNameLike=%${firstName}%`
+    );
+  },
+
   getUsersByLastName (
+    bearerToken: string,
+    CamundaUrl: string,
+    lastName: string | null
+  ) {
+    return bpmAxios(bearerToken, CamundaUrl).get(
+      `/${engine}/user?lastNameLike=%${lastName}%`
+    );
+  },
+
+  getUsersByEmail (
+    bearerToken: string,
+    CamundaUrl: string,
+    email: string | null
+  ) {
+    return bpmAxios(bearerToken, CamundaUrl).get(
+      `/${engine}/user?emailLike=%${email}%`
+    );
+  },
+
+  getUsersByFirstNameGroups (
+    bearerToken: string,
+    CamundaUrl: string,
+    firstName: string | null,
+    group: string
+  ) {
+    return bpmAxios(bearerToken, CamundaUrl).get(
+      `/${engine}/user?memberOfGroup=${group}&firstNameLike=%${firstName}%`
+    );
+  },
+
+  getUsersByLastNameGroups (
     bearerToken: string,
     CamundaUrl: string,
     lastName: string | null,
@@ -156,6 +196,17 @@ const CamundaRest = {
   ) {
     return bpmAxios(bearerToken, CamundaUrl).get(
       `/${engine}/user?lastNameLike=%${lastName}%&memberOfGroup=${group}`
+    );
+  },
+
+  getUsersByEmailGroups (
+    bearerToken: string,
+    CamundaUrl: string,
+    email: string | null,
+    group: string
+  ) {
+    return bpmAxios(bearerToken, CamundaUrl).get(
+      `/${engine}/user?emailLike=%${email}%&memberOfGroup=${group}`
     );
   },
 
