@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3><i class="bi bi-list-task"></i> Application History</h3>
+    <h3><i class="fa fa-list"></i> Application History</h3>
     <b-col v-if="applicationId && taskHistoryList.length">
       <b-table-simple
         caption-top
@@ -26,7 +26,7 @@
                 :href="formatURL(h.formUrl)"
                 target="_blank"
               >
-                <i class="bi bi-eye-fill" style="color:black;"></i>
+                <i class="fa fa-eye" style="color:black;"></i>
                 View Submission
               </b-button>
             </b-th>
