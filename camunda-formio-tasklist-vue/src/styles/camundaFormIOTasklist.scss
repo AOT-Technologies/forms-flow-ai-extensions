@@ -441,7 +441,7 @@ li {
   color: white;
 }
 .assignee-tickmark-icon {
-  font-size: 1.6em;
+  font-size: 1.4em;
 }
 .assignee-cancel-icon {
   font-size: 1.4em;
@@ -485,5 +485,8 @@ li {
 .cft-actionable-container a{
   color: #2780e3;
   border-bottom-style: none;
+}
+.row .v-select .vs__dropdown-toggle {
+  width: 150px;
 }
 }
