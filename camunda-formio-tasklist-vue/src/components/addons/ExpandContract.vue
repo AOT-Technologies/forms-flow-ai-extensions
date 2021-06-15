@@ -2,8 +2,8 @@
   <b-navbar>
     <b-nav-form>
       <b-button @click="clickMaxi" variant="light" size="sm">
-        <i v-if="maximize" class="bi bi-arrows-angle-expand"></i>
-        <i v-else class="bi bi-arrows-angle-contract"></i>
+        <i v-if="maximize" class="fa fa-expand"></i>
+        <i v-else class="fa fa-compress"></i>
       </b-button>
     </b-nav-form>
   </b-navbar>
