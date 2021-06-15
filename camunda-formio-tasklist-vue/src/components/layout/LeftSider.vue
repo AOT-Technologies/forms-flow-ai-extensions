@@ -12,14 +12,12 @@
         v-on:click="toggle(idx)"
         :class="{ 'cft-selected': idx == activeIndex }"
       >
-        <div @click="setselectedTask(task.id)" class="cft-select-task">
-          <h5 class="cft-task-title" data-title="Task Name">{{ task.name }}</h5>
+        <b-container fluid @click="setselectedTask(task.id)">
+          <b-row class="cft-task-title"
+            >{{ task.name }}
+          </b-row>
           <b-row>
-            <b-col cols="6">
-              <div
-                class="cft-process-title"
-                data-tile="Process Definition Name"
-              >
+            <b-col cols="6" class="cft-process-title">
                 {{
                   getProcessDataFromList(
                     getProcessDefinitions,
@@ -27,7 +25,6 @@
                     "name"
                   )
                 }}
-              </div>
             </b-col>
             <b-col cols="6">
               <div class="cft-task-assignee" data-title="Task assignee">
@@ -36,25 +33,19 @@
             </b-col>
           </b-row>
           <b-row>
-            <div class="created-details font-11 cft-task-details-assign">
+            <div class="created-details cft-task-details-assign">
               <b-col cols="9">
                 <span
-                  class="cft-due-date"
-                  :data-title="getExactDate(task.due)"
                   v-if="task.due"
                 >
                   Due {{ timedifference(task.due) }},
                 </span>
                 <span
-                  class="cft-due-date"
-                  :data-title="getExactDate(task.followUp)"
                   v-if="task.followUp"
                 >
                   Follow-up {{ timedifference(task.followUp) }},
                 </span>
                 <span
-                  class="cft-due-date"
-                  :data-title="getExactDate(task.created)"
                   v-if="task.created"
                 >
                   Created {{ timedifference(task.created) }}
@@ -65,7 +56,7 @@
               </b-col>
             </div>
           </b-row>
-        </div>
+        </b-container>
       </b-list-group-item>
 
       <b-pagination
