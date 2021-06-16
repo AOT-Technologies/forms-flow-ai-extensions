@@ -77,7 +77,7 @@
     </b-list-group>
     <b-list-group cols="3" v-else>
       <b-row class="cft-not-selected mt-2 ml-1 row">
-        <i class="bi bi-exclamation-circle-fill" scale="1"></i>
+        <i class="fa fa-circle-exclamation" scale="1"></i>
         <p>No tasks found in the list.</p>
       </b-row>
     </b-list-group>

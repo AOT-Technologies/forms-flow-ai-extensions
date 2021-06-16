@@ -1,3 +1,5 @@
+@import "vue-select/src/scss/vue-select.scss";
+
 .task-outer-container{
   max-width: 100vw;
   background-color: white;
@@ -441,10 +443,10 @@ li {
   color: white;
 }
 .assignee-tickmark-icon {
-  font-size: 1.6em;
+  font-size: 1.1em;
 }
 .assignee-cancel-icon {
-  font-size: 1.4em;
+  font-size: 1.25em;
 }
 
 //TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
@@ -482,8 +484,11 @@ li {
 .tooltip-inner a {
   color: #2780e3;
 }
-.cft-actionable-container a{
+.cft-actionable-container .form-tab-conatiner a{
   color: #2780e3;
   border-bottom-style: none;
+}
+.row .v-select .vs__dropdown-toggle {
+  width: 150px;
 }
 }
