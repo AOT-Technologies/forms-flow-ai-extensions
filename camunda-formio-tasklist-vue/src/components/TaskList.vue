@@ -70,7 +70,7 @@
                   </b-tooltip>
                 </span>
               </b-col>
-              <b-col class="align-self-center" v-else cols="12" md="3">
+              <b-col class="d-flex align-items-end" v-else cols="12" md="3">
                 <DatePicker
                   type="datetime"
                   placeholder="Set Follow-up date"
@@ -83,7 +83,7 @@
                   @change="updateFollowUpDate"
                 ></DatePicker>
               </b-col>
-              <b-col class="align-self-center" v-if="task.due" cols="12" md="3">
+              <b-col class="d-flex align-items-end" v-if="task.due" cols="12" md="3">
                 <span>
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.due) }}
@@ -93,7 +93,7 @@
                   </b-tooltip>
                 </span>
               </b-col>
-              <b-col class="align-self-center" v-else cols="12" md="3">
+              <b-col class="d-flex align-items-end" v-else cols="12" md="3">
                 <DatePicker
                   type="datetime"
                   placeholder="Set Due Date"
@@ -106,7 +106,7 @@
                   @change="updateDueDate"
                 ></DatePicker>
               </b-col>
-              <b-col class="align-self-center" cols="12" md="3">
+              <b-col class="d-flex align-items-end" cols="12" md="3">
                 <div id="groups" v-b-modal.AddGroupModal>
                   <i class="fa fa-th mr-1"></i>
                   <span v-if="groupListNames">
@@ -170,10 +170,11 @@
                   </div>
                 </b-modal>
               </b-col>
-              <b-col v-if="task.assignee" cols="12" :md="3">
+              <b-col :class="task.assignee ? 'd-flex align-items-end' : ''"
+                v-if="task.assignee" >
                 <div v-if="editAssignee" class="cft-user-edit">
-                  <div class="cft-assignee-change-box row">
-                    <div class="row col-9 col-md-9 icon-right-side">
+                  <div class="cft-assignee-change-box">
+                    <div class="d-flex justify-content-end row">
                       <i
                         @click="onSetassignee"
                         class="fa fa-check assignee-tickmark-icon icon-border"
@@ -184,13 +185,16 @@
                       ></i>
                       <!-- </span> -->
                     </div>
-                    <v-select
-                      @search="fetchOptions"
-                      :options="autoUserList"
-                      v-model="userSelected"
-                      placeholder="Search by Lastname"
-                      class="col-9 col-md-9"
-                    />
+                    <div class="row">
+                      <v-select
+                        @search="fetchOptions"
+                        :options="autoUserList"
+                        v-model="userSelected"
+                        full-width
+                        placeholder="Search by Lastname"
+                        class="d-flex align-items-end"
+                      />
+                    </div>
                   </div>
                 </div>
                 <div class="cft-user-details" v-else>
@@ -226,7 +230,7 @@
             <div class="height-100">
               <b-tabs pills class="height-100" content-class="mt-3">
                 <b-tab title="Form" active>
-                  <div v-if="showfrom" class="ml-4 mr-4">
+                  <div v-if="showfrom" class="ml-4 mr-4 form-tab-conatiner">
                     <b-overlay
                       :show="task.assignee !== userName"
                       variant="light"
