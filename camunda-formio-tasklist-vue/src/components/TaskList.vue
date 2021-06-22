@@ -10,7 +10,7 @@
       :payload="payload"
     />
     <b-row class="cft-service-task-list mt-1">
-      <b-col xl="3" lg="3" md="12" class="cft-first" v-if="maximize">
+      <b-col xl="3" lg="3" md="12" v-if="maximize">
         <LeftSider
           v-if="token && bpmApiUrl"
           :token="token"
@@ -764,6 +764,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.setFormsFlowTaskId("");
     this.setFormsFlowactiveIndex(0);
     this.$root.$on("call-fetchData", (para: any) => {
+      this.reloadTasks();
       this.editAssignee = false;
       this.setFormsFlowTaskId(para.selectedTaskId);
       this.fetchTaskData(this.getFormsFlowTaskId);
