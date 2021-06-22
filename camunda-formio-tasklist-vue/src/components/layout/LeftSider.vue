@@ -4,6 +4,11 @@
       @update-task-list="onSearchUpdateTasklistResult"
       :tasklength="Lentask"
     />
+    <task-list-sort
+    :selectedfilterId="selectedfilterId"
+    :perPage="perPage"
+    :payload="payload"
+    />
     <b-list-group class="cft-list-container" v-if="tasks && tasks.length">
       <b-list-group-item
         button
@@ -81,6 +86,7 @@ import BaseMixin from "../mixins/BaseMixin.vue";
 import CamundaRest from "../../services/camunda-rest";
 import { Payload } from "../../services/TasklistTypes";
 import TaskListSearch from "../search/TaskListSearch.vue";
+import TaskListSort from "../sort/TaskListSort.vue";
 import cloneDeep from "lodash/cloneDeep";
 import { getFormattedDateAndTime } from "../../services/format-time";
 import isEqual from "lodash/isEqual";
@@ -92,6 +98,7 @@ const serviceFlowModule = namespace("serviceFlowModule");
 @Component({
   components: {
     TaskListSearch,
+    TaskListSort
   },
 })
 export default class LeftSider extends Mixins(BaseMixin) {

@@ -23,7 +23,7 @@
         </b-nav-item-dropdown>
       </div>
       <FormListModal :token="token" :bpmApiUrl="bpmApiUrl" />
-      <div class="cft-first">
+      <!-- <div class="cft-first">
         <div id="cftf-dpdown-container" class="mx-2">
           <div
             class="cftf-dpdown-box mr-2"
@@ -84,8 +84,8 @@
             @add-sort="addSort"
           >
           </TaskSortOptions>
-        </div>
-      </div>
+        </div> -->
+      <!-- </div> -->
     </div>
   </b-container>
 </template>
@@ -122,11 +122,10 @@ export default class Header extends Mixins(BaseMixin) {
   public setFormsFlowTaskCurrentPage: any;
 
   private activefilter = 0;
-  private sortList = TASK_FILTER_LIST_DEFAULT_PARAM;
-  private sortOptions: Array<object> = [];
-  private userList: Array<object> = [];
-  private updateSortOptions: Array<object> = [];
-  private setupdateSortListDropdownindex = 0;
+  // private sortList = TASK_FILTER_LIST_DEFAULT_PARAM;
+  // private sortOptions: Array<object> = [];
+  // private updateSortOptions: Array<object> = [];
+  // private setupdateSortListDropdownindex = 0;
 
   togglefilter (filter: any, index: number) {
     this.activefilter = index;
@@ -146,100 +145,100 @@ export default class Header extends Mixins(BaseMixin) {
     });
   }
 
-  getOptions (options: any) {
-    const optionsArray: {
-      sortOrder: string;
-      label: string;
-      sortBy: string;
-    }[] = [];
-    sortingList.forEach((sortOption) => {
-      if (
-        !options.some(
-          (option: { sortBy: string }) => option.sortBy === sortOption.sortBy
-        )
-      ) {
-        optionsArray.push({ ...sortOption });
-      }
-    });
-    return optionsArray;
-  }
+  // getOptions (options: any) {
+  //   const optionsArray: {
+  //     sortOrder: string;
+  //     label: string;
+  //     sortBy: string;
+  //   }[] = [];
+  //   sortingList.forEach((sortOption) => {
+  //     if (
+  //       !options.some(
+  //         (option: { sortBy: string }) => option.sortBy === sortOption.sortBy
+  //       )
+  //     ) {
+  //       optionsArray.push({ ...sortOption });
+  //     }
+  //   });
+  //   return optionsArray;
+  // }
 
-  addSort (sort: any) {
-    this.sortList.push(sort);
-    if (this.sortList.length === sortingList.length) {
-      this.updateSortOptions = this.sortOptions;
-      this.sortOptions = [];
-    } else {
-      this.sortOptions = this.getOptions(this.sortList);
-    }
-    this.setFormsFlowTaskCurrentPage(1);
-    this.$root.$emit("update-pagination-currentpage", {
-      page: this.getFormsFlowTaskCurrentPage,
-    });
-    this.$root.$emit("call-fetchPaginatedTaskList", {
-      filterId: this.selectedfilterId,
-      requestData: this.payload,
-      firstResult: (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
-      maxResults: this.perPage,
-    });
-  }
+  // addSort (sort: any) {
+  //   this.sortList.push(sort);
+  //   if (this.sortList.length === sortingList.length) {
+  //     this.updateSortOptions = this.sortOptions;
+  //     this.sortOptions = [];
+  //   } else {
+  //     this.sortOptions = this.getOptions(this.sortList);
+  //   }
+  //   this.setFormsFlowTaskCurrentPage(1);
+  //   this.$root.$emit("update-pagination-currentpage", {
+  //     page: this.getFormsFlowTaskCurrentPage,
+  //   });
+  //   this.$root.$emit("call-fetchPaginatedTaskList", {
+  //     filterId: this.selectedfilterId,
+  //     requestData: this.payload,
+  //     firstResult: (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+  //     maxResults: this.perPage,
+  //   });
+  // }
 
-  updateSort (sort: any, index: number) {
-    this.sortList[index].label = sort.label;
-    this.sortList[index].sortBy = sort.sortBy;
+  // updateSort (sort: any, index: number) {
+  //   this.sortList[index].label = sort.label;
+  //   this.sortList[index].sortBy = sort.sortBy;
 
-    this.sortOptions = this.getOptions(this.sortList);
-    this.payload["sorting"] = this.sortList;
-    this.setFormsFlowTaskCurrentPage(1);
-    this.$root.$emit("update-pagination-currentpage", {
-      page: this.getFormsFlowTaskCurrentPage,
-    });
-    this.$root.$emit("call-fetchPaginatedTaskList", {
-      filterId: this.selectedfilterId,
-      requestData: this.payload,
-      firstResult: (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
-      maxResults: this.perPage,
-    });
-  }
+  //   this.sortOptions = this.getOptions(this.sortList);
+  //   this.payload["sorting"] = this.sortList;
+  //   this.setFormsFlowTaskCurrentPage(1);
+  //   this.$root.$emit("update-pagination-currentpage", {
+  //     page: this.getFormsFlowTaskCurrentPage,
+  //   });
+  //   this.$root.$emit("call-fetchPaginatedTaskList", {
+  //     filterId: this.selectedfilterId,
+  //     requestData: this.payload,
+  //     firstResult: (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+  //     maxResults: this.perPage,
+  //   });
+  // }
 
-  deleteSort (sort: any, index: number) {
-    this.sortList.splice(index, 1);
-    this.updateSortOptions = [];
-    this.sortOptions = this.getOptions(this.sortList);
-    this.payload["sorting"] = this.sortList;
-    this.setFormsFlowTaskCurrentPage(1);
-    this.$root.$emit("update-pagination-currentpage", {
-      page: this.getFormsFlowTaskCurrentPage,
-    });
-    this.$root.$emit("call-fetchPaginatedTaskList", {
-      filterId: this.selectedfilterId,
-      requestData: this.payload,
-      firstResult: (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
-      maxResults: this.perPage,
-    });
-  }
+  // deleteSort (sort: any, index: number) {
+  //   this.sortList.splice(index, 1);
+  //   this.updateSortOptions = [];
+  //   this.sortOptions = this.getOptions(this.sortList);
+  //   this.payload["sorting"] = this.sortList;
+  //   this.setFormsFlowTaskCurrentPage(1);
+  //   this.$root.$emit("update-pagination-currentpage", {
+  //     page: this.getFormsFlowTaskCurrentPage,
+  //   });
+  //   this.$root.$emit("call-fetchPaginatedTaskList", {
+  //     filterId: this.selectedfilterId,
+  //     requestData: this.payload,
+  //     firstResult: (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+  //     maxResults: this.perPage,
+  //   });
+  // }
 
-  toggleSort (index: number) {
-    if (this.sortList[index].sortOrder === "asc")
-      this.sortList[index].sortOrder = "desc";
-    else {
-      this.sortList[index].sortOrder = "asc";
-    }
-    this.payload["sorting"] = this.sortList;
-    this.setFormsFlowTaskCurrentPage(1);
-    this.$root.$emit("update-pagination-currentpage", {
-      page: this.getFormsFlowTaskCurrentPage,
-    });
-    this.$root.$emit("call-fetchPaginatedTaskList", {
-      filterId: this.selectedfilterId,
-      requestData: this.payload,
-      firstResult: (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
-      maxResults: this.perPage,
-    });
-  }
+  // toggleSort (index: number) {
+  //   if (this.sortList[index].sortOrder === "asc")
+  //     this.sortList[index].sortOrder = "desc";
+  //   else {
+  //     this.sortList[index].sortOrder = "asc";
+  //   }
+  //   this.payload["sorting"] = this.sortList;
+  //   this.setFormsFlowTaskCurrentPage(1);
+  //   this.$root.$emit("update-pagination-currentpage", {
+  //     page: this.getFormsFlowTaskCurrentPage,
+  //   });
+  //   this.$root.$emit("call-fetchPaginatedTaskList", {
+  //     filterId: this.selectedfilterId,
+  //     requestData: this.payload,
+  //     firstResult: (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+  //     maxResults: this.perPage,
+  //   });
+  // }
 
-  mounted () {
-    this.sortOptions = this.getOptions(this.sortList);
-  }
+  // mounted () {
+  //   this.sortOptions = this.getOptions(this.sortList);
+  // }
 }
 </script>

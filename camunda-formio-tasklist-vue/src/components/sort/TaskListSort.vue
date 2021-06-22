@@ -62,7 +62,37 @@
 </template>
 
 <script lang="ts">
-export default {};
+import { Component, Prop, Vue } from "vue-property-decorator";
+import {
+  TASK_FILTER_LIST_DEFAULT_PARAM,
+  sortingList,
+} from "../../services/utils";
+import { Payload } from "../../services/TasklistTypes";
+import TaskSortOptions from "../TaskListSortoptions.vue";
+import { namespace } from "vuex-class";
+
+const serviceFlowModule = namespace("serviceFlowModule");
+
+@Component({
+  components: {
+    TaskSortOptions,
+  }
+})
+export default class TaskListSort extends Vue {
+  @Prop() private perPage!: number;
+  @Prop() private selectedfilterId!: string;
+  @Prop() private payload!: Payload;
+
+  @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
+  private getFormsFlowTaskCurrentPage: any;
+  @serviceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
+  public setFormsFlowTaskCurrentPage: any;
+
+  private sortList = TASK_FILTER_LIST_DEFAULT_PARAM;
+  private sortOptions: Array<object> = [];
+  private updateSortOptions: Array<object> = [];
+  private setupdateSortListDropdownindex = 0;
+
   getOptions (options: any) {
     const optionsArray: {
       sortOrder: string;
@@ -155,4 +185,8 @@ export default {};
     });
   }
 
+  mounted () {
+    this.sortOptions = this.getOptions(this.sortList);
+  }
+}
 </script>
