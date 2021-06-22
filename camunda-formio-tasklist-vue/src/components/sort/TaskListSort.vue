@@ -1,64 +1,54 @@
 <template>
-  <div class="cft-first">
-    <div id="cftf-dpdown-container" class="mx-2">
-      <div
-        class="cftf-dpdown-box mr-2"
-        v-for="(sort, idx) in sortList"
-        :key="sort.sortBy"
-      >
-        <b-row>
-          <b-col cols="1" v-b-tooltip.hover title="Remove Sorting Field">
-            <span
-              v-if="sortList.length > 1"
-              class="cftf-exit-button"
-              @click="deleteSort(sort, idx)"
-            >
-              <i class="fa fa-times"></i>
-            </span>
-          </b-col>
-          <b-col cols="7">
-            <b-nav-item-dropdown
-              :text="sortList[idx].label"
-              v-b-tooltip.hover
-              title="Click To Change Field for Sorting"
-              :no-caret="true"
-            >
-              <span v-if="sortOptions.length">
-                <b-dropdown-item-button
-                  v-for="sort in sortOptions"
-                  :key="sort.sortBy"
-                  @click="updateSort(sort, idx)"
-                  >{{ sort.label }}
-                </b-dropdown-item-button>
-              </span>
-              <b-dropdown-item-button v-else
-                >Sorry, no more fields to sortBy.</b-dropdown-item-button
-              >
-            </b-nav-item-dropdown>
-          </b-col>
-          <b-col cols="1" v-b-tooltip.hover title="Toggle Sort Order">
-            <a
-              v-if="sort.sortOrder === 'asc'"
-              @click="toggleSort(idx)"
-              href="#"
-              title="Ascending"
-            >
-              <i class="fa fa-chevron-up cftf-arrow" aria-hidden="true"></i>
-            </a>
-            <a v-else @click="toggleSort(idx)" href="#" title="Descending">
-              <i class="fa fa-chevron-down cft-arrow" aria-hidden="true"></i>
-            </a>
-          </b-col>
-        </b-row>
-      </div>
-      <TaskSortOptions
-        :sortOptions="sortOptions"
-        :updateSortOptions="updateSortOptions"
-        @add-sort="addSort"
-      >
-      </TaskSortOptions>
-    </div>
-  </div>
+  <b-col id="cftf-dpdown-container" class="d-flex flex-row">
+    <b-row
+      class="cftf-dpdown-box mr-2 pr-3"
+      v-for="(sort, idx) in sortList"
+      :key="sort.sortBy"
+    >
+        <span
+          v-if="sortList.length > 1"
+          class="cftf-exit-button"
+          @click="deleteSort(sort, idx)"
+        >
+          <i class="fa fa-times"></i>
+        </span>
+        <b-nav-item-dropdown
+          :text="sortList[idx].label"
+          v-b-tooltip.hover
+          title="Click To Change Field for Sorting"
+          :no-caret="true"
+        >
+          <span v-if="sortOptions.length">
+            <b-dropdown-item-button
+              v-for="sort in sortOptions"
+              :key="sort.sortBy"
+              @click="updateSort(sort, idx)"
+              >{{ sort.label }}
+            </b-dropdown-item-button>
+          </span>
+          <b-dropdown-item-button v-else
+            >Sorry, no more fields to sortBy.</b-dropdown-item-button
+          >
+        </b-nav-item-dropdown>
+        <a
+          v-if="sort.sortOrder === 'asc'"
+          @click="toggleSort(idx)"
+          href="#"
+          title="Ascending"
+        >
+          <i class="fa fa-chevron-up cftf-arrow" aria-hidden="true"></i>
+        </a>
+        <a v-else @click="toggleSort(idx)" href="#" title="Descending">
+          <i class="fa fa-chevron-down cft-arrow" aria-hidden="true"></i>
+        </a>
+    </b-row>
+    <TaskSortOptions
+      :sortOptions="sortOptions"
+      :updateSortOptions="updateSortOptions"
+      @add-sort="addSort"
+    >
+    </TaskSortOptions>
+  </b-col>
 </template>
 
 <script lang="ts">
@@ -76,7 +66,7 @@ const serviceFlowModule = namespace("serviceFlowModule");
 @Component({
   components: {
     TaskSortOptions,
-  }
+  },
 })
 export default class TaskListSort extends Vue {
   @Prop() private perPage!: number;

@@ -1,13 +1,13 @@
 <template>
   <span>
-    <TaskListSearch
-      @update-task-list="onSearchUpdateTasklistResult"
-      :tasklength="Lentask"
-    />
     <task-list-sort
     :selectedfilterId="selectedfilterId"
     :perPage="perPage"
     :payload="payload"
+    />
+    <TaskListSearch
+      @update-task-list="onSearchUpdateTasklistResult"
+      :tasklength="Lentask"
     />
     <b-list-group class="cft-list-container" v-if="tasks && tasks.length">
       <b-list-group-item
