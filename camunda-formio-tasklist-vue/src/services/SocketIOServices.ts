@@ -6,6 +6,7 @@ import Stomp from "stompjs";
 let stompClient: any = null;
 let reloadCallback: any = null;
 let socket: any = null;
+let interval: any = null;
 
 const BPM_BASE_URL_SOCKET_IO = localStorage.getItem("bpmApiUrl")
   ? localStorage.getItem("bpmApiUrl")?.replace(`/${engine}`, `/${socketUrl}`)
@@ -22,6 +23,7 @@ const clientConnectCallback = () => {
     isConnected()
   );
   if (isConnected()) {
+    clearInterval(interval);
     console.log("inside connect callback==>>");
     stompClient.subscribe("/topic/task-event", function(output: any) {
       const taskUpdate = JSON.parse(output.body);
@@ -36,7 +38,7 @@ const clientErrorCallback = (error: string) => {
   stompClient = Stomp.over(socket);
   // setTimeout(clientConnectCallback, 100, reloadCallback);
   console.log("reconnecting in 5000 ms =>>>>");
-  setInterval(connectClient, 5000);
+  interval = setInterval(connectClient, 5000);
 };
 
 const connectClient = () => {
