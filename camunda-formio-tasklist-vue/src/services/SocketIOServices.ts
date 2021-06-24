@@ -14,7 +14,12 @@ const isConnected = () => {
 };
 
 const clientConnectCallback = (reloadCallback: any) => {
+  console.log(
+    "is connected inside clientConnectCallback========>>>>>",
+    isConnected()
+  );
   if (isConnected()) {
+    console.log("inside connect callback==>>");
     stompClient.subscribe("/topic/task-event", function(output: any) {
       const taskUpdate = JSON.parse(output.body);
       reloadCallback(taskUpdate.id, taskUpdate?.eventName);
@@ -23,10 +28,10 @@ const clientConnectCallback = (reloadCallback: any) => {
 };
 
 const clientErrorCallback = (reloadCallback: any, socket: any) => {
-  // stompClient = Stomp.overTCP(socket, 61612);
-  console.log("herrrrrrrrrrrrr erorrrr");
+  console.log("inside error callback is connected ==>>", isConnected());
   stompClient = Stomp.over(socket);
   // setTimeout(clientConnectCallback, 100, reloadCallback);
+  console.log("reconnecting in 1000 ms =>>>>");
   setTimeout(connectClient, 1000, reloadCallback, socket);
 };
 const connectClient = (reloadCallback: any, socket: any) => {
@@ -46,14 +51,16 @@ const connect = (encryptKey: any, reloadCallback: any) => {
   const socketUrl = `${BPM_BASE_URL_SOCKET_IO}?accesstoken=${accessToken}`;
   const socket = new SockJS(socketUrl);
   /* eslint-disable no-debugger, no-console */
-  console.log(socket.url, "++++++++++++");
+  console.log("socketUrl------>>", socketUrl);
+  console.log(" Stomp.over==>>");
   stompClient = Stomp.over(socket);
-  console.log(stompClient, "++++++++3333333333333333333333++++");
+  console.log("socket-->>", socket);
   stompClient.debug = null;
   connectClient(reloadCallback, socket);
 };
 
 const disconnect = () => {
+  console.log("===============disconnected========");
   stompClient.disconnect();
 };
 
