@@ -4,6 +4,9 @@ import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 /* eslint-disable */
 let stompClient: any = null;
+let reloadCallback: any = null;
+let socket: any = null;
+
 const BPM_BASE_URL_SOCKET_IO = localStorage.getItem("bpmApiUrl")
   ? localStorage.getItem("bpmApiUrl")?.replace(`/${engine}`, `/${socketUrl}`)
   : "";
@@ -13,7 +16,7 @@ const isConnected = () => {
   return stompClient?.connected || null;
 };
 
-const clientConnectCallback = (reloadCallback: any) => {
+const clientConnectCallback = () => {
   console.log(
     "is connected inside clientConnectCallback========>>>>>",
     isConnected()
@@ -27,36 +30,41 @@ const clientConnectCallback = (reloadCallback: any) => {
   }
 };
 
-const clientErrorCallback = (reloadCallback: any, socket: any) => {
+const clientErrorCallback = (error: string) => {
+  console.log("error==>>", error);
   console.log("inside error callback is connected ==>>", isConnected());
   stompClient = Stomp.over(socket);
   // setTimeout(clientConnectCallback, 100, reloadCallback);
-  console.log("reconnecting in 1000 ms =>>>>");
-  setTimeout(connectClient, 1000, reloadCallback, socket);
+  console.log("reconnecting in 5000 ms =>>>>");
+  setInterval(connectClient, 5000);
 };
-const connectClient = (reloadCallback: any, socket: any) => {
-  stompClient.connect(
-    {},
-    function() {
-      clientConnectCallback(reloadCallback);
-    },
-    function() {
-      console.log("error");
-      clientErrorCallback(reloadCallback, socket);
-    }
-  );
+
+const connectClient = () => {
+  console.log("STOMP: Attempting connection");
+  stompClient = Stomp.over(socket);
+  stompClient.connect({}, clientConnectCallback, clientErrorCallback);
 };
-const connect = (encryptKey: any, reloadCallback: any) => {
+const connect = (encryptKey: any, reloadCallbacks: any) => {
+  reloadCallback = reloadCallbacks;
   const accessToken = AES.encrypt(token, encryptKey).toString();
   const socketUrl = `${BPM_BASE_URL_SOCKET_IO}?accesstoken=${accessToken}`;
-  const socket = new SockJS(socketUrl);
+  socket = new SockJS(socketUrl);
+
   /* eslint-disable no-debugger, no-console */
   console.log("socketUrl------>>", socketUrl);
   console.log(" Stomp.over==>>");
   stompClient = Stomp.over(socket);
   console.log("socket-->>", socket);
   stompClient.debug = null;
-  connectClient(reloadCallback, socket);
+  // stompClient.connect({}, function() {
+  //   if (isConnected()) {
+  //     stompClient.subscribe("/topic/task-event", function(output: any) {
+  //       const taskUpdate = JSON.parse(output.body);
+  //       reloadCallback(taskUpdate.id, taskUpdate?.eventName);
+  //     });
+  //   }
+  // });
+  connectClient();
 };
 
 const disconnect = () => {
