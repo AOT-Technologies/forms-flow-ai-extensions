@@ -1,4 +1,4 @@
-import { engine, socketUrl } from "./constants";
+import { engine, socketUrl } from "../services/constants";
 import AES from "crypto-js/aes";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
@@ -8,7 +8,7 @@ let reloadCallback: any = null;
 let socket: any = null;
 let encryptKey: any = null;
 let interval: any = null;
-let clientErrorCallback: any=null;
+let clientErrorCallback: any = null;
 
 const BPM_BASE_URL_SOCKET_IO = localStorage.getItem("bpmApiUrl")
   ? localStorage.getItem("bpmApiUrl")?.replace(`/${engine}`, `/${socketUrl}`)
@@ -29,9 +29,7 @@ const clientConnectCallback = () => {
   }
 };
 
-
-
-function connectClient () {
+function connectClient() {
   const accessToken = AES.encrypt(token, encryptKey).toString();
   const socketUrl = `${BPM_BASE_URL_SOCKET_IO}?accesstoken=${accessToken}`;
 
@@ -45,7 +43,7 @@ clientErrorCallback = (error: string) => {
   /* eslint-disable no-debugger, no-console */
   console.log("error==>>", error);
   stompClient = Stomp.over(socket);
-  
+
   // interval = setInterval(connectClient, 10000);
   interval = setTimeout(connectClient, 5000);
 };
