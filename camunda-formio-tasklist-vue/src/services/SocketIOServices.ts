@@ -38,7 +38,7 @@ const clientErrorCallback = (error: string) => {
   console.log("inside error callback is connected ==>>", isConnected());
   stompClient = Stomp.over(socket);
   // setTimeout(clientConnectCallback, 100, reloadCallback);
-  console.log("reconnecting in 5000 ms =>>>>");
+  console.log("reconnecting in 10000 ms =>>>>");
   interval = setInterval(connectClient, 10000);
   // setTimeout(connectClient, 5000);
 };
@@ -50,7 +50,6 @@ function connectClient() {
 
   /* eslint-disable no-debugger, no-console */
   console.log("socketUrl------>>", socketUrl);
-  console.log(" Stomp.over==>>");
   // stompClient = Stomp.over(socket);
   console.log("STOMP: Attempting connection");
   stompClient = Stomp.over(socket);
