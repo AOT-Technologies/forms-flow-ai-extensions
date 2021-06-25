@@ -2,12 +2,13 @@ import { engine, socketUrl } from "./constants";
 import AES from "crypto-js/aes";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
-/* eslint-disable */
+
 let stompClient: any = null;
 let reloadCallback: any = null;
 let socket: any = null;
 let encryptKey: any = null;
 let interval: any = null;
+let clientErrorCallback: any=null;
 
 const BPM_BASE_URL_SOCKET_IO = localStorage.getItem("bpmApiUrl")
   ? localStorage.getItem("bpmApiUrl")?.replace(`/${engine}`, `/${socketUrl}`)
@@ -19,13 +20,8 @@ const isConnected = () => {
 };
 
 const clientConnectCallback = () => {
-  console.log(
-    "is connected inside clientConnectCallback========>>>>>",
-    isConnected()
-  );
   if (isConnected()) {
-    clearInterval(interval);
-    console.log("inside connect callback==>>");
+    clearTimeout(interval);
     stompClient.subscribe("/topic/task-event", function(output: any) {
       const taskUpdate = JSON.parse(output.body);
       reloadCallback(taskUpdate.id, taskUpdate?.eventName);
@@ -33,30 +29,26 @@ const clientConnectCallback = () => {
   }
 };
 
-const clientErrorCallback = (error: string) => {
-  console.log("error==>>", error);
-  console.log("inside error callback is connected ==>>", isConnected());
-  stompClient = Stomp.over(socket);
-  // setTimeout(clientConnectCallback, 100, reloadCallback);
-  console.log("reconnecting in 10000 ms =>>>>");
-  interval = setInterval(connectClient, 10000);
-  // setTimeout(connectClient, 5000);
-};
 
-function connectClient() {
+
+function connectClient () {
   const accessToken = AES.encrypt(token, encryptKey).toString();
   const socketUrl = `${BPM_BASE_URL_SOCKET_IO}?accesstoken=${accessToken}`;
-  socket = new SockJS(socketUrl);
 
-  /* eslint-disable no-debugger, no-console */
-  console.log("socketUrl------>>", socketUrl);
-  // stompClient = Stomp.over(socket);
-  console.log("STOMP: Attempting connection");
+  socket = new SockJS(socketUrl);
   stompClient = Stomp.over(socket);
-  console.log("socket-->>", socket);
-  stompClient.debug = null;
+  // stompClient.debug = null;
   stompClient.connect({}, clientConnectCallback, clientErrorCallback);
 }
+
+clientErrorCallback = (error: string) => {
+  /* eslint-disable no-debugger, no-console */
+  console.log("error==>>", error);
+  stompClient = Stomp.over(socket);
+  
+  // interval = setInterval(connectClient, 10000);
+  interval = setTimeout(connectClient, 5000);
+};
 
 const connect = (encryptionKey: any, reloadCallbacks: any) => {
   reloadCallback = reloadCallbacks;
@@ -65,8 +57,7 @@ const connect = (encryptionKey: any, reloadCallbacks: any) => {
 };
 
 const disconnect = () => {
-  clearInterval(interval);
-  console.log("===============disconnected========");
+  clearTimeout(interval);
   stompClient.disconnect();
 };
 
