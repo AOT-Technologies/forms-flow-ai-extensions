@@ -36,26 +36,22 @@ function connectClient() {
       `/${socketUrl}`
     );
     const accessToken = AES.encrypt(token, encryptKey).toString();
-    // const serviceBCURL = "https://test-sbc-ffa-bpm.apps.silver.devops.gov.bc.ca/camunda/forms-flow-bpm-socket"
     const websocketUrl = `${BPM_BASE_URL_SOCKET_IO}?accesstoken=${accessToken}`;
-    // const websocketUrl = `${serviceBCURL}?accesstoken=${accessToken}`;
 
     socket = new SockJS(websocketUrl);
     stompClient = Stomp.over(socket);
-    // stompClient.debug = null;
+    stompClient.debug = null;
     stompClient.connect({}, clientConnectCallback, clientErrorCallback);
   } else {
-    console.log("bpmApiUrl not set");
+    clientErrorCallback("bpmApiUrl not set", true);
     reloadCallback(null, null, true);
   }
 }
 
-clientErrorCallback = (error: string) => {
+clientErrorCallback = (error: string, flag?: boolean) => {
   /* eslint-disable no-debugger, no-console */
   console.log("error==>>", error);
-  stompClient = Stomp.over(socket);
-
-  // interval = setInterval(connectClient, 10000);
+  if (!flag) stompClient = Stomp.over(socket);
   interval = setTimeout(connectClient, 10000);
 };
 

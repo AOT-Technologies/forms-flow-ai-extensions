@@ -833,7 +833,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       (refreshedTaskId: any, eventName: any, error: any) => {
         if (error) {
           this.$bvToast.toast(
-            `websocket is not connected which will cause some inconsistency. System is trying to reconnect, if you see this message for more than 10sec, please refresh the page`,
+            `WebSocket is not connected which will cause 
+            some inconsistency. System is trying to reconnect, 
+            if you see this message for more than 10sec, 
+            please refresh the page and try`,
             {
               title: "Websocket Alert",
               autoHideDelay: 10000,
