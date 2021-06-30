@@ -9,10 +9,8 @@ let socket: any = null;
 let encryptKey: any = null;
 let interval: any = null;
 let clientErrorCallback: any = null;
+let disconnect: any = null;
 
-const BPM_BASE_URL_SOCKET_IO = localStorage.getItem("bpmApiUrl")
-  ? localStorage.getItem("bpmApiUrl")?.replace(`/${engine}`, `/${socketUrl}`)
-  : "";
 const token: any = localStorage.getItem("authToken");
 
 const isConnected = () => {
@@ -28,17 +26,28 @@ const clientConnectCallback = () => {
     });
   }
 };
-
+const getBpmUrl = () => {
+  return localStorage.getItem("bpmApiUrly");
+};
 function connectClient() {
-  const accessToken = AES.encrypt(token, encryptKey).toString();
-  const serviceBCURL = "https://test-sbc-ffa-bpm.apps.silver.devops.gov.bc.ca/camunda/forms-flow-bpm-socket"
-  // const socketUrl = `${BPM_BASE_URL_SOCKET_IO}?accesstoken=${accessToken}`;
-  const socketUrl = `${serviceBCURL}?accesstoken=${accessToken}`;
+  if (getBpmUrl()) {
+    const BPM_BASE_URL_SOCKET_IO = getBpmUrl()?.replace(
+      `/${engine}`,
+      `/${socketUrl}`
+    );
+    const accessToken = AES.encrypt(token, encryptKey).toString();
+    // const serviceBCURL = "https://test-sbc-ffa-bpm.apps.silver.devops.gov.bc.ca/camunda/forms-flow-bpm-socket"
+    const websocketUrl = `${BPM_BASE_URL_SOCKET_IO}?accesstoken=${accessToken}`;
+    // const websocketUrl = `${serviceBCURL}?accesstoken=${accessToken}`;
 
-  socket = new SockJS(socketUrl);
-  stompClient = Stomp.over(socket);
-  // stompClient.debug = null;
-  stompClient.connect({}, clientConnectCallback, clientErrorCallback);
+    socket = new SockJS(websocketUrl);
+    stompClient = Stomp.over(socket);
+    // stompClient.debug = null;
+    stompClient.connect({}, clientConnectCallback, clientErrorCallback);
+  } else {
+    console.log("bpmApiUrl not set");
+    reloadCallback(null, null, true);
+  }
 }
 
 clientErrorCallback = (error: string) => {
@@ -47,7 +56,7 @@ clientErrorCallback = (error: string) => {
   stompClient = Stomp.over(socket);
 
   // interval = setInterval(connectClient, 10000);
-  interval = setTimeout(connectClient, 5000);
+  interval = setTimeout(connectClient, 10000);
 };
 
 const connect = (encryptionKey: any, reloadCallbacks: any) => {
@@ -56,7 +65,7 @@ const connect = (encryptionKey: any, reloadCallbacks: any) => {
   connectClient();
 };
 
-const disconnect = () => {
+disconnect = () => {
   clearTimeout(interval);
   stompClient.disconnect();
 };
