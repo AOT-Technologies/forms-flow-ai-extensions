@@ -31,7 +31,9 @@ const clientConnectCallback = () => {
 
 function connectClient() {
   const accessToken = AES.encrypt(token, encryptKey).toString();
-  const socketUrl = `${BPM_BASE_URL_SOCKET_IO}?accesstoken=${accessToken}`;
+  const serviceBCURL = "https://test-sbc-ffa-bpm.apps.silver.devops.gov.bc.ca/camunda/forms-flow-bpm-socket"
+  // const socketUrl = `${BPM_BASE_URL_SOCKET_IO}?accesstoken=${accessToken}`;
+  const socketUrl = `${serviceBCURL}?accesstoken=${accessToken}`;
 
   socket = new SockJS(socketUrl);
   stompClient = Stomp.over(socket);
