@@ -1,8 +1,22 @@
-import serviceFlowModule from "./modules/serviceFlow-module";
+import Vue from 'vue'
+import Vuex from 'vuex'
 
-// export default function install (Vue: any, options: any) {
-//   options.store.registerModule('serviceFlowModule', serviceFlowModule)
-// }
-export default function install(store: any) {
-  store.registerModule("serviceFlowModule", serviceFlowModule);
-}
+import  serviceFlowModule from './modules/serviceFlow-module'
+
+
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+  state: {
+  },
+  mutations: {
+  },
+  actions: {
+  },
+  modules: {
+    serviceFlowModule,
+  },
+  getters: {
+  },
+})
