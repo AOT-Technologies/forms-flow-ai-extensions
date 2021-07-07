@@ -30,5 +30,6 @@ export const sortingList = [
 export const getUserName = () => {
   const userDetails: any = localStorage.getItem('UserDetails')
   const userDetailsObj: any = JSON.parse(userDetails)
+  /* eslint-disable camelcase */
   return userDetailsObj?.preferred_username
 }
