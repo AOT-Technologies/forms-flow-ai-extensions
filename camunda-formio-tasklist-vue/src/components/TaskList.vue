@@ -316,12 +316,14 @@ import CamundaRest from "../services/camunda-rest";
 import DatePicker from "vue2-datepicker";
 import ExpandContract from "./addons/ExpandContract.vue";
 import { Form } from "vue-formio";
+import FormsFlowStore from "@/store/index";
 import Header from "./layout/Header.vue";
 import LeftSider from "./layout/LeftSider.vue";
 import { Payload } from "../services/TasklistTypes";
 import SocketIOService from "../services/SocketIOServices";
 import TaskHistory from "../components/TaskHistory.vue";
 import TaskListMixin from "./mixins/TaskListMixin.vue";
+import Vue from "vue";
 import { authenticateFormio } from "../services/formio-token";
 import { getFormDetails } from "../services/get-formio";
 import { getISODateTime } from "../services/format-time";
@@ -330,8 +332,9 @@ import moment from "moment";
 import { namespace } from "vuex-class";
 import { reviewerGroup } from "../services/constants";
 import vSelect from "vue-select";
+import serviceFlowModule from "../store/modules/serviceFlow-module";
 
-const serviceFlowModule = namespace("serviceFlowModule");
+const StoreServiceFlowModule = namespace("serviceFlowModule");
 
 @Component({
   components: {
@@ -347,20 +350,21 @@ const serviceFlowModule = namespace("serviceFlowModule");
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
+  @Prop() private mainStore!: any;
   @Prop({ default: "lastName" }) userListType!: string;
 
-  @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
+  @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
-  @serviceFlowModule.Getter("getFormsFlowTaskId")
+  @StoreServiceFlowModule.Getter("getFormsFlowTaskId")
   private getFormsFlowTaskId: any;
-  @serviceFlowModule.Getter("getFormsFlowactiveIndex")
+  @StoreServiceFlowModule.Getter("getFormsFlowactiveIndex")
   private getFormsFlowactiveIndex: any;
 
-  @serviceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
+  @StoreServiceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
   public setFormsFlowTaskCurrentPage: any;
-  @serviceFlowModule.Mutation("setFormsFlowTaskId")
+  @StoreServiceFlowModule.Mutation("setFormsFlowTaskId")
   public setFormsFlowTaskId: any;
-  @serviceFlowModule.Mutation("setFormsFlowactiveIndex")
+  @StoreServiceFlowModule.Mutation("setFormsFlowactiveIndex")
   public setFormsFlowactiveIndex: any;
 
   private tasks: Array<object> = [];
@@ -944,6 +948,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.$root.$off("call-fetchPaginatedTaskList");
     this.$root.$off("call-fetchTaskList");
     this.$root.$off("call-managerScreen");
+    // this.mainStore.unregisterModule("serviceFlowModule")
+  }
+  beforeCreate() {
+    // Vue.use(FormsFlowStore, { store: this.mainStore });
+    // console.log(this.$store,'++++++++++++++store', this.$store.hasModule(["StoreServiceFlowModule"]))
+    // FormsFlowStore(this.mainStore );
+    // FormsFlowStore(this.$store );
+    // Vue.use(FormsFlowStore, { store: this.$store });
+    this.$store.registerModule("serviceFlowModule", serviceFlowModule);
+    //  console.log(this.mainStore,'++++++++++++++++')
   }
 }
 </script>
