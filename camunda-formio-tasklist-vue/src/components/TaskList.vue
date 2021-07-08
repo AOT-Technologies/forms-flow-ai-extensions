@@ -426,9 +426,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.userSelected["code"] = this.task.assignee;
   }
 
-  onFormSubmitCallback() {
+  onFormSubmitCallback(actionType="") {
     if (this.task.id) {
-      this.onBPMTaskFormSubmit(this.task.id);
+      this.onBPMTaskFormSubmit(this.task.id, actionType);
       this.reloadTasks();
     }
   }
@@ -472,7 +472,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  onBPMTaskFormSubmit(taskId: string) {
+  onBPMTaskFormSubmit(taskId: string, ...rest: any[]) {
     const formRequestFormat = {
       variables: {
         formUrl: {
@@ -579,6 +579,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         break;
       case "reloadCurrentTask":
         this.reloadCurrentTask();
+        break;
+      case "actionComplete":
+        this.onFormSubmitCallback(customEvent.actionType);
         break;
     }
   };
