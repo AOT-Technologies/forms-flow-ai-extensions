@@ -1,6 +1,6 @@
 # camunda-formio-tasklist-vue
 
-<p align="center"><img src=".images/logo.png"/></p> 
+![image](https://user-images.githubusercontent.com/70306694/124284590-c3078b80-db6a-11eb-81c7-921cfbe46495.png)
 
 This is a Vue component build for formsflow.ai solution to integrate
 Camunda Tasklist, associated forms in a bundled solution which can
