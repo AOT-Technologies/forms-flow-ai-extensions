@@ -247,21 +247,11 @@ const CamundaRest = {
     taskId: string,
     values: object,
     CamundaUrl: string,
-    ...rest: any[]
   ) {
-    const done = rest.length ? rest[0] : ( ) => {
-      //do nothing
-    };
     return bpmAxios(bearerToken, CamundaUrl).post(
       `/${engine}/task/${taskId}/submit-form`,
       values
-    ).then((res) => {
-      done(null, res);
-    }
-    ).catch((err) => {
-      done(err);
-    });
-
+    )
   },
 
   listForms (bearerToken: any, CamundaUrl: any) {
