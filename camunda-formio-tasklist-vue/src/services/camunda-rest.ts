@@ -249,8 +249,9 @@ const CamundaRest = {
     CamundaUrl: string,
     ...rest: any[]
   ) {
-    /*eslint-disable no-empty-function: "error"*/
-    const done = rest.length ? rest[0] : () => {};
+    const done = rest.length ? rest[0] : ( ) => {
+      //do nothing
+    };
     return bpmAxios(bearerToken, CamundaUrl).post(
       `/${engine}/task/${taskId}/submit-form`,
       values
