@@ -29,7 +29,7 @@
         <div class="cft-service-task-details">
           <b-row
             class="ml-0 cft-task-header task-header-title"
-            v-b-tooltip.hover
+            v-b-tooltip.hover.left
             title="Task Name"
           >
             {{ task.name }}
@@ -209,33 +209,40 @@
                   </div>
                 </div>
                 <div class="cft-user-details" v-else>
-                  <b-tooltip target="setAssignee" triggers="hover">
+                  <!-- <b-tooltip target="setAssignee" triggers="hover">
                     Click to change <b>assignee</b>
-                  </b-tooltip>
-                  <span id="setAssignee">
+                  </b-tooltip> -->
+                  <span
+                    id="setAssignee"
+                    v-b-tooltip.hover
+                    title="Click to change Assignee"
+                  >
                     <i class="fa fa-user cft-person-fill" />
                     <span class="cft-user-span" @click="toggleassignee">
                       {{ task.assignee }}
                     </span>
                   </span>
-                  <b-tooltip target="resetAssignee" triggers="hover">
-                    Reset <b>Assignee</b>
-                  </b-tooltip>
-                  <span id="resetAssignee">
+                  <!-- <b-tooltip target="resetAssignee" triggers="hover">
+                    Reset <b>Assignee</b> -->
+                  <!-- </b-tooltip> -->
+                  <span
+                    id="resetAssignee"
+                    v-b-tooltip.hover
+                    title="Reset Assignee"
+                  >
                     <i class="fa fa-times ml-1" @click="onUnClaim" />
                   </span>
                 </div>
               </b-col>
               <b-col v-else cols="12" md="2">
-                <div @click="onClaim">
+                <div @click="onClaim" v-b-tooltip.hover.left title="Claim task">
                   <span id="claimAssignee">
-                    <i class="fa fa-user" />
-                    Claim
+                    <i class="fa fa-user" />Claim
                   </span>
                 </div>
-                <b-tooltip target="claimAssignee" triggers="hover">
+                <!-- <b-tooltip target="claimAssignee" triggers="hover">
                   Claim a <b>task</b>
-                </b-tooltip>
+                </b-tooltip> -->
               </b-col>
             </b-row>
             <div class="height-100">
@@ -347,6 +354,7 @@ const serviceFlowModule = namespace("serviceFlowModule");
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
+  @Prop() private mainStore!: any;
   @Prop({ default: "lastName" }) userListType!: string;
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
@@ -836,9 +844,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       (refreshedTaskId: any, eventName: any, error: any) => {
         if (error) {
           this.$bvToast.toast(
-            `WebSocket is not connected which will cause 
-            some inconsistency. System is trying to reconnect, 
-            if you see this message for more than 10sec, 
+            `WebSocket is not connected which will cause
+            some inconsistency. System is trying to reconnect,
+            if you see this message for more than 10sec,
             please refresh the page and try`,
             {
               title: "Websocket Alert",
