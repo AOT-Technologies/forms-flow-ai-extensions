@@ -336,9 +336,10 @@ import { getformHistoryApi } from "../services/formsflowai-api";
 import moment from "moment";
 import { namespace } from "vuex-class";
 import { reviewerGroup } from "../services/constants";
+import serviceFlowModule from "../store/modules/serviceFlow-module";
 import vSelect from "vue-select";
 
-const serviceFlowModule = namespace("serviceFlowModule");
+const StoreServiceFlowModule = namespace("serviceFlowModule");
 
 @Component({
   components: {
@@ -357,18 +358,18 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private mainStore!: any;
   @Prop({ default: "lastName" }) userListType!: string;
 
-  @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
+  @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
-  @serviceFlowModule.Getter("getFormsFlowTaskId")
+  @StoreServiceFlowModule.Getter("getFormsFlowTaskId")
   private getFormsFlowTaskId: any;
-  @serviceFlowModule.Getter("getFormsFlowactiveIndex")
+  @StoreServiceFlowModule.Getter("getFormsFlowactiveIndex")
   private getFormsFlowactiveIndex: any;
 
-  @serviceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
+  @StoreServiceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
   public setFormsFlowTaskCurrentPage: any;
-  @serviceFlowModule.Mutation("setFormsFlowTaskId")
+  @StoreServiceFlowModule.Mutation("setFormsFlowTaskId")
   public setFormsFlowTaskId: any;
-  @serviceFlowModule.Mutation("setFormsFlowactiveIndex")
+  @StoreServiceFlowModule.Mutation("setFormsFlowactiveIndex")
   public setFormsFlowactiveIndex: any;
 
   private tasks: Array<object> = [];
@@ -952,6 +953,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.$root.$off("call-fetchPaginatedTaskList");
     this.$root.$off("call-fetchTaskList");
     this.$root.$off("call-managerScreen");
+    if (this.$store.hasModule("serviceFlowModule")) {
+      this.$store.unregisterModule("serviceFlowModule");
+    }
+  }
+  beforeCreate() {
+    if (!this.$store.hasModule("serviceFlowModule")) {
+      this.$store.registerModule("serviceFlowModule", serviceFlowModule);
+    }
   }
 }
 </script>

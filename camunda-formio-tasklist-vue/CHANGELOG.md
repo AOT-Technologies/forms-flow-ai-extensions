@@ -1,8 +1,11 @@
 # Changes for camunda-formio-tasklist-vue
 
+## v1.0.8, 2021-07-08
+
+- Added dynamic store registration of the npm component for easy Integration. So on integration, there is no need to register out the store in their main.ts.
+
 ## v1.0.7, 2021-06-30
 
-- All changes in v1.0.6 included in v1.0.7
 - Unpublished  v1.0.6 due to duplicated  file issue
 
 ## v1.0.6, 2021-06-30
