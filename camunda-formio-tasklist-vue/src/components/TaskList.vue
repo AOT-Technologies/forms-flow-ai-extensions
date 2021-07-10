@@ -25,29 +25,33 @@
         />
       </b-col>
       <b-col v-if="getFormsFlowTaskId && task" :lg="maximize ? 9 : 12" md="12">
-        <ExpandContract />
         <div class="cft-service-task-details">
-          <b-row
-            class="ml-0 cft-task-header task-header-title"
-            v-b-tooltip.hover.left
-            title="Task Name"
-          >
-            {{ task.name }}
+          <b-row>
+            <ExpandContract />
+            <span
+              class="ml-0 cft-task-header task-header-title"
+              v-b-tooltip.hover.top
+              title="Task Name"
+              >{{ task.name }}
+            </span>
           </b-row>
           <br />
-          <b-row
-            class="ml-0 cft-task-name"
-            v-b-tooltip.hover
-            title="Process Name"
-          >
-            {{ taskProcess }}
+          <b-row>
+            <span
+              class="ml-0 cft-task-name"
+              v-b-tooltip.hover
+              title="Process Name"
+              >{{ taskProcess }}</span
+            >
           </b-row>
           <br />
-          <b-row
-            class="ml-0 cft-application-id"
-            v-b-tooltip.hover
-            title="Application Id"
-            >Application ID # {{ applicationId }}
+          <b-row class="ml-0 ">
+            <span
+              class="cft-application-id"
+              v-b-tooltip.hover
+              title="Application Id"
+              >Application ID # {{ applicationId }}</span
+            >
           </b-row>
           <div class="cft-actionable-container">
             <b-row class="cft-actionable">
@@ -194,7 +198,6 @@
                         @click="toggleassignee"
                         class="fa fa-times assignee-cancel-icon icon-border"
                       ></i>
-                      <!-- </span> -->
                     </div>
                     <div class="row">
                       <v-select
@@ -209,9 +212,6 @@
                   </div>
                 </div>
                 <div class="cft-user-details" v-else>
-                  <!-- <b-tooltip target="setAssignee" triggers="hover">
-                    Click to change <b>assignee</b>
-                  </b-tooltip> -->
                   <span
                     id="setAssignee"
                     v-b-tooltip.hover
@@ -222,9 +222,6 @@
                       {{ task.assignee }}
                     </span>
                   </span>
-                  <!-- <b-tooltip target="resetAssignee" triggers="hover">
-                    Reset <b>Assignee</b> -->
-                  <!-- </b-tooltip> -->
                   <span
                     id="resetAssignee"
                     v-b-tooltip.hover
@@ -234,15 +231,15 @@
                   </span>
                 </div>
               </b-col>
-              <b-col v-else cols="12" md="2">
+              <b-col
+                :class="task.assignee ? '' : 'd-flex align-items-end'"
+                v-else
+              >
                 <div @click="onClaim" v-b-tooltip.hover.left title="Claim task">
                   <span id="claimAssignee">
                     <i class="fa fa-user" />Claim
                   </span>
                 </div>
-                <!-- <b-tooltip target="claimAssignee" triggers="hover">
-                  Claim a <b>task</b>
-                </b-tooltip> -->
               </b-col>
             </b-row>
             <div class="height-100">
@@ -290,7 +287,7 @@
         </div>
       </b-col>
       <b-col v-else>
-        <ExpandContract />
+        <!-- <ExpandContract /> -->
         <b-row class="cft-not-selected mt-2 ml-1 row">
           <i
             class="fa fa-exclamation-circle-fill"
