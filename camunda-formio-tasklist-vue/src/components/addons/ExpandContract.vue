@@ -25,7 +25,7 @@ import TaskListMixin from "../mixins/TaskListMixin.vue";
 
 @Component
 export default class ExpandContract extends Mixins(TaskListMixin) {
-  clickMaxi() {
+  clickMaxi () {
     this.maximize = !this.maximize;
     this.$root.$emit("call-managerScreen", { maxi: this.maximize });
   }
