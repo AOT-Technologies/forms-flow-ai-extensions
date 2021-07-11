@@ -20,7 +20,7 @@ const isConnected = () => {
 const clientConnectCallback = () => {
   if (isConnected()) {
     clearTimeout(interval);
-    stompClient.subscribe("/topic/task-event", function(output: any) {
+    stompClient.subscribe("/topic/task-event", function (output: any) {
       const taskUpdate = JSON.parse(output.body);
       reloadCallback(taskUpdate.id, taskUpdate?.eventName);
     });
@@ -29,7 +29,7 @@ const clientConnectCallback = () => {
 const getBpmUrl = () => {
   return localStorage.getItem("bpmApiUrl");
 };
-function connectClient() {
+function connectClient () {
   if (getBpmUrl()) {
     const BPM_BASE_URL_SOCKET_IO = getBpmUrl()?.replace(
       `/${engine}`,

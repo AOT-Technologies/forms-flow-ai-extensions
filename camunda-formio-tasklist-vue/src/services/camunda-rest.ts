@@ -2,13 +2,13 @@ import { engine, formExt } from "../services/constants";
 import { bpmAxios } from "../services/axios";
 
 const CamundaRest = {
-  async getProcessDefinitions(bearerToken: string, CamundaUrl: string) {
+  async getProcessDefinitions (bearerToken: string, CamundaUrl: string) {
     return await bpmAxios(bearerToken, CamundaUrl).get(
       `/${engine}/process-definition`
     );
   },
 
-  async getProcessDefinitionById(
+  async getProcessDefinitionById (
     bearerToken: string,
     processDefinitionId: string,
     CamundaUrl: string
@@ -18,7 +18,7 @@ const CamundaRest = {
     );
   },
 
-  async startProcess(
+  async startProcess (
     bearerToken: string,
     processDefinitionKey: string,
     values: string,
@@ -30,13 +30,13 @@ const CamundaRest = {
     );
   },
 
-  async getTaskById(bearerToken: string, taskId: string, CamundaUrl: string) {
+  async getTaskById (bearerToken: string, taskId: string, CamundaUrl: string) {
     return await bpmAxios(bearerToken, CamundaUrl).get(
       `/${engine}/task/${taskId}`
     );
   },
 
-  async updateTasksByID(
+  async updateTasksByID (
     bearerToken: string,
     taskId: string,
     CamundaUrl: string,
@@ -48,7 +48,7 @@ const CamundaRest = {
     );
   },
 
-  async getTaskGroupByID(
+  async getTaskGroupByID (
     bearerToken: string,
     taskId: string,
     CamundaUrl: string
@@ -58,7 +58,7 @@ const CamundaRest = {
     );
   },
 
-  async createTaskGroupByID(
+  async createTaskGroupByID (
     bearerToken: string,
     taskId: string,
     CamundaUrl: string,
@@ -70,7 +70,7 @@ const CamundaRest = {
     );
   },
 
-  async deleteTaskGroupByID(
+  async deleteTaskGroupByID (
     bearerToken: string,
     taskId: string,
     CamundaUrl: string,
@@ -82,7 +82,7 @@ const CamundaRest = {
     );
   },
 
-  async complete(
+  async complete (
     bearerToken: string,
     taskId: string,
     values: string,
@@ -94,7 +94,7 @@ const CamundaRest = {
     );
   },
 
-  async claim(
+  async claim (
     bearerToken: string,
     taskId: string,
     values: any,
@@ -106,13 +106,13 @@ const CamundaRest = {
     );
   },
 
-  async unclaim(bearerToken: string, taskId: string, CamundaUrl: string) {
+  async unclaim (bearerToken: string, taskId: string, CamundaUrl: string) {
     return await bpmAxios(bearerToken, CamundaUrl).post(
       `/${engine}/task/${taskId}/unclaim`
     );
   },
 
-  async setassignee(
+  async setassignee (
     bearerToken: string,
     taskId: string,
     values: any,
@@ -124,7 +124,7 @@ const CamundaRest = {
     );
   },
 
-  async getVariablesByTaskId(
+  async getVariablesByTaskId (
     bearerToken: string,
     taskId: string,
     CamundaUrl: string
@@ -134,7 +134,7 @@ const CamundaRest = {
     );
   },
 
-  async getVariablesByProcessId(
+  async getVariablesByProcessId (
     bearerToken: string,
     processInstanceId: string,
     CamundaUrl: string
@@ -144,11 +144,11 @@ const CamundaRest = {
     );
   },
 
-  async getUsers(bearerToken: string, CamundaUrl: string) {
+  async getUsers (bearerToken: string, CamundaUrl: string) {
     return await bpmAxios(bearerToken, CamundaUrl).get(`/${engine}/user`);
   },
 
-  async getUsersByMemberGroups(
+  async getUsersByMemberGroups (
     bearerToken: string,
     CamundaUrl: string,
     group: string
@@ -158,7 +158,7 @@ const CamundaRest = {
     );
   },
 
-  async getUsersByFirstName(
+  async getUsersByFirstName (
     bearerToken: string,
     CamundaUrl: string,
     firstName: string | null
@@ -168,7 +168,7 @@ const CamundaRest = {
     );
   },
 
-  async getUsersByLastName(
+  async getUsersByLastName (
     bearerToken: string,
     CamundaUrl: string,
     lastName: string | null
@@ -178,7 +178,7 @@ const CamundaRest = {
     );
   },
 
-  async getUsersByEmail(
+  async getUsersByEmail (
     bearerToken: string,
     CamundaUrl: string,
     email: string | null
@@ -188,7 +188,7 @@ const CamundaRest = {
     );
   },
 
-  async getUsersByFirstNameGroups(
+  async getUsersByFirstNameGroups (
     bearerToken: string,
     CamundaUrl: string,
     firstName: string | null,
@@ -199,7 +199,7 @@ const CamundaRest = {
     );
   },
 
-  async getUsersByLastNameGroups(
+  async getUsersByLastNameGroups (
     bearerToken: string,
     CamundaUrl: string,
     lastName: string | null,
@@ -210,7 +210,7 @@ const CamundaRest = {
     );
   },
 
-  async getUsersByEmailGroups(
+  async getUsersByEmailGroups (
     bearerToken: string,
     CamundaUrl: string,
     email: string | null,
@@ -221,13 +221,13 @@ const CamundaRest = {
     );
   },
 
-  async filterList(bearerToken: string, CamundaUrl: string) {
+  async filterList (bearerToken: string, CamundaUrl: string) {
     return await bpmAxios(bearerToken, CamundaUrl).get(
       `/${engine}/filter?resourceType=Task&itemCount=false&sortBy=name&sortOrder=asc`
     );
   },
 
-  async filterTaskList(
+  async filterTaskList (
     bearerToken: string,
     filterId: string,
     values: any,
@@ -239,7 +239,7 @@ const CamundaRest = {
     );
   },
 
-  async filterTaskListPagination(
+  async filterTaskListPagination (
     bearerToken: string,
     filterId: string,
     values: any,
@@ -253,7 +253,7 @@ const CamundaRest = {
     );
   },
 
-  async formTaskSubmit(
+  async formTaskSubmit (
     bearerToken: string,
     taskId: string,
     values: object,
@@ -265,11 +265,11 @@ const CamundaRest = {
     );
   },
 
-  async listForms(bearerToken: any, CamundaUrl: any) {
+  async listForms (bearerToken: any, CamundaUrl: any) {
     return await bpmAxios(bearerToken, CamundaUrl).get(`/${formExt}/form`);
   },
 
-  async getProcessDiagramXML(
+  async getProcessDiagramXML (
     bearerToken: any,
     processDefinitionId: string,
     CamundaUrl: any
