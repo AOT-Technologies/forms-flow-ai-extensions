@@ -42,7 +42,7 @@
               v-b-tooltip.hover
               title="Process Name"
               >{{ taskProcess }}</span
-            >git sttau
+            >
           </b-row>
           <br />
           <b-row class="ml-0">
