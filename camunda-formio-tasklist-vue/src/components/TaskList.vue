@@ -122,7 +122,7 @@
               <b-col class="d-flex align-items-end" cols="12" md="3">
                 <div id="groups" v-b-modal.AddGroupModal>
                   <i class="fa fa-th mr-1"></i>
-                  <span v-if="groupListNames">
+                  <span class="group-align word-break" v-if="groupListNames">
                     {{ String(groupListNames) }}
                   </span>
                   <span v-else>Add Groups</span>
