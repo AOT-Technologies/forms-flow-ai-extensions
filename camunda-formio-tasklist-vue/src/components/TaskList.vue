@@ -36,13 +36,13 @@
             </span>
           </b-row>
           <br />
-          <b-row>
+          <b-row class="ml-0">
             <span
-              class="ml-0 cft-task-name"
+              class="cft-task-name"
               v-b-tooltip.hover
               title="Process Name"
               >{{ taskProcess }}</span
-            >
+            >git sttau
           </b-row>
           <br />
           <b-row class="ml-0">
@@ -240,7 +240,7 @@
               >
                 <div @click="onClaim" v-b-tooltip.hover.left title="Claim task">
                   <span id="claimAssignee">
-                    <i class="fa fa-user" />Claim
+                    <i class="fa fa-user" /> Claim
                   </span>
                 </div>
               </b-col>
@@ -290,7 +290,6 @@
         </div>
       </b-col>
       <b-col v-else>
-        <!-- <ExpandContract /> -->
         <b-row class="cft-not-selected mt-2 ml-1 row">
           <i
             class="fa fa-exclamation-circle-fill"
