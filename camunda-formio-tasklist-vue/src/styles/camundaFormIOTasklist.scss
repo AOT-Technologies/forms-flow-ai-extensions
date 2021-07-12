@@ -491,4 +491,15 @@ li {
 .row .v-select .vs__dropdown-toggle {
   width: 150px;
 }
+.group-align {
+  display:-webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+.word-break{
+  word-break: break-all;
+}
 }
