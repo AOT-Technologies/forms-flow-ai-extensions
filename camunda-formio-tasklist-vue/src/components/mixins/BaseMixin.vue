@@ -21,36 +21,29 @@ export default class BaseMixin extends Vue {
   }
 
   checkProps () {
+    /* eslint-disable no-debugger, no-console */
     if (!this.bpmApiUrl || this.bpmApiUrl === "") {
-      /* eslint-disable no-debugger, no-console */
       console.warn("bpmApiUrl prop not Passed");
     }
     if (!this.token || this.token === "") {
-      /* eslint-disable no-debugger, no-console */
       console.warn("token prop not Passed");
     }
     if (!this.formIOResourceId || this.formIOResourceId === "") {
-      /* eslint-disable no-debugger, no-console */
       console.warn("formIOResourceId prop not passed");
     }
     if (!this.formIOReviewerId || this.formIOReviewerId === "") {
-      /* eslint-disable no-debugger, no-console */
       console.warn("formIOReviewerId prop not passed");
     }
     if (!this.formIOApiUrl || this.formIOApiUrl === "") {
-      /* eslint-disable no-debugger, no-console */
       console.warn("formIOApiUrl prop not passed");
     }
     if (!this.formsflowaiApiUrl || this.formsflowaiApiUrl === "") {
-      /* eslint-disable no-debugger, no-console */
       console.warn("formsflow.ai API url prop not passed");
     }
     if (!this.formsflowaiUrl || this.formsflowaiUrl === "") {
-      /* eslint-disable no-debugger, no-console */
       console.warn("formsflow.ai URL prop not passed");
     }
     if (!this.webSocketEncryptkey || this.webSocketEncryptkey === "") {
-      /* eslint-disable no-debugger, no-console */
       console.warn("WEBSOCKET_ENCRYPT_KEY prop not passed");
     }
 

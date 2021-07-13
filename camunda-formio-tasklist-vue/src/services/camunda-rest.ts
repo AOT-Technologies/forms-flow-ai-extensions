@@ -257,12 +257,12 @@ const CamundaRest = {
     bearerToken: string,
     taskId: string,
     values: object,
-    CamundaUrl: string,
+    CamundaUrl: string
   ) {
     return await bpmAxios(bearerToken, CamundaUrl).post(
       `/${engine}/task/${taskId}/submit-form`,
       values
-    )
+    );
   },
 
   async listForms (bearerToken: any, CamundaUrl: any) {

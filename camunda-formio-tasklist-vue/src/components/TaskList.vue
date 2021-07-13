@@ -354,7 +354,6 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
-  @Prop() private mainStore!: any;
   @Prop({ default: "lastName" }) userListType!: string;
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
@@ -495,7 +494,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       const newformRequestFormat: any = Object.assign(formRequestFormat['variables'], 
         {action: {value: actionType}}
       );
-      formRequestFormat = {variables: newformRequestFormat}
+      formRequestFormat = {variables: newformRequestFormat};
     }
     
     CamundaRest.formTaskSubmit(
@@ -582,10 +581,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         const { warnings } = await viewer.importXML(this.xmlData);
         viewer.get("canvas").zoom("fit-viewport");
         /* eslint-disable no-debugger, no-console */
-        console.log(warnings)
+        console.log(warnings);
       } catch (err) {
-        /* eslint-disable no-debugger, no-console */
         console.error("error rendering process diagram", err);
+        /* eslint-enable */
       }
     });
   }
@@ -641,8 +640,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         );
       })
       .catch((error) => {
-        /* eslint-disable no-debugger, no-console */
-        console.error("Error", error);
+        console.error("Error", error); // eslint-disable-line no-console
       });
   }
 
@@ -652,8 +650,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.reloadCurrentTask();
       })
       .catch((error) => {
-        /* eslint-disable no-debugger, no-console */
-        console.error("Error", error);
+        console.error("Error", error); // eslint-disable-line no-console
       });
   }
 
@@ -674,8 +671,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         );
       })
       .catch((error) => {
-        /* eslint-disable no-debugger, no-console */
-        console.error("Error", error);
+        console.error("Error", error);// eslint-disable-line no-console
       });
     this.toggleassignee();
   }
@@ -717,7 +713,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.reloadCurrentTask();
       })
       .catch((error) => {
-        console.error("Error", error);
+        console.error("Error", error); // eslint-disable-line no-console
       });
   }
 
@@ -732,7 +728,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       );
       this.updateTaskDatedetails(this.task.id, referenceobject);
     } catch {
-      console.warn("Follow date error");
+      console.warn("Follow date error"); // eslint-disable-line no-console
     }
   }
 
@@ -747,7 +743,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       );
       this.updateTaskDatedetails(this.task.id, referenceobject);
     } catch {
-      console.warn("Due date error");
+      console.warn("Due date error"); // eslint-disable-line no-console
     }
   }
 
@@ -761,7 +757,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       referenceobject["due"] = null;
       this.updateTaskDatedetails(this.task.id, referenceobject);
     } catch {
-      console.warn("Due date error");
+      console.warn("Due date error"); // eslint-disable-line no-console
     }
   }
 
@@ -775,7 +771,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       ] = null;
       this.updateTaskDatedetails(this.task.id, referenceobject);
     } catch {
-      console.warn("Follow up date error");
+      console.warn("Follow up date error"); // eslint-disable-line no-console
     }
   }
 
