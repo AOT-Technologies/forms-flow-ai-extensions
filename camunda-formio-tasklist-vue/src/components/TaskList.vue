@@ -248,7 +248,7 @@
             <div class="height-100">
               <b-tabs pills class="height-100" content-class="mt-3">
                 <b-tab title="Form" active>
-                  <div v-if="showfrom" class="ml-4 mr-4 form-tab-conatiner">
+                  <div class="ml-4 mr-4 form-tab-conatiner">
                     <b-overlay
                       :show="task.assignee !== userName"
                       variant="light"
@@ -258,6 +258,7 @@
                     >
                       <!-- don't remove form-render class -->
                       <formio
+                        v-if="formioUrl"
                         :src="formioUrl"
                         :options="
                           task.assignee !== userName
@@ -381,7 +382,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private setDue: any = [];
   private setGroup = null;
   private userSelected: any = {};
-  private showfrom: boolean = false;
   public perPage: number = 10;
   private tasklength: number = 0;
   private editFormoptions: object = {
@@ -516,9 +516,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.getGroupDetails();
   }
 
-  getTaskFormIODetails (taskId: string) {
-    // this.showfrom = false;
-    CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
+  async getTaskFormIODetails (taskId: string) {
+    await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
       (result) => {
         if (result.data["formUrl"]?.value) {
           this.formioUrl = result.data["formUrl"]?.value;
@@ -531,9 +530,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.submissionId = submissionId;
           this.formId = formId;
         }
-        this.showfrom = true;
       },
     );
+
   }
 
   getTaskHistoryDetails (taskId: string) {
@@ -610,15 +609,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
   }
 
-  onClaim () {
-    CamundaRest.claim(
+  async onClaim () {
+    await CamundaRest.claim(
       this.token,
       this.task.id,
       { userId: this.userName },
       this.bpmApiUrl,
     )
-      .then(() => {
-        this.fetchTaskData(this.getFormsFlowTaskId);
+      .then(async () => {
+        await this.fetchTaskData(this.getFormsFlowTaskId);
         this.fetchPaginatedTaskList(
           this.selectedfilterId,
           this.payload,
@@ -641,15 +640,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       });
   }
 
-  onSetassignee () {
-    CamundaRest.setassignee(
+  async onSetassignee () {
+    await CamundaRest.setassignee(
       this.token,
       this.task.id,
       { userId: this.userSelected?.code },
       this.bpmApiUrl,
     )
-      .then(() => {
-        this.fetchTaskData(this.getFormsFlowTaskId);
+      .then(async () => {
+        await this.fetchTaskData(this.getFormsFlowTaskId);
         this.fetchPaginatedTaskList(
           this.selectedfilterId,
           this.payload,
@@ -762,29 +761,29 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  fetchTaskData (taskId: string) {
+  async fetchTaskData (taskId: string) {
     this.task = getTaskFromList(this.tasks, taskId);
     if (this.task) {
       this.getBPMTaskDetail(taskId);
-      CamundaRest.getVariablesByProcessId(
+      await CamundaRest.getVariablesByProcessId(
         this.token,
         this.task.processInstanceId,
         this.bpmApiUrl,
       );
-      this.getTaskFormIODetails(taskId);
+      await this.getTaskFormIODetails(taskId);
       this.getTaskHistoryDetails(taskId);
       this.getTaskProcessDiagramDetails(this.task);
     }
   }
 
-  mounted () {
+  async mounted () {
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
     this.setFormsFlowactiveIndex(NaN);
-    this.$root.$on("call-fetchData", (para: any) => {
+    this.$root.$on("call-fetchData", async (para: any) => {
       this.editAssignee = false;
       this.setFormsFlowTaskId(para.selectedTaskId);
-      this.fetchTaskData(this.getFormsFlowTaskId);
+      await this.fetchTaskData(this.getFormsFlowTaskId);
     });
 
     this.$root.$on("call-fetchPaginatedTaskList", (para: any) => {
@@ -815,7 +814,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.userEmail,
       this.formIOUserRoles,
     );
-    CamundaRest.filterList(this.token, this.bpmApiUrl).then((response) => {
+    await CamundaRest.filterList(this.token, this.bpmApiUrl).then((response) => {
       this.filterList = response.data;
       this.selectedfilterId = findFilterKeyOfAllTask(
         this.filterList,
@@ -837,7 +836,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     SocketIOService.connect(
       this.webSocketEncryptkey,
-      (refreshedTaskId: any, eventName: any, error: any) => {
+      async (refreshedTaskId: any, eventName: any, error: any) => {
         if (error) {
           this.$bvToast.toast(
             `WebSocket is not connected which will cause
@@ -859,7 +858,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
             (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
             this.perPage,
           );
-          this.fetchTaskData(this.getFormsFlowTaskId);
+          await this.fetchTaskData(this.getFormsFlowTaskId);
           if (eventName === "create") {
             this.$root.$emit("call-pagination");
             this.fetchTaskList(this.selectedfilterId, this.payload);
@@ -869,13 +868,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.getFormsFlowTaskId &&
           refreshedTaskId === this.getFormsFlowTaskId
         ) {
-          this.fetchTaskData(this.getFormsFlowTaskId);
+          await this.fetchTaskData(this.getFormsFlowTaskId);
           this.reloadCurrentTask();
         }
       },
     );
 
-    CamundaRest.getUsersByMemberGroups(
+    await CamundaRest.getUsersByMemberGroups(
       this.token,
       this.bpmApiUrl,
       reviewerGroup,
@@ -934,11 +933,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  updated () {
+  async updated () {
     if (this.fulltasks.length && this.taskId2 !== "") {
       this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
       this.getBPMTaskDetail(this.taskId2);
-      this.getTaskFormIODetails(this.taskId2);
+      await this.getTaskFormIODetails(this.taskId2);
       this.getTaskHistoryDetails(this.taskId2);
       this.getTaskProcessDiagramDetails(this.task);
       this.taskId2 = "";
