@@ -517,7 +517,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   getTaskFormIODetails (taskId: string) {
-    this.showfrom = false;
+    // this.showfrom = false;
     CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
       (result) => {
         if (result.data["formUrl"]?.value) {
@@ -537,7 +537,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   getTaskHistoryDetails (taskId: string) {
-    this.applicationId = "";
     this.taskHistoryList = [];
     CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
       (result) => {
@@ -781,7 +780,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   mounted () {
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
-    this.setFormsFlowactiveIndex(0);
+    this.setFormsFlowactiveIndex(NaN);
     this.$root.$on("call-fetchData", (para: any) => {
       this.editAssignee = false;
       this.setFormsFlowTaskId(para.selectedTaskId);
