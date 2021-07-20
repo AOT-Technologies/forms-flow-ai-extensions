@@ -248,7 +248,7 @@
             <div class="height-100">
               <b-tabs pills class="height-100" content-class="mt-3">
                 <b-tab title="Form" active>
-                  <div class="ml-4 mr-4 form-tab-conatiner">
+                  <div v-if ="formioUrl" class="ml-4 mr-4 form-tab-conatiner">
                     <b-overlay
                       :show="task.assignee !== userName"
                       variant="light"
@@ -525,14 +525,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
             this.formioUrl,
             this.formIOApiUrl,
           );
-
           this.formioUrl = formioUrl;
           this.submissionId = submissionId;
           this.formId = formId;
         }
-      },
-    );
-
+      });
   }
 
   getTaskHistoryDetails (taskId: string) {
