@@ -248,7 +248,7 @@
             <div class="height-100">
               <b-tabs pills class="height-100" content-class="mt-3">
                 <b-tab title="Form" active>
-                  <div v-if ="formioUrl" class="ml-4 mr-4 form-tab-conatiner">
+                  <div class="ml-4 mr-4 form-tab-conatiner">
                     <b-overlay
                       :show="task.assignee !== userName"
                       variant="light"
@@ -519,9 +519,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   async getTaskFormIODetails (taskId: string) {
     // this.showForm = false;
-    this.formioUrl = "";
+    // this.formioUrl = "";
     await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
-      (result) => {
+      async (result) => {
         if (result.data["formUrl"]?.value) {
           const formioUrlPattern = result.data["formUrl"]?.value;
           const { formioUrl, formId, submissionId } = getFormDetails(
@@ -531,7 +531,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.formioUrl = formioUrl;
           this.submissionId = submissionId;
           this.formId = formId;
-          
+          await this.reloadCurrentTask();
           // this.showForm = true;
         }
       });
