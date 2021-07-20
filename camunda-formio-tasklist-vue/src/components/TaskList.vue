@@ -248,7 +248,7 @@
             <div class="height-100">
               <b-tabs pills class="height-100" content-class="mt-3">
                 <b-tab title="Form" active>
-                  <div v-if ="formioUrl" class="ml-4 mr-4 form-tab-conatiner">
+                  <div v-if ="showForm" class="ml-4 mr-4 form-tab-conatiner">
                     <b-overlay
                       :show="task.assignee !== userName"
                       variant="light"
@@ -410,6 +410,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private autoUserList: any = [];
   private taskIdValue: string = "";
   private taskId2: string = "";
+  private showForm: boolean = false
 
   checkPropsIsPassedAndSetValue () {
     if (this.getTaskId) {
@@ -517,6 +518,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async getTaskFormIODetails (taskId: string) {
+    this.showForm = false;
     await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
       (result) => {
         if (result.data["formUrl"]?.value) {
@@ -528,6 +530,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.formioUrl = formioUrl;
           this.submissionId = submissionId;
           this.formId = formId;
+          
+          this.showForm = true;
         }
       });
   }
