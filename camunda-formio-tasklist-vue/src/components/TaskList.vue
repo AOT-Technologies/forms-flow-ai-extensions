@@ -433,21 +433,21 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.userSelected["code"] = this.task.assignee;
   }
 
-  onFormSubmitCallback () {
+  async onFormSubmitCallback () {
     if (this.task.id) {
-      this.onBPMTaskFormSubmit(this.task.id);
-      this.reloadTasks();
+      await this.onBPMTaskFormSubmit(this.task.id);
+      await this.reloadTasks();
     }
   }
 
-  addGroup () {
-    CamundaRest.createTaskGroupByID(this.token, this.task.id, this.bpmApiUrl, {
+  async addGroup () {
+    await CamundaRest.createTaskGroupByID(this.token, this.task.id, this.bpmApiUrl, {
       userId: null,
       groupId: this.setGroup,
       type: "candidate",
-    }).then(() => {
-      this.getGroupDetails();
-      this.reloadCurrentTask();
+    }).then(async () => {
+      await this.getGroupDetails();
+      await this.reloadCurrentTask();
       this.setGroup = null;
     });
   }
@@ -469,17 +469,17 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  deleteGroup (groupid: string) {
-    CamundaRest.deleteTaskGroupByID(this.token, this.task.id, this.bpmApiUrl, {
+  async deleteGroup (groupid: string) {
+    await CamundaRest.deleteTaskGroupByID(this.token, this.task.id, this.bpmApiUrl, {
       groupId: groupid,
       type: "candidate",
-    }).then(() => {
-      this.getGroupDetails();
-      this.reloadCurrentTask();
+    }).then(async () => {
+      await this.getGroupDetails();
+      await this.reloadCurrentTask();
     });
   }
 
-  onBPMTaskFormSubmit (taskId: string) {
+  async onBPMTaskFormSubmit (taskId: string) {
     const formRequestFormat = {
       variables: {
         formUrl: {
@@ -490,21 +490,21 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         },
       },
     };
-    CamundaRest.formTaskSubmit(
+    await CamundaRest.formTaskSubmit(
       this.token,
       taskId,
       formRequestFormat,
       this.bpmApiUrl,
-    ).then(() => {
-      this.reloadCurrentTask();
+    ).then(async () => {
+      await this.reloadCurrentTask();
     });
   }
 
-  getBPMTaskDetail (taskId: string) {
-    CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl).then(
-      (result) => {
+  async getBPMTaskDetail (taskId: string) {
+    await CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl).then(
+      async (result) => {
         this.task = result.data;
-        CamundaRest.getProcessDefinitionById(
+        await CamundaRest.getProcessDefinitionById(
           this.token,
           this.task.processDefinitionId,
           this.bpmApiUrl,
@@ -513,7 +513,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         });
       },
     );
-    this.getGroupDetails();
+    await this.getGroupDetails();
   }
 
   async getTaskFormIODetails (taskId: string) {
@@ -532,9 +532,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       });
   }
 
-  getTaskHistoryDetails (taskId: string) {
+  async getTaskHistoryDetails (taskId: string) {
     this.taskHistoryList = [];
-    CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
+    await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
       (result) => {
         if (result.data && result.data["applicationId"]?.value) {
           this.applicationId = result.data["applicationId"].value;
@@ -550,8 +550,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
   }
 
-  getTaskProcessDiagramDetails (task: any) {
-    CamundaRest.getProcessDiagramXML(
+  async getTaskProcessDiagramDetails (task: any) {
+    await CamundaRest.getProcessDiagramXML(
       this.token,
       task.processDefinitionId,
       this.bpmApiUrl,
@@ -575,20 +575,20 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  oncustomEventCallback = (customEvent: any) => {
+  oncustomEventCallback = async (customEvent: any) => {
     switch (customEvent.type) {
     case "reloadTasks":
-      this.reloadTasks();
+      await this.reloadTasks();
       break;
     case "reloadCurrentTask":
-      this.reloadCurrentTask();
+      await this.reloadCurrentTask();
       break;
     }
   }
 
-  reloadTasks () {
+  async reloadTasks () {
     this.setFormsFlowTaskId("");
-    this.fetchPaginatedTaskList(
+    await this.fetchPaginatedTaskList(
       this.selectedfilterId,
       this.payload,
       (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
@@ -596,9 +596,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
   }
 
-  reloadCurrentTask () {
-    this.getBPMTaskDetail(this.task.id);
-    this.fetchPaginatedTaskList(
+  async reloadCurrentTask () {
+    await this.getBPMTaskDetail(this.task.id);
+    await this.fetchPaginatedTaskList(
       this.selectedfilterId,
       this.payload,
       (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
@@ -615,7 +615,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     )
       .then(async () => {
         await this.fetchTaskData(this.getFormsFlowTaskId);
-        this.fetchPaginatedTaskList(
+        await this.fetchPaginatedTaskList(
           this.selectedfilterId,
           this.payload,
           (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
@@ -627,10 +627,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       });
   }
 
-  onUnClaim () {
-    CamundaRest.unclaim(this.token, this.task.id, this.bpmApiUrl)
-      .then(() => {
-        this.reloadCurrentTask();
+  async onUnClaim () {
+    await CamundaRest.unclaim(this.token, this.task.id, this.bpmApiUrl)
+      .then(async () => {
+        await this.reloadCurrentTask();
       })
       .catch((error) => {
         console.error("Error", error);
@@ -646,7 +646,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     )
       .then(async () => {
         await this.fetchTaskData(this.getFormsFlowTaskId);
-        this.fetchPaginatedTaskList(
+        await this.fetchPaginatedTaskList(
           this.selectedfilterId,
           this.payload,
           (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
@@ -659,8 +659,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.toggleassignee();
   }
 
-  fetchTaskList (filterId: string, requestData: object) {
-    CamundaRest.filterTaskList(
+  async fetchTaskList (filterId: string, requestData: object) {
+    await CamundaRest.filterTaskList(
       this.token,
       filterId,
       requestData,
@@ -671,14 +671,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  fetchPaginatedTaskList (
+  async fetchPaginatedTaskList (
     filterId: string,
     requestData: object,
     first: number,
     max: number,
   ) {
     this.selectedfilterId = filterId;
-    CamundaRest.filterTaskListPagination(
+    await CamundaRest.filterTaskListPagination(
       this.token,
       filterId,
       requestData,
@@ -690,17 +690,17 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  updateTaskDatedetails (taskId: string, task: any) {
-    CamundaRest.updateTasksByID(this.token, taskId, this.bpmApiUrl, task)
-      .then(() => {
-        this.reloadCurrentTask();
+  async updateTaskDatedetails (taskId: string, task: any) {
+    await CamundaRest.updateTasksByID(this.token, taskId, this.bpmApiUrl, task)
+      .then(async () => {
+        await this.reloadCurrentTask();
       })
       .catch((error) => {
         console.error("Error", error);
       });
   }
 
-  updateFollowUpDate () {
+  async updateFollowUpDate () {
     const referenceobject = this.task;
     try {
       referenceobject["followUp"] = getISODateTime(
@@ -709,13 +709,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
             this.getFormsFlowactiveIndex
         ],
       );
-      this.updateTaskDatedetails(this.task.id, referenceobject);
+      await this.updateTaskDatedetails(this.task.id, referenceobject);
     } catch {
       console.warn("Follow date error");
     }
   }
 
-  updateDueDate () {
+  async updateDueDate () {
     const referenceobject = this.task;
     try {
       referenceobject["due"] = getISODateTime(
@@ -724,13 +724,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
             this.getFormsFlowactiveIndex
         ],
       );
-      this.updateTaskDatedetails(this.task.id, referenceobject);
+      await this.updateTaskDatedetails(this.task.id, referenceobject);
     } catch {
       console.warn("Due date error");
     }
   }
 
-  removeDueDate () {
+  async removeDueDate () {
     const referenceobject = this.task;
     try {
       this.setDue[
@@ -738,13 +738,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.getFormsFlowactiveIndex
       ] = null;
       referenceobject["due"] = null;
-      this.updateTaskDatedetails(this.task.id, referenceobject);
+      await this.updateTaskDatedetails(this.task.id, referenceobject);
     } catch {
       console.warn("Due date error");
     }
   }
 
-  removeFollowupDate () {
+  async removeFollowupDate () {
     const referenceobject = this.task;
     try {
       referenceobject["followUp"] = null;
@@ -752,7 +752,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         (this.getFormsFlowTaskCurrentPage - 1) * this.perPage +
           this.getFormsFlowactiveIndex
       ] = null;
-      this.updateTaskDatedetails(this.task.id, referenceobject);
+      await this.updateTaskDatedetails(this.task.id, referenceobject);
     } catch {
       console.warn("Follow up date error");
     }
@@ -761,15 +761,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async fetchTaskData (taskId: string) {
     this.task = getTaskFromList(this.tasks, taskId);
     if (this.task) {
-      this.getBPMTaskDetail(taskId);
+      await this.getBPMTaskDetail(taskId);
       await CamundaRest.getVariablesByProcessId(
         this.token,
         this.task.processInstanceId,
         this.bpmApiUrl,
       );
       await this.getTaskFormIODetails(taskId);
-      this.getTaskHistoryDetails(taskId);
-      this.getTaskProcessDiagramDetails(this.task);
+      await this.getTaskHistoryDetails(taskId);
+      await this.getTaskProcessDiagramDetails(this.task);
     }
   }
 
@@ -783,10 +783,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       await this.fetchTaskData(this.getFormsFlowTaskId);
     });
 
-    this.$root.$on("call-fetchPaginatedTaskList", (para: any) => {
+    this.$root.$on("call-fetchPaginatedTaskList", async (para: any) => {
       this.selectedfilterId = para.filterId;
       this.payload = para.requestData;
-      this.fetchPaginatedTaskList(
+      await this.fetchPaginatedTaskList(
         para.filterId,
         para.requestData,
         para.firstResult,
@@ -794,8 +794,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       );
     });
 
-    this.$root.$on("call-fetchTaskList", (para: any) => {
-      this.fetchTaskList(para.filterId, para.requestData);
+    this.$root.$on("call-fetchTaskList", async (para: any) => {
+      await this.fetchTaskList(para.filterId, para.requestData);
     });
 
     this.$root.$on("call-managerScreen", (para: any) => {
@@ -811,15 +811,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.userEmail,
       this.formIOUserRoles,
     );
-    await CamundaRest.filterList(this.token, this.bpmApiUrl).then((response) => {
+    await CamundaRest.filterList(this.token, this.bpmApiUrl).then(async (response) => {
       this.filterList = response.data;
       this.selectedfilterId = findFilterKeyOfAllTask(
         this.filterList,
         "name",
         "All tasks",
       );
-      this.fetchTaskList(this.selectedfilterId, this.payload);
-      this.fetchPaginatedTaskList(
+      await this.fetchTaskList(this.selectedfilterId, this.payload);
+      await this.fetchPaginatedTaskList(
         this.selectedfilterId,
         this.payload,
         (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
@@ -849,7 +849,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           );
         }
         if (this.selectedfilterId) {
-          this.fetchPaginatedTaskList(
+          await this.fetchPaginatedTaskList(
             this.selectedfilterId,
             this.payload,
             (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
@@ -858,7 +858,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           await this.fetchTaskData(this.getFormsFlowTaskId);
           if (eventName === "create") {
             this.$root.$emit("call-pagination");
-            this.fetchTaskList(this.selectedfilterId, this.payload);
+            await this.fetchTaskList(this.selectedfilterId, this.payload);
           }
         }
         if (
@@ -866,7 +866,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           refreshedTaskId === this.getFormsFlowTaskId
         ) {
           await this.fetchTaskData(this.getFormsFlowTaskId);
-          this.reloadCurrentTask();
+          await this.reloadCurrentTask();
         }
       },
     );
@@ -895,8 +895,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  fetchOptions (search: any) {
-    CamundaRest.getUsersByLastNameGroups(
+  async fetchOptions (search: any) {
+    await CamundaRest.getUsersByLastNameGroups(
       this.token,
       this.bpmApiUrl,
       search,
@@ -933,10 +933,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async updated () {
     if (this.fulltasks.length && this.taskId2 !== "") {
       this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
-      this.getBPMTaskDetail(this.taskId2);
+      await this.getBPMTaskDetail(this.taskId2);
       await this.getTaskFormIODetails(this.taskId2);
-      this.getTaskHistoryDetails(this.taskId2);
-      this.getTaskProcessDiagramDetails(this.task);
+      await this.getTaskHistoryDetails(this.taskId2);
+      await this.getTaskProcessDiagramDetails(this.task);
       this.taskId2 = "";
     }
   }
