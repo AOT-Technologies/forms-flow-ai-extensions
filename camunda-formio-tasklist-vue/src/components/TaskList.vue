@@ -519,6 +519,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   async getTaskFormIODetails (taskId: string) {
     // this.showForm = false;
+    this.formioUrl = "";
     await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
       (result) => {
         if (result.data["formUrl"]?.value) {
