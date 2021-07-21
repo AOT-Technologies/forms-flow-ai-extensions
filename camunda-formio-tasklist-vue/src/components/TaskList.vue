@@ -411,6 +411,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private taskIdValue: string = "";
   private taskId2: string = "";
   // private showForm: boolean = false
+  private refresedTaskFromWebSocket: string = ""
 
   checkPropsIsPassedAndSetValue () {
     if (this.getTaskId) {
@@ -518,8 +519,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async getTaskFormIODetails (taskId: string) {
-    // this.showForm = false;
-    // this.formioUrl = "";
+    console.log(this.refresedTaskFromWebSocket,  taskId, (this.refresedTaskFromWebSocket === taskId),'refresedTaskFromWebSocket, taskid');
+    if (this.refresedTaskFromWebSocket === taskId){
+      this.formioUrl = "";
+    }
     await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
       async (result) => {
         if (result.data["formUrl"]?.value) {
@@ -531,8 +534,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.formioUrl = formioUrl;
           this.submissionId = submissionId;
           this.formId = formId;
-          await this.reloadCurrentTask();
-          // this.showForm = true;
         }
       });
   }
@@ -773,6 +774,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.bpmApiUrl,
       );
       await this.getTaskFormIODetails(taskId);
+      console.log(taskId,'+++++++++++++++taskIdtaskId');
       await this.getTaskHistoryDetails(taskId);
       await this.getTaskProcessDiagramDetails(this.task);
     }
@@ -839,6 +841,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     SocketIOService.connect(
       this.webSocketEncryptkey,
       async (refreshedTaskId: any, eventName: any, error: any) => {
+        if (eventName === "update"){
+          this.refresedTaskFromWebSocket = refreshedTaskId;
+        }
         if (error) {
           this.$bvToast.toast(
             `WebSocket is not connected which will cause
