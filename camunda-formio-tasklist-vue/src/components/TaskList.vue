@@ -519,7 +519,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async getTaskFormIODetails (taskId: string) {
-    console.log(this.refresedTaskFromWebSocket,  taskId, (this.refresedTaskFromWebSocket === taskId),'refresedTaskFromWebSocket, taskid');
     if (this.refresedTaskFromWebSocket === taskId){
       this.formioUrl = "";
     }
@@ -774,7 +773,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.bpmApiUrl,
       );
       await this.getTaskFormIODetails(taskId);
-      console.log(taskId,'+++++++++++++++taskIdtaskId');
       await this.getTaskHistoryDetails(taskId);
       await this.getTaskProcessDiagramDetails(this.task);
     }
