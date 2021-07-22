@@ -248,7 +248,7 @@
             <div class="height-100">
               <b-tabs pills class="height-100" content-class="mt-3">
                 <b-tab title="Form" active>
-                  <div class="ml-4 mr-4 form-tab-conatiner">
+                  <div v-if="formioUrl" class="ml-4 mr-4 form-tab-conatiner">
                     <b-overlay
                       :show="task.assignee !== userName"
                       variant="light"
@@ -521,8 +521,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   async getTaskFormIODetails (taskId: string) {
     if (this.eventNameWebSocket !== "create"){
-      console.log('hereeeeeeeeeeeeeeeee');
       if (this.refresedTaskFromWebSocket === taskId){
+        console.log('hereeeeeeeeeeeeeeeee');
         this.formioUrl = "";
       }
       await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
@@ -623,10 +623,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl,
     )
       .then(async () => {
-        if (!SocketIOService.isConnected()) {
-          console.log('fetch onClaim');
-          await this.fetchTaskData(this.getFormsFlowTaskId);
-        }
+        // if (!SocketIOService.isConnected()) {
+        //   console.log('fetch onClaim');
+        // }
+        console.log('claimmmmmmmmmmm');
+        await this.fetchTaskData(this.getFormsFlowTaskId);
         await this.fetchPaginatedTaskList(
           this.selectedfilterId,
           this.payload,
