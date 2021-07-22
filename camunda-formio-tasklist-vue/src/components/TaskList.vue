@@ -867,7 +867,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
             },
           );
         }
-        if (eventName === "update") {
+        if (this.selectedfilterId || (
+          this.getFormsFlowTaskId &&
+          refreshedTaskId === this.getFormsFlowTaskId
+        )) {
           this.fetchTaskData(this.getFormsFlowTaskId);
         }
         if (this.selectedfilterId) {
@@ -890,6 +893,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           // this.fetchTaskData(this.getFormsFlowTaskId);
           this.reloadCurrentTask();
         }
+
       },
     );
 
