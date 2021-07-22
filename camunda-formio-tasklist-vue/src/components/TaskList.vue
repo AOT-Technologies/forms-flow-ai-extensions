@@ -851,6 +851,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     SocketIOService.connect(
       this.webSocketEncryptkey,
       (refreshedTaskId: any, eventName: any, error: any) => {
+        console.log(refreshedTaskId, eventName, error,'+++websocket events');
         this.taskIdWebsocket = refreshedTaskId;
         if (error) {
           this.$bvToast.toast(
