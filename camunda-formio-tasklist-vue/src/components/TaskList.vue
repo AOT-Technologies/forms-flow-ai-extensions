@@ -410,10 +410,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private autoUserList: any = [];
   private taskIdValue: string = "";
   private taskId2: string = "";
-  // private showForm: boolean = false
-  private refresedTaskFromWebSocket: string = ""
-  private eventNameWebSocket: string = ""
-  private showForm: boolean = false
+  private taskIdWebsocket: string = "";
+  private eventNameWebSocket: string = "";
+  private showForm: boolean = false;
 
   checkPropsIsPassedAndSetValue () {
     if (this.getTaskId) {
@@ -521,13 +520,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async getTaskFormIODetails (taskId: string) {
-    this.showForm = false;
+    if(this.taskIdWebsocket === taskId) {
+      this.showForm = false;
+      this.formioUrl = "";
+    }
     CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
       (result) => {
         if (result.data["formUrl"]?.value) {
-          this.formioUrl = result.data["formUrl"]?.value;
+          const formUrlPattern = result.data["formUrl"]?.value;
           const { formioUrl, formId, submissionId } = getFormDetails(
-            this.formioUrl,
+            formUrlPattern,
             this.formIOApiUrl,
           );
 
@@ -847,6 +849,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     SocketIOService.connect(
       this.webSocketEncryptkey,
       (refreshedTaskId: any, eventName: any, error: any) => {
+        this.taskIdWebsocket = refreshedTaskId;
         if (error) {
           this.$bvToast.toast(
             `WebSocket is not connected which will cause
