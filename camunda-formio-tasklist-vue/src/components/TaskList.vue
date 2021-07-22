@@ -521,31 +521,25 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async getTaskFormIODetails (taskId: string) {
-    // if (this.eventNameWebSocket !== "create"){
-    // if (this.refresedTaskFromWebSocket === taskId){
-    //   console.log('hereeeeeeeeeeeeeeeee');
-    //   this.formioUrl = "";
-    // }
     this.showForm = false;
-    await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
-      async (result) => {
+    CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
+      (result) => {
         if (result.data["formUrl"]?.value) {
-          const formioUrlPattern = result.data["formUrl"]?.value;
+          this.formioUrl = result.data["formUrl"]?.value;
           const { formioUrl, formId, submissionId } = getFormDetails(
-            formioUrlPattern,
+            this.formioUrl,
             this.formIOApiUrl,
           );
-          this.formioUrl = "";
+
           this.formioUrl = formioUrl;
           this.submissionId = submissionId;
           this.formId = formId;
         }
-      });
-    this.showForm = true;
-    //   this.eventNameWebSocket = "";
-    // // }
-    // this.refresedTaskFromWebSocket = "";
+        this.showForm = true;
+      },
+    );
   }
+
 
   async getTaskHistoryDetails (taskId: string) {
     this.taskHistoryList = [];
@@ -622,19 +616,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async onClaim () {
-    await CamundaRest.claim(
+    CamundaRest.claim(
       this.token,
       this.task.id,
       { userId: this.userName },
       this.bpmApiUrl,
     )
-      .then(async () => {
-        // if (!SocketIOService.isConnected()) {
-        //   console.log('fetch onClaim');
-        // }
-        console.log('claimmmmmmmmmmm');
-        await this.fetchTaskData(this.getFormsFlowTaskId);
-        await this.fetchPaginatedTaskList(
+      .then(() => {
+        this.fetchTaskData(this.getFormsFlowTaskId);
+        this.fetchPaginatedTaskList(
           this.selectedfilterId,
           this.payload,
           (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
@@ -856,13 +846,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     SocketIOService.connect(
       this.webSocketEncryptkey,
-      async (refreshedTaskId: any, eventName: any, error: any) => {
-        console.log(refreshedTaskId, eventName, error,'+++++++++++++websocket');
-        // this.refresedTaskFromWebSocket = "";
-        // this.eventNameWebSocket ="";
-        // if (eventName === "update"){
-        //   this.refresedTaskFromWebSocket = refreshedTaskId;
-        // }
+      (refreshedTaskId: any, eventName: any, error: any) => {
         if (error) {
           this.$bvToast.toast(
             `WebSocket is not connected which will cause
@@ -878,35 +862,25 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           );
         }
         if (this.selectedfilterId) {
-          await this.fetchPaginatedTaskList(
+          this.fetchPaginatedTaskList(
             this.selectedfilterId,
             this.payload,
             (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
             this.perPage,
           );
-          console.log('fetch task mounted call-111');
-          await this.fetchTaskData(this.getFormsFlowTaskId);
+          this.fetchTaskData(this.getFormsFlowTaskId);
           if (eventName === "create") {
-            this.eventNameWebSocket = "create";
             this.$root.$emit("call-pagination");
-            await this.fetchTaskList(this.selectedfilterId, this.payload);
+            this.fetchTaskList(this.selectedfilterId, this.payload);
           }
         }
         if (
           this.getFormsFlowTaskId &&
           refreshedTaskId === this.getFormsFlowTaskId
         ) {
-          console.log('fetch task mounted call-22');
-          await this.fetchTaskData(this.getFormsFlowTaskId);
-          await this.reloadCurrentTask();
+          this.fetchTaskData(this.getFormsFlowTaskId);
+          this.reloadCurrentTask();
         }
-        // if (
-        //   (this.getFormsFlowTaskId &&
-        //   refreshedTaskId === this.getFormsFlowTaskId) || (this.selectedfilterId)
-        // ){
-        //   console.log('fetch task mounted call-88888888888888');
-        //   await this.fetchTaskData(this.getFormsFlowTaskId);
-        // }
       },
     );
 
