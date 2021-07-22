@@ -867,6 +867,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
             },
           );
         }
+        if (eventName === "update") {
+          this.fetchTaskData(this.getFormsFlowTaskId);
+        }
         if (this.selectedfilterId) {
           this.fetchPaginatedTaskList(
             this.selectedfilterId,
@@ -874,7 +877,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
             (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
             this.perPage,
           );
-          this.fetchTaskData(this.getFormsFlowTaskId);
+          // this.fetchTaskData(this.getFormsFlowTaskId);
           if (eventName === "create") {
             this.$root.$emit("call-pagination");
             this.fetchTaskList(this.selectedfilterId, this.payload);
@@ -884,7 +887,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.getFormsFlowTaskId &&
           refreshedTaskId === this.getFormsFlowTaskId
         ) {
-          this.fetchTaskData(this.getFormsFlowTaskId);
+          // this.fetchTaskData(this.getFormsFlowTaskId);
           this.reloadCurrentTask();
         }
       },
