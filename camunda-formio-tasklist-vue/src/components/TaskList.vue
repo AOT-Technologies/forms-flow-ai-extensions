@@ -412,6 +412,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private taskId2: string = "";
   // private showForm: boolean = false
   private refresedTaskFromWebSocket: string = ""
+  private eventNameWebSocket: string = ""
 
   checkPropsIsPassedAndSetValue () {
     if (this.getTaskId) {
@@ -519,22 +520,25 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async getTaskFormIODetails (taskId: string) {
-    if (this.refresedTaskFromWebSocket === taskId){
-      this.formioUrl = "";
+    if (this.eventNameWebSocket !== "create"){
+      console.log('hereeeeeeeeeeeeeeeee');
+      if (this.refresedTaskFromWebSocket === taskId){
+        this.formioUrl = "";
+      }
+      await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
+        async (result) => {
+          if (result.data["formUrl"]?.value) {
+            const formioUrlPattern = result.data["formUrl"]?.value;
+            const { formioUrl, formId, submissionId } = getFormDetails(
+              formioUrlPattern,
+              this.formIOApiUrl,
+            );
+            this.formioUrl = formioUrl;
+            this.submissionId = submissionId;
+            this.formId = formId;
+          }
+        });
     }
-    await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
-      async (result) => {
-        if (result.data["formUrl"]?.value) {
-          const formioUrlPattern = result.data["formUrl"]?.value;
-          const { formioUrl, formId, submissionId } = getFormDetails(
-            formioUrlPattern,
-            this.formIOApiUrl,
-          );
-          this.formioUrl = formioUrl;
-          this.submissionId = submissionId;
-          this.formId = formId;
-        }
-      });
   }
 
   async getTaskHistoryDetails (taskId: string) {
@@ -619,7 +623,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl,
     )
       .then(async () => {
-        await this.fetchTaskData(this.getFormsFlowTaskId);
+        if (!SocketIOService.isConnected()) {
+          console.log('fetch onClaim');
+          await this.fetchTaskData(this.getFormsFlowTaskId);
+        }
         await this.fetchPaginatedTaskList(
           this.selectedfilterId,
           this.payload,
@@ -650,6 +657,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl,
     )
       .then(async () => {
+        
+        console.log('fetch taskonSetassignee');
         await this.fetchTaskData(this.getFormsFlowTaskId);
         await this.fetchPaginatedTaskList(
           this.selectedfilterId,
@@ -764,6 +773,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async fetchTaskData (taskId: string) {
+    console.log('fetchTaskData');
     this.task = getTaskFromList(this.tasks, taskId);
     if (this.task) {
       await this.getBPMTaskDetail(taskId);
@@ -785,6 +795,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.$root.$on("call-fetchData", async (para: any) => {
       this.editAssignee = false;
       this.setFormsFlowTaskId(para.selectedTaskId);
+      console.log('fetch task mounted call emit bus-444');
       await this.fetchTaskData(this.getFormsFlowTaskId);
     });
 
@@ -839,6 +850,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     SocketIOService.connect(
       this.webSocketEncryptkey,
       async (refreshedTaskId: any, eventName: any, error: any) => {
+        console.log(refreshedTaskId, eventName, error,'+++++++++++++websocket');
+        this.refresedTaskFromWebSocket = "";
+        this.eventNameWebSocket ="";
         if (eventName === "update"){
           this.refresedTaskFromWebSocket = refreshedTaskId;
         }
@@ -863,8 +877,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
             (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
             this.perPage,
           );
-          await this.fetchTaskData(this.getFormsFlowTaskId);
+          // console.log('fetch task mounted call-111')
+          // await this.fetchTaskData(this.getFormsFlowTaskId);
           if (eventName === "create") {
+            this.eventNameWebSocket = "create";
             this.$root.$emit("call-pagination");
             await this.fetchTaskList(this.selectedfilterId, this.payload);
           }
@@ -873,8 +889,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.getFormsFlowTaskId &&
           refreshedTaskId === this.getFormsFlowTaskId
         ) {
-          await this.fetchTaskData(this.getFormsFlowTaskId);
+          // console.log('fetch task mounted call-22')
+          // await this.fetchTaskData(this.getFormsFlowTaskId);
           await this.reloadCurrentTask();
+        }
+        if (
+          (this.getFormsFlowTaskId &&
+          refreshedTaskId === this.getFormsFlowTaskId) || (this.selectedfilterId)
+        ){
+          console.log('fetch task mounted call-88888888888888');
+          await this.fetchTaskData(this.getFormsFlowTaskId);
         }
       },
     );
@@ -940,6 +964,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   async updated () {
     if (this.fulltasks.length && this.taskId2 !== "") {
+      console.log('updated');
       this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
       await this.getBPMTaskDetail(this.taskId2);
       await this.getTaskFormIODetails(this.taskId2);
