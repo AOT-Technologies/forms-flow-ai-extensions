@@ -878,8 +878,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
             (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
             this.perPage,
           );
-          // console.log('fetch task mounted call-111')
-          // await this.fetchTaskData(this.getFormsFlowTaskId);
+          console.log('fetch task mounted call-111');
+          await this.fetchTaskData(this.getFormsFlowTaskId);
           if (eventName === "create") {
             this.eventNameWebSocket = "create";
             this.$root.$emit("call-pagination");
@@ -890,17 +890,17 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.getFormsFlowTaskId &&
           refreshedTaskId === this.getFormsFlowTaskId
         ) {
-          // console.log('fetch task mounted call-22')
-          // await this.fetchTaskData(this.getFormsFlowTaskId);
+          console.log('fetch task mounted call-22');
+          await this.fetchTaskData(this.getFormsFlowTaskId);
           await this.reloadCurrentTask();
         }
-        if (
-          (this.getFormsFlowTaskId &&
-          refreshedTaskId === this.getFormsFlowTaskId) || (this.selectedfilterId)
-        ){
-          console.log('fetch task mounted call-88888888888888');
-          await this.fetchTaskData(this.getFormsFlowTaskId);
-        }
+        // if (
+        //   (this.getFormsFlowTaskId &&
+        //   refreshedTaskId === this.getFormsFlowTaskId) || (this.selectedfilterId)
+        // ){
+        //   console.log('fetch task mounted call-88888888888888');
+        //   await this.fetchTaskData(this.getFormsFlowTaskId);
+        // }
       },
     );
 
