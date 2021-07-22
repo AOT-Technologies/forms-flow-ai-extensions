@@ -625,7 +625,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl,
     )
       .then(() => {
-        this.fetchTaskData(this.getFormsFlowTaskId);
+        if (!SocketIOService.isConnected()) {
+          this.fetchTaskData(this.getFormsFlowTaskId);
+        }
         this.fetchPaginatedTaskList(
           this.selectedfilterId,
           this.payload,
