@@ -521,6 +521,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   async getTaskFormIODetails (taskId: string) {
     if(this.taskIdWebsocket === taskId) {
+      console.log(this.taskIdWebsocket , taskId,'=============vefore restting url');
       this.showForm = false;
       this.formioUrl = "";
     }
@@ -774,9 +775,17 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async fetchTaskData (taskId: string) {
-    console.log('fetchTaskData');
-    this.task = getTaskFromList(this.tasks, taskId);
+    console.log(this.tasks, taskId,'++++1111111');
+    // this.task = getTaskFromList(this.tasks, taskId);
+    const res =  await CamundaRest.getTaskWithId(
+      this.token,
+      this.bpmApiUrl,
+      taskId
+    );
+    this.task = res.data;
+    console.log('fetchTaskData', this.task, taskId);
     if (this.task) {
+      console.log('fetchTaskData-ifff', taskId);
       await this.getBPMTaskDetail(taskId);
       await CamundaRest.getVariablesByProcessId(
         this.token,
