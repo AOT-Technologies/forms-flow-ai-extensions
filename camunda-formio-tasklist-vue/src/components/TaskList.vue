@@ -695,6 +695,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
+  async fetchTaskListCount (filterId: string, requestData: object) {
+    await CamundaRest.filterTaskListCount(
+      this.token,
+      filterId,
+      this.bpmApiUrl
+    ).then((result) => {
+      this.tasklength = result.data.count;
+    });
+  }
+
   async fetchPaginatedTaskList (
     filterId: string,
     requestData: object,
@@ -827,6 +837,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       await this.fetchTaskList(para.filterId, para.requestData);
     });
 
+    this.$root.$on("call-fetchTaskListCount", async (para: any) => {
+      await this.fetchTaskListCount(para.filterId, para.requestData);
+    });
+
     this.$root.$on("call-managerScreen", (para: any) => {
       this.maximize = para.maxi;
     });
@@ -848,7 +862,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           "name",
           ALL_FILTER
         );
-        await this.fetchTaskList(this.selectedfilterId, this.payload);
+        await this.fetchTaskListCount(this.selectedfilterId, this.payload);
         await this.reloadLHSTaskList();
       }
     );
@@ -877,8 +891,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         }
 
         if (eventName === "create") {
-          this.$root.$emit("call-pagination");
+          this.fetchTaskListCount(this.selectedfilterId, this.payload);
           this.reloadLHSTaskList();
+          this.$root.$emit("call-pagination");
         } 
         
         else {
@@ -970,6 +985,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.$root.$off("call-fetchData");
     this.$root.$off("call-fetchPaginatedTaskList");
     this.$root.$off("call-fetchTaskList");
+    this.$root.$off("call-fetchTaskListCount");
     this.$root.$off("call-managerScreen");
     if (this.$store.hasModule("serviceFlowModule")) {
       this.$store.unregisterModule("serviceFlowModule");
