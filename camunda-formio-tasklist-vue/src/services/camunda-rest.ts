@@ -252,15 +252,6 @@ const CamundaRest = {
       values
     );
   },
-  async getTaskWithId (
-    bearerToken: string,
-    CamundaUrl: string,
-    taskId: string
-  ) {
-    return await bpmAxios(bearerToken, CamundaUrl).get(
-      `/${engine}/task/${taskId}`,
-    );
-  },
 
   async formTaskSubmit (
     bearerToken: string,
