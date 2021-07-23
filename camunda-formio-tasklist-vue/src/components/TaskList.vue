@@ -876,32 +876,38 @@ export default class Tasklist extends Mixins(TaskListMixin) {
             },
           );
         }
-        if (this.selectedfilterId || (
-          this.getFormsFlowTaskId &&
+        if (eventName === "create") {
+          this.$root.$emit("call-pagination");
+          this.fetchTaskList(this.selectedfilterId, this.payload);
+        } else {
+          if (this.selectedfilterId || (
+            this.getFormsFlowTaskId &&
           refreshedTaskId === this.getFormsFlowTaskId
-        )) {
-          this.fetchTaskData(this.getFormsFlowTaskId);
-        }
-        if (this.selectedfilterId) {
-          this.fetchPaginatedTaskList(
-            this.selectedfilterId,
-            this.payload,
-            (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
-            this.perPage,
-          );
+          )) {
+            this.fetchTaskData(this.getFormsFlowTaskId);
+          }
+          if (this.selectedfilterId) {
+            this.fetchPaginatedTaskList(
+              this.selectedfilterId,
+              this.payload,
+              (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+              this.perPage,
+            );
           // this.fetchTaskData(this.getFormsFlowTaskId);
-          if (eventName === "create") {
-            this.$root.$emit("call-pagination");
-            this.fetchTaskList(this.selectedfilterId, this.payload);
+          // if (eventName === "create") {
+          //   this.$root.$emit("call-pagination");
+          //   this.fetchTaskList(this.selectedfilterId, this.payload);
+          // }
+          }
+          if (
+            this.getFormsFlowTaskId &&
+          refreshedTaskId === this.getFormsFlowTaskId
+          ) {
+          // this.fetchTaskData(this.getFormsFlowTaskId);
+            this.reloadCurrentTask();
           }
         }
-        if (
-          this.getFormsFlowTaskId &&
-          refreshedTaskId === this.getFormsFlowTaskId
-        ) {
-          // this.fetchTaskData(this.getFormsFlowTaskId);
-          this.reloadCurrentTask();
-        }
+ 
 
       },
     );
