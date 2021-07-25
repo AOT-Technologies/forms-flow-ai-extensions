@@ -424,6 +424,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.taskIdValue = routeparams;
       }
     }
+    console.log("Entered", this.taskIdValue);
     this.userName = getUserName();
   }
 
@@ -812,6 +813,42 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
+  async fetchOptions (search: any) {
+    await CamundaRest.getUsersByLastNameGroups(
+      this.token,
+      this.bpmApiUrl,
+      search,
+      reviewerGroup
+    ).then((response) => {
+      this.autoUserList = [];
+      response.data.forEach((element: any) => {
+        this.autoUserList.push({
+          code: element.id,
+          label: `${element.lastName} ${element.firstName} `,
+        });
+      });
+    });
+  }
+
+  findTaskIdDetailsFromURLrouter (taskId: string, fulltasks: any) {
+    console.log("Entered on email search");
+    this.task = getTaskFromList(fulltasks, taskId);
+    this.setFormsFlowTaskId(this.taskIdValue);
+    const pos = fulltasks
+      .map(function (e: any) {
+        return e.id;
+      })
+      .indexOf(this.taskIdValue);
+    this.setFormsFlowactiveIndex(pos % this.perPage);
+    this.$root.$emit("update-activeIndex-pagination", {
+      activeindex: this.getFormsFlowactiveIndex,
+    });
+    this.setFormsFlowTaskCurrentPage(Math.floor(pos / this.perPage) + 1);
+    this.$root.$emit("update-pagination-currentpage", {
+      page: this.getFormsFlowTaskCurrentPage,
+    });
+  }
+
   async mounted () {
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
@@ -926,59 +963,39 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       });
     });
 
-    //We used two variables - taskId2 and taskIdValue because the router value from gettaskId is always constant,so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
+    //We used two variables - taskId2 and taskIdValue because the router value from gettaskId
+    // is always constant,so after calling the required task details from router to use other
+    // tasks in list we need to set taskId2 value as ''
     if (this.taskId2 !== this.taskIdValue) {
       this.taskId2 = this.taskIdValue;
     } else {
       this.taskId2 = "";
     }
-  }
-
-  async fetchOptions (search: any) {
-    await CamundaRest.getUsersByLastNameGroups(
-      this.token,
-      this.bpmApiUrl,
-      search,
-      reviewerGroup
-    ).then((response) => {
-      this.autoUserList = [];
-      response.data.forEach((element: any) => {
-        this.autoUserList.push({
-          code: element.id,
-          label: `${element.lastName} ${element.firstName} `,
-        });
-      });
-    });
-  }
-
-  findTaskIdDetailsFromURLrouter (taskId: string, tasks: any) {
-    this.task = getTaskFromList(tasks, taskId);
-    this.setFormsFlowTaskId(this.taskIdValue);
-    const pos = tasks
-      .map(function (e: any) {
-        return e.id;
-      })
-      .indexOf(this.taskIdValue);
-    this.setFormsFlowactiveIndex(pos % this.perPage);
-    this.$root.$emit("update-activeIndex-pagination", {
-      activeindex: this.getFormsFlowactiveIndex,
-    });
-    this.setFormsFlowTaskCurrentPage(Math.floor(pos / this.perPage) + 1);
-    this.$root.$emit("update-pagination-currentpage", {
-      page: this.getFormsFlowTaskCurrentPage,
-    });
-  }
-
-  async updated () {
-    if (this.fulltasks.length && this.taskId2 !== "") {
-      this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
-      await this.getBPMTaskDetail(this.taskId2);
-      await this.getTaskFormIODetails(this.taskId2);
-      await this.getTaskHistoryDetails(this.taskId2);
-      await this.getTaskProcessDiagramDetails(this.task);
+    console.log("if condition", this.taskId2);
+    if (this.taskId2 !== "") {
+      await this.fetchTaskList(this.selectedfilterId, this.payload);
+      await this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
+      await this.fetchTaskData(this.taskId2);
       this.taskId2 = "";
     }
   }
+
+  // async updated () {
+  //   console.log("update entere");
+  //   console.log(this.taskId2);
+  //   if (this.taskId2 !== "") {
+  //     console.log("entered inside task update");
+  //     await this.fetchTaskList(this.selectedfilterId, this.payload);
+  //     console.log(this.fulltasks);
+  //     await this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
+  //     await this.fetchTaskData(this.taskId2);
+  //     // await this.getBPMTaskDetail(this.taskId2);
+  //     // await this.getTaskFormIODetails(this.taskId2);
+  //     // await this.getTaskHistoryDetails(this.taskId2);
+  //     // await this.getTaskProcessDiagramDetails(this.task);
+  //     this.taskId2 = "";
+  //   }
+  // }
 
   beforeDestroy () {
     SocketIOService.disconnect();
