@@ -9,8 +9,8 @@
       :selectedfilterId="selectedfilterId"
       :payload="payload"
     />
-    <b-row class="cft-service-task-list mt-1">
-      <b-col xl="3" lg="3" md="12" class="cft-first" v-if="maximize">
+    <b-row class="cft-service-task-list mt-1 ">
+      <b-col xl="3" lg="3" md="12" class="cft-first t-height" v-if="maximize">
         <LeftSider
           v-if="token && bpmApiUrl"
           :token="token"
@@ -24,7 +24,7 @@
           :payload="payload"
         />
       </b-col>
-      <b-col v-if="getFormsFlowTaskId && task" :lg="maximize ? 9 : 12" md="12">
+      <b-col v-if="getFormsFlowTaskId && task" :lg="maximize ? 9 : 12" md="12" class="t-height">
         <div class="cft-service-task-details">
           <b-row>
             <ExpandContract />
@@ -593,7 +593,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         console.log(warnings); // eslint-disable-line no-console
       } 
       catch (err) {
-        // console.error("error rendering process diagram", err);
+        console.error("error rendering process diagram", err); // eslint-disable-line no-console 
       }
     });
   }
@@ -731,7 +731,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     await CamundaRest.updateTasksByID(this.token, taskId, this.bpmApiUrl, task)
       .then(async () => {
         if (!SocketIOService.isConnected()) {
-          console.log("Entered here inside as no socketio");
+          console.log("Entered here inside as no socketio");// eslint-disable-line no-console
           await this.reloadCurrentTask();
         }
       })
@@ -1001,3 +1001,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 }
 </script>
+<style>
+body {
+ overflow-y: hidden;
+}
+</style>
