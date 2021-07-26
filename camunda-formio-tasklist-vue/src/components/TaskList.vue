@@ -311,8 +311,8 @@ import "vue2-datepicker/index.css";
 import "semantic-ui-css/semantic.min.css";
 import "../styles/user-styles.css";
 import "../styles/camundaFormIOTasklist.scss";
-import { Component, Mixins, Prop } from "vue-property-decorator";
 import { ALL_FILTER,reviewerGroup } from "../services/constants";
+import { Component, Mixins, Prop } from "vue-property-decorator";
 import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   findFilterKeyOfAllTask,
@@ -414,7 +414,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private eventNameWebSocket: string = "";
   private showForm: boolean = false;
 
-  checkPropsIsPassedAndSetValue () {
+  checkforTaskID () {
     if (this.getTaskId) {
       this.taskIdValue = this.getTaskId;
     }
@@ -424,7 +424,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.taskIdValue = routeparams;
       }
     }
-    console.log("Entered", this.taskIdValue);
     this.userName = getUserName();
   }
 
@@ -591,7 +590,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       try {
         const { warnings } = await viewer.importXML(this.xmlData);
         viewer.get("canvas").zoom("fit-viewport");
-        console.log(warnings);
+        console.log(warnings); // eslint-disable-line no-console
       } 
       catch (err) {
         // console.error("error rendering process diagram", err);
@@ -653,7 +652,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.reloadLHSTaskList();
       })
       .catch((error) => {
-        console.error("Error", error);
+        console.error("Error", error); // eslint-disable-line no-console
       });
   }
 
@@ -663,7 +662,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         await this.reloadCurrentTask();
       })
       .catch((error) => {
-        console.error("Error", error);
+        console.error("Error", error); // eslint-disable-line no-console
       });
   }
 
@@ -679,7 +678,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         await this.reloadLHSTaskList();
       })
       .catch((error) => {
-        console.error("Error", error);
+        console.error("Error", error); // eslint-disable-line no-console
       });
     this.toggleassignee();
   }
@@ -692,7 +691,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     ).then((result) => {
       this.fulltasks = result.data;
-      this.tasklength = result.data.length;
     });
   }
 
@@ -700,7 +698,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     await CamundaRest.filterTaskListCount(
       this.token,
       filterId,
-      this.bpmApiUrl
+      requestData,
+      this.bpmApiUrl,
     ).then((result) => {
       this.tasklength = result.data.count;
     });
@@ -731,7 +730,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         await this.reloadCurrentTask();
       })
       .catch((error) => {
-        console.error("Error", error);
+        console.error("Error", error); // eslint-disable-line no-console
       });
   }
 
@@ -746,7 +745,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       );
       await this.updateTaskDatedetails(this.task.id, referenceobject);
     } catch {
-      console.warn("Follow date error");
+      console.warn("Follow date error"); // eslint-disable-line no-console
     }
   }
 
@@ -761,7 +760,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       );
       await this.updateTaskDatedetails(this.task.id, referenceobject);
     } catch {
-      console.warn("Due date error");
+      console.warn("Due date error");  // eslint-disable-line no-console
     }
   }
 
@@ -775,7 +774,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       referenceobject["due"] = null;
       await this.updateTaskDatedetails(this.task.id, referenceobject);
     } catch {
-      console.warn("Due date error");
+      console.warn("Due date error"); // eslint-disable-line no-console
     }
   }
 
@@ -789,7 +788,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       ] = null;
       await this.updateTaskDatedetails(this.task.id, referenceobject);
     } catch {
-      console.warn("Follow up date error");
+      console.warn("Follow up date error"); // eslint-disable-line no-console
     }
   }
 
@@ -830,8 +829,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  findTaskIdDetailsFromURLrouter (taskId: string, fulltasks: any) {
-    console.log("Entered on email search");
+  async findTaskIdDetailsFromURLrouter (taskId: string, fulltasks: any) {
     this.task = getTaskFromList(fulltasks, taskId);
     this.setFormsFlowTaskId(this.taskIdValue);
     const pos = fulltasks
@@ -870,10 +868,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       );
     });
 
-    this.$root.$on("call-fetchTaskList", async (para: any) => {
-      await this.fetchTaskList(para.filterId, para.requestData);
-    });
-
     this.$root.$on("call-fetchTaskListCount", async (para: any) => {
       await this.fetchTaskListCount(para.filterId, para.requestData);
     });
@@ -883,7 +877,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
 
     this.checkProps();
-    this.checkPropsIsPassedAndSetValue();
+    this.checkforTaskID();
     authenticateFormio(
       this.formIOResourceId,
       this.formIOReviewerId,
@@ -971,7 +965,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     } else {
       this.taskId2 = "";
     }
-    console.log("if condition", this.taskId2);
     if (this.taskId2 !== "") {
       await this.fetchTaskList(this.selectedfilterId, this.payload);
       await this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
@@ -980,28 +973,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  // async updated () {
-  //   console.log("update entere");
-  //   console.log(this.taskId2);
-  //   if (this.taskId2 !== "") {
-  //     console.log("entered inside task update");
-  //     await this.fetchTaskList(this.selectedfilterId, this.payload);
-  //     console.log(this.fulltasks);
-  //     await this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
-  //     await this.fetchTaskData(this.taskId2);
-  //     // await this.getBPMTaskDetail(this.taskId2);
-  //     // await this.getTaskFormIODetails(this.taskId2);
-  //     // await this.getTaskHistoryDetails(this.taskId2);
-  //     // await this.getTaskProcessDiagramDetails(this.task);
-  //     this.taskId2 = "";
-  //   }
-  // }
-
   beforeDestroy () {
     SocketIOService.disconnect();
     this.$root.$off("call-fetchData");
     this.$root.$off("call-fetchPaginatedTaskList");
-    this.$root.$off("call-fetchTaskList");
     this.$root.$off("call-fetchTaskListCount");
     this.$root.$off("call-managerScreen");
     if (this.$store.hasModule("serviceFlowModule")) {
