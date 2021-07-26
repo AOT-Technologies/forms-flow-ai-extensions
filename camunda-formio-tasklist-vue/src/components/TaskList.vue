@@ -648,8 +648,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       .then(() => {
         if (!SocketIOService.isConnected()) {
           this.fetchTaskData(this.getFormsFlowTaskId);
+          this.reloadLHSTaskList();
         }
-        this.reloadLHSTaskList();
       })
       .catch((error) => {
         console.error("Error", error); // eslint-disable-line no-console
@@ -659,7 +659,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async onUnClaim () {
     await CamundaRest.unclaim(this.token, this.task.id, this.bpmApiUrl)
       .then(async () => {
-        await this.reloadCurrentTask();
+        if (!SocketIOService.isConnected()) {
+          this.fetchTaskData(this.getFormsFlowTaskId);
+          this.reloadLHSTaskList();
+        }
       })
       .catch((error) => {
         console.error("Error", error); // eslint-disable-line no-console
@@ -727,7 +730,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async updateTaskDatedetails (taskId: string, task: any) {
     await CamundaRest.updateTasksByID(this.token, taskId, this.bpmApiUrl, task)
       .then(async () => {
-        await this.reloadCurrentTask();
+        if (!SocketIOService.isConnected()) {
+          console.log("Entered here inside as no socketio");
+          await this.reloadCurrentTask();
+        }
       })
       .catch((error) => {
         console.error("Error", error); // eslint-disable-line no-console
@@ -931,7 +937,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           if (this.selectedfilterId ||
               (this.getFormsFlowTaskId && refreshedTaskId === this.getFormsFlowTaskId)
           ) {
-            this.fetchTaskData(this.getFormsFlowTaskId);
+            if(this.task.assignee === this.userName){
+              this.getBPMTaskDetail(this.task.id);
+            }
+            else {
+              this.fetchTaskData(this.getFormsFlowTaskId);
+            }
           }
           if (this.selectedfilterId) {
             this.reloadLHSTaskList();
