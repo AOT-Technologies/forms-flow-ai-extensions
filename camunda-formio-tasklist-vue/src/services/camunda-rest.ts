@@ -256,10 +256,12 @@ const CamundaRest = {
   async filterTaskListCount(
     bearerToken: string,
     filterId: string,
-    CamundaUrl: string
+    values: any,
+    CamundaUrl: string,
   ) {
-    return await bpmAxios(bearerToken, CamundaUrl).get(
-      `/${engine}/filter/${filterId}/count`
+    return await bpmAxios(bearerToken, CamundaUrl).post(
+      `/${engine}/filter/${filterId}/count`,
+      values
     );
   },
 

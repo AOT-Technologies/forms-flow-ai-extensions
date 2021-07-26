@@ -179,7 +179,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
       ...queryList,
     };
     if (!isEqual(this.payload, requiredParams)) {
-      this.$root.$emit("call-fetchTaskList", {
+      this.$root.$emit("call-fetchTaskListCount", {
         filterId: this.selectedfilterId,
         requestData: cloneDeep(requiredParams),
       });
