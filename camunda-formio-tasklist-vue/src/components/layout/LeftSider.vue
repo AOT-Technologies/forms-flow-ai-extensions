@@ -126,7 +126,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
 
   private getProcessDefinitions: Array<object> = [];
   private processDefinitionId = "";
-  private activeIndex = 0;
+  private activeIndex = NaN;
   private sList: any;
   private currentPage = 1;
 
@@ -135,7 +135,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     this.payload["firstResult"] = (newVal - 1) * this.perPage;
     this.payload["maxResults"] = this.perPage;
     if (this.currentPage !== this.getFormsFlowTaskCurrentPage) {
-      this.activeIndex = 0;
+      this.activeIndex = NaN;
     }
     this.setFormsFlowTaskCurrentPage(this.currentPage);
     this.$root.$emit("call-fetchPaginatedTaskList", {
@@ -179,7 +179,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
       ...queryList,
     };
     if (!isEqual(this.payload, requiredParams)) {
-      this.$root.$emit("call-fetchTaskList", {
+      this.$root.$emit("call-fetchTaskListCount", {
         filterId: this.selectedfilterId,
         requestData: cloneDeep(requiredParams),
       });

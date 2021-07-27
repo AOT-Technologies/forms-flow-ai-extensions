@@ -26,7 +26,7 @@ module.exports = {
     "no-unused-vars": "warn",
     "no-undef": "warn",
     "@typescript-eslint/no-inferrable-types": "off",
-    "space-before-function-paren": ["error", "always"],
-    "semi": ["error", "always"],
+    "space-before-function-paren": ["warn", "always"],
+    "semi": ["warn", "always"],
   },
 };
