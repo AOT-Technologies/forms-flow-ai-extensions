@@ -253,6 +253,18 @@ const CamundaRest = {
     );
   },
 
+  async filterTaskListCount(
+    bearerToken: string,
+    filterId: string,
+    values: any,
+    CamundaUrl: string,
+  ) {
+    return await bpmAxios(bearerToken, CamundaUrl).post(
+      `/${engine}/filter/${filterId}/count`,
+      values
+    );
+  },
+
   async formTaskSubmit (
     bearerToken: string,
     taskId: string,
