@@ -49,8 +49,6 @@ function connectClient () {
 }
 
 clientErrorCallback = (error: string, flag?: boolean) => {
-  /* eslint-disable no-debugger, no-console */
-  console.log("error==>>", error);
   if (!flag) stompClient = Stomp.over(socket);
   interval = setTimeout(connectClient, 10000);
 };

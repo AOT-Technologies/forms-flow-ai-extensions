@@ -588,10 +588,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       });
 
       try {
-        const { warnings } = await viewer.importXML(this.xmlData);
+        await viewer.importXML(this.xmlData);
         viewer.get("canvas").zoom("fit-viewport");
-        console.log(warnings); // eslint-disable-line no-console
-      } 
+      }
       catch (err) {
         console.error("error rendering process diagram", err); // eslint-disable-line no-console 
       }
@@ -731,7 +730,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     await CamundaRest.updateTasksByID(this.token, taskId, this.bpmApiUrl, task)
       .then(async () => {
         if (!SocketIOService.isConnected()) {
-          console.log("Entered here inside as no socketio");// eslint-disable-line no-console
           await this.reloadCurrentTask();
         }
       })
