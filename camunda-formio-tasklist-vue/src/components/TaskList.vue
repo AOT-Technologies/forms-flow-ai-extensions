@@ -999,8 +999,3 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 }
 </script>
-<style>
-body {
- overflow-y: hidden;
-}
-</style>
