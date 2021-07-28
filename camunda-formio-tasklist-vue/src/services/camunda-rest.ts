@@ -253,7 +253,7 @@ const CamundaRest = {
     );
   },
 
-  async filterTaskListCount(
+  async filterTaskListCount (
     bearerToken: string,
     filterId: string,
     values: any,
