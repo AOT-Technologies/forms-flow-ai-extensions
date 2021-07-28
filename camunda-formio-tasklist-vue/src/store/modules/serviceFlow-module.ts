@@ -1,5 +1,5 @@
-import { FormsFlowStateModelIF } from '../../interfaces'
-import { FormsFlowstateModel } from '../state'
+import { FormsFlowStateModelIF } from '../../interfaces';
+import { FormsFlowstateModel } from '../state';
 
 export default {
   namespaced: true,
@@ -8,13 +8,13 @@ export default {
   },
   getters: {
     getFormsFlowTaskCurrentPage (state: any) {
-      return state.formsFlowTaskCurrentPage
+      return state.formsFlowTaskCurrentPage;
     },
     getFormsFlowTaskId (state: any) {
-      return state.formsFlowTaskId
+      return state.formsFlowTaskId;
     },
     getFormsFlowactiveIndex (state: any) {
-      return state.formsFlowactiveIndex
+      return state.formsFlowactiveIndex;
     },
   },
   actions: {
@@ -24,4 +24,4 @@ export default {
     setFormsFlowTaskId: (state: FormsFlowStateModelIF, payload: string) => (state.formsFlowTaskId = payload),
     setFormsFlowactiveIndex: (state: FormsFlowStateModelIF, payload: number) => (state.formsFlowactiveIndex = payload),
   }
-}
+};

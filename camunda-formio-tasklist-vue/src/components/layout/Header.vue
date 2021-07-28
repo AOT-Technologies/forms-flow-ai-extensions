@@ -130,7 +130,7 @@ export default class Header extends Mixins(BaseMixin) {
 
   togglefilter (filter: any, index: number) {
     this.activefilter = index;
-    this.$root.$emit("call-fetchTaskList", {
+    this.$root.$emit("call-fetchTaskListCount", {
       filterId: filter.id,
       requestData: this.payload,
     });
