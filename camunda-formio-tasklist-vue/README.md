@@ -9,9 +9,9 @@ be installed as a package.
 
 ## Things to look out when integrating
 
-
+- Install the latest version of [Camunda-formio-tasklist-vue](https://www.npmjs.com/package/camunda-formio-tasklist-vue) and [bootstrap-vue](https://bootstrap-vue.org/)
 - Ensure you import the appropriate Vue component as defined in [TaskList View](https://github.com/AOT-Technologies/forms-flow-ai-extensions/blob/master/camunda-formio-tasklist-vue/src/views/TaskList.vue) and do the environment configuration in the integrated solution.
-
+- In your `main.ts` remember to import bootstrap-vue dependencies as [this example project](https://github.com/ann-aot/service-flow-vue/blob/main/src/main.ts).
 - Write a seperate router in integration project for defining routers for
 Application History `view submission` using our component to view
 the Form.
