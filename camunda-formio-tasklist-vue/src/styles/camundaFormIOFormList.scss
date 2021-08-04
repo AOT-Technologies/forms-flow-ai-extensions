@@ -41,6 +41,7 @@ font-family: Nunito Sans, SemiBold;
   border: #38598a !important;
   color: white !important;
 }
+
 }
 
 .cft-form-list-paginate{
@@ -48,6 +49,10 @@ display: flex;
 justify-content: center;
 margin-top: 15px;
 }
+
+.cft-cursor-pointer {
+    cursor: pointer;
+  }
 
   //TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
 

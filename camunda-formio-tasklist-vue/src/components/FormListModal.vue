@@ -31,8 +31,7 @@
             <b-tr>
               <b-th>
               <p @click="sortFormList" class="cft-cursor-pointer">Form Name
-                <i class="fa fa-caret-up" v-if="sortAscending"/>
-                <i class="fa fa-caret-down" v-else/>
+                <i :class="sortAscending ? 'fa fa-caret-up': 'fa fa-caret-down'"/>
               </p>
               </b-th>
               <b-th>Operations</b-th>
