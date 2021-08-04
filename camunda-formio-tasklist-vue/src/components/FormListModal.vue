@@ -1,7 +1,7 @@
 <template>
-  <div class="cftf-form-conatiner">
-    <b-button class="cft-form-button" v-b-modal.modal-multi-1>
-      <h4 ref="btn-show"><i class="fa fa-wpforms"></i> Forms</h4>
+  <div class="cftf-form-conatiner text-font">
+    <b-button variant="primary" v-b-modal.modal-multi-1>
+      <span ref="btn-show"><i class="fa fa-wpforms"> Forms</i></span>
     </b-button>
     <b-modal
       ref="modal-1"

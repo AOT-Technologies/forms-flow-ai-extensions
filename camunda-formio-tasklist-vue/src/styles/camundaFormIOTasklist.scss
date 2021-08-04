@@ -210,9 +210,12 @@
   #cftf-dpdown-container {
     display: flex;
     flex-wrap: wrap;
-    padding: calc(6px + 2px) 15px calc(6px - 2px) 15px;
-    box-shadow: 0 2px 6px -4px #555;
-    background-color: #fafafa;
+    // padding: calc(6px + 2px) 15px calc(6px - 2px) 15px;
+    // box-shadow: 0 2px 6px -4px rgb(19, 19, 19);
+    background-color: #F5F5F5;
+    box-shadow: 0 3px 6px 0px #c3bebe;
+    border-radius: 3px;
+
     .nav-link {
       padding: 0px;
     }
@@ -506,5 +509,8 @@ li {
 .t-height {
   overflow: scroll !important;
   height: 93vh;
+}
+.text-font { 
+  font-family: Nunito Sans, SemiBold;
 }
 }
