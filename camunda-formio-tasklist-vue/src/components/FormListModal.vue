@@ -29,7 +29,12 @@
         >
           <b-thead>
             <b-tr>
-              <b-th>Form Name</b-th>
+              <b-th>
+              <p @click="sortFormList" class="cft-cursor-pointer">Form Name
+                <i class="fa fa-caret-up" v-if="sortAscending"/>
+                <i class="fa fa-caret-down" v-else/>
+              </p>
+              </b-th>
               <b-th>Operations</b-th>
             </b-tr>
           </b-thead>
@@ -126,10 +131,11 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private formcurrentPage: number = 1;
   private formValueId: string | null = null;
   private formId: string | null = null;
-  private submissionId: string | null = null;
   private formioUrl: string | null = null;
   private formTitle: string = "";
   private formsflowAIApiUrl: any;
+  private sortAscending: boolean = false;
+  private submissionId: string | null = null;
 
   linkFormGen () {
     this.formListItems();
@@ -156,6 +162,11 @@ export default class FormListModal extends Mixins(BaseMixin) {
   backClick () {
     this.$bvModal.hide("modal-multi-2");
     this.$bvModal.show("modal-multi-1");
+  }
+
+  sortFormList() {
+    this.sortAscending = !this.sortAscending;
+    this.formList = this.formList.reverse();
   }
 
   onSubmit (submission: any) {
