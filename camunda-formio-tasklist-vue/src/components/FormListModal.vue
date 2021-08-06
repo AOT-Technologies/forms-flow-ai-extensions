@@ -30,14 +30,14 @@
           <b-thead>
             <b-tr>
               <b-th>
-              <p @click="sortFormList" class="cft-cursor-pointer">
+              <span @click="sortFormList" class="cft-cursor-pointer">
                   Form Name
                   <i
                     :class="
                       sortAscending ? 'fa fa-caret-up' : 'fa fa-caret-down'
                     "
                   />
-                </p>
+              </span>
               </b-th>
               <b-th>Operations</b-th>
             </b-tr>
