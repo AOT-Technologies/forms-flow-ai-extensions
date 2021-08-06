@@ -1,5 +1,5 @@
 <template>
-  <div class="cft-input-search-filter">
+  <div class="cft-input-search-filter px-2">
     <b-col class="cft-filter-container" xl="12" lg="12" md="12" sm="12">
       <div v-if="selectedSearchQueries.length">
         <TaskListSearchType />
