@@ -1,13 +1,13 @@
-.cftf-form-conatiner{
+.cftf-form-conatiner {
   background-color: white;
   text-align: left;
   font-size: 16px;
 
-  .cft-form-button {
-    background-color: #1a5a96;
-    border: #38598a !important;
-    color: white !important;
-  }
+  // .cft-form-button {
+  //   background-color: #1a5a96;
+  //   border: #38598a !important;
+  //   color: white !important;
+  // }
 
   .bg-default {
     background-color: #38598a !important;
@@ -15,13 +15,13 @@
     color: white !important;
   }
 
-  .cft-form-list-paginate{
+  .cft-form-list-paginate {
     display: flex;
     justify-content: center;
     margin-top: 15px;
   }
 
-  .cft-not-selected{
+  .cft-not-selected {
     border: 3px solid #b3b3b3;
     padding: 10px;
     color: #b3b3b3;
@@ -31,58 +31,53 @@
 }
 
 .cft-form-submission {
-background-color: white;
-text-align: left;
-font-size: 16px;
-font-family: Nunito Sans, SemiBold;
+  background-color: white;
+  text-align: left;
+  font-size: 16px;
+  font-family: Nunito Sans, SemiBold;
 
-.bg-default {
-  background-color: #38598a !important;
-  border: #38598a !important;
-  color: white !important;
+  .bg-default {
+    background-color: #38598a !important;
+    border: #38598a !important;
+    color: white !important;
+  }
 }
 
+.cft-form-list-paginate {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
 }
 
-.cft-form-list-paginate{
-display: flex;
-justify-content: center;
-margin-top: 15px;
+//TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
+
+[data-tooltip]:before {
+  visibility: unset !important;
+  position: initial !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  cursor: pointer !important;
+  // content is overiding as  empty string in integrated system,
+  // below coded added to fix the issue in integrated system
+  content: "\f059" !important;
+  color: #2780e3;
 }
 
-.cft-cursor-pointer {
-    cursor: pointer;
-  }
+[data-tooltip]:after {
+  opacity: 0 !important;
+}
 
-  //TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
+.tooltip-inner {
+  background-color: white !important;
+  color: black !important;
+  box-shadow: 1px 1px 1px 1px;
+}
 
-  [data-tooltip]:before {
-    visibility: unset !important;
-    position: initial !important;
-    box-shadow: none !important;
-    opacity: 1 !important;
-    cursor:pointer !important;
-    // content is overiding as  empty string in integrated system,
-    // below coded added to fix the issue in integrated system
-    content: "\f059" !important;
-    color: #2780e3;
-  }
+.cft-height {
+  overflow: scroll !important;
+  height: 93vh;
+}
 
-  [data-tooltip]:after {
-    opacity: 0 !important;
-  }
-
-  .tooltip-inner {
-    background-color: white !important;
-    color: black !important;
-    box-shadow: 1px 1px 1px 1px;
-  }
-
-  .t-height {
-    overflow: scroll !important;
-    height: 93vh;
-  }
-  
-  .cft-actionable-container .tab-content{
-    overflow: hidden;
-  }
+.cft-actionable-container .tab-content {
+  overflow: hidden;
+}

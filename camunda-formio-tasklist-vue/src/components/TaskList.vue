@@ -10,7 +10,7 @@
       :payload="payload"
     />
     <b-row class="cft-service-task-list mt-1 ">
-      <b-col xl="3" lg="3" md="12" class="cft-first t-height" v-if="maximize">
+      <b-col xl="3" lg="3" md="12" class="cft-first cft-height" v-if="maximize">
         <LeftSider
           v-if="token && bpmApiUrl"
           :token="token"
@@ -24,7 +24,7 @@
           :payload="payload"
         />
       </b-col>
-      <b-col v-if="getFormsFlowTaskId && task" :lg="maximize ? 9 : 12" md="12" class="t-height">
+      <b-col v-if="getFormsFlowTaskId && task" :lg="maximize ? 9 : 12" md="12" class="cft-height">
         <div class="cft-service-task-details">
           <b-row>
             <ExpandContract />
@@ -113,7 +113,7 @@
               <b-col cols="3" class="align-self-center">
                 <div id="groups" v-b-modal.AddGroupModal class="group-align word-break">
                   <i class="fa fa-th mr-1"></i>
-                  <span  v-if="groupListNames">
+                  <span class="cft-group-align cft-word-break" v-if="groupListNames">
                     {{ String(groupListNames) }}
                   </span>
                   <span  v-else>Add Groups</span>
