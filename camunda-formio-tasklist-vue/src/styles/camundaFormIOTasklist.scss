@@ -538,7 +538,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-all;
-    width: 240px;
+    width: 100%;
   }
 
   .assignee-align {
@@ -562,7 +562,8 @@
     overflow: scroll !important;
     height: 93vh;
   }
+
   .mx-datepicker {
     width: 100%;
-}
+  }
 }
