@@ -1,5 +1,5 @@
 <template>
-  <div class="cftf-form-conatiner text-font">
+  <div class="cftf-form-conatiner cft-text-font">
     <b-button variant="primary" v-b-modal.modal-multi-1>
       <span ref="btn-show"><i class="fa fa-wpforms"> Forms</i></span>
     </b-button>
