@@ -1,6 +1,6 @@
 @import "vue-select/src/scss/vue-select.scss";
 
-.task-outer-container{
+.task-outer-container {
   max-width: 100vw;
   background-color: white;
   text-align: left;
@@ -13,7 +13,7 @@
     color: white !important;
   }
 
-  .cft-not-selected{
+  .cft-not-selected {
     border: 3px solid #b3b3b3;
     padding: 10px;
     color: #b3b3b3;
@@ -25,13 +25,14 @@
     font-size: 16px;
   }
 
-  .cft-filter:focus{
+  .cft-filter:focus {
     outline: none;
   }
 
   .cft-task-row-2 {
     font-size: 15px;
   }
+
   .cft-task-row-3 {
     font-size: 11px;
   }
@@ -66,21 +67,26 @@
     font-size: medium;
     border-left: 2px solid #003366 !important;
   }
-  .cft-diagram-container{
+
+  .cft-diagram-container {
     height: 100%;
   }
-  .cft-canvas-container{
+
+  .cft-canvas-container {
     height: 100%;
   }
-  .cft-actionable-container{
-    height:100%;
+
+  .cft-actionable-container {
+    height: 100%;
   }
+
   .cft-actionable {
     color: #1a5a96;
     background-color: transparent;
     cursor: pointer;
     margin: 10px 0;
     font-size: 16px;
+    height: 25%;
   }
 
   .cft-select-task {
@@ -95,8 +101,7 @@
     justify-content: flex-end;
   }
 
-  .cft-filter-dropbtn
-  {
+  .cft-filter-dropbtn {
     background-color: #1a5a96;
     color: white;
     font-size: 20px;
@@ -104,13 +109,13 @@
     cursor: pointer;
     padding: 5px 9px;
   }
-  .cft-input-filter{
+
+  .cft-input-filter {
     display: flex;
     justify-content: space-between;
   }
 
-  .cft-filter-dropdown
-  {
+  .cft-filter-dropdown {
     position: relative;
   }
 
@@ -127,7 +132,7 @@
   }
 
   .cft-search-items {
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     border: 1px solid #949494;
     border-radius: 3%;
     position: absolute;
@@ -161,51 +166,58 @@
     margin-top: 5px;
     background-color: #f2dede;
     border-color: #ebccd1;
-    color: #0b2d5f;;
+    color: #0b2d5f;
+    ;
   }
 
-  .cft-filter-dropdown-content
-  {
+  .cft-filter-dropdown-content {
     font-size: large;
     display: block;
     position: fixed;
     cursor: pointer;
     background-color: #f9f9f9;
     min-width: 250px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 2;
   }
+
   .cft-list-container {
     margin-top: 5px;
   }
 
-  .cft-task-details-assign{
+  .cft-task-details-assign {
     display: flex;
     justify-content: space-between;
   }
-  .font-11{
+
+  .font-11 {
     font-size: 11px;
   }
-  .assigne-details{
+
+  .assigne-details {
     font-size: 15px;
     font-weight: 500;
     margin-top: 10px;
 
   }
-  .cft-filter-sort{
+
+  .cft-filter-sort {
     display: flex;
     justify-content: space-between;
   }
+
   .tabs {
     display: block;
   }
+
   [aria-busy=true] {
     cursor: unset !important;
   }
-  .cft-paginate{
-      display: flex;
-      justify-content: center;
-      margin-top: 15px;
+
+  .cft-paginate {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
   }
 
   #cftf-dpdown-container {
@@ -214,48 +226,54 @@
     padding: calc(6px + 2px) 15px calc(6px - 2px) 15px;
     box-shadow: 0 2px 6px -4px #555;
     background-color: #fafafa;
+
     .nav-link {
       padding: 0px;
     }
+
     span {
-    color: #212529;
+      color: #212529;
     }
   }
 
   .cftf-dpdown-box {
     margin-top: 5px;
+
     .fa-chevron-down {
-        color: #212529;
+      color: #212529;
     }
 
     .fa-chevron-up {
-        color: #212529;
+      color: #212529;
     }
 
     .fa-plus {
-        color: #212529;
+      color: #212529;
     }
 
     .nav-link {
-        color: #212529;
+      color: #212529;
     }
 
   }
-  .cft-dpdown-inner-container{
+
+  .cft-dpdown-inner-container {
     display: flex;
   }
-  .cft-selection-box  {
+
+  .cft-selection-box {
     width: 60%;
-      margin-left: 4px;
+    margin-left: 4px;
   }
+
   @media(max-width: 300px) {
     .cftf-dpdown-box {
-       width: 100%;
-     }
+      width: 100%;
+    }
   }
 
   .tab-content {
-    height:100%;
+    height: 100%;
   }
 
   .vue-bpmn-diagram-container {
@@ -290,222 +308,290 @@
     cursor: pointer;
   }
 
-  p{
+  p {
     white-space: normal;
   }
 
-  .cft-form-title{
+  .cft-form-title {
     cursor: pointer;
     color: #4d61fc;
     border-bottom: 1px solid #4d61fc;
     background-color: transparent;
   }
 
-  .main-filters{
+  .main-filters {
     display: flex;
     justify-content: flex-start;
     align-items: center;
   }
-  .cft-task-title{
+
+  .cft-task-title {
     font-size: 16px;
     margin: 0;
   }
 
-  .cft-process-title{
+  .cft-process-title {
     font-size: 16px;
     font-weight: 500;
   }
 
-  .created-details{
+  .created-details {
     display: flex;
     width: 100%;
     justify-content: space-between;
   }
-  .height-100{
+
+  .height-100 {
     min-height: 100%;
     overflow-x: hidden;
   }
 
-  .cft-priority{
+  .cft-priority {
     text-align: right;
   }
 
-.cft-process-title[data-title]:hover:after,
-.cft-task-title[data-title]:hover:after,
-.cft-priority[data-title]:hover:after,
-.cft-task-assignee[data-title]:hover:after {
-  font-size: 12px;
-  content: attr(data-title);
-  padding: 4px 8px;
-  color: rgb(255, 255, 255);
-  position: absolute;
-  background-color: rgb(0, 0, 0);
-  right: 3rem;
-  top: 100%;
-  white-space: nowrap;
-  z-index: 1;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  -moz-box-shadow: 0px 0px 4px #222;
-  -webkit-box-shadow: 0px 0px 4px #222;
-  box-shadow: 0px 0px 4px #222;
-  background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #eeeeee),color-stop(1, #cccccc));
-  background-image: -webkit-linear-gradient(top, #eeeeee, #cccccc);
-  background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
-  background-image: -ms-linear-gradient(top, #eeeeee, #cccccc);
-  background-image: -o-linear-gradient(top, #eeeeee, #cccccc);
-}
-.cft-application-id{
-  display: block;
-  height: auto;
-  width:20%;
-  cursor: pointer;
-}
+  .cft-process-title[data-title]:hover:after,
+  .cft-task-title[data-title]:hover:after,
+  .cft-priority[data-title]:hover:after,
+  .cft-task-assignee[data-title]:hover:after {
+    font-size: 12px;
+    content: attr(data-title);
+    padding: 4px 8px;
+    color: rgb(255, 255, 255);
+    position: absolute;
+    background-color: rgb(0, 0, 0);
+    right: 3rem;
+    top: 100%;
+    white-space: nowrap;
+    z-index: 1;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0px 0px 4px #222;
+    -webkit-box-shadow: 0px 0px 4px #222;
+    box-shadow: 0px 0px 4px #222;
+    background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eeeeee), color-stop(1, #cccccc));
+    background-image: -webkit-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -ms-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -o-linear-gradient(top, #eeeeee, #cccccc);
+  }
 
-.cft-task-name{
-  height: 20px;
-  width: 30%;
-  cursor: pointer;
-  font-size: 20px;
-  font-weight: 400;
-  color: #212529;
-}
+  .cft-application-id {
+    display: block;
+    height: auto;
+    width: 20%;
+    cursor: pointer;
+  }
 
-.cft-task-assignee[data-title]:hover:after {
-  width: 80%;
-}
+  .cft-task-name {
+    height: 20px;
+    width: 30%;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 400;
+    color: #212529;
+  }
 
-.cftf-form-conatiner{
-  background-color: white;
-  .cftf-taskhead{
-    font-weight: bold;
-    font-size: 30px;
-    margin-left: 10px;
+  .cft-task-assignee[data-title]:hover:after {
+    width: 80%;
+  }
+
+  .cftf-form-conatiner {
+    background-color: white;
+
+    .cftf-taskhead {
+      font-weight: bold;
+      font-size: 30px;
+      margin-left: 10px;
+      display: flex;
+    }
+
+    .cftf-table-align {
+      text-align: left;
+    }
+  }
+
+  .cft-form-list-paginate {
     display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    padding: 0px;
   }
-  .cftf-table-align{
-    text-align: left;
+
+  .cft-user-select {
+    width: 70%;
+    height: none;
+    color: #01060a;
+    font-weight: 500;
+    font-size: 14px;
+    border: 3px solid #b3b3b3;
   }
-}
 
-.cft-form-list-paginate{
-  display: flex;
-  justify-content: center;
-  margin-top: 15px;
-  padding: 0px;
-}
-.cft-user-select{
-  width: 70%;
-  height: none;
-  color: #01060a;
-  font-weight: 500;
-  font-size: 14px;
-  border: 3px solid #b3b3b3;
-}
-.cft-user-close{
-  position: relative;
-  color: #1a5a96;
-  font-family: Nunito Sans, SemiBold;
-  font-weight: bold;
-}
-.cft-person-fill{
-  padding-right: 3px;
-}
-.cft-user-details {
-  position: absolute;
-}
-.custom-select {
-  height: auto;
-  vertical-align: top;
-  width: 80% !important;
-}
-.custom-select:focus{
-  border-color: none !important;
-  box-shadow: none;
-}
-.diagram-full-screen {
-  height:  100vh;
-  min-height: 100vh;
-}
-.card{
-  white-space: normal;
-}
-li {
-  list-style-type: none;
-}
-.cft-nav-backgroup, .cft-nav-backgroup:hover
-{
-  background-color: #1a5a96;
-  border: #38598a !important;
-}
-.cft-filter-header {
-  color: white;
-}
-.assignee-tickmark-icon {
-  font-size: 1.1em;
-}
-.assignee-cancel-icon {
-  font-size: 1.25em;
-}
+  .cft-user-close {
+    position: relative;
+    color: #1a5a96;
+    font-family: Nunito Sans, SemiBold;
+    font-weight: bold;
+  }
 
-//TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
+  .cft-person-fill {
+    padding-right: 3px;
+  }
 
-[data-tooltip]:before {
-  visibility: unset !important;
-  position: initial !important;
-  box-shadow: none !important;
-  opacity: 1 !important;
-  cursor:pointer !important;
-  // content is overiding as  empty string in integrated system,
-  // below coded added to fix the issue in integrated system
-  content: "\f059"  !important;
-  color: #2780e3;
-}
+  .cft-user-details {
+    position: absolute;
+  }
 
-[data-tooltip]:after {
-  opacity: 0 !important;
-}
+  .custom-select {
+    height: auto;
+    vertical-align: top;
+    width: 80% !important;
+  }
 
-.icon-right-side {
-  left: 8.3em;
-}
-.icon-border {
-  padding: 0.20rem 0.15rem !important;
-  border: 1px solid rgb(184, 184, 184) !important;
-}
+  .custom-select:focus {
+    border-color: none !important;
+    box-shadow: none;
+  }
 
-.tooltip-inner {
-  background-color: white;
-  color: black;
-  box-shadow: 1px 1px 1px 1px;
-}
+  .diagram-full-screen {
+    height: 100vh;
+    min-height: 100vh;
+  }
 
-.tooltip-inner a {
-  color: #2780e3;
-}
-.cft-actionable-container .form-tab-conatiner a{
-  color: #2780e3;
-  border-bottom-style: none;
-}
-.row .v-select .vs__dropdown-toggle {
-  width: 150px;
-}
-.group-align {
-  display:-webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: break-all;
-}
-.word-break{
-  word-break: break-all;
-}
+  .card {
+    white-space: normal;
+  }
 
-.t-height {
-  overflow: scroll !important;
-  height: 93vh;
-}
+  li {
+    list-style-type: none;
+  }
+
+  .cft-nav-backgroup,
+  .cft-nav-backgroup:hover {
+    background-color: #1a5a96;
+    border: #38598a !important;
+  }
+
+  .cft-filter-header {
+    color: white;
+  }
+
+  .assignee-tickmark-icon {
+    font-size: 1.7em;
+  }
+
+  .assignee-cancel-icon {
+    font-size: 1.7em;
+  }
+
+  //TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
+
+  [data-tooltip]:before {
+    visibility: unset !important;
+    position: initial !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+    // content is overiding as  empty string in integrated system,
+    // below coded added to fix the issue in integrated system
+    content: "\f059" !important;
+    color: #2780e3;
+  }
+
+  [data-tooltip]:after {
+    opacity: 0 !important;
+  }
+
+  .icon-right-side {
+    left: 8.3em;
+  }
+
+  .icon-border {
+    padding: 0.20rem 0.15rem !important;
+    border: 1px solid rgb(184, 184, 184) !important;
+  }
+
+  .tooltip-inner {
+    background-color: white;
+    color: black;
+    box-shadow: 1px 1px 1px 1px;
+  }
+
+  .tooltip-inner a {
+    color: #2780e3;
+  }
+
+  .cft-actionable-container .form-tab-conatiner a {
+    color: #2780e3;
+    border-bottom-style: none;
+  }
+
+  .row .v-select .vs__dropdown-toggle {
+    width: 150px;
+  }
+
+  .cft-group-align {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    width: 100%;
+  }
+
+  .assignee-align {
+    width: 50% !important;
+    height: 34px !important;
+    border: 1px solid #000000;
+  }
+
+  .cft-assignee-change-box .assignee-align .vs__selected {
+    white-space: nowrap;
+    width: 50%;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  .word-break {
+    word-break: break-all;
+  }
+
+  .cft-height {
+    overflow: scroll !important;
+    height: 93vh;
+  }
+
+  .mx-datepicker {
+    width: 100%;
+  }
+
+  .tasklist-container {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  .cft-form-list-paginate {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    padding: 0px;
+  }
+
+  .cft-user-select {
+    width: 70%;
+    height: none;
+    color: #01060a;
+    font-weight: 500;
+    font-size: 14px;
+    border: 3px solid #b3b3b3;
+  }
+
+  .cft-user-close {
+    position: relative;
+    color: #1a5a96;
+    font-family: Nunito Sans, SemiBold;
+    font-weight: bold;
+  }
 }

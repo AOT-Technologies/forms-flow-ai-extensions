@@ -1,14 +1,11 @@
 <template>
   <b-container fluid class="task-outer-container">
     <div class="main-filters my-2 mb-1">
-      <div class="cft-filter-dropdown mx-2">
-        <b-nav-item-dropdown class="cft-nav-backgroup mr-0" :no-caret="true">
-          <template slot="button-content">
-          <span>
-            <h4 class="cft-filter-header"><i class="fa fa-wpforms"/> Filters</h4>
-          </span>
-          </template>
-          <span v-if="filterList.length">
+      <div class="cft-filter-dropdown mx-2"> 
+        <b-dropdown variant="primary">
+            <template #button-content >
+              <span><i class="fa fa-wpforms"> Filters</i></span>
+            </template>
             <b-dropdown-item
               v-for="(filter, idx) in filterList"
               :key="filter.id"
@@ -19,13 +16,12 @@
             >
               {{ filter.name }}
             </b-dropdown-item>
-          </span>
-          <b-dropdown-item v-else>No Filters found</b-dropdown-item>
-        </b-nav-item-dropdown>
+          <b-dropdown-item v-if="!filterList.length">No Filters found</b-dropdown-item>
+          </b-dropdown>
       </div>
       <FormListModal :token="token" :bpmApiUrl="bpmApiUrl" />
       <div class="cft-first">
-        <div id="cftf-dpdown-container" class="mx-2">
+        <div id="cftf-dpdown-container" class="ml-2">
           <div
             class="cftf-dpdown-box mr-2"
             v-for="(sort, idx) in sortList"
