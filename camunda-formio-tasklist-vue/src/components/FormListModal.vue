@@ -133,13 +133,13 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private formperPage: number = 10;
   private formNumPages: number = 1;
   private formcurrentPage: number = 1;
-  private formValueId?: string  = null;
-  private formId?: string = null;
-  private formioUrl?: string = null;
+  private formValueId?: string  = undefined;
+  private formId?: string = undefined;
+  private formioUrl?: string = undefined;
   private formTitle: string = "";
   private formsflowAIApiUrl: any;
   private sortAscending: boolean = false;
-  private submissionId?: string = null;
+  private submissionId?: string = "";
 
   linkFormGen () {
     this.formListItems();
