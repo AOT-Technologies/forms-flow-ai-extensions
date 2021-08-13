@@ -25,6 +25,10 @@
     }
   }
 }
+.task-outer-container .row .v-select .vs__dropdown-toggle {
+    width: 100% !important;
+    height: 34px !important;
+  }
 body, html {
     padding-right: 0px !important;
     overflow-y: auto !important;
