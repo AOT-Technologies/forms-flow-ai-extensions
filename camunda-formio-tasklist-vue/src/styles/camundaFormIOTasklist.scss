@@ -566,4 +566,31 @@
   .mx-datepicker {
     width: 100%;
   }
+
+  .tasklist-container {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  .cft-form-list-paginate {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    padding: 0px;
+  }
+
+  .cft-user-select {
+    width: 70%;
+    height: none;
+    color: #01060a;
+    font-weight: 500;
+    font-size: 14px;
+    border: 3px solid #b3b3b3;
+  }
+
+  .cft-user-close {
+    position: relative;
+    color: #1a5a96;
+    font-family: Nunito Sans, SemiBold;
+    font-weight: bold;
+  }
 }
