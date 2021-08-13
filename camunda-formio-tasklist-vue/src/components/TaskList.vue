@@ -306,9 +306,11 @@ import CamundaRest from "../services/camunda-rest";
 import DatePicker from "vue2-datepicker";
 import ExpandContract from "./addons/ExpandContract.vue";
 import { Form } from "vue-formio";
+import {FormRequestActionPayload} from "../models/FormRequestActionPayload";
+import {FormRequestPayload} from "../models/FormRequestPayload";
 import Header from "./layout/Header.vue";
 import LeftSider from "./layout/LeftSider.vue";
-import { Payload } from "../services/TasklistTypes";
+import { Payload } from "../models/Payload";
 import SocketIOService from "../services/SocketIOServices";
 import TaskHistory from "../components/TaskHistory.vue";
 import TaskListMixin from "./mixins/TaskListMixin.vue";
@@ -355,7 +357,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   private tasks: Array<object> = [];
   private fulltasks: Array<object> = [];
-  private taskProcess?: string = undefined;
+  private taskProcess: string = "";
   private formId: string = "";
   private submissionId: string = "";
   private formioUrl: string = "";
@@ -377,7 +379,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private editAssignee: boolean = false;
   private applicationId: string = "";
   private groupList: Array<object> = [];
-  private groupListNames?: Array<string> = undefined;
+  private groupListNames?: Array<string> = [];
   private groupListItems: string[] = [];
   private userEmail: string = "external";
   private selectedfilterId: string = "";
@@ -475,7 +477,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async onBPMTaskFormSubmit (taskId: string, actionType: string) {
-    let formRequestFormat: any = {
+    let formRequestFormat: FormRequestPayload = {
       variables: {
         formUrl: {
           value: this.formioUrl,
@@ -486,7 +488,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       },
     };
     if (actionType !== "") {
-      const newformRequestFormat: any = Object.assign(formRequestFormat['variables'], 
+      const newformRequestFormat: FormRequestActionPayload = Object.assign(formRequestFormat['variables'], 
         {action: {value: actionType}}
       );
       formRequestFormat = {variables: newformRequestFormat};

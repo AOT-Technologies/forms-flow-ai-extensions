@@ -133,7 +133,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private formperPage: number = 10;
   private formNumPages: number = 1;
   private formcurrentPage: number = 1;
-  private formValueId?: string  = undefined;
+  private formValueId?: string  = "";
   private formId?: string = undefined;
   private formioUrl?: string = undefined;
   private formTitle: string = "";
