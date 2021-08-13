@@ -29,4 +29,8 @@
     width: 230px !important;
     height: 34px !important;
   }
+body, html {
+    padding-right: 0px !important;
+    overflow-y: auto !important;
+}
 </style>

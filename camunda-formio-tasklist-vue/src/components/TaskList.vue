@@ -56,9 +56,7 @@
           <div class="cft-actionable-container">
           
             <b-row class="cft-actionable">
-              <b-col
-                class="align-self-center"
-              >
+              <b-col  cols="2" class="align-self-center" >
                 <span v-if="task.followUp">
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.followUp) }}
@@ -85,9 +83,7 @@
                   ></DatePicker>
                 </span>
               </b-col>
-              <b-col
-                class="align-self-center"
-              >
+              <b-col cols="2" class="align-self-center" >
                 <span v-if="task.due">
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.due) }}
@@ -114,7 +110,7 @@
                   ></DatePicker>
                 </span>
               </b-col>
-              <b-col class="align-self-center">
+              <b-col cols="3" class="align-self-center">
                 <div id="groups" v-b-modal.AddGroupModal class="group-align word-break">
                   <i class="fa fa-th mr-1"></i>
                   <span  v-if="groupListNames">
@@ -181,36 +177,28 @@
                   </div>
                 </b-modal>
               </b-col>
-              <b-col
-               class="align-self-center">
+              <b-col class="align-self-center">
               <span v-if="task.assignee">
                 <div v-if="editAssignee" class="cft-user-edit">
                   <div class="cft-assignee-change-box">
-                      <b-row>
-                        <b-col>
-                          <v-select
-                            @search="fetchOptions"
-                            :options="autoUserList"
-                            v-model="userSelected"
-                            placeholder="Search by Lastname"
-                             class="assignee-align"
-                          />
-                          
-                          </b-col>
-                        <b-col>
-                          <i
-                            @click="onSetassignee"
-                            class="fa fa-check assignee-tickmark-icon icon-border"
-                          ></i>
-                          <i
-                            @click="toggleassignee"
-                            class="fa fa-times assignee-cancel-icon icon-border"
-                          ></i>
-                          </b-col>                          
-                          </b-row>
+                    <v-select
+                      @search="fetchOptions"
+                      :options="autoUserList"
+                      v-model="userSelected"
+                      placeholder="Search by Lastname"
+                      class="assignee-align float-left"
+                    />
+                    <i
+                      @click="onSetassignee"
+                      class="fa fa-check assignee-tickmark-icon icon-border"
+                    ></i>
+                    <i
+                      @click="toggleassignee"
+                      class="fa fa-times assignee-cancel-icon icon-border"
+                    ></i>
                   </div>
                 </div>
-                <div v-else class="float-right">
+                <div v-else>
                   <span
                     id="setAssignee"
                     v-b-tooltip.hover
@@ -231,8 +219,7 @@
                 </div>
               </span>
               <span v-else>
-                <div @click="onClaim" v-b-tooltip.hover.left title="Claim task" 
-                    class="float-right">
+                <div @click="onClaim" v-b-tooltip.hover.left title="Claim task" >
                   <span id="claimAssignee">
                     <i class="fa fa-user" /> Claim
                   </span>
