@@ -26,7 +26,7 @@
   }
 }
 .task-outer-container .row .v-select .vs__dropdown-toggle {
-    width: 230px !important;
+    width: 100% !important;
     height: 34px !important;
   }
 body, html {

@@ -85,7 +85,7 @@
     cursor: pointer;
     margin: 10px 0;
     font-size: 16px;
-    height: 35px;
+    height: 25%;
   }
 
   .cft-select-task {
@@ -538,18 +538,18 @@
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-all;
-    width: 270px;
+    width: 240px;
   }
 
   .assignee-align {
-    width: 230px !important;
+    width: 50% !important;
     height: 34px !important;
     border: 1px solid #000000;
   }
 
   .cft-assignee-change-box .assignee-align .vs__selected {
     white-space: nowrap;
-    width: 180px;
+    width: 50%;
     overflow: hidden;
     text-overflow: clip;
   }
@@ -562,4 +562,7 @@
     overflow: scroll !important;
     height: 93vh;
   }
+  .mx-datepicker {
+    width: 100%;
+}
 }
