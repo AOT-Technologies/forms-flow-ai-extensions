@@ -137,7 +137,6 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private formId?: string = undefined;
   private formioUrl?: string = undefined;
   private formTitle: string = "";
-  private formsflowAIApiUrl: any;
   private sortAscending: boolean = false;
   private submissionId?: string = "";
 
@@ -177,10 +176,10 @@ export default class FormListModal extends Mixins(BaseMixin) {
     this.formId = submission.form;
     this.submissionId = submission._id;
 
-    this.formsflowAIApiUrl = localStorage.getItem("formsflow.ai.api.url");
+    const formsflowAIApiUrl = localStorage.getItem("formsflow.ai.api.url");
     if (
-      typeof this.formsflowAIApiUrl !== "undefined" &&
-      this.formsflowAIApiUrl !== null
+      typeof formsflowAIApiUrl !== "undefined" &&
+      formsflowAIApiUrl !== null
     ) {
       this.formioUrl =
         localStorage.getItem("formsflow.ai.url") +
@@ -189,7 +188,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
         "/submission/" +
         this.submissionId;
       formApplicationSubmit(
-        this.formsflowAIApiUrl,
+        formsflowAIApiUrl,
         {
           formId: this.formId,
           formSubmissionId: this.submissionId,
