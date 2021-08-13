@@ -223,7 +223,7 @@ const CamundaRest = {
 
   async filterList (bearerToken: string, CamundaUrl: string) {
     return await bpmAxios(bearerToken, CamundaUrl).get(
-      `/${engine}/filter?resourceType=Task&itemCount=false&sortBy=name&sortOrder=asc`
+      `/${engine}/filter?resourceType=Task`
     );
   },
 

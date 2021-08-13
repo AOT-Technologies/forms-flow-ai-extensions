@@ -667,7 +667,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.toggleassignee();
   }
 
-  async fetchTaskList (filterId: string, requestData: object) {
+  async fetchFullTaskList (filterId: string, requestData: Payload) {
     await CamundaRest.filterTaskList(
       this.token,
       filterId,
@@ -678,7 +678,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  async fetchTaskListCount (filterId: string, requestData: object) {
+  async fetchTaskListCount (filterId: string, requestData: Payload) {
     await CamundaRest.filterTaskListCount(
       this.token,
       filterId,
@@ -957,7 +957,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.taskId2 = "";
     }
     if (this.taskId2 !== "") {
-      await this.fetchTaskList(this.selectedfilterId, this.payload);
+      await this.fetchFullTaskList(this.selectedfilterId, this.payload);
       await this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
       await this.fetchTaskData(this.taskId2);
       this.taskId2 = "";
