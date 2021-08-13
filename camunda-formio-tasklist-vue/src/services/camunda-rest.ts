@@ -161,7 +161,7 @@ const CamundaRest = {
   async getUsersByFirstName (
     bearerToken: string,
     CamundaUrl: string,
-    firstName: string | null
+    firstName?: string
   ) {
     return await bpmAxios(bearerToken, CamundaUrl).get(
       `/${engine}/user?firstNameLike=%${firstName}%`
@@ -171,7 +171,7 @@ const CamundaRest = {
   async getUsersByLastName (
     bearerToken: string,
     CamundaUrl: string,
-    lastName: string | null
+    lastName?: string
   ) {
     return await bpmAxios(bearerToken, CamundaUrl).get(
       `/${engine}/user?lastNameLike=%${lastName}%`
@@ -181,7 +181,7 @@ const CamundaRest = {
   async getUsersByEmail (
     bearerToken: string,
     CamundaUrl: string,
-    email: string | null
+    email?: string
   ) {
     return await bpmAxios(bearerToken, CamundaUrl).get(
       `/${engine}/user?emailLike=%${email}%`
@@ -253,7 +253,7 @@ const CamundaRest = {
     );
   },
 
-  async filterTaskListCount(
+  async filterTaskListCount (
     bearerToken: string,
     filterId: string,
     values: any,

@@ -95,7 +95,7 @@ import {
 } from "../../services/utils";
 import BaseMixin from "../mixins/BaseMixin.vue";
 import FormListModal from "../FormListModal.vue";
-import { Payload } from "../../services/TasklistTypes";
+import { Payload } from "../../models/Payload";
 import TaskSortOptions from "../TaskListSortoptions.vue";
 import { namespace } from "vuex-class";
 
