@@ -373,7 +373,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   private tasks: Array<object> = [];
   private fulltasks: Array<object> = [];
-  private taskProcess: string | null = null;
+  private taskProcess?: string = null;
   private formId: string = "";
   private submissionId: string = "";
   private formioUrl: string = "";
@@ -395,7 +395,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private editAssignee: boolean = false;
   private applicationId: string = "";
   private groupList: Array<object> = [];
-  private groupListNames: Array<string> | null = null;
+  private groupListNames?: Array<string> = null;
   private groupListItems: string[] = [];
   private userEmail: string = "external";
   private selectedfilterId: string = "";

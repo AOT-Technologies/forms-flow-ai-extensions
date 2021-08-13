@@ -21,7 +21,6 @@ export default class BaseMixin extends Vue {
   }
 
   checkProps () {
-    /* eslint-disable no-debugger, no-console */
     if (!this.bpmApiUrl || this.bpmApiUrl === "") {
       console.warn("bpmApiUrl prop not Passed");
     }

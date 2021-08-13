@@ -133,13 +133,13 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private formperPage: number = 10;
   private formNumPages: number = 1;
   private formcurrentPage: number = 1;
-  private formValueId: string | null = null;
-  private formId: string | null = null;
-  private formioUrl: string | null = null;
+  private formValueId?: string  = null;
+  private formId?: string = null;
+  private formioUrl?: string = null;
   private formTitle: string = "";
   private formsflowAIApiUrl: any;
   private sortAscending: boolean = false;
-  private submissionId: string | null = null;
+  private submissionId?: string = null;
 
   linkFormGen () {
     this.formListItems();
@@ -168,7 +168,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
     this.$bvModal.show("modal-multi-1");
   }
 
-  sortFormList() {
+  sortFormList () {
     this.sortAscending = !this.sortAscending;
     this.formList = this.formList.reverse();
   }
