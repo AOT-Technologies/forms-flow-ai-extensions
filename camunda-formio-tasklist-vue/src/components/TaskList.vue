@@ -54,14 +54,10 @@
             >
           </b-row>
           <div class="cft-actionable-container">
+          
             <b-row class="cft-actionable">
-              <b-col
-                class="align-self-center"
-                v-if="task.followUp"
-                cols="12"
-                md="3"
-              >
-                <span>
+              <b-col  cols="2" class="align-self-center" >
+                <span v-if="task.followUp">
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.followUp) }}
                   <i
@@ -73,27 +69,22 @@
                     Click to remove <b>FollowUp Date</b>
                   </b-tooltip>
                 </span>
+                <span v-else>
+                  <DatePicker
+                    type="datetime"
+                    placeholder="Set Follow-up date"
+                    v-model="
+                      setFollowup[
+                        (getFormsFlowTaskCurrentPage - 1) * perPage +
+                          getFormsFlowactiveIndex
+                      ]
+                    "
+                    @change="updateFollowUpDate"
+                  ></DatePicker>
+                </span>
               </b-col>
-              <b-col class="d-flex align-items-end" v-else cols="12" md="3">
-                <DatePicker
-                  type="datetime"
-                  placeholder="Set Follow-up date"
-                  v-model="
-                    setFollowup[
-                      (getFormsFlowTaskCurrentPage - 1) * perPage +
-                        getFormsFlowactiveIndex
-                    ]
-                  "
-                  @change="updateFollowUpDate"
-                ></DatePicker>
-              </b-col>
-              <b-col
-                class="d-flex align-items-end"
-                v-if="task.due"
-                cols="12"
-                md="3"
-              >
-                <span>
+              <b-col cols="2" class="align-self-center" >
+                <span v-if="task.due">
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.due) }}
                   <i
@@ -105,27 +96,27 @@
                     Click to remove <b> Due Date</b>
                   </b-tooltip>
                 </span>
+                <span v-else>
+                  <DatePicker
+                    type="datetime"
+                    placeholder="Set Due Date"
+                    v-model="
+                      setDue[
+                        (getFormsFlowTaskCurrentPage - 1) * perPage +
+                          getFormsFlowactiveIndex
+                      ]
+                    "
+                    @change="updateDueDate"
+                  ></DatePicker>
+                </span>
               </b-col>
-              <b-col class="d-flex align-items-end" v-else cols="12" md="3">
-                <DatePicker
-                  type="datetime"
-                  placeholder="Set Due Date"
-                  v-model="
-                    setDue[
-                      (getFormsFlowTaskCurrentPage - 1) * perPage +
-                        getFormsFlowactiveIndex
-                    ]
-                  "
-                  @change="updateDueDate"
-                ></DatePicker>
-              </b-col>
-              <b-col class="d-flex align-items-end" cols="12" md="3">
-                <div id="groups" v-b-modal.AddGroupModal>
+              <b-col cols="3" class="align-self-center">
+                <div id="groups" v-b-modal.AddGroupModal class="group-align word-break">
                   <i class="fa fa-th mr-1"></i>
                   <span class="cft-group-align cft-word-break" v-if="groupListNames">
                     {{ String(groupListNames) }}
                   </span>
-                  <span v-else>Add Groups</span>
+                  <span  v-else>Add Groups</span>
                   <b-tooltip target="groups" triggers="hover">
                     <b>Groups</b>
                   </b-tooltip>
@@ -186,35 +177,28 @@
                   </div>
                 </b-modal>
               </b-col>
-              <b-col
-                :class="task.assignee ? 'd-flex align-items-end' : ''"
-                v-if="task.assignee"
-              >
+              <b-col class="align-self-center">
+              <span v-if="task.assignee">
                 <div v-if="editAssignee" class="cft-user-edit">
                   <div class="cft-assignee-change-box">
-                    <div class="d-flex justify-content-end row">
-                      <i
-                        @click="onSetassignee"
-                        class="fa fa-check assignee-tickmark-icon icon-border"
-                      ></i>
-                      <i
-                        @click="toggleassignee"
-                        class="fa fa-times assignee-cancel-icon icon-border"
-                      ></i>
-                    </div>
-                    <div class="row">
-                      <v-select
-                        @search="fetchOptions"
-                        :options="autoUserList"
-                        v-model="userSelected"
-                        full-width
-                        placeholder="Search by Lastname"
-                        class="d-flex align-items-end"
-                      />
-                    </div>
+                    <v-select
+                      @search="fetchOptions"
+                      :options="autoUserList"
+                      v-model="userSelected"
+                      placeholder="Search by Lastname"
+                      class="assignee-align float-left"
+                    />
+                    <i
+                      @click="onSetassignee"
+                      class="fa fa-check assignee-tickmark-icon icon-border"
+                    ></i>
+                    <i
+                      @click="toggleassignee"
+                      class="fa fa-times assignee-cancel-icon icon-border"
+                    ></i>
                   </div>
                 </div>
-                <div class="cft-user-details" v-else>
+                <div v-else>
                   <span
                     id="setAssignee"
                     v-b-tooltip.hover
@@ -233,16 +217,14 @@
                     <i class="fa fa-times ml-1" @click="onUnClaim" />
                   </span>
                 </div>
-              </b-col>
-              <b-col
-                :class="task.assignee ? '' : 'd-flex align-items-end'"
-                v-else
-              >
-                <div @click="onClaim" v-b-tooltip.hover.left title="Claim task">
+              </span>
+              <span v-else>
+                <div @click="onClaim" v-b-tooltip.hover.left title="Claim task" >
                   <span id="claimAssignee">
                     <i class="fa fa-user" /> Claim
                   </span>
                 </div>
+              </span>
               </b-col>
             </b-row>
             <div class="height-100">

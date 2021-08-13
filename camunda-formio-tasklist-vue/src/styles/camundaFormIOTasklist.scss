@@ -85,6 +85,7 @@
     cursor: pointer;
     margin: 10px 0;
     font-size: 16px;
+    height: 25%;
   }
 
   .cft-select-task {
@@ -221,11 +222,9 @@
   #cftf-dpdown-container {
     display: flex;
     flex-wrap: wrap;
-    // padding: calc(6px + 2px) 15px calc(6px - 2px) 15px;
-    // box-shadow: 0 2px 6px -4px rgb(19, 19, 19);
-    background-color: #F5F5F5;
-    box-shadow: 0 3px 6px 0px #c3bebe;
-    border-radius: 3px;
+    padding: calc(6px + 2px) 15px calc(6px - 2px) 15px;
+    box-shadow: 0 2px 6px -4px #555;
+    background-color: #fafafa;
 
     .nav-link {
       padding: 0px;
@@ -468,22 +467,22 @@
     list-style-type: none;
   }
 
-  // .cft-nav-backgroup,
-  // .cft-nav-backgroup:hover {
-  //   background-color: #1a5a96;
-  //   border: #38598a !important;
-  // }
+  .cft-nav-backgroup,
+  .cft-nav-backgroup:hover {
+    background-color: #1a5a96;
+    border: #38598a !important;
+  }
 
   .cft-filter-header {
     color: white;
   }
 
   .assignee-tickmark-icon {
-    font-size: 1.1em;
+    font-size: 1.7em;
   }
 
   .assignee-cancel-icon {
-    font-size: 1.25em;
+    font-size: 1.7em;
   }
 
   //TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
@@ -534,14 +533,28 @@
 
   .cft-group-align {
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-all;
+    width: 100%;
   }
 
-  .cft-word-break {
+  .assignee-align {
+    width: 50% !important;
+    height: 34px !important;
+    border: 1px solid #000000;
+  }
+
+  .cft-assignee-change-box .assignee-align .vs__selected {
+    white-space: nowrap;
+    width: 50%;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  .word-break {
     word-break: break-all;
   }
 
@@ -550,7 +563,34 @@
     height: 93vh;
   }
 
-  .cft-text-font {
+  .mx-datepicker {
+    width: 100%;
+  }
+
+  .tasklist-container {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  .cft-form-list-paginate {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    padding: 0px;
+  }
+
+  .cft-user-select {
+    width: 70%;
+    height: none;
+    color: #01060a;
+    font-weight: 500;
+    font-size: 14px;
+    border: 3px solid #b3b3b3;
+  }
+
+  .cft-user-close {
+    position: relative;
+    color: #1a5a96;
     font-family: Nunito Sans, SemiBold;
+    font-weight: bold;
   }
 }
