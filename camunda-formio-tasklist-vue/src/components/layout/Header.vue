@@ -14,8 +14,8 @@
               :key="filter.id"
               href="#"
               @click="togglefilter(filter, idx)"
-              :active="idx == activefilter"
-              :class="{ 'cft-filter-selected': idx == activefilter }"
+              :active="idx === activefilter"
+              :class="{ 'cft-filter-selected': idx === activefilter }"
             >
               {{ filter.name }}
             </b-dropdown-item>
