@@ -196,6 +196,23 @@
                       @click="toggleassignee"
                       class="fa fa-times assignee-cancel-icon icon-border"
                     ></i>
+                    <b-dropdown id="dropdown-right" class="ml-3 cft-select-generic-search" variant="primary">
+                      <template #button-content >
+                      <span><i class="fa fa-filter"/></span>
+                      </template>
+                        <b-dropdown-item>
+                          <input type="radio" id="firstname" value="Search by firstname" >
+                          <label for="firstname">Search by firstname</label>
+                        </b-dropdown-item >
+                        <b-dropdown-item >
+                          <input type="radio" id="lastname" value="Search by lastname" >
+                          <label for="lastname">Search by lastname</label>
+                        </b-dropdown-item>
+                        <b-dropdown-item >
+                          <input type="radio" id="email" value="Search by email" >
+                          <label for="email">Search by email</label>
+                        </b-dropdown-item>
+                      </b-dropdown>
                   </div>
                 </div>
                 <div v-else>
