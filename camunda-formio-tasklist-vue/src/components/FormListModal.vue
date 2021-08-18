@@ -29,7 +29,16 @@
         >
           <b-thead>
             <b-tr>
-              <b-th>Form Name</b-th>
+              <b-th>
+              <span @click="sortFormList" class="cft-cursor-pointer">
+                  Form Name
+                  <i
+                    :class="
+                      sortAscending ? 'fa fa-caret-up' : 'fa fa-caret-down'
+                    "
+                  />
+              </span>
+              </b-th>
               <b-th>Operations</b-th>
             </b-tr>
           </b-thead>
@@ -124,12 +133,12 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private formperPage: number = 10;
   private formNumPages: number = 1;
   private formcurrentPage: number = 1;
-  private formValueId: string | null = null;
-  private formId: string | null = null;
-  private submissionId: string | null = null;
-  private formioUrl: string | null = null;
+  private formValueId?: string  = "";
+  private formId?: string = undefined;
+  private formioUrl?: string = undefined;
   private formTitle: string = "";
-  private formsflowAIApiUrl: any;
+  private sortAscending: boolean = false;
+  private submissionId?: string = "";
 
   linkFormGen () {
     this.formListItems();
@@ -158,14 +167,19 @@ export default class FormListModal extends Mixins(BaseMixin) {
     this.$bvModal.show("modal-multi-1");
   }
 
+  sortFormList () {
+    this.sortAscending = !this.sortAscending;
+    this.formList = this.formList.reverse();
+  }
+
   onSubmit (submission: any) {
     this.formId = submission.form;
     this.submissionId = submission._id;
 
-    this.formsflowAIApiUrl = localStorage.getItem("formsflow.ai.api.url");
+    const formsflowAIApiUrl = localStorage.getItem("formsflow.ai.api.url");
     if (
-      typeof this.formsflowAIApiUrl !== "undefined" &&
-      this.formsflowAIApiUrl !== null
+      typeof formsflowAIApiUrl !== "undefined" &&
+      formsflowAIApiUrl !== null
     ) {
       this.formioUrl =
         localStorage.getItem("formsflow.ai.url") +
@@ -174,7 +188,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
         "/submission/" +
         this.submissionId;
       formApplicationSubmit(
-        this.formsflowAIApiUrl,
+        formsflowAIApiUrl,
         {
           formId: this.formId,
           formSubmissionId: this.submissionId,

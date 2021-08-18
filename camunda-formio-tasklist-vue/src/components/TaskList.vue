@@ -306,9 +306,11 @@ import CamundaRest from "../services/camunda-rest";
 import DatePicker from "vue2-datepicker";
 import ExpandContract from "./addons/ExpandContract.vue";
 import { Form } from "vue-formio";
+import {FormRequestActionPayload} from "../models/FormRequestActionPayload";
+import {FormRequestPayload} from "../models/FormRequestPayload";
 import Header from "./layout/Header.vue";
 import LeftSider from "./layout/LeftSider.vue";
-import { Payload } from "../services/TasklistTypes";
+import { Payload } from "../models/Payload";
 import SocketIOService from "../services/SocketIOServices";
 import TaskHistory from "../components/TaskHistory.vue";
 import TaskListMixin from "./mixins/TaskListMixin.vue";
@@ -355,7 +357,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   private tasks: Array<object> = [];
   private fulltasks: Array<object> = [];
-  private taskProcess: string | null = null;
+  private taskProcess: string = "";
   private formId: string = "";
   private submissionId: string = "";
   private formioUrl: string = "";
@@ -377,7 +379,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private editAssignee: boolean = false;
   private applicationId: string = "";
   private groupList: Array<object> = [];
-  private groupListNames: Array<string> | null = null;
+  private groupListNames?: Array<string> = [];
   private groupListItems: string[] = [];
   private userEmail: string = "external";
   private selectedfilterId: string = "";
@@ -418,9 +420,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.userSelected["code"] = this.task.assignee;
   }
 
-  async onFormSubmitCallback () {
+  async onFormSubmitCallback (actionType="") {
     if (this.task.id) {
-      await this.onBPMTaskFormSubmit(this.task.id);
+      await this.onBPMTaskFormSubmit(this.task.id, actionType);
       await this.reloadTasks();
     }
   }
@@ -450,7 +452,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
     this.groupList = grouplist.data;
     this.groupListItems = [];
-    this.groupListNames = null;
+    this.groupListNames = undefined;
     for (const group of grouplist.data) {
       this.groupListItems.push(group.groupId);
     }
@@ -474,8 +476,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  async onBPMTaskFormSubmit (taskId: string) {
-    const formRequestFormat = {
+  async onBPMTaskFormSubmit (taskId: string, actionType: string) {
+    let formRequestFormat: FormRequestPayload = {
       variables: {
         formUrl: {
           value: this.formioUrl,
@@ -485,6 +487,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         },
       },
     };
+    if (actionType !== "") {
+      const newformRequestFormat: FormRequestActionPayload = Object.assign(formRequestFormat['variables'], 
+        {action: {value: actionType}}
+      );
+      formRequestFormat = {variables: newformRequestFormat};
+    }
+    
     await CamundaRest.formTaskSubmit(
       this.token,
       taskId,
@@ -587,6 +596,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     case "reloadCurrentTask":
       await this.reloadCurrentTask();
       break;
+    case "actionComplete":
+      this.onFormSubmitCallback(customEvent.actionType);
+      break;
     }
   };
 
@@ -667,7 +679,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.toggleassignee();
   }
 
-  async fetchTaskList (filterId: string, requestData: object) {
+  async fetchFullTaskList (filterId: string, requestData: Payload) {
     await CamundaRest.filterTaskList(
       this.token,
       filterId,
@@ -678,7 +690,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  async fetchTaskListCount (filterId: string, requestData: object) {
+  async fetchTaskListCount (filterId: string, requestData: Payload) {
     await CamundaRest.filterTaskListCount(
       this.token,
       filterId,
@@ -957,7 +969,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.taskId2 = "";
     }
     if (this.taskId2 !== "") {
-      await this.fetchTaskList(this.selectedfilterId, this.payload);
+      await this.fetchFullTaskList(this.selectedfilterId, this.payload);
       await this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
       await this.fetchTaskData(this.taskId2);
       this.taskId2 = "";

@@ -20,7 +20,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import CamundaTasklist from "@/components/TaskList.vue";
-// import configMap from '../utils/config-helper'
 @Component({
   components: {
     CamundaTasklist,
@@ -42,7 +41,7 @@ export default class TaskList extends Vue {
   };
 
   public isServiceFLowEnabled = true;
-  mounted() {
+  mounted () {
     this.isServiceFLowEnabled = true;
   }
 }

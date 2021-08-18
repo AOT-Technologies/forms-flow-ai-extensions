@@ -11,7 +11,8 @@
               :key="filter.id"
               href="#"
               @click="togglefilter(filter, idx)"
-              :class="{ 'cft-filter-selected': idx == activefilter }"
+              :active="idx === activefilter"
+              :class="{ 'cft-filter-selected': idx === activefilter }"
             >
               {{ filter.name }}
             </b-dropdown-item>
@@ -94,7 +95,7 @@ import {
 } from "../../services/utils";
 import BaseMixin from "../mixins/BaseMixin.vue";
 import FormListModal from "../FormListModal.vue";
-import { Payload } from "../../services/TasklistTypes";
+import { Payload } from "../../models/Payload";
 import TaskSortOptions from "../TaskListSortoptions.vue";
 import { namespace } from "vuex-class";
 
