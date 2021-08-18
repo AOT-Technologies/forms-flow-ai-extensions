@@ -9,6 +9,7 @@
         v-if="sortList.length > 1"
         class="cftf-exit-button"
         @click="deleteSort(sort, idx)"
+        v-b-tooltip.hover title="Remove Sorting Field"
       >
         <i class="fa fa-times"></i>
       </span>
@@ -60,6 +61,7 @@ import {
 import "../../styles/camundaFormIOTasklist.scss";
 import { Payload } from "../../models/Payload";
 import TaskSortOptions from "../sort/TaskListSortoptions.vue";
+import TaskListSortElement from "../../models/sorting.vue";
 import { namespace } from "vuex-class";
 const serviceFlowModule = namespace("serviceFlowModule");
 @Component({
