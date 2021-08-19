@@ -1,5 +1,5 @@
 export interface TaskListSortElement {
-    sortOrder: string
-    label: string
-    sortBy: string
+    sortOrder: string;
+    label: string;
+    sortBy: string;
 }

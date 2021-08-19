@@ -9,7 +9,7 @@
       :selectedfilterId="selectedfilterId"
       :payload="payload"
     />
-    <b-row class="cft-service-task-list mt-1 ">
+    <b-row class="cft-service-task-list mt-1">
       <b-col xl="3" lg="3" md="12" class="cft-height" v-if="maximize">
         <LeftSider
           v-if="token && bpmApiUrl"
@@ -24,7 +24,12 @@
           :payload="payload"
         />
       </b-col>
-      <b-col v-if="getFormsFlowTaskId && task" :lg="maximize ? 9 : 12" md="12" class="cft-height">
+      <b-col
+        v-if="getFormsFlowTaskId && task"
+        :lg="maximize ? 9 : 12"
+        md="12"
+        class="cft-height"
+      >
         <div class="cft-service-task-details">
           <b-row>
             <ExpandContract />
@@ -54,9 +59,8 @@
             >
           </b-row>
           <div class="cft-actionable-container">
-          
             <b-row class="cft-actionable">
-              <b-col  cols="2" class="align-self-center" >
+              <b-col cols="2" class="align-self-center">
                 <span v-if="task.followUp">
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.followUp) }}
@@ -83,7 +87,7 @@
                   ></DatePicker>
                 </span>
               </b-col>
-              <b-col cols="2" class="align-self-center" >
+              <b-col cols="2" class="align-self-center">
                 <span v-if="task.due">
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.due) }}
@@ -111,12 +115,19 @@
                 </span>
               </b-col>
               <b-col cols="3" class="align-self-center">
-                <div id="groups" v-b-modal.AddGroupModal class="group-align word-break">
+                <div
+                  id="groups"
+                  v-b-modal.AddGroupModal
+                  class="group-align word-break"
+                >
                   <i class="fa fa-th mr-1"></i>
-                  <span class="cft-group-align cft-word-break" v-if="groupListNames">
+                  <span
+                    class="cft-group-align cft-word-break"
+                    v-if="groupListNames"
+                  >
                     {{ String(groupListNames) }}
                   </span>
-                  <span  v-else>Add Groups</span>
+                  <span v-else>Add Groups</span>
                   <b-tooltip target="groups" triggers="hover">
                     <b>Groups</b>
                   </b-tooltip>
@@ -178,66 +189,76 @@
                 </b-modal>
               </b-col>
               <b-col class="align-self-center">
-              <span v-if="task.assignee">
-                <div v-if="editAssignee" class="cft-user-edit">
-                  <div class="cft-assignee-change-box">
-                    <v-select
-                      :label="selectSearchType"
-                      :options="reviewerUserList"
-                      v-model="userSelected"
-                      placeholder="Search by Lastname"
-                      class="assignee-align float-left"
-                    />
-                    <i
-                      @click="onSetassignee"
-                      class="fa fa-check assignee-tickmark-icon icon-border"
-                    ></i>
-                    <i
-                      @click="toggleassignee"
-                      class="fa fa-times assignee-cancel-icon icon-border"
-                    ></i>
-                    <b-dropdown id="dropdown-right" class="ml-3 cft-select-generic-search" variant="primary">
-                      <template #button-content >
-                      <span><i class="fa fa-filter"/></span>
-                      </template>
-                        <b-dd-item 
+                <span v-if="task.assignee">
+                  <div v-if="editAssignee" class="cft-user-edit">
+                    <div class="cft-assignee-change-box">
+                      <v-select
+                        :label="selectSearchType"
+                        :options="reviewerUserList"
+                        v-model="userSelected"
+                        placeholder="Search by Lastname"
+                        class="assignee-align float-left"
+                      />
+                      <i
+                        @click="onSetassignee"
+                        class="fa fa-check assignee-tickmark-icon icon-border"
+                      ></i>
+                      <i
+                        @click="toggleassignee"
+                        class="fa fa-times assignee-cancel-icon icon-border"
+                      ></i>
+                      <b-dropdown
+                        id="dropdown-right"
+                        class="ml-3 cft-select-generic-search"
+                        variant="primary"
+                      >
+                        <template #button-content>
+                          <span><i class="fa fa-filter" /></span>
+                        </template>
+                        <b-dd-item
                           v-for="(row, index) in UserSearchListLabel"
                           :key="row.id"
-                          @click="setSelectedUserSearchBy(row.searchType, index)"
+                          @click="
+                            setSelectedUserSearchBy(row.searchType, index)
+                          "
                           :active="index === activeUserSearchindex"
                         >
                           <span>{{ row.label }}</span>
                         </b-dd-item>
                       </b-dropdown>
+                    </div>
                   </div>
-                </div>
-                <div v-else>
-                  <span
-                    id="setAssignee"
-                    v-b-tooltip.hover
-                    title="Click to change Assignee"
-                  >
-                    <i class="fa fa-user cft-person-fill" />
-                    <span class="cft-user-span" @click="toggleassignee">
-                      {{ task.assignee }}
+                  <div v-else>
+                    <span
+                      id="setAssignee"
+                      v-b-tooltip.hover
+                      title="Click to change Assignee"
+                    >
+                      <i class="fa fa-user cft-person-fill" />
+                      <span class="cft-user-span" @click="toggleassignee">
+                        {{ task.assignee }}
+                      </span>
                     </span>
-                  </span>
-                  <span
-                    id="resetAssignee"
-                    v-b-tooltip.hover
-                    title="Reset Assignee"
+                    <span
+                      id="resetAssignee"
+                      v-b-tooltip.hover
+                      title="Reset Assignee"
+                    >
+                      <i class="fa fa-times ml-1" @click="onUnClaim" />
+                    </span>
+                  </div>
+                </span>
+                <span v-else>
+                  <div
+                    @click="onClaim"
+                    v-b-tooltip.hover.left
+                    title="Claim task"
                   >
-                    <i class="fa fa-times ml-1" @click="onUnClaim" />
-                  </span>
-                </div>
-              </span>
-              <span v-else>
-                <div @click="onClaim" v-b-tooltip.hover.left title="Claim task" >
-                  <span id="claimAssignee">
-                    <i class="fa fa-user" /> Claim
-                  </span>
-                </div>
-              </span>
+                    <span id="claimAssignee">
+                      <i class="fa fa-user" /> Claim
+                    </span>
+                  </div>
+                </span>
               </b-col>
             </b-row>
             <div class="height-100">
@@ -306,7 +327,11 @@ import "vue2-datepicker/index.css";
 import "semantic-ui-css/semantic.min.css";
 import "../styles/user-styles.css";
 import "../styles/camundaFormIOTasklist.scss";
-import { ALL_FILTER,reviewerGroup, SEARCH_USERS_BY } from "../services/constants";
+import {
+  ALL_FILTER,
+  SEARCH_USERS_BY,
+  reviewerGroup,
+} from "../services/constants";
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
@@ -319,8 +344,8 @@ import CamundaRest from "../services/camunda-rest";
 import DatePicker from "vue2-datepicker";
 import ExpandContract from "./addons/ExpandContract.vue";
 import { Form } from "vue-formio";
-import {FormRequestActionPayload} from "../models/FormRequestActionPayload";
-import {FormRequestPayload} from "../models/FormRequestPayload";
+import { FormRequestActionPayload } from "../models/FormRequestActionPayload";
+import { FormRequestPayload } from "../models/FormRequestPayload";
 import Header from "./layout/Header.vue";
 import LeftSider from "./layout/LeftSider.vue";
 import { Payload } from "../models/Payload";
@@ -404,7 +429,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     maxResults: this.perPage,
   };
   private taskHistoryList: Array<object> = [];
-  private autoUserList: Array<object>  = [];
   private reviewerUserList: Array<object> = [];
   private selectSearchType: string = "lastName";
   private taskIdValue: string = "";
@@ -442,7 +466,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.activeUserSearchindex = index;
   }
 
-  async onFormSubmitCallback (actionType="") {
+  async onFormSubmitCallback (actionType = "") {
     if (this.task.id) {
       await this.onBPMTaskFormSubmit(this.task.id, actionType);
       await this.reloadTasks();
@@ -510,12 +534,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       },
     };
     if (actionType !== "") {
-      const newformRequestFormat: FormRequestActionPayload = Object.assign(formRequestFormat['variables'], 
-        {action: {value: actionType}}
+      const newformRequestFormat: FormRequestActionPayload = Object.assign(
+        formRequestFormat["variables"],
+        { action: { value: actionType } }
       );
-      formRequestFormat = {variables: newformRequestFormat};
+      formRequestFormat = { variables: newformRequestFormat };
     }
-    
+
     await CamundaRest.formTaskSubmit(
       this.token,
       taskId,
@@ -603,9 +628,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       try {
         await viewer.importXML(this.xmlData);
         viewer.get("canvas").zoom("fit-viewport");
-      }
-      catch (err) {
-        console.error("error rendering process diagram", err); // eslint-disable-line no-console 
+      } catch (err) {
+        console.error("error rendering process diagram", err); // eslint-disable-line no-console
       }
     });
   }
@@ -717,7 +741,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.token,
       filterId,
       requestData,
-      this.bpmApiUrl,
+      this.bpmApiUrl
     ).then((result) => {
       this.tasklength = result.data.count;
     });
@@ -780,7 +804,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       );
       await this.updateTaskDatedetails(this.task.id, referenceobject);
     } catch {
-      console.warn("Due date error");  // eslint-disable-line no-console
+      console.warn("Due date error"); // eslint-disable-line no-console
     }
   }
 
@@ -816,7 +840,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const res = await CamundaRest.getTaskById(
       this.token,
       taskId,
-      this.bpmApiUrl,
+      this.bpmApiUrl
     );
     this.task = res.data;
     if (this.task) {
@@ -928,16 +952,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.fetchTaskListCount(this.selectedfilterId, this.payload);
           this.reloadLHSTaskList();
           this.$root.$emit("call-pagination");
-        } 
-        
-        else {
-          if (this.selectedfilterId ||
-              (this.getFormsFlowTaskId && refreshedTaskId === this.getFormsFlowTaskId)
+        } else {
+          if (
+            this.selectedfilterId ||
+            (this.getFormsFlowTaskId &&
+              refreshedTaskId === this.getFormsFlowTaskId)
           ) {
-            if(this.task.assignee === this.userName){
+            if (this.task.assignee === this.userName) {
               this.getBPMTaskDetail(this.task.id);
-            }
-            else {
+            } else {
               this.fetchTaskData(this.getFormsFlowTaskId);
             }
           }
@@ -953,14 +976,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl,
       reviewerGroup
     ).then((response) => {
-
       this.reviewerUserList = [];
       response.data.forEach((element: any) => {
         this.reviewerUserList.push({
           code: element.id,
-          email: element.email ,
+          email: element.email,
           firstName: `${element.firstName} ${element.lastName}`,
-          lastName: `${element.lastName} ${element.firstName}`
+          lastName: `${element.lastName} ${element.firstName}`,
         });
       });
     });
