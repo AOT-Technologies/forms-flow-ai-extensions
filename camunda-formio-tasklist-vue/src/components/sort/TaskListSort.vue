@@ -61,7 +61,7 @@ import {
 import "../../styles/camundaFormIOTasklist.scss";
 import { Payload } from "../../models/Payload";
 import TaskSortOptions from "../sort/TaskListSortoptions.vue";
-import TaskListSortElement from "../../models/sorting.vue";
+import {TaskListSortElement} from "../../models/sorting";
 import { namespace } from "vuex-class";
 const serviceFlowModule = namespace("serviceFlowModule");
 @Component({
@@ -77,12 +77,12 @@ export default class TaskListSort extends Vue {
   private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
   public setFormsFlowTaskCurrentPage: any;
-  private sortList: any = TASK_FILTER_LIST_DEFAULT_PARAM;
+  private sortList: TaskListSortElement[] = TASK_FILTER_LIST_DEFAULT_PARAM;
   private sortOptions: Array<object> = [];
   private updateSortOptions: Array<object> = [];
   private setupdateSortListDropdownindex = 0;
 
-  getOptions (options: any) {
+  getOptions (options: TaskListSortElement[]) {
     const optionsArray: {
       sortOrder: string;
       label: string;
@@ -101,7 +101,7 @@ export default class TaskListSort extends Vue {
   }
 
 
-  addSort (sort: any) {
+  addSort (sort: TaskListSortElement) {
     this.sortList.push(sort);
     if (this.sortList.length === sortingList.length) {
       this.updateSortOptions = this.sortOptions;
@@ -121,7 +121,7 @@ export default class TaskListSort extends Vue {
     });
   }
 
-  updateSort (sort: any, index: number) {
+  updateSort (sort: TaskListSortElement, index: number) {
     this.sortList[index].label = sort.label;
     this.sortList[index].sortBy = sort.sortBy;
     this.sortOptions = this.getOptions(this.sortList);
@@ -138,7 +138,7 @@ export default class TaskListSort extends Vue {
     });
   }
 
-  deleteSort (sort: any, index: number) {
+  deleteSort (sort: TaskListSortElement, index: number) {
     this.sortList.splice(index, 1);
     this.updateSortOptions = [];
     this.sortOptions = this.getOptions(this.sortList);
