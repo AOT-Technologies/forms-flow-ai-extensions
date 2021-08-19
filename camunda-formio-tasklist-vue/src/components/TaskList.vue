@@ -182,8 +182,8 @@
                 <div v-if="editAssignee" class="cft-user-edit">
                   <div class="cft-assignee-change-box">
                     <v-select
-                      @search="fetchOptions"
-                      :options="autoUserList"
+                      :label="selectSearchType"
+                      :options="reviewerUserList"
                       v-model="userSelected"
                       placeholder="Search by Lastname"
                       class="assignee-align float-left"
@@ -200,18 +200,14 @@
                       <template #button-content >
                       <span><i class="fa fa-filter"/></span>
                       </template>
-                        <b-dropdown-item>
-                          <input type="radio" id="firstname" value="Search by firstname" >
-                          <label for="firstname">Search by firstname</label>
-                        </b-dropdown-item >
-                        <b-dropdown-item >
-                          <input type="radio" id="lastname" value="Search by lastname" >
-                          <label for="lastname">Search by lastname</label>
-                        </b-dropdown-item>
-                        <b-dropdown-item >
-                          <input type="radio" id="email" value="Search by email" >
-                          <label for="email">Search by email</label>
-                        </b-dropdown-item>
+                        <b-dd-item 
+                          v-for="(row, index) in UserSearchListLabel"
+                          :key="row.id"
+                          @click="setSelectedUserSearchBy(row.searchType, index)"
+                          :active="index === activeUserSearchindex"
+                        >
+                          <span>{{ row.label }}</span>
+                        </b-dd-item>
                       </b-dropdown>
                   </div>
                 </div>
@@ -310,7 +306,7 @@ import "vue2-datepicker/index.css";
 import "semantic-ui-css/semantic.min.css";
 import "../styles/user-styles.css";
 import "../styles/camundaFormIOTasklist.scss";
-import { ALL_FILTER,reviewerGroup } from "../services/constants";
+import { ALL_FILTER,reviewerGroup, SEARCH_USERS_BY } from "../services/constants";
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
@@ -408,12 +404,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     maxResults: this.perPage,
   };
   private taskHistoryList: Array<object> = [];
-  private autoUserList: any = [];
+  private autoUserList: Array<object>  = [];
+  private reviewerUserList: Array<object> = [];
+  private selectSearchType: string = "lastName";
   private taskIdValue: string = "";
   private taskId2: string = "";
   private taskIdWebsocket: string = "";
   private eventNameWebSocket: string = "";
   private showForm: boolean = false;
+  private activeUserSearchindex = 1;
+  private UserSearchListLabel: Array<object> = SEARCH_USERS_BY;
 
   checkforTaskID () {
     if (this.getTaskId) {
@@ -435,6 +435,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   toggleassignee () {
     this.editAssignee = !this.editAssignee;
     this.userSelected["code"] = this.task.assignee;
+  }
+
+  setSelectedUserSearchBy (searchby: string, index: number) {
+    this.selectSearchType = searchby;
+    this.activeUserSearchindex = index;
   }
 
   async onFormSubmitCallback (actionType="") {
@@ -687,13 +692,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     )
       .then(async () => {
-        await this.fetchTaskData(this.getFormsFlowTaskId);
-        await this.reloadLHSTaskList();
+        this.fetchTaskData(this.getFormsFlowTaskId);
       })
       .catch((error) => {
         console.error("Error", error); // eslint-disable-line no-console
       });
-    this.toggleassignee();
+    await this.toggleassignee();
+    await this.reloadLHSTaskList();
   }
 
   async fetchFullTaskList (filterId: string, requestData: Payload) {
@@ -827,23 +832,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async fetchOptions (search: any) {
-    await CamundaRest.getUsersByLastNameGroups(
-      this.token,
-      this.bpmApiUrl,
-      search,
-      reviewerGroup
-    ).then((response) => {
-      this.autoUserList = [];
-      response.data.forEach((element: any) => {
-        this.autoUserList.push({
-          code: element.id,
-          label: `${element.lastName} ${element.firstName} `,
-        });
-      });
-    });
-  }
-
   async findTaskIdDetailsFromURLrouter (taskId: string, fulltasks: any) {
     this.task = getTaskFromList(fulltasks, taskId);
     this.setFormsFlowTaskId(this.taskIdValue);
@@ -965,14 +953,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl,
       reviewerGroup
     ).then((response) => {
-      this.autoUserList = [];
+
+      this.reviewerUserList = [];
       response.data.forEach((element: any) => {
-        this.autoUserList.push({
+        this.reviewerUserList.push({
           code: element.id,
-          email: element.email,
-          fullName: `${element.firstName} ${element.lastName}`,
-          lastNameSearch: `${element.lastName} (${element.id})`,
-          label: `${element.lastName} ${element.firstName} `,
+          email: element.email ,
+          firstName: `${element.firstName} ${element.lastName}`,
+          lastName: `${element.lastName} ${element.firstName}`
         });
       });
     });
