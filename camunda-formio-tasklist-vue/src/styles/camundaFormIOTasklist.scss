@@ -17,7 +17,8 @@
     border: 3px solid #b3b3b3;
     padding: 10px;
     color: #b3b3b3;
-    width: 100%;
+    width: 98%;
+    margin-bottom: 2%;
   }
 
   .cft-task-filter-length {
@@ -217,7 +218,8 @@
   .cft-paginate {
     display: flex;
     justify-content: center;
-    margin-top: 15px;
+    margin-top: 2%;
+    margin-bottom: 2%;
   }
 
   #cftf-dpdown-container {
@@ -304,7 +306,7 @@
     }
   }
 
-  p{
+  p {
     white-space: normal;
   }
 
@@ -528,6 +530,11 @@
     width: 100%;
   }
 
+  .task-outer-container .row .v-select .vs__dropdown-toggle {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
   .cft-group-align {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -547,7 +554,7 @@
 
   .cft-assignee-change-box .assignee-align .vs__selected {
     white-space: nowrap;
-    width: 50%;
+    width: 100%;
     overflow: hidden;
     text-overflow: clip;
   }
