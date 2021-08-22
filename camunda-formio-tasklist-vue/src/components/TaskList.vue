@@ -318,6 +318,7 @@ import { authenticateFormio } from "../services/formio-token";
 import { getFormDetails } from "../services/get-formio";
 import { getISODateTime } from "../services/format-time";
 import { getformHistoryApi } from "../services/formsflowai-api";
+import { sortByPriorityList } from "../services/filterListFormatterService";
 import moment from "moment";
 import { namespace } from "vuex-class";
 import serviceFlowModule from "../store/modules/serviceFlow-module";
@@ -885,7 +886,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
     await CamundaRest.filterList(this.token, this.bpmApiUrl).then(
       async (response) => {
-        this.filterList = response.data;
+        this.filterList = sortByPriorityList(response.data);
         this.selectedfilterId = findFilterKeyOfAllTask(
           this.filterList,
           "name",
