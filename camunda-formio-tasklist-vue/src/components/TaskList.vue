@@ -201,11 +201,11 @@
                       />
                       <i
                         @click="onSetassignee"
-                        class="fa fa-check assignee-tickmark-icon icon-border"
+                        class="fa fa-check cft-assignee-tickmark-icon cft-icon-border"
                       ></i>
                       <i
                         @click="toggleassignee"
-                        class="fa fa-times assignee-cancel-icon icon-border"
+                        class="fa fa-times cft-assignee-cancel-icon cft-icon-border"
                       ></i>
                       <b-dropdown
                         id="dropdown-right"
