@@ -14,7 +14,7 @@
               :active="idx === activefilter"
               :class="{ 'cft-filter-selected': idx === activefilter }"
             >
-              {{ filter.name }}
+            <span class="font-weight-normal cft-filter-text">{{ filter.name }}</span>
             </b-dropdown-item>
           <b-dropdown-item v-if="!filterList.length">No Filters found</b-dropdown-item>
           </b-dropdown>
@@ -96,6 +96,7 @@ import {
 import BaseMixin from "../mixins/BaseMixin.vue";
 import FormListModal from "../FormListModal.vue";
 import { Payload } from "../../models/Payload";
+import { FilterPayload } from "../../models/FilterPayload";
 import TaskSortOptions from "../TaskListSortoptions.vue";
 import { namespace } from "vuex-class";
 
@@ -109,7 +110,7 @@ const serviceFlowModule = namespace("serviceFlowModule");
 })
 export default class Header extends Mixins(BaseMixin) {
   @Prop() private perPage!: number;
-  @Prop() private filterList!: Array<string>;
+  @Prop() private filterList!: FilterPayload[];
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
 
@@ -118,7 +119,7 @@ export default class Header extends Mixins(BaseMixin) {
   @serviceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
   public setFormsFlowTaskCurrentPage: any;
 
-  private activefilter = 0;
+  private activefilter = NaN;
   private sortList = TASK_FILTER_LIST_DEFAULT_PARAM;
   private sortOptions: Array<object> = [];
   private userList: Array<object> = [];
@@ -235,8 +236,27 @@ export default class Header extends Mixins(BaseMixin) {
     });
   }
 
+  getActivefilterId (selectedfilterId: string) {
+    this.filterList.forEach((filter, index) => {
+      if(filter.id=== this.selectedfilterId) {
+        this.activefilter = index;
+      }
+    })
+  }
+
   mounted () {
     this.sortOptions = this.getOptions(this.sortList);
   }
+
+  updated() {
+    if(this.selectedfilterId) {this.getActivefilterId(this.selectedfilterId); }
+  }
+
 }
 </script>
+
+<style scoped>
+.cft-filter-text {
+  font-size: 16px;
+}
+</style>

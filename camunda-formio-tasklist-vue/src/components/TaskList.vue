@@ -311,6 +311,7 @@ import {FormRequestPayload} from "../models/FormRequestPayload";
 import Header from "./layout/Header.vue";
 import LeftSider from "./layout/LeftSider.vue";
 import { Payload } from "../models/Payload";
+import { FilterPayload } from "../models/FilterPayload";
 import SocketIOService from "../services/SocketIOServices";
 import TaskHistory from "../components/TaskHistory.vue";
 import TaskListMixin from "./mixins/TaskListMixin.vue";
@@ -376,7 +377,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     },
   };
   private readFormOptions: object = { readOnly: true };
-  private filterList: Array<object> = [];
+  private filterList: FilterPayload[] = [];
   private editAssignee: boolean = false;
   private applicationId: string = "";
   private groupList: Array<object> = [];
