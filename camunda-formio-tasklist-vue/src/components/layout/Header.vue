@@ -126,7 +126,7 @@ export default class Header extends Mixins(BaseMixin) {
   private updateSortOptions: Array<object> = [];
   private setupdateSortListDropdownindex = 0;
 
-  togglefilter (filter: any, index: number) {
+  togglefilter (filter: FilterPayload, index: number) {
     this.activefilter = index;
     this.$root.$emit("call-fetchTaskListCount", {
       filterId: filter.id,
