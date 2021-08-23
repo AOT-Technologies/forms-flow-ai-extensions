@@ -613,7 +613,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  async getTaskProcessDiagramDetails (task: any) {
+  async getTaskProcessDiagramDetails (task: TaskPayload) {
     await CamundaRest.getProcessDiagramXML(
       this.token,
       task.processDefinitionId,
@@ -769,7 +769,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  async updateTaskDatedetails (taskId: string, task: any) {
+  async updateTaskDatedetails (taskId: string, task: TaskPayload) {
     await CamundaRest.updateTasksByID(this.token, taskId, this.bpmApiUrl, task)
       .then(async () => {
         if (!SocketIOService.isConnected()) {
@@ -859,7 +859,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async findTaskIdDetailsFromURLrouter (taskId: string, fulltasks: any) {
+  async findTaskIdDetailsFromURLrouter (taskId: string, fulltasks: TaskPayload) {
     this.task = getTaskFromList(fulltasks, taskId);
     this.setFormsFlowTaskId(this.taskIdValue);
     const pos = fulltasks
