@@ -352,6 +352,7 @@ import LeftSider from "./layout/LeftSider.vue";
 import { Payload } from "../models/Payload";
 import SocketIOService from "../services/SocketIOServices";
 import TaskHistory from "../components/addons/TaskHistory.vue";
+import {TaskPayload} from "../models/TaskPayload";
 import TaskListMixin from "./mixins/TaskListMixin.vue";
 import { authenticateFormio } from "../services/formio-token";
 import { getFormDetails } from "../services/get-formio";
@@ -395,13 +396,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   @StoreServiceFlowModule.Mutation("setFormsFlowactiveIndex")
   public setFormsFlowactiveIndex: any;
 
-  private tasks: Array<object> = [];
-  private fulltasks: Array<object> = [];
+  private tasks: TaskPayload[] = [];
+  private fulltasks: TaskPayload[] = [];
   private taskProcess: string = "";
   private formId: string = "";
   private submissionId: string = "";
   private formioUrl: string = "";
-  private task: any = {};
+  private task: TaskPayload = {};
   private setFollowup: any = [];
   private setDue: any = [];
   private setGroup = null;
@@ -478,7 +479,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async addGroup () {
     await CamundaRest.createTaskGroupByID(
       this.token,
-      this.task.id,
+      this.task?.id,
       this.bpmApiUrl,
       {
         userId: null,
