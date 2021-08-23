@@ -14,7 +14,7 @@ export interface FilterPayload {
         taskVariables?: Array<object>;
         processVariables?: Array<object>;
         caseInstanceVariables?: Array<object>;
-        orQueries?: Array<object>
+        orQueries?: Array<object>;
     };
     resourceType: string;
 }
