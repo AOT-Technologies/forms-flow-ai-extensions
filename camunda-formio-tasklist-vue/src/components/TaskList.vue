@@ -350,7 +350,7 @@ import Header from "./layout/Header.vue";
 import LeftSider from "./layout/LeftSider.vue";
 import { Payload } from "../models/Payload";
 import SocketIOService from "../services/SocketIOServices";
-import TaskHistory from "../components/TaskHistory.vue";
+import TaskHistory from "../components/addons/TaskHistory.vue";
 import TaskListMixin from "./mixins/TaskListMixin.vue";
 import { authenticateFormio } from "../services/formio-token";
 import { getFormDetails } from "../services/get-formio";

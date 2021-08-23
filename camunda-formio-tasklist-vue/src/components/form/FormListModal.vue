@@ -116,12 +116,12 @@
 </template>
 
 <script lang="ts">
-import "../styles/camundaFormIOFormList.scss";
+import "../../styles/camundaFormIOFormList.scss";
 import { Component, Mixins } from "vue-property-decorator";
-import BaseMixin from "./mixins/BaseMixin.vue";
-import CamundaRest from "../services/camunda-rest";
+import BaseMixin from "../mixins/BaseMixin.vue";
+import CamundaRest from "../../services/camunda-rest";
 import { Form } from "vue-formio";
-import { formApplicationSubmit } from "../services/formsflowai-api";
+import { formApplicationSubmit } from "../../services/formsflowai-api";
 
 @Component({
   components: {

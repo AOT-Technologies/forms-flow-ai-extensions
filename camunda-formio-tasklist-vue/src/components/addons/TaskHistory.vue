@@ -46,8 +46,8 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import FormViewSubmission from "../components/FormViewSubmission.vue";
-import { getLocalDateTime } from "../services/format-time";
+import FormViewSubmission from "../form/FormViewSubmission.vue";
+import { getLocalDateTime } from "../../services/format-time";
 
 @Component({
   components: {
