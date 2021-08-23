@@ -535,7 +535,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     };
     if (actionType !== "") {
       const newformRequestFormat: FormRequestActionPayload = Object.assign(
-        formRequestFormat["variables"],
+        formRequestFormat.variables,
         { action: { value: actionType } }
       );
       formRequestFormat = { variables: newformRequestFormat };
