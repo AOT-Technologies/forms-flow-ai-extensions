@@ -343,6 +343,7 @@ import BpmnViewer from "bpmn-js";
 import CamundaRest from "../services/camunda-rest";
 import DatePicker from "vue2-datepicker";
 import ExpandContract from "./addons/ExpandContract.vue";
+import { FilterPayload } from "../models/FilterPayload";
 import { Form } from "vue-formio";
 import { FormRequestActionPayload } from "../models/FormRequestActionPayload";
 import { FormRequestPayload } from "../models/FormRequestPayload";
@@ -359,6 +360,7 @@ import { getformHistoryApi } from "../services/formsflowai-api";
 import moment from "moment";
 import { namespace } from "vuex-class";
 import serviceFlowModule from "../store/modules/serviceFlow-module";
+import { sortByPriorityList } from "../services/filterListFormatterService";
 import vSelect from "vue-select";
 
 const StoreServiceFlowModule = namespace("serviceFlowModule");
@@ -413,7 +415,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     },
   };
   private readFormOptions: object = { readOnly: true };
-  private filterList: Array<object> = [];
+  private filterList: FilterPayload[] = [];
   private editAssignee: boolean = false;
   private applicationId: string = "";
   private groupList: Array<object> = [];
@@ -914,7 +916,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
     await CamundaRest.filterList(this.token, this.bpmApiUrl).then(
       async (response) => {
-        this.filterList = response.data;
+        this.filterList = sortByPriorityList(response.data);
         this.selectedfilterId = findFilterKeyOfAllTask(
           this.filterList,
           "name",
