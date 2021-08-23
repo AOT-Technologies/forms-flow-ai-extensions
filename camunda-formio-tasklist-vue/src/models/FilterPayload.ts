@@ -8,6 +8,13 @@ export interface FilterPayload {
         refresh: boolean;
         showUndefinedVariable: boolean;
     };
-    query: Record<string, any>;
+    query: {
+        candidateUser?: string;
+        includeAssignedTasks?: boolean;
+        taskVariables?: Array<object>;
+        processVariables?: Array<object>;
+        caseInstanceVariables?: Array<object>;
+        orQueries?: Array<object>
+    };
     resourceType: string;
 }
