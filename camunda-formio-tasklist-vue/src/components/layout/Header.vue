@@ -94,9 +94,9 @@ import {
   sortingList,
 } from "../../services/utils";
 import BaseMixin from "../mixins/BaseMixin.vue";
+import { FilterPayload } from "../../models/FilterPayload";
 import FormListModal from "../FormListModal.vue";
 import { Payload } from "../../models/Payload";
-import { FilterPayload } from "../../models/FilterPayload";
 import TaskSortOptions from "../TaskListSortoptions.vue";
 import { namespace } from "vuex-class";
 
@@ -238,17 +238,17 @@ export default class Header extends Mixins(BaseMixin) {
 
   getActivefilterId (selectedfilterId: string) {
     this.filterList.forEach((filter, index) => {
-      if(filter.id=== this.selectedfilterId) {
+      if(filter.id=== selectedfilterId) {
         this.activefilter = index;
       }
-    })
+    });
   }
 
   mounted () {
     this.sortOptions = this.getOptions(this.sortList);
   }
 
-  updated() {
+  updated () {
     if(this.selectedfilterId) {this.getActivefilterId(this.selectedfilterId); }
   }
 

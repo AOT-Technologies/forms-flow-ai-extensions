@@ -8,6 +8,6 @@ export interface FilterPayload {
         refresh: boolean;
         showUndefinedVariable: boolean;
     };
-    query: Object;
+    query: Record<string, any>;
     resourceType: string;
-};
+}
