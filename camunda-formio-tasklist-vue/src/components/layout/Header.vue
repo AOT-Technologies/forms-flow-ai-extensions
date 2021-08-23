@@ -61,7 +61,7 @@ export default class Header extends Mixins(BaseMixin) {
 
   private activefilter = NaN;
 
-  togglefilter (filter: any, index: number) {
+  togglefilter (filter: FilterPayload, index: number) {
     this.activefilter = index;
     this.$root.$emit("call-fetchTaskListCount", {
       filterId: filter.id,
