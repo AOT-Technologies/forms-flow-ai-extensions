@@ -484,6 +484,10 @@
     font-size: 1.7em;
   }
 
+  .cft-assignee-filter-icon {
+    font-size: 1.7em;
+  }
+
   //TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
 
   [data-tooltip]:before {
@@ -600,7 +604,6 @@
   }
 
   .cft-select-generic-search {
-    font-size: 1.7rem;
-    padding-bottom: 2.2%;
+    padding-bottom: 2%;
   }
 }

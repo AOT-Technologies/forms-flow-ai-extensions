@@ -213,7 +213,7 @@
                         variant="primary"
                       >
                         <template #button-content>
-                          <span><i class="fa fa-filter" /></span>
+                          <span><i class="fa fa-filter cft-assignee-filter-icon" /></span>
                         </template>
                         <b-dd-item
                           v-for="(row, index) in UserSearchListLabel"
