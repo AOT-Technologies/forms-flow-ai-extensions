@@ -27,17 +27,15 @@
             v-for="(sort, idx) in sortList"
             :key="sort.sortBy"
           >
-            <b-row>
-              <b-col cols="1" v-b-tooltip.hover title="Remove Sorting Field">
+            <b-row class="ml-2">
                 <span
+                  v-b-tooltip.hover title="Remove Sorting Field"
                   v-if="sortList.length > 1"
                   class="cftf-exit-button"
                   @click="deleteSort(sort, idx)"
                 >
                   <i class="fa fa-times"></i>
                 </span>
-              </b-col>
-              <b-col cols="7">
                 <b-nav-item-dropdown
                   :text="sortList[idx].label"
                   v-b-tooltip.hover
@@ -56,23 +54,23 @@
                     >Sorry, no more fields to sortBy.</b-dropdown-item-button
                   >
                 </b-nav-item-dropdown>
-              </b-col>
-              <b-col cols="1" v-b-tooltip.hover title="Toggle Sort Order">
+                <span v-b-tooltip.hover title="Toggle Sort Order">
                 <a
                   v-if="sort.sortOrder === 'asc'"
                   @click="toggleSort(idx)"
                   href="#"
                   title="Ascending"
+                  
                 >
-                  <i class="fa fa-chevron-up cftf-arrow" aria-hidden="true"></i>
+                  <i class="fa fa-chevron-up cftf-arrow mx-2" aria-hidden="true"></i>
                 </a>
                 <a v-else @click="toggleSort(idx)" href="#" title="Descending">
                   <i
-                    class="fa fa-chevron-down cft-arrow"
+                    class="fa fa-chevron-down cft-arrow mx-2"
                     aria-hidden="true"
                   ></i>
                 </a>
-              </b-col>
+                </span>
             </b-row>
           </div>
           <TaskSortOptions
