@@ -19,6 +19,7 @@
 </template>
 
 <script lang="ts">
+import "../../styles/camundaFormIOTasklist.scss";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 
 @Component

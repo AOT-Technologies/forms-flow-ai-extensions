@@ -241,6 +241,7 @@
 
   .cftf-dpdown-box {
     margin-top: 5px;
+    margin-bottom: 5px;
 
     .fa-chevron-down {
       color: #212529;
@@ -298,8 +299,7 @@
 
   .cftf-add-sorting {
     color: #212529;
-    padding: 5px;
-    margin-top: 5px;
+    padding-top: 68%;
     position: relative;
 
     .nav-link {
@@ -477,11 +477,15 @@
     color: white;
   }
 
-  .assignee-tickmark-icon {
+  .cft-assignee-tickmark-icon {
     font-size: 1.7em;
   }
 
-  .assignee-cancel-icon {
+  .cft-assignee-cancel-icon {
+    font-size: 1.7em;
+  }
+
+  .cft-assignee-filter-icon {
     font-size: 1.7em;
   }
 
@@ -507,7 +511,7 @@
     left: 8.3em;
   }
 
-  .icon-border {
+  .cft-icon-border {
     padding: 0.20rem 0.15rem !important;
     border: 1px solid rgb(184, 184, 184) !important;
   }
@@ -598,5 +602,9 @@
     color: #1a5a96;
     font-family: Nunito Sans, SemiBold;
     font-weight: bold;
+  }
+
+  .cft-select-generic-search {
+    padding-bottom: 2%;
   }
 }
