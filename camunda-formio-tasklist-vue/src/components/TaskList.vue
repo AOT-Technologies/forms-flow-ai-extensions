@@ -403,7 +403,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private submissionId: string = "";
   private formioUrl: string = "";
   private task: TaskPayload = {};
-  private setFollowup: any = [];
+  private setFollowup: Array<string> = [];
   private setDue: any = [];
   private setGroup = null;
   private userSelected: any = {};
@@ -470,7 +470,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async onFormSubmitCallback (actionType = "") {
-    if (this.task.id) {
+    if (this.task.id!==null) {
       await this.onBPMTaskFormSubmit(this.task.id, actionType);
       await this.reloadTasks();
     }
@@ -714,7 +714,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async onSetassignee () {
     await CamundaRest.setassignee(
       this.token,
-      this.task.id,
+      this.task.id!,
       { userId: this.userSelected?.code },
       this.bpmApiUrl
     )
@@ -790,7 +790,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
             this.getFormsFlowactiveIndex
         ]
       );
-      await this.updateTaskDatedetails(this.task.id, referenceobject);
+      await this.updateTaskDatedetails(this.task.id!, referenceobject);
     } catch {
       console.warn("Follow date error"); // eslint-disable-line no-console
     }
@@ -805,7 +805,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
             this.getFormsFlowactiveIndex
         ]
       );
-      await this.updateTaskDatedetails(this.task.id, referenceobject);
+      await this.updateTaskDatedetails(this.task.id!, referenceobject);
     } catch {
       console.warn("Due date error"); // eslint-disable-line no-console
     }
@@ -819,7 +819,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.getFormsFlowactiveIndex
       ] = null;
       referenceobject["due"] = null;
-      await this.updateTaskDatedetails(this.task.id, referenceobject);
+      await this.updateTaskDatedetails(this.task.id!, referenceobject);
     } catch {
       console.warn("Due date error"); // eslint-disable-line no-console
     }
@@ -833,7 +833,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         (this.getFormsFlowTaskCurrentPage - 1) * this.perPage +
           this.getFormsFlowactiveIndex
       ] = null;
-      await this.updateTaskDatedetails(this.task.id, referenceobject);
+      await this.updateTaskDatedetails(this.task.id!, referenceobject);
     } catch {
       console.warn("Follow up date error"); // eslint-disable-line no-console
     }
@@ -850,7 +850,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       await this.getBPMTaskDetail(taskId);
       await CamundaRest.getVariablesByProcessId(
         this.token,
-        this.task.processInstanceId,
+        this.task.processInstanceId!,
         this.bpmApiUrl
       );
       await this.getTaskFormIODetails(taskId);
@@ -859,7 +859,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async findTaskIdDetailsFromURLrouter (taskId: string, fulltasks: TaskPayload) {
+  async findTaskIdDetailsFromURLrouter (taskId: string, fulltasks: TaskPayload[]) {
     this.task = getTaskFromList(fulltasks, taskId);
     this.setFormsFlowTaskId(this.taskIdValue);
     const pos = fulltasks
@@ -962,7 +962,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
               refreshedTaskId === this.getFormsFlowTaskId)
           ) {
             if (this.task.assignee === this.userName) {
-              this.getBPMTaskDetail(this.task.id);
+              this.getBPMTaskDetail(this.task.id!);
             } else {
               this.fetchTaskData(this.getFormsFlowTaskId);
             }
