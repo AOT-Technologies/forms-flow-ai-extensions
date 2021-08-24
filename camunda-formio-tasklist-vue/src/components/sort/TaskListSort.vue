@@ -1,13 +1,13 @@
 <template>
-  <b-col id="cftf-dpdown-container" class="d-flex flex-row ml-2">
+  <b-col id="cftf-dpdown-container" class="d-flex flex-row pl-2">
     <b-row
-      class="cftf-dpdown-box mx-2"
+      class="cftf-dpdown-box mx-1 border"
       v-for="(sort, idx) in sortList"
       :key="sort.sortBy"
     >
       <span
         v-if="sortList.length > 1"
-        class="cftf-exit-button"
+        class="cftf-exit-button ml-1"
         @click="deleteSort(sort, idx)"
         v-b-tooltip.hover title="Remove Sorting Field"
       >
@@ -16,6 +16,7 @@
       <b-nav-item-dropdown
         :text="sortList[idx].label"
         v-b-tooltip.hover
+         class="pl-1"
         title="Click To Change Field for Sorting"
         :no-caret="true"
       >
@@ -37,10 +38,10 @@
         href="#"
         title="Ascending"
       >
-        <i class="fa fa-chevron-up cftf-arrow" aria-hidden="true"></i>
+        <i class="fa fa-chevron-up cftf-arrow ml-2" aria-hidden="true"></i>
       </a>
       <a v-else @click="toggleSort(idx)" href="#" title="Descending">
-        <i class="fa fa-chevron-down cft-arrow" aria-hidden="true"></i>
+        <i class="fa fa-chevron-down cft-arrow ml-2" aria-hidden="true"></i>
       </a>
     </b-row>
     <TaskSortOptions
