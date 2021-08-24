@@ -14,7 +14,7 @@
               :active="idx === activefilter"
               :class="{ 'cft-filter-selected': idx === activefilter }"
             >
-              {{ filter.name }}
+            <span class="font-weight-normal cft-filter-text">{{ filter.name }}</span>
             </b-dropdown-item>
           <b-dropdown-item v-if="!filterList.length">No Filters found</b-dropdown-item>
           </b-dropdown>
@@ -34,6 +34,7 @@
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import BaseMixin from "../mixins/BaseMixin.vue";
+import { FilterPayload } from "../../models/FilterPayload";
 import FormListModal from "../FormListModal.vue";
 import { Payload } from "../../models/Payload";
 import TaskListSort from "../sort/TaskListSort.vue";
@@ -49,7 +50,7 @@ const serviceFlowModule = namespace("serviceFlowModule");
 })
 export default class Header extends Mixins(BaseMixin) {
   @Prop() private perPage!: number;
-  @Prop() private filterList!: Array<string>;
+  @Prop() private filterList!: FilterPayload[];
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
 
@@ -58,9 +59,9 @@ export default class Header extends Mixins(BaseMixin) {
   @serviceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
   public setFormsFlowTaskCurrentPage: any;
 
-  private activefilter = 0;
+  private activefilter = NaN;
 
-  togglefilter (filter: any, index: number) {
+  togglefilter (filter: FilterPayload, index: number) {
     this.activefilter = index;
     this.$root.$emit("call-fetchTaskListCount", {
       filterId: filter.id,
@@ -79,3 +80,9 @@ export default class Header extends Mixins(BaseMixin) {
   }
 }
 </script>
+
+<style scoped>
+.cft-filter-text {
+  font-size: 16px;
+}
+</style>
