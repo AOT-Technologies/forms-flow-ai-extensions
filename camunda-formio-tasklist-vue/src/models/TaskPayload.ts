@@ -3,8 +3,8 @@ export interface TaskPayload {
   name?: string;
   assignee?: string;
   created?: string;
-  due?: string;
-  followUp?: string;
+  due?: string|null;
+  followUp?: string|null;
   delegationState?: string;
   description?: string;
   executionId?: string;

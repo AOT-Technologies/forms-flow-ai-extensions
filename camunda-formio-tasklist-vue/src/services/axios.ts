@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export function bpmAxios (bearerToken: string, CamundaUrl: any) {
+export function bpmAxios (bearerToken: string, CamundaUrl: string) {
   return axios.create({
     baseURL: CamundaUrl,
     withCredentials: false,
