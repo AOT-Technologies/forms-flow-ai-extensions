@@ -60,7 +60,7 @@ import {
   sortingList,
 } from "../../services/utils";
 import { Payload } from "../../models/Payload";
-import {TaskListSortElement} from "../../models/sorting";
+import {TaskListSortElement} from "../../models/SortingPayload";
 import TaskSortOptions from "../sort/TaskListSortoptions.vue";
 import { namespace } from "vuex-class";
 const serviceFlowModule = namespace("serviceFlowModule");

@@ -1,8 +1,9 @@
 import { httpGETRequest, httpPOSTRequest } from "./axios";
+import {ApplicationCreatePayload} from "../models/ApplicationCreatePayload";
 
 export const formApplicationSubmit = (
   Apiurl: string,
-  data: any,
+  data: ApplicationCreatePayload,
   token: string
 ) => {
   return httpPOSTRequest(Apiurl + "/application/create", data, token);
