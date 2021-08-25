@@ -21,3 +21,9 @@ export interface TaskPayload {
   formKey?: string;
   tenantId?: string;
 }
+
+export interface CustomEventPayload {
+  actionType: string;
+  component: Object;
+  type: string;
+}
