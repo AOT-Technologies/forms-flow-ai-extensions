@@ -225,9 +225,10 @@
   #cftf-dpdown-container {
     display: flex;
     flex-wrap: wrap;
-    padding: calc(6px + 2px) 15px calc(6px - 2px) 15px;
+    // padding: calc(6px + 2px) 15px calc(6px - 2px) 15px;
     box-shadow: 0 2px 6px -4px #555;
     background-color: #fafafa;
+    font-size: 14px !important;
 
     .nav-link {
       padding: 0px;

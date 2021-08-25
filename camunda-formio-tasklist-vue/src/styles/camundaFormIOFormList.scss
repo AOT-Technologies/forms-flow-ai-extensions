@@ -76,7 +76,7 @@
 
 .cft-height {
   overflow: scroll !important;
-  height: 93vh;
+  height: calc(100vh -200px);
 }
 
 .cft-actionable-container .tab-content {
