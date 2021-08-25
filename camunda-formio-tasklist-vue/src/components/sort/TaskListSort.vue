@@ -53,15 +53,15 @@
 </template>
 
 <script lang="ts">
+import "../../styles/camundaFormIOTasklist.scss";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   sortingList,
 } from "../../services/utils";
-import "../../styles/camundaFormIOTasklist.scss";
 import { Payload } from "../../models/Payload";
-import TaskSortOptions from "../sort/TaskListSortoptions.vue";
 import {TaskListSortElement} from "../../models/sorting";
+import TaskSortOptions from "../sort/TaskListSortoptions.vue";
 import { namespace } from "vuex-class";
 const serviceFlowModule = namespace("serviceFlowModule");
 @Component({

@@ -333,14 +333,14 @@ import {
   reviewerGroup,
 } from "../services/constants";
 import { Component, Mixins, Prop } from "vue-property-decorator";
-import { CustomEventPayload, TaskPayload } from "../models/TaskPayload";
+import { CustomEventPayload, TaskPayload, UserSearchListLabelPayload } from "../models/TaskPayload";
 import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   findFilterKeyOfAllTask,
   getTaskFromList,
   getUserName,
 } from "../services/utils";
-import { UserPayload, UserListPayload } from "../models/UserPayload";
+import { UserListPayload, UserPayload } from "../models/UserPayload";
 import BpmnViewer from "bpmn-js";
 import CamundaRest from "../services/camunda-rest";
 import DatePicker from "vue2-datepicker";
@@ -355,6 +355,7 @@ import LeftSider from "./layout/LeftSider.vue";
 import { Payload } from "../models/Payload";
 import SocketIOService from "../services/SocketIOServices";
 import TaskHistory from "../components/addons/TaskHistory.vue";
+import { TaskHistoryListPayload } from "../models/TaskHistoryListPayload";
 import TaskListMixin from "./mixins/TaskListMixin.vue";
 import { authenticateFormio } from "../services/formio-token";
 import { getFormDetails } from "../services/get-formio";
@@ -433,8 +434,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     firstResult: 0,
     maxResults: this.perPage,
   };
-  private taskHistoryList: Array<object> = [];
-  private reviewerUsersList: Array<object> = [];
+  private taskHistoryList: TaskHistoryListPayload[] = [];
+  private reviewerUsersList: UserListPayload[] = [];
   private selectSearchType: string = "lastName";
   private taskIdValue: string = "";
   private taskId2: string = "";
@@ -442,7 +443,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private eventNameWebSocket: string = "";
   private showForm: boolean = false;
   private activeUserSearchindex = 1;
-  private UserSearchListLabel: Array<object> = SEARCH_USERS_BY;
+  private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
 
   checkforTaskID () {
     if (this.getTaskId) {
@@ -936,7 +937,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     SocketIOService.connect(
       this.webSocketEncryptkey,
-      (refreshedTaskId: string, eventName: string, error: any) => {
+      (refreshedTaskId: string, eventName: string, error: string) => {
         this.taskIdWebsocket = refreshedTaskId;
         if (error) {
           this.$bvToast.toast(

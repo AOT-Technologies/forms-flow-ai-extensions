@@ -27,3 +27,8 @@ export interface CustomEventPayload {
   component: Object;
   type: string;
 }
+
+export interface UserSearchListLabelPayload {
+  searchType: string;
+  label: string;
+}
