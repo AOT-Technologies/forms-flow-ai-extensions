@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import FormViewSubmission from "../form/FormViewSubmission.vue";
+import FormViewSubmission from "../FormViewSubmission.vue";
 import { TaskHistoryListPayload } from "../../models/TaskHistoryListPayload";
 import { getLocalDateTime } from "../../services/format-time";
 
