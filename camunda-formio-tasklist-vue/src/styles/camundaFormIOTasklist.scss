@@ -1,5 +1,24 @@
 @import "vue-select/src/scss/vue-select.scss";
 
+:root {
+  --h100: 100px;
+  --h120: 120px;
+  --h140: 140px;
+  --h160: 160px;
+  --h180: 180px;
+  --h200: 200px;
+  --h220: 220px;
+  --h240: 240px;
+  --h260: 260px;
+  --h280: 280px;
+  --h300: 300px;
+  --h320: 320px;
+  --h340: 340px;
+  --h360: 360px;
+  --h380: 380px;
+  --h400: 400px;
+}
+
 .task-outer-container {
   max-width: 100vw;
   background-color: white;
@@ -568,11 +587,6 @@
     word-break: break-all;
   }
 
-  .cft-height {
-    overflow: scroll !important;
-    height: 93vh;
-  }
-
   .mx-datepicker {
     width: 100%;
   }
@@ -606,5 +620,90 @@
 
   .cft-select-generic-search {
     padding-bottom: 2%;
+  }
+
+  .cft-height {
+    overflow: scroll !important;
+    height: calc(100vh);
+  }
+
+  .cft-height-h100 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h100));
+  }
+
+  .cft-height-h120 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h120));
+  }
+
+  .cft-height-h140 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h140));
+  }
+
+  .cft-height-h160 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h160));
+  }
+
+  .cft-height-h180 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h180));
+  }
+
+  .cft-height-h200 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h200));
+  }
+
+  .cft-height-h220 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h220));
+  }
+
+  .cft-height-h240 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h240));
+  }
+
+  .cft-height-h260 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h260));
+  }
+
+  .cft-height-h280 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h280));
+  }
+
+  .cft-height-h300 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h300));
+  }
+
+  .cft-height-h320 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h320));
+  }
+
+  .cft-height-h340 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h340));
+  }
+
+  .cft-height-h360 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h360));
+  }
+
+  .cft-height-h380 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h380));
+  }
+
+  .cft-height-h400 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h400));
   }
 }
