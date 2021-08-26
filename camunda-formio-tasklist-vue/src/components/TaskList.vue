@@ -923,7 +923,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.filterList = sortByPriorityList(response.data);
         this.selectedfilterId = findFilterKeyOfAllTask(
           this.filterList,
-          "name",
           ALL_FILTER
         );
         await this.fetchTaskListCount(this.selectedfilterId, this.payload);

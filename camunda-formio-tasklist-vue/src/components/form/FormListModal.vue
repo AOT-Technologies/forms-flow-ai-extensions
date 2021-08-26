@@ -28,8 +28,10 @@
           bordered
           hover
           responsive
-          :fields="fields"
-          :items="items"
+          caption-top
+          small
+          :fields="formfields"
+          :items="formitems"
           :per-page="formperPage"
           :current-page="formcurrentPage"
           id="formListTable"
@@ -91,9 +93,11 @@
 <script lang="ts">
 import "../../styles/camundaFormIOFormList.scss";
 import { Component, Mixins } from "vue-property-decorator";
-import { FormListFieldsPayload, FormListItemsPayload } from "../../models/FormListPayload";
+import { FormListFieldsPayload, FormListItemsPayload, FormioSubmissionPayload } from "../../models/FormListPayload";
 import BaseMixin from "../mixins/BaseMixin.vue";
 import CamundaRest from "../../services/camunda-rest";
+import { CustomEventPayload } from "../../models/TaskPayload";
+import { FORMLIST_FIELDS } from "../../services/constants";
 import { Form } from "vue-formio";
 import { formApplicationSubmit } from "../../services/formsflowai-api";
 
@@ -103,11 +107,8 @@ import { formApplicationSubmit } from "../../services/formsflowai-api";
   }
 })
 export default class FormListModal extends Mixins(BaseMixin) {
-  private fields: FormListFieldsPayload[] = [
-    { key: "formName", sortable: true },
-    { key: "operations" }
-  ];
-  private items: FormListItemsPayload[] = [];
+  private formfields: FormListFieldsPayload[] = FORMLIST_FIELDS;
+  private formitems: FormListItemsPayload[] = [];
   private formperPage: number = 10;
   private formcurrentPage: number = 1;
   private formValueId?: string = "";
@@ -117,13 +118,13 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private submissionId?: string = "";
 
   get totalrows () {
-    return this.items.length;
+    return this.formitems.length;
   }
 
   formListItems () {
     CamundaRest.listForms(this.token, this.bpmApiUrl).then(response => {
       response.data.forEach((form: FormListItemsPayload) => {
-        this.items.push(form);
+        this.formitems.push(form);
       });
     });
   }
@@ -141,7 +142,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
     this.$bvModal.show("modal-multi-1");
   }
 
-  onSubmit (submission: any) {
+  onSubmit (submission: FormioSubmissionPayload) {
     this.formId = submission.form;
     this.submissionId = submission._id;
 
@@ -170,7 +171,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
     // this.$bvModal.show('modal-multi-1');
   }
 
-  oncustomEventCallback = (customEvent: any) => {
+  oncustomEventCallback = (customEvent: CustomEventPayload) => {
     switch (customEvent.type) {
     case "customSubmitDone":
       this.$bvModal.hide("modal-multi-2");
