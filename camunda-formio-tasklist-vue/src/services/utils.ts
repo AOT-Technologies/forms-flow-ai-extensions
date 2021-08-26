@@ -3,7 +3,7 @@ import { TaskPayload } from "../models/TaskPayload";
 
 export const getTaskFromList = (tasks: TaskPayload[], taskId: string) => {
   const task = tasks.find(task => task.id === taskId);
-  return task;
+  return task!;
 };
 
 export const findFilterKeyOfAllTask = (array: FilterPayload[], value: string) => {
