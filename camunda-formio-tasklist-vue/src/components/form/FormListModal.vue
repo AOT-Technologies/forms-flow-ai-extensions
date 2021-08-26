@@ -1,7 +1,9 @@
 <template>
   <div class="cftf-form-conatiner cft-text-font">
     <b-button variant="primary" v-b-modal.modal-multi-1>
-      <span ref="btn-show"><i class="fa fa-wpforms"> Forms</i></span>
+      <span ref="btn-show">
+        <i class="fa fa-wpforms"> Forms</i>
+      </span>
     </b-button>
     <b-modal
       ref="modal-1"
@@ -14,63 +16,40 @@
       <template #modal-header="{ close }">
         <h5>FORM LIST</h5>
         <b-button size="sm" variant="outline-danger" @click="close()">
-          <h5>Close <i class="fa fa-times"></i></h5>
+          <h5>
+            Close
+            <i class="fa fa-times"></i>
+          </h5>
         </b-button>
       </template>
-      <div v-if="formList.length" class="overflow-auto">
-        <b-table-simple
+      <div class="overflow-auto">
+        <b-table
+          sort-icon-left
+          bordered
           hover
-          small
-          caption-top
           responsive
-          :bordered="true"
-          :outlined="true"
+          :fields="fields"
+          :items="items"
           :per-page="formperPage"
+          :current-page="formcurrentPage"
+          id="formListTable"
         >
-          <b-thead>
-            <b-tr>
-              <b-th>
-              <span @click="sortFormList" class="cft-cursor-pointer">
-                  Form Name
-                  <i
-                    :class="
-                      sortAscending ? 'fa fa-caret-up' : 'fa fa-caret-down'
-                    "
-                  />
-              </span>
-              </b-th>
-              <b-th>Operations</b-th>
-            </b-tr>
-          </b-thead>
-          <b-tbody>
-            <b-tr v-for="form in formList" :key="form.formId">
-              <b-th> {{ form.formName }}</b-th>
-              <b-th>
-                <b-button
-                  variant="primary"
-                  v-b-modal.modal-multi-2
-                  @click="storeFormValue(form.formId, form.formName)"
-                  >Submit New
-                </b-button>
-              </b-th>
-            </b-tr>
-          </b-tbody>
-        </b-table-simple>
+          <template #cell(operations)="data">
+            <b-button
+              variant="primary"
+              v-b-modal.modal-multi-2
+              @click="storeFormValue(data.item.formId, data.item.formName)"
+            >Submit New</b-button>
+          </template>
+        </b-table>
 
-        <b-pagination-nav
-          :link-gen="linkFormGen"
-          :number-of-pages="formNumPages"
+        <b-pagination
           v-model="formcurrentPage"
+          :per-page="formperPage"
+          :total-rows="totalrows"
+          aria-controls="formListTable"
           class="cft-form-list-paginate"
-        />
-      </div>
-      <div v-else>
-        <b-list-group-item>
-          <b-row class="cft-not-selected mt-2 ml-1 row">
-            <i class="fa fa-exclamation-circle"></i>
-            <p>No Form found in the list.</p>
-          </b-row>
-        </b-list-group-item>
+        ></b-pagination>
       </div>
     </b-modal>
     <b-modal
@@ -83,41 +62,36 @@
       :hide-footer="true"
     >
       <template #modal-header="{ close }">
-        <b-button variant="link" @click="backClick">
-          <h5><i class="fa fa-chevron-left"></i> Back</h5>
+        <b-button variant="link" @click="backClickToFormList">
+          <h5>
+            <i class="fa fa-chevron-left"></i> Back
+          </h5>
         </b-button>
         <h5>SUBMIT FORM</h5>
         <b-button size="sm" variant="outline-danger" @click="close()">
-          <h5>Close <i class="fa fa-times"></i></h5>
+          <h5>
+            Close
+            <i class="fa fa-times"></i>
+          </h5>
         </b-button>
       </template>
       <h4>{{ formTitle }}</h4>
       <Form
         :src="formValueId"
-        form=""
-        submission=""
-        options=""
+        form
+        submission
+        options
         v-on:submit="onSubmit"
         v-on:customEvent="oncustomEventCallback"
-      >
-      </Form>
+      ></Form>
     </b-modal>
-        <!-- <b-modal
-          ref="modal-3"
-          id="modal-multi-3"
-          size="xl"
-          title="View form"
-          ok-only
-        >
-        <FormViewSubmission :formid="formId" :submissionid="submissionId">
-        </FormViewSubmission>
-        </b-modal> -->
   </div>
 </template>
 
 <script lang="ts">
 import "../../styles/camundaFormIOFormList.scss";
 import { Component, Mixins } from "vue-property-decorator";
+import { FormListFieldsPayload, FormListItemsPayload } from "../../models/FormListPayload";
 import BaseMixin from "../mixins/BaseMixin.vue";
 import CamundaRest from "../../services/camunda-rest";
 import { Form } from "vue-formio";
@@ -125,32 +99,32 @@ import { formApplicationSubmit } from "../../services/formsflowai-api";
 
 @Component({
   components: {
-    Form,
-  },
+    Form
+  }
 })
 export default class FormListModal extends Mixins(BaseMixin) {
-  private formList: Array<object> = [];
+  private fields: FormListFieldsPayload[] = [
+    { key: "formName", sortable: true },
+    { key: "operations" }
+  ];
+  private items: FormListItemsPayload[] = [];
   private formperPage: number = 10;
-  private formNumPages: number = 1;
   private formcurrentPage: number = 1;
-  private formValueId?: string  = "";
+  private formValueId?: string = "";
   private formId?: string = undefined;
   private formioUrl?: string = undefined;
   private formTitle: string = "";
-  private sortAscending: boolean = false;
   private submissionId?: string = "";
 
-  linkFormGen () {
-    this.formListItems();
+  get totalrows () {
+    return this.items.length;
   }
 
   formListItems () {
-    CamundaRest.listForms(this.token, this.bpmApiUrl).then((response) => {
-      this.formNumPages = Math.ceil(response.data.length / this.formperPage);
-      this.formList = response.data.splice(
-        (this.formcurrentPage - 1) * this.formperPage,
-        this.formperPage
-      );
+    CamundaRest.listForms(this.token, this.bpmApiUrl).then(response => {
+      response.data.forEach((form: FormListItemsPayload) => {
+        this.items.push(form);
+      });
     });
   }
 
@@ -162,14 +136,9 @@ export default class FormListModal extends Mixins(BaseMixin) {
     this.formTitle = title;
   }
 
-  backClick () {
+  backClickToFormList () {
     this.$bvModal.hide("modal-multi-2");
     this.$bvModal.show("modal-multi-1");
-  }
-
-  sortFormList () {
-    this.sortAscending = !this.sortAscending;
-    this.formList = this.formList.reverse();
   }
 
   onSubmit (submission: any) {
@@ -192,7 +161,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
         {
           formId: this.formId,
           formSubmissionId: this.submissionId,
-          formUrl: this.formioUrl,
+          formUrl: this.formioUrl
         },
         this.token
       );
@@ -205,7 +174,6 @@ export default class FormListModal extends Mixins(BaseMixin) {
     switch (customEvent.type) {
     case "customSubmitDone":
       this.$bvModal.hide("modal-multi-2");
-      // this.$bvModal.show('modal-multi-1');
       break;
     }
   };
