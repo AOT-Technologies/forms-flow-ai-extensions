@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts">
-import "../../styles/camundaFormIOFormList.scss";
+import "../styles/camundaFormIOFormList.scss";
 import { Component, Mixins } from "vue-property-decorator";
 import { FormListFieldsPayload, FormListItemsPayload, FormioSubmissionPayload } from "../models/FormListPayload";
 import BaseMixin from "./mixins/BaseMixin.vue";
