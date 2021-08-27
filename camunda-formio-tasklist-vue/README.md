@@ -2,9 +2,9 @@
 
 ![image](https://user-images.githubusercontent.com/70306694/124284590-c3078b80-db6a-11eb-81c7-921cfbe46495.png)
 
-This is a Vue component build for formsflow.ai solution to integrate
-Camunda Tasklist, associated forms in a bundled solution which can
-be installed as a package. 
+This is a NPM package for formsflow.ai solution. It can be used
+as a  Vue component build for to integrate Camunda Tasklist, associated
+forms in a bundled solution.  You can install it [NPM package manager](https://www.npmjs.com/package/camunda-formio-tasklist-vue).
 
 
 ## Things to look out when integrating
@@ -16,23 +16,27 @@ be installed as a package.
 Application History `view submission` using our component to view
 the Form.
 
+A sample project which was used for integration `camunda-formio-tasklist-vue`
+components can be found [here](https://github.com/AOT-Technologies/service-flow-vue/).
 
-## Local Project setup
+## Project Setup
+
+### Local Project setup
 ```
 npm install
 ```
 
-## Compiles and hot-reloads for development
+### Compiles and hot-reloads for development
 ```
 npm run serve
 ```
 
-## build for production with minification
+### build for production with minification
 ```
 npm run build
 ```
 
-## build for production and view the bundle analyzer report
+### build for production and view the bundle analyzer report
 ```
 npm run build --report
 ```
@@ -40,7 +44,7 @@ npm run build --report
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-## Required Environmental Variables
+## Required Config Variables
 
 | Variable | Description |
 | --- | --- |
