@@ -1,5 +1,6 @@
 <template>
-  <span>
+<div class="card">
+  <div class="tasklist-container">
     <TaskListSearch
       @update-task-list="onSearchUpdateTasklistResult"
       :tasklength="Lentask"
@@ -13,9 +14,9 @@
         :class="{ 'cft-selected': idx == activeIndex }"
       >
         <div @click="setselectedTask(task.id)" class="cft-select-task">
-          <h5 class="cft-task-title" data-title="Task Name">{{ task.name }}</h5>
+          <span class="cft-task-title font-weight-bold" data-title="Task Name">{{ task.name }}</span>
           <b-row>
-            <b-col cols="6">
+            <b-col cols="7">
               <div
                 class="cft-process-title"
                 data-tile="Process Definition Name"
@@ -29,7 +30,7 @@
                 }}
               </div>
             </b-col>
-            <b-col cols="6">
+            <b-col cols="5">
               <div class="cft-task-assignee" data-title="Task assignee">
                 {{ task.assignee }}
               </div>
@@ -50,7 +51,7 @@
                   :data-title="getExactDate(task.followUp)"
                   v-if="task.followUp"
                 >
-                  Follow-up {{ timedifference(task.followUp) }},
+                  Follow-up {{ timedifference(task.followUp) }} ,
                 </span>
                 <span
                   class="cft-due-date"
@@ -81,14 +82,15 @@
         <p>No tasks found in the list.</p>
       </b-row>
     </b-list-group>
-  </span>
+  </div>
+</div>
 </template>
 
 <script lang="ts">
 import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
 import BaseMixin from "../mixins/BaseMixin.vue";
 import CamundaRest from "../../services/camunda-rest";
-import { Payload } from "../../services/TasklistTypes";
+import { Payload } from "../../models/Payload";
 import TaskListSearch from "../search/TaskListSearch.vue";
 import cloneDeep from "lodash/cloneDeep";
 import { getFormattedDateAndTime } from "../../services/format-time";

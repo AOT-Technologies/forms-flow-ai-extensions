@@ -6,7 +6,7 @@
     title="Add New Field For Sorting"
   >
     <template slot="button-content">
-      <i class="fa fa-plus fa-sm click-element cftf-add-sorting" />
+      <i class="fa fa-plus fa-sm click-element cftf-add-sorting mt-1"/>
     </template>
     <b-dropdown-item-button
       v-for="s in sortOptions"
@@ -19,6 +19,7 @@
 </template>
 
 <script lang="ts">
+import "../../styles/camundaFormIOTasklist.scss";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 
 @Component
