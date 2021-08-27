@@ -10,7 +10,7 @@
       :payload="payload"
     />
     <b-row class="cft-service-task-list mt-1">
-      <b-col xl="3" lg="3" md="12" class="cft-height" v-if="maximize">
+      <b-col xl="3" lg="3" md="12" :class="containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'" v-if="maximize">
         <LeftSider
           v-if="token && bpmApiUrl"
           :token="token"
@@ -28,7 +28,7 @@
         v-if="getFormsFlowTaskId && task"
         :lg="maximize ? 9 : 12"
         md="12"
-        class="cft-height"
+        :class="containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'"
       >
         <div class="cft-service-task-details">
           <b-row>
@@ -383,6 +383,7 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
+  @Prop() private containerHeight!: string;
   @Prop({ default: "lastName" }) userListType!: string;
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
