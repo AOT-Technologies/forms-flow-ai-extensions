@@ -80,6 +80,9 @@
       <h4>{{ formTitle }}</h4>
       <Form
         :src="formValueId"
+        form
+        submission
+        options
         v-on:submit="onSubmit"
         v-on:customEvent="oncustomEventCallback"
       ></Form>
