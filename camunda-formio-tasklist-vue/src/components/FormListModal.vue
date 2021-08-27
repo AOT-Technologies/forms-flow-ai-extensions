@@ -22,7 +22,7 @@
           </h5>
         </b-button>
       </template>
-      <div class="overflow-auto">
+      <div>
         <b-table
           sort-icon-left
           bordered

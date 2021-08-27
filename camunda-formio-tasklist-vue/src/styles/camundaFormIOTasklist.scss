@@ -431,12 +431,6 @@
     }
   }
 
-  .cft-form-list-paginate {
-    display: flex;
-    justify-content: center;
-    margin-top: 15px;
-    padding: 0px;
-  }
 
   .cft-user-select {
     width: 70%;
@@ -597,7 +591,7 @@
 
   .cft-form-list-paginate {
     display: flex;
-    justify-content: center;
+    justify-content: center !important;
     margin-top: 15px;
     padding: 0px;
   }
