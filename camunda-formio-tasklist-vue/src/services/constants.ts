@@ -8,3 +8,7 @@ export const SEARCH_USERS_BY = [
   {'searchType': 'lastName', 'label': 'Search by Last Name'},
   {'searchType': 'email', 'label': 'Search by Email'},
 ];
+export const FORMLIST_FIELDS = [
+  { key: "formName", sortable: true },
+  { key: "operations" }
+];
