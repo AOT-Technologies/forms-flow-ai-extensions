@@ -1,5 +1,14 @@
 # Changes for camunda-formio-tasklist-vue
 
+## v1.0.11, 
+
+#### Fixes
+
+- Task Search option to search by last Name, first Name and Email
+- Generic UI updates
+- FormList sorting by Form Name
+- New container height attribute to dynamically adjust the height of the container
+
 ## v1.0.10, 2021-07-28
 
 #### Fixes
