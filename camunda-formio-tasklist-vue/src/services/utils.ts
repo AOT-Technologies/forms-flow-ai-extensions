@@ -8,7 +8,7 @@ export const getTaskFromList = (tasks: TaskPayload[], taskId: string) => {
 
 export const findFilterKeyOfAllTask = (array: FilterPayload[], value: string) => {
   for (let i = 0; i < array.length; i++) {
-    if (array[i]["name"] === value) {
+    if (array[i]?.["name"] === value) {
       return array[i]["id"];
     }
   }
