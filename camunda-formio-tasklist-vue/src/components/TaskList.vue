@@ -273,6 +273,9 @@
                       aria-busy="true"
                     >
                       <!-- don't remove form-render class -->
+                      {{task.assignee}}
+                      {{userName}}
+                      {{task.assignee === userName}}
                       <formio
                         v-if="formioUrl"
                         :src="formioUrl"
@@ -407,6 +410,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private setDue: any = [];
   private setGroup = null;
   private userSelected: any = {};
+  public userName?: string = undefined;
   public perPage: number = 10;
   private tasklength: number = 0;
   private editFormoptions: object = {
@@ -453,6 +457,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     }
     this.userName = getUserName();
+    console.log(this.userName);
   }
 
   timedifference (date: Date) {
