@@ -22,7 +22,7 @@
           </h5>
         </b-button>
       </template>
-      <div class="overflow-auto">
+      <div>
         <b-table
           sort-icon-left
           bordered
@@ -80,9 +80,9 @@
       <h4>{{ formTitle }}</h4>
       <Form
         :src="formValueId"
-        form
-        submission
-        options
+        form=""
+        submission=""
+        options=""
         v-on:submit="onSubmit"
         v-on:customEvent="oncustomEventCallback"
       ></Form>
