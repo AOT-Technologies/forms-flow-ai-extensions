@@ -11,7 +11,7 @@ let interval: any = null;
 let clientErrorCallback: any = null;
 let disconnect: any = null;
 
-const token: any = localStorage.getItem("authToken");
+const token: string| null = localStorage.getItem("authToken");
 
 const isConnected = () => {
   return stompClient?.connected || null;
@@ -35,7 +35,7 @@ function connectClient () {
       `/${engine}`,
       `/${socketUrl}`
     );
-    const accessToken = AES.encrypt(token, encryptKey).toString();
+    const accessToken = AES.encrypt(token!, encryptKey).toString();
     const websocketUrl = `${BPM_BASE_URL_SOCKET_IO}?accesstoken=${accessToken}`;
 
     socket = new SockJS(websocketUrl);

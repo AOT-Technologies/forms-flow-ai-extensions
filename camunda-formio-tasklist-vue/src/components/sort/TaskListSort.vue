@@ -54,15 +54,15 @@
 </template>
 
 <script lang="ts">
+import "../../styles/camundaFormIOTasklist.scss";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   sortingList,
 } from "../../services/utils";
-import "../../styles/camundaFormIOTasklist.scss";
 import { Payload } from "../../models/Payload";
+import {TaskListSortElement} from "../../models/SortingPayload";
 import TaskSortOptions from "../sort/TaskListSortoptions.vue";
-import {TaskListSortElement} from "../../models/sorting";
 import { namespace } from "vuex-class";
 const serviceFlowModule = namespace("serviceFlowModule");
 @Component({
@@ -79,8 +79,8 @@ export default class TaskListSort extends Vue {
   @serviceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
   public setFormsFlowTaskCurrentPage: any;
   private sortList: TaskListSortElement[] = TASK_FILTER_LIST_DEFAULT_PARAM;
-  private sortOptions: Array<object> = [];
-  private updateSortOptions: Array<object> = [];
+  private sortOptions: TaskListSortElement[] = [];
+  private updateSortOptions: TaskListSortElement[] = [];
   private setupdateSortListDropdownindex = 0;
 
   getOptions (options: TaskListSortElement[]) {
