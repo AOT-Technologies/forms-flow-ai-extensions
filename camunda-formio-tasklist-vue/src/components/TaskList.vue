@@ -607,13 +607,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     if (result.data && result.data["applicationId"]?.value) {
       this.applicationId = result.data["applicationId"].value;
-      getformHistoryApi(
+      const applicationHistoryList = await getformHistoryApi(
         this.formsflowaiApiUrl,
         result.data["applicationId"].value,
         this.token
-      ).then((r) => {
-        this.taskHistoryList = r.data.applications;
-      });
+      );
+      this.taskHistoryList = applicationHistoryList.applications;
     }
   }
 

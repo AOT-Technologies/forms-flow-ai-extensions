@@ -12,7 +12,7 @@ export function bpmAxios (bearerToken: string, CamundaUrl: string) {
   });
 }
 
-export const httpPOSTRequest = (
+export const httpPOSTRequest = async (
   url: string,
   data: any,
   bearerToken: string,
@@ -25,16 +25,18 @@ export const httpPOSTRequest = (
   });
 };
 
-export const httpGETRequest = (
+export const httpGETRequest = async (
   url: string,
   data: any,
   bearerToken: string,
   isBearer = true
 ) => {
-  return axios.get(url, {
+  const response = await axios.get(url, {
     params: data,
     headers: {
       Authorization: isBearer ? `Bearer ${bearerToken}` : bearerToken,
     },
   });
+  return response?.data;
+
 };
