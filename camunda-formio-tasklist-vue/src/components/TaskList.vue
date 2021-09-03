@@ -273,8 +273,11 @@
                       aria-busy="true"
                     >
                       <div v-if="task.assignee === userName">
-                        <FormEdit :formioUrl="formioUrl" @onformsubmit="onFormSubmitCallback"
-                        @oncustomevent="oncustomEventCallback"/>
+                        <FormEdit
+                          :formioUrl="formioUrl"
+                          @onformsubmit="onFormSubmitCallback"
+                          @oncustomevent="oncustomEventCallback"
+                        />
                       </div>
                       <div v-else>
                         <FormView :formioUrl="formioUrl"/>
@@ -339,13 +342,13 @@ import CamundaRest from "../services/camunda-rest";
 import DatePicker from "vue2-datepicker";
 import ExpandContract from "./addons/ExpandContract.vue";
 import { FilterPayload } from "../models/FilterPayload";
+import FormEdit from "./form/Edit.vue";
 import { FormRequestActionPayload } from "../models/FormRequestActionPayload";
 import { FormRequestPayload } from "../models/FormRequestPayload";
+import FormView from "./form/View.vue";
 import { GroupListPayload } from "../models/GroupListPayload";
 import Header from "./layout/Header.vue";
 import LeftSider from "./layout/LeftSider.vue";
-import FormEdit from "./form/Edit.vue";
-import FormView from "./form/View.vue";
 import { Payload } from "../models/Payload";
 import SocketIOService from "../services/SocketIOServices";
 import TaskHistory from "../components/addons/TaskHistory.vue";
@@ -445,7 +448,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     }
     this.userName = getUserName();
-    console.log(this.userName);
   }
 
   timedifference (date: Date) {
@@ -844,7 +846,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.task.processInstanceId!,
         this.bpmApiUrl
       );
-      await Promise.all([this.getBPMTaskDetail(taskId), this.getTaskFormIODetails(taskId), this.getTaskHistoryDetails(taskId), this.getTaskProcessDiagramDetails(this.task)])
+      await Promise.all([this.getBPMTaskDetail(taskId), this.getTaskFormIODetails(taskId), this.getTaskHistoryDetails(taskId), this.getTaskProcessDiagramDetails(this.task)]);
     }
   }
 

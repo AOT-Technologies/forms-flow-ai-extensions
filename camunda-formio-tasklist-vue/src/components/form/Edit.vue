@@ -13,25 +13,25 @@
 
 <script lang="ts">
 import "formiojs/dist/formio.full.min.css";
-import { Component, Prop, Emit, Vue } from "vue-property-decorator";
+import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import { Form } from "vue-formio";
 
 @Component({
-    components: {
-        Form
-    },
-    })
+  components: {
+    Form
+  },
+})
 export default class FormEdit extends Vue {
     @Prop() private formioUrl!: string;
 
     @Emit("onformsubmit")
     onFormSubmitCallback (item: any) {
-        return item;
+      return item;
     }
 
     @Emit("oncustomevent")
     oncustomEventCallback (item: any) {
-        return item;
+      return item;
     }
 }
 </script>

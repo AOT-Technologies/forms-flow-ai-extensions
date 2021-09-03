@@ -11,14 +11,14 @@
 
 <script lang="ts">
 import "formiojs/dist/formio.full.min.css";
-import { Component, Prop, Emit, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import { Form } from "vue-formio";
 
 @Component({
-    components: {
-        Form
-    },
-    })
+  components: {
+    Form
+  },
+})
 export default class FormView extends Vue {
     @Prop() private formioUrl!: string;;
 }
