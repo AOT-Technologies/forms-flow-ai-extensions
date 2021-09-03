@@ -22,7 +22,7 @@ import { Form } from "vue-formio";
     },
     })
 export default class FormEdit extends Vue {
-    @Prop() private formioUrl: string;
+    @Prop() private formioUrl!: string;
 
     @Emit("onformsubmit")
     onFormSubmitCallback (item: any) {
