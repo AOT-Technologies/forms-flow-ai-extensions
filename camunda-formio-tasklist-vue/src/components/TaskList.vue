@@ -558,22 +558,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  async getBPMTaskDetail (taskId: string) {
-    await CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl).then(
-      async (result) => {
-        this.task = result.data;
-        await CamundaRest.getProcessDefinitionById(
-          this.token,
-          this.task.processDefinitionId!,
-          this.bpmApiUrl
-        ).then((res) => {
-          this.taskProcess = res.data.name;
-        });
-      }
-    );
+    async getBPMTaskDetail (taskId: string) {
+    const taskResult = await CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl);
+    const processResult = await CamundaRest.getProcessDefinitionById(this.token, taskResult.data.processDefinitionId, this.bpmApiUrl);
+    const applicationResult = await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl);
+    this.task = taskResult.data;
+    this.taskProcess = processResult.data.name;
+    this.applicationId = applicationResult.data.applicationId.value;
     await this.getGroupDetails();
   }
-
   async getTaskFormIODetails (taskId: string) {
     if (this.taskIdWebsocket === taskId) {
       this.showForm = false;
@@ -599,17 +592,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   async getTaskHistoryDetails (taskId: string) {
     this.taskHistoryList = [];
-    const result = await CamundaRest.getVariablesByTaskId(
-      this.token,
-      taskId,
-      this.bpmApiUrl
-    );
 
-    if (result.data && result.data["applicationId"]?.value) {
-      this.applicationId = result.data["applicationId"].value;
+    if (this.applicationId) {
       const applicationHistoryList = await getformHistoryApi(
         this.formsflowaiApiUrl,
-        result.data["applicationId"].value,
+        this.applicationId,
         this.token
       );
       this.taskHistoryList = applicationHistoryList.applications;
