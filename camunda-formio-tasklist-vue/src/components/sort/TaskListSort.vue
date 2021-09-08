@@ -184,24 +184,24 @@ export default class TaskListSort extends Vue {
     });
   }
   getTaskSortOption () {
-      
-    if (TASK_FILTER_LIST_DEFAULT_PARAM_CREATED.sortBy === this.taskSortBy){
-      this.payload.sorting = [TASK_FILTER_LIST_DEFAULT_PARAM_CREATED];
-    }
     if (TASK_SORT_DEFAULT_DUE_DATE.sortBy === this.taskSortBy){
       this.payload.sorting = [TASK_SORT_DEFAULT_DUE_DATE];
     }
-    if (TASK_SORT_DEFAULT_FOLLOW_UP_DATE.sortBy === this.taskSortBy){
+    else if (TASK_SORT_DEFAULT_FOLLOW_UP_DATE.sortBy === this.taskSortBy){
       this.payload.sorting = [TASK_SORT_DEFAULT_FOLLOW_UP_DATE];
     }
-    if (TASK_SORT_DEFAULT_PARAM_NAME.sortBy === this.taskSortBy){
+    else if (TASK_SORT_DEFAULT_PARAM_NAME.sortBy === this.taskSortBy){
       this.payload.sorting = [TASK_SORT_DEFAULT_PARAM_NAME];
     }
-    if (TASK_SORT_DEFAULT_ASSINGEE.sortBy === this.taskSortBy){
+    else if (TASK_SORT_DEFAULT_ASSINGEE.sortBy === this.taskSortBy){
       this.payload.sorting = [TASK_SORT_DEFAULT_ASSINGEE];
     }
-    if (TASK_SORT_DEFAULT_PRIORITY.sortBy === this.taskSortBy){
+    else if (TASK_SORT_DEFAULT_PRIORITY.sortBy === this.taskSortBy){
       this.payload.sorting = [TASK_SORT_DEFAULT_PRIORITY];
+    } else 
+    {
+      // created is the default task sort
+      this.payload.sorting = [TASK_FILTER_LIST_DEFAULT_PARAM_CREATED];
     }
     this.sortList = this.payload.sorting;
   }
