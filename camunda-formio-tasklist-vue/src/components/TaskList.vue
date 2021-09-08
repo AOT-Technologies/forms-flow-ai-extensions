@@ -10,7 +10,15 @@
       :payload="payload"
     />
     <b-row class="cft-service-task-list mt-1">
-      <b-col xl="3" lg="3" md="12" :class="containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'" v-if="maximize">
+      <b-col
+        xl="3"
+        lg="3"
+        md="12"
+        :class="
+          containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'
+        "
+        v-if="maximize"
+      >
         <LeftSider
           v-if="token && bpmApiUrl"
           :token="token"
@@ -28,7 +36,9 @@
         v-if="getFormsFlowTaskId && task"
         :lg="maximize ? 9 : 12"
         md="12"
-        :class="containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'"
+        :class="
+          containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'
+        "
       >
         <div class="cft-service-task-details">
           <b-row>
@@ -201,11 +211,17 @@
                       />
                       <i
                         @click="onSetassignee"
-                        class="fa fa-check cft-assignee-tickmark-icon cft-icon-border"
+                        class="
+                          fa fa-check
+                          cft-assignee-tickmark-icon cft-icon-border
+                        "
                       ></i>
                       <i
                         @click="toggleassignee"
-                        class="fa fa-times cft-assignee-cancel-icon cft-icon-border"
+                        class="
+                          fa fa-times
+                          cft-assignee-cancel-icon cft-icon-border
+                        "
                       ></i>
                       <b-dropdown
                         id="dropdown-right"
@@ -213,7 +229,9 @@
                         variant="primary"
                       >
                         <template #button-content>
-                          <span><i class="fa fa-filter cft-assignee-filter-icon" /></span>
+                          <span
+                            ><i class="fa fa-filter cft-assignee-filter-icon"
+                          /></span>
                         </template>
                         <b-dd-item
                           v-for="(row, index) in UserSearchListLabel"
@@ -333,7 +351,11 @@ import {
   reviewerGroup,
 } from "../services/constants";
 import { Component, Mixins, Prop } from "vue-property-decorator";
-import { CustomEventPayload, TaskPayload, UserSearchListLabelPayload } from "../models/TaskPayload";
+import {
+  CustomEventPayload,
+  TaskPayload,
+  UserSearchListLabelPayload,
+} from "../models/TaskPayload";
 import {
   TASK_FILTER_LIST_DEFAULT_PARAM,
   findFilterKeyOfAllTask,
@@ -407,8 +429,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private submissionId: string = "";
   private formioUrl: string = "";
   private task: TaskPayload = {};
-  private setFollowup: Array<Date| null> = [];
-  private setDue: Array<Date| null> = [];
+  private setFollowup: Array<Date | null> = [];
+  private setDue: Array<Date | null> = [];
   private setGroup = null;
   private userSelected: UserListPayload = {};
   public perPage: number = 10;
@@ -474,7 +496,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async onFormSubmitCallback (actionType = "") {
-    if (this.task.id!==null) {
+    if (this.task.id !== null) {
       await this.onBPMTaskFormSubmit(this.task.id!, actionType);
       await this.reloadTasks();
     }
@@ -558,13 +580,19 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-    async getBPMTaskDetail (taskId: string) {
-    const taskResult = await CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl);
-    const processResult = await CamundaRest.getProcessDefinitionById(this.token, taskResult.data.processDefinitionId, this.bpmApiUrl);
-    const applicationResult = await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl);
+  async getBPMTaskDetail (taskId: string) {
+    const [taskResult, applicationIdResult] = await Promise.all([
+      CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl),
+      CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl),
+    ]);
+    const processResult = await CamundaRest.getProcessDefinitionById(
+      this.token,
+      taskResult.data.processDefinitionId,
+      this.bpmApiUrl
+    );
     this.task = taskResult.data;
     this.taskProcess = processResult.data.name;
-    this.applicationId = applicationResult.data.applicationId.value;
+    this.applicationId = applicationIdResult.data.applicationId.value;
     await this.getGroupDetails();
   }
   async getTaskFormIODetails (taskId: string) {
@@ -849,7 +877,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async findTaskIdDetailsFromURLrouter (taskId: string, fulltasks: TaskPayload[]) {
+  async findTaskIdDetailsFromURLrouter (
+    taskId: string,
+    fulltasks: TaskPayload[]
+  ) {
     this.task = getTaskFromList(fulltasks, taskId);
     this.setFormsFlowTaskId(this.taskIdValue);
     const pos = fulltasks
