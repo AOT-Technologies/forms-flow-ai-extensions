@@ -15,12 +15,6 @@ export const findFilterKeyOfAllTask = (array: FilterPayload[], value: string) =>
   return array[0]["id"];
 };
 
-export const TASK_FILTER_LIST_DEFAULT_PARAM = [{
-  sortBy: "created",
-  sortOrder: "desc",
-  label: "Created"
-}];
-
 export const sortingList = [
   { "sortOrder": "desc", "label": "Created", "sortBy": "created" },
   { "sortOrder": "desc", "label": "Due Date", "sortBy": "dueDate" },

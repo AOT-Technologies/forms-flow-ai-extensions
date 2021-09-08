@@ -57,13 +57,19 @@
 import "../../styles/camundaFormIOTasklist.scss";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import {
-  TASK_FILTER_LIST_DEFAULT_PARAM,
-  sortingList,
-} from "../../services/utils";
+  TASK_FILTER_LIST_DEFAULT_PARAM_CREATED,
+  TASK_SORT_DEFAULT_ASSINGEE,
+  TASK_SORT_DEFAULT_DUE_DATE,
+  TASK_SORT_DEFAULT_FOLLOW_UP_DATE,
+  TASK_SORT_DEFAULT_PARAM_NAME,
+  TASK_SORT_DEFAULT_PRIORITY,
+  TaskListSortType,
+} from "../../models";
 import { Payload } from "../../models/Payload";
-import {TaskListSortElement} from "../../models/SortingPayload";
 import TaskSortOptions from "../sort/TaskListSortoptions.vue";
 import { namespace } from "vuex-class";
+import { sortingList } from "../../services";
+
 const serviceFlowModule = namespace("serviceFlowModule");
 @Component({
   components: {
@@ -74,21 +80,24 @@ export default class TaskListSort extends Vue {
   @Prop() private perPage!: number;
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
+  @Prop() private taskSortBy!: string
+
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
   public setFormsFlowTaskCurrentPage: any;
-  private sortList: TaskListSortElement[] = TASK_FILTER_LIST_DEFAULT_PARAM;
-  private sortOptions: TaskListSortElement[] = [];
-  private updateSortOptions: TaskListSortElement[] = [];
+  private sortList: TaskListSortType[] = [];
+  private sortOptions: TaskListSortType[] = [];
+  private updateSortOptions: TaskListSortType[] = [];
   private setupdateSortListDropdownindex = 0;
 
-  getOptions (options: TaskListSortElement[]) {
+  getOptions (options: TaskListSortType[]) {
     const optionsArray: {
       sortOrder: string;
       label: string;
       sortBy: string;
     }[] = [];
+
     sortingList.forEach((sortOption) => {
       if (
         !options.some(
@@ -102,7 +111,7 @@ export default class TaskListSort extends Vue {
   }
 
 
-  addSort (sort: TaskListSortElement) {
+  addSort (sort: TaskListSortType) {
     this.sortList.push(sort);
     if (this.sortList.length === sortingList.length) {
       this.updateSortOptions = this.sortOptions;
@@ -122,7 +131,7 @@ export default class TaskListSort extends Vue {
     });
   }
 
-  updateSort (sort: TaskListSortElement, index: number) {
+  updateSort (sort: TaskListSortType, index: number) {
     this.sortList[index].label = sort.label;
     this.sortList[index].sortBy = sort.sortBy;
     this.sortOptions = this.getOptions(this.sortList);
@@ -139,7 +148,7 @@ export default class TaskListSort extends Vue {
     });
   }
 
-  deleteSort (sort: TaskListSortElement, index: number) {
+  deleteSort (sort: TaskListSortType, index: number) {
     this.sortList.splice(index, 1);
     this.updateSortOptions = [];
     this.sortOptions = this.getOptions(this.sortList);
@@ -174,8 +183,30 @@ export default class TaskListSort extends Vue {
       maxResults: this.perPage,
     });
   }
-
+  getTaskSortOption () {
+      
+    if (TASK_FILTER_LIST_DEFAULT_PARAM_CREATED.sortBy === this.taskSortBy){
+      this.payload.sorting = [TASK_FILTER_LIST_DEFAULT_PARAM_CREATED];
+    }
+    if (TASK_SORT_DEFAULT_DUE_DATE.sortBy === this.taskSortBy){
+      this.payload.sorting = [TASK_SORT_DEFAULT_DUE_DATE];
+    }
+    if (TASK_SORT_DEFAULT_FOLLOW_UP_DATE.sortBy === this.taskSortBy){
+      this.payload.sorting = [TASK_SORT_DEFAULT_FOLLOW_UP_DATE];
+    }
+    if (TASK_SORT_DEFAULT_PARAM_NAME.sortBy === this.taskSortBy){
+      this.payload.sorting = [TASK_SORT_DEFAULT_PARAM_NAME];
+    }
+    if (TASK_SORT_DEFAULT_ASSINGEE.sortBy === this.taskSortBy){
+      this.payload.sorting = [TASK_SORT_DEFAULT_ASSINGEE];
+    }
+    if (TASK_SORT_DEFAULT_PRIORITY.sortBy === this.taskSortBy){
+      this.payload.sorting = [TASK_SORT_DEFAULT_PRIORITY];
+    }
+    this.sortList = this.payload.sorting;
+  }
   mounted () {
+    this.getTaskSortOption();
     this.sortOptions = this.getOptions(this.sortList);
   }
 }

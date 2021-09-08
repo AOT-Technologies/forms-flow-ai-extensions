@@ -8,6 +8,7 @@
       :perPage="perPage"
       :selectedfilterId="selectedfilterId"
       :payload="payload"
+      :taskSortBy="taskSortBy"
     />
     <b-row class="cft-service-task-list mt-1">
       <b-col xl="3" lg="3" md="12" :class="containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'" v-if="maximize">
@@ -335,11 +336,11 @@ import {
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import { CustomEventPayload, TaskPayload, UserSearchListLabelPayload } from "../models/TaskPayload";
 import {
-  TASK_FILTER_LIST_DEFAULT_PARAM,
+  TaskListSortType,
   findFilterKeyOfAllTask,
   getTaskFromList,
-  getUserName,
-} from "../services/utils";
+  getUserName
+} from "../services";
 import { UserListPayload, UserPayload } from "../models/UserPayload";
 import BpmnViewer from "bpmn-js";
 import CamundaRest from "../services/camunda-rest";
@@ -385,6 +386,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
   @Prop() private containerHeight!: string;
   @Prop({ default: "lastName" }) userListType!: string;
+  @Prop({default: "created"}) public taskSortBy!: string
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -431,7 +433,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private xmlData!: string;
   private payload: Payload = {
     active: true,
-    sorting: TASK_FILTER_LIST_DEFAULT_PARAM,
+    sorting: [] as TaskListSortType[],
     firstResult: 0,
     maxResults: this.perPage,
   };
@@ -445,7 +447,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private showForm: boolean = false;
   private activeUserSearchindex = 1;
   private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
-
+  
   checkforTaskID () {
     if (this.getTaskId) {
       this.taskIdValue = this.getTaskId;
