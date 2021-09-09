@@ -272,19 +272,16 @@
                       spinner-type="none"
                       aria-busy="true"
                     >
-                      <!-- don't remove form-render class -->
-                      <formio
-                        v-if="formioUrl"
-                        :src="formioUrl"
-                        :options="
-                          task.assignee !== userName
-                            ? readFormOptions
-                            : editFormoptions
-                        "
-                        v-on:submit="onFormSubmitCallback"
-                        v-on:customEvent="oncustomEventCallback"
-                        class="form-render"
-                      ></formio>
+                      <div v-if="task.assignee === userName">
+                        <FormEdit
+                          :formioUrl="formioUrl"
+                          @onformsubmit="onFormSubmitCallback"
+                          @oncustomevent="oncustomEventCallback"
+                        />
+                      </div>
+                      <div v-else>
+                        <FormView :formioUrl="formioUrl"/>
+                      </div>
                     </b-overlay>
                   </div>
                 </b-tab>
@@ -322,7 +319,6 @@
 
 <script lang="ts">
 import "font-awesome/scss/font-awesome.scss";
-import "formiojs/dist/formio.full.min.css";
 import "vue2-datepicker/index.css";
 import "semantic-ui-css/semantic.min.css";
 import "../styles/user-styles.css";
@@ -346,9 +342,10 @@ import CamundaRest from "../services/camunda-rest";
 import DatePicker from "vue2-datepicker";
 import ExpandContract from "./addons/ExpandContract.vue";
 import { FilterPayload } from "../models/FilterPayload";
-import { Form } from "vue-formio";
+import FormEdit from "./form/Edit.vue";
 import { FormRequestActionPayload } from "../models/FormRequestActionPayload";
 import { FormRequestPayload } from "../models/FormRequestPayload";
+import FormView from "./form/View.vue";
 import { GroupListPayload } from "../models/GroupListPayload";
 import Header from "./layout/Header.vue";
 import LeftSider from "./layout/LeftSider.vue";
@@ -371,7 +368,6 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 
 @Component({
   components: {
-    formio: Form,
     DatePicker,
     TaskHistory,
     Header,
@@ -379,12 +375,13 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
     vSelect,
     ExpandContract,
     BpmnViewer,
+    FormEdit,
+    FormView
   },
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
   @Prop() private containerHeight!: string;
-  @Prop({ default: "lastName" }) userListType!: string;
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -413,13 +410,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private userSelected: UserListPayload = {};
   public perPage: number = 10;
   private tasklength: number = 0;
-  private editFormoptions: object = {
-    noAlerts: false,
-    i18n: {
-      en: { error: "Please fix the errors before submitting again." },
-    },
-  };
-  private readFormOptions: object = { readOnly: true };
   private filterList: FilterPayload[] = [];
   private editAssignee: boolean = false;
   private applicationId: string = "";
