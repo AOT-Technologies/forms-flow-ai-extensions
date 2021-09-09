@@ -89,7 +89,7 @@
 <script lang="ts">
 import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
 import BaseMixin from "../mixins/BaseMixin.vue";
-import CamundaRest from "../../services/camunda-rest";
+import { CamundaRest } from "../../services/camunda-rest";
 import { Payload } from "../../models/Payload";
 import TaskListSearch from "../search/TaskListSearch.vue";
 import cloneDeep from "lodash/cloneDeep";

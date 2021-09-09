@@ -44,7 +44,7 @@
 <script lang="ts">
 import "../../styles/camundaFormIOFormList.scss";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import CamundaRest from "../../services/camunda-rest";
+import { CamundaRest } from "../../services/camunda-rest";
 
 @Component
 export default class FormList extends Vue {

@@ -322,6 +322,7 @@
 </template>
 
 <script lang="ts">
+
 import "font-awesome/scss/font-awesome.scss";
 import "formiojs/dist/formio.full.min.css";
 import "vue2-datepicker/index.css";
@@ -330,20 +331,24 @@ import "../styles/user-styles.css";
 import "../styles/camundaFormIOTasklist.scss";
 import {
   ALL_FILTER,
+  CamundaRest,
   SEARCH_USERS_BY,
+  SocketIOService,
+  TaskListSortType,
+  authenticateFormio,
+  findFilterKeyOfAllTask,
+  getFormDetails,
+  getISODateTime,
+  getTaskFromList,
+  getUserName,
+  getformHistoryApi,
   reviewerGroup,
-} from "../services/constants";
+  sortByPriorityList
+} from "../services";
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import { CustomEventPayload, TaskPayload, UserSearchListLabelPayload } from "../models/TaskPayload";
-import {
-  TaskListSortType,
-  findFilterKeyOfAllTask,
-  getTaskFromList,
-  getUserName
-} from "../services";
 import { UserListPayload, UserPayload } from "../models/UserPayload";
 import BpmnViewer from "bpmn-js";
-import CamundaRest from "../services/camunda-rest";
 import DatePicker from "vue2-datepicker";
 import ExpandContract from "./addons/ExpandContract.vue";
 import { FilterPayload } from "../models/FilterPayload";
@@ -354,18 +359,12 @@ import { GroupListPayload } from "../models/GroupListPayload";
 import Header from "./layout/Header.vue";
 import LeftSider from "./layout/LeftSider.vue";
 import { Payload } from "../models/Payload";
-import SocketIOService from "../services/SocketIOServices";
 import TaskHistory from "../components/addons/TaskHistory.vue";
 import { TaskHistoryListPayload } from "../models/TaskHistoryListPayload";
 import TaskListMixin from "./mixins/TaskListMixin.vue";
-import { authenticateFormio } from "../services/formio-token";
-import { getFormDetails } from "../services/get-formio";
-import { getISODateTime } from "../services/format-time";
-import { getformHistoryApi } from "../services/formsflowai-api";
 import moment from "moment";
 import { namespace } from "vuex-class";
 import serviceFlowModule from "../store/modules/serviceFlow-module";
-import { sortByPriorityList } from "../services/filterListFormatterService";
 import vSelect from "vue-select";
 
 const StoreServiceFlowModule = namespace("serviceFlowModule");

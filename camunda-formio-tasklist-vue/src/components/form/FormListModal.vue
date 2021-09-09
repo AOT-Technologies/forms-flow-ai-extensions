@@ -95,7 +95,7 @@ import "../../styles/camundaFormIOFormList.scss";
 import { Component, Mixins } from "vue-property-decorator";
 import { FormListFieldsPayload, FormListItemsPayload, FormioSubmissionPayload } from "../../models/FormListPayload";
 import BaseMixin from "../mixins/BaseMixin.vue";
-import CamundaRest from "../../services/camunda-rest";
+import { CamundaRest } from "../../services/camunda-rest";
 import { CustomEventPayload } from "../../models/TaskPayload";
 import { FORMLIST_FIELDS } from "../../services/constants";
 import { Form } from "vue-formio";

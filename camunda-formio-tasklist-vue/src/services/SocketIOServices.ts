@@ -64,10 +64,9 @@ disconnect = () => {
   stompClient.disconnect();
 };
 
-const SocketIOService = {
+export const SocketIOService = {
   connect,
   disconnect,
   isConnected,
 };
 
-export default SocketIOService;

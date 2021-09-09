@@ -1,5 +1,4 @@
 
-export * from "../models/sortOptions";
 export * from "./axios";
 export * from "./camunda-rest";
 export * from "./constants";

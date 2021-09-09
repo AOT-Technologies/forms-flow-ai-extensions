@@ -38,7 +38,6 @@ import BaseMixin from "../mixins/BaseMixin.vue";
 import { FilterPayload } from "../../models/FilterPayload";
 import FormListModal from "../form/FormListModal.vue";
 import { Payload } from "../../models/Payload";
-import { TaskListSortType } from "@/services";
 import TaskListSort from "../sort/TaskListSort.vue";
 import { namespace } from "vuex-class";
 
