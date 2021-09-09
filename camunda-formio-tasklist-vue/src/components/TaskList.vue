@@ -382,7 +382,6 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
   @Prop() private containerHeight!: string;
-  //@Prop({ default: "lastName" }) userListType!: string;
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
