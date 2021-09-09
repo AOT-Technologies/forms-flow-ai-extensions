@@ -29,16 +29,20 @@
           hover
           responsive
           caption-top
-          small
           :fields="formfields"
           :items="formitems"
           :per-page="formperPage"
           :current-page="formcurrentPage"
           id="formListTable"
         >
+          <template #cell(formName)="data">
+            <span class="font-weight-bold text-justify">{{data.item.formName}}</span>
+          </template>
           <template #cell(operations)="data">
             <b-button
+              squared
               variant="primary"
+              size="small"
               v-b-modal.modal-multi-2
               @click="storeFormValue(data.item.formId, data.item.formName)"
             >Submit New</b-button>
