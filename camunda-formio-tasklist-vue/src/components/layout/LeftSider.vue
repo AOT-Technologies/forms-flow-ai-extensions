@@ -11,7 +11,7 @@
         v-for="(task, idx) in tasks"
         v-bind:key="task.id"
         v-on:click="toggle(idx)"
-        :class="{ 'cft-selected': idx == activeIndex }"
+        :class="{ 'cft-selected': task.id == getFormsFlowTaskId }"
       >
         <div @click="setselectedTask(task.id)" class="cft-select-task">
           <span class="cft-task-title font-weight-bold" data-title="Task Name">{{ task.name }}</span>
