@@ -345,25 +345,36 @@ import {
   reviewerGroup,
   sortByPriorityList
 } from "../services";
-import { Component, Mixins, Prop } from "vue-property-decorator";
-import { CustomEventPayload, TaskPayload, UserSearchListLabelPayload } from "../models/TaskPayload";
-import { UserListPayload, UserPayload } from "../models/UserPayload";
+import {
+  Component, Mixins, Prop 
+} from "vue-property-decorator";
+import {
+  CustomEventPayload, 
+  FilterPayload, 
+  FormRequestActionPayload, 
+  FormRequestPayload, 
+  GroupListPayload, 
+  Payload, 
+  TaskHistoryListPayload, 
+  TaskPayload, 
+  UserListPayload, 
+  UserPayload, 
+  UserSearchListLabelPayload 
+} from "../models";
 import BpmnViewer from "bpmn-js";
 import DatePicker from "vue2-datepicker";
 import ExpandContract from "./addons/ExpandContract.vue";
-import { FilterPayload } from "../models/FilterPayload";
-import { Form } from "vue-formio";
-import { FormRequestActionPayload } from "../models/FormRequestActionPayload";
-import { FormRequestPayload } from "../models/FormRequestPayload";
-import { GroupListPayload } from "../models/GroupListPayload";
+import {
+  Form 
+} from "vue-formio";
 import Header from "./layout/Header.vue";
 import LeftSider from "./layout/LeftSider.vue";
-import { Payload } from "../models/Payload";
 import TaskHistory from "../components/addons/TaskHistory.vue";
-import { TaskHistoryListPayload } from "../models/TaskHistoryListPayload";
 import TaskListMixin from "./mixins/TaskListMixin.vue";
 import moment from "moment";
-import { namespace } from "vuex-class";
+import {
+  namespace 
+} from "vuex-class";
 import serviceFlowModule from "../store/modules/serviceFlow-module";
 import vSelect from "vue-select";
 
@@ -384,8 +395,12 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
   @Prop() private containerHeight!: string;
-  @Prop({ default: "lastName" }) userListType!: string;
-  @Prop({default: "created"}) public taskSortBy!: string
+  @Prop({
+    default: "lastName"
+  }) userListType!: string;
+  @Prop({
+    default: "created"
+  }) public taskSortBy!: string
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -407,20 +422,26 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private formId: string = "";
   private submissionId: string = "";
   private formioUrl: string = "";
-  private task: TaskPayload = {};
+  private task: TaskPayload = {
+  };
   private setFollowup: Array<Date| null> = [];
   private setDue: Array<Date| null> = [];
   private setGroup = null;
-  private userSelected: UserListPayload = {};
+  private userSelected: UserListPayload = {
+  };
   public perPage: number = 10;
   private tasklength: number = 0;
   private editFormoptions: object = {
     noAlerts: false,
     i18n: {
-      en: { error: "Please fix the errors before submitting again." },
+      en: {
+        error: "Please fix the errors before submitting again."
+      },
     },
   };
-  private readFormOptions: object = { readOnly: true };
+  private readFormOptions: object = {
+    readOnly: true
+  };
   private filterList: FilterPayload[] = [];
   private editAssignee: boolean = false;
   private applicationId: string = "";
@@ -544,9 +565,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if (actionType !== "") {
       const newformRequestFormat: FormRequestActionPayload = Object.assign(
         formRequestFormat.variables,
-        { action: { value: actionType } }
+        {
+          action: {
+            value: actionType
+          }
+        }
       );
-      formRequestFormat = { variables: newformRequestFormat };
+      formRequestFormat = {
+        variables: newformRequestFormat
+      };
     }
 
     await CamundaRest.formTaskSubmit(
@@ -584,7 +611,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       (result) => {
         if (result.data["formUrl"]?.value) {
           const formUrlPattern = result.data["formUrl"]?.value;
-          const { formioUrl, formId, submissionId } = getFormDetails(
+          const {
+            formioUrl, formId, submissionId 
+          } = getFormDetails(
             formUrlPattern,
             this.formIOApiUrl
           );
@@ -688,7 +717,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     CamundaRest.claim(
       this.token,
       this.task.id!,
-      { userId: this.userName },
+      {
+        userId: this.userName
+      },
       this.bpmApiUrl
     )
       .then(() => {
@@ -719,7 +750,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     await CamundaRest.setassignee(
       this.token,
       this.task.id!,
-      { userId: this.userSelected?.code },
+      {
+        userId: this.userSelected?.code
+      },
       this.bpmApiUrl
     )
       .then(async () => {

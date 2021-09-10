@@ -12,10 +12,9 @@ module.exports = {
     ecmaVersion: 2020,
   },
   rules: {
-    "no-console": "warn",
+    "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "vue/no-unused-components": "warn",
-    "sort-imports": "warn",
+    "vue/no-unused-components": "error",
     "camelcase": "warn",
     "vue/valid-template-root": "warn",
     "indent": ["warn", 2],
@@ -28,6 +27,10 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": "off",
     "semi": ["warn", "always"],
     "eol-last": ["error", "always"],
-    "block-spacing": "error"
+    "block-spacing": "error",
+    "linebreak-style": "error",
+    "object-curly-newline": ["error", "always"],
+    "@typescript-eslint/no-explicit-any": "off",
+    "object-curly-spacing": ["error", "always"]
   },
 };
