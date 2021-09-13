@@ -40,7 +40,9 @@
 
 <script lang="ts">
 import "../../styles/camundaFormIOTasklistSearch.scss";
-import { Component, Emit, Prop, Vue } from "vue-property-decorator";
+import {
+  Component, Emit, Prop, Vue 
+} from "vue-property-decorator";
 import {
   FilterSearchTypes,
   getDeletedVariableIndex,
@@ -51,7 +53,9 @@ import {
 import TaskListAddSearchIgnoreCase from "./TaskListAddSearchIgnoreCase.vue";
 import TaskListSearchType from "./TaskListSearchType.vue";
 import TaskSearchItem from "./TaskSearchItem.vue";
-import { getISODateTime } from "../../services/format-time";
+import {
+  getISODateTime 
+} from "../../services/format-time";
 
 @Component({
   components: {
@@ -61,7 +65,9 @@ import { getISODateTime } from "../../services/format-time";
   },
 })
 export default class TaskListSearch extends Vue {
-  @Prop({ default: 0 }) private tasklength!: number;
+  @Prop({
+    default: 0 
+  }) private tasklength!: number;
 
   private searchListElements: any = taskSearchFilters;
   private queryType: string = "ALL";
@@ -271,7 +277,9 @@ export default class TaskListSearch extends Vue {
     if (this.queryType === "ALL") {
       return this.queryList;
     } else {
-      return { orQueries: [this.queryList] };
+      return {
+        orQueries: [this.queryList] 
+      };
     }
   }
 

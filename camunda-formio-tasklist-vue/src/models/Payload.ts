@@ -1,4 +1,6 @@
-import { TaskListSortType } from "@/services/";
+import {
+  TaskListSortType 
+} from "@/services/";
 export interface Payload {
   active?: boolean;
   sorting: TaskListSortType[];

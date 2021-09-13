@@ -1,5 +1,9 @@
-import { httpGETRequest, httpPOSTRequest } from "./axios";
-import {ApplicationCreatePayload} from "../models/ApplicationCreatePayload";
+import {
+  httpGETRequest, httpPOSTRequest 
+} from "./axios";
+import {
+  ApplicationCreatePayload
+} from "../models/ApplicationCreatePayload";
 
 export const formApplicationSubmit = (
   Apiurl: string,
@@ -16,7 +20,8 @@ export const getformHistoryApi = async(
 ) => {
   return httpGETRequest(
     ApiUrl + "/application/" + applicationId + "/history",
-    {},
+    {
+    },
     token
   );
 };

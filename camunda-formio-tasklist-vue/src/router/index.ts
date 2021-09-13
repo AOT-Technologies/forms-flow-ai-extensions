@@ -1,4 +1,6 @@
-import VueRouter, { RouteConfig } from 'vue-router';
+import VueRouter, {
+  RouteConfig 
+} from 'vue-router';
 import FormViewSubmission from '@/components/FormViewSubmission.vue';
 import Tasklist from '@/views/TaskList.vue';
 

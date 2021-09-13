@@ -1,5 +1,7 @@
 <script lang="ts">
-import { Component, Mixins } from "vue-property-decorator";
+import {
+  Component, Mixins 
+} from "vue-property-decorator";
 import BaseMixin from "./BaseMixin.vue";
 
 @Component({

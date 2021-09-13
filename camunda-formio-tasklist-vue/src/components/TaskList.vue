@@ -634,7 +634,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       taskId,
       this.bpmApiUrl
     );
-
+    this.applicationId = "";
     if (result.data && result.data["applicationId"]?.value) {
       this.applicationId = result.data["applicationId"].value;
       const applicationHistoryList = await getformHistoryApi(
