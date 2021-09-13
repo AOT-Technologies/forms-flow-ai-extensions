@@ -13,7 +13,7 @@ export const formApplicationSubmit = (
   return httpPOSTRequest(Apiurl + "/application/create", data, token);
 };
 
-export const getformHistoryApi = async(
+export const getformHistoryApi = async (
   ApiUrl: string,
   applicationId: string,
   token: string
