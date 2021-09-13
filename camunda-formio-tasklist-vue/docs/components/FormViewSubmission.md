@@ -12,7 +12,8 @@ History.
 
 ## Usage
 
-```<template>
+```
+<template>
     <FormViewSubmission
       v-if="formId && submissionId"
       :formid="formId"
