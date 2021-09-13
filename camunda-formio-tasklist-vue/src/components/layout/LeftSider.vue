@@ -92,16 +92,13 @@ import {
 } from "vue-property-decorator";
 import BaseMixin from "../mixins/BaseMixin.vue";
 import {
-  CamundaRest 
-} from "../../services/camunda-rest";
+  CamundaRest, getFormattedDateAndTime
+} from "../../services";
 import {
   Payload 
 } from "../../models/Payload";
 import TaskListSearch from "../search/TaskListSearch.vue";
 import cloneDeep from "lodash/cloneDeep";
-import {
-  getFormattedDateAndTime 
-} from "../../services/format-time";
 import isEqual from "lodash/isEqual";
 import moment from "moment";
 import {
@@ -139,7 +136,6 @@ export default class LeftSider extends Mixins(BaseMixin) {
   private getProcessDefinitions: Array<object> = [];
   private processDefinitionId = "";
   private activeIndex = NaN;
-  private sList: any;
   private currentPage = 1;
 
   @Watch("currentPage")

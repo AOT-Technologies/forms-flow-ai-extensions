@@ -16,7 +16,7 @@ import {
 } from "vue-formio";
 import {
   getFormDetails 
-} from "../services/get-formio";
+} from "../services";
 
 @Component({
   components: {

@@ -96,24 +96,21 @@ import {
   Component, Mixins 
 } from "vue-property-decorator";
 import {
-  FormListFieldsPayload, FormListItemsPayload, FormioSubmissionPayload 
-} from "../../models/FormListPayload";
+  CustomEventPayload,
+  FormListFieldsPayload,
+  FormListItemsPayload,
+  FormioSubmissionPayload 
+} from "../../models";
 import BaseMixin from "../mixins/BaseMixin.vue";
 import {
   CamundaRest 
 } from "../../services/camunda-rest";
 import {
-  CustomEventPayload 
-} from "../../models/TaskPayload";
-import {
-  FORMLIST_FIELDS 
-} from "../../services/constants";
+  formApplicationSubmit, FORMLIST_FIELDS 
+} from "../../services";
 import {
   Form 
 } from "vue-formio";
-import {
-  formApplicationSubmit 
-} from "../../services/formsflowai-api";
 
 @Component({
   components: {
