@@ -19,8 +19,8 @@ History.
       :formid="formId"
       :submissionid="submissionId"
     />
-    </template>
-    <script>
-    import FormViewSubmission from "camunda-formio-tasklist-vue/src/components/FormViewSubmission.vue";
-    </script>
+</template>
+<script>
+import FormViewSubmission from "camunda-formio-tasklist-vue/src/components/FormViewSubmission.vue";
+</script>
 ```
