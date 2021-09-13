@@ -21,7 +21,8 @@ solution in your Vue.js based project.
 
 ## Usage
 
-```<template>
+```
+<template>
     <CamundaTasklist
       :bpmApiUrl="configs.BPM_URL"
       :token="jwttoken"
