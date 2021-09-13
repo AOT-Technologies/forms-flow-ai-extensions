@@ -1,21 +1,23 @@
 # camunda-formio-tasklist-vue
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
 ![image](https://user-images.githubusercontent.com/70306694/124284590-c3078b80-db6a-11eb-81c7-921cfbe46495.png)
 
-This is a NPM package for formsflow.ai solution. It can be used
-as a  Vue component build for to integrate Camunda Tasklist, associated
+This is an NPM package for using the formsflow.ai solution. It can be used
+as a  Vue component build to integrate Camunda Tasklist, associated
 forms in a bundled solution.  
 
 :inbox_tray: You can install it [NPM package manager](https://www.npmjs.com/package/camunda-formio-tasklist-vue).
 
 
-## Things to look out when integrating :information_source:
+## Things to look out for when integrating :information_source:
 
 - Install the latest version of [Camunda-formio-tasklist-vue](https://www.npmjs.com/package/camunda-formio-tasklist-vue) and [bootstrap-vue](https://bootstrap-vue.org/)
 - Ensure you import the appropriate Vue component as defined in [TaskList View](https://github.com/AOT-Technologies/forms-flow-ai-extensions/blob/master/camunda-formio-tasklist-vue/src/views/TaskList.vue) and do the environment configuration in the integrated solution.
 - In your `main.ts` remember to import bootstrap-vue dependencies.
-[Refer this example project](https://github.com/AOT-Technologies/service-flow-vue/blob/main/src/main.ts).
-- Write a seperate router in integration project for defining routers for
+[Refer to this example project](https://github.com/AOT-Technologies/service-flow-vue/blob/main/src/main.ts).
+- Write a separate router in the integration project for defining routers for
 Application History `view submission` using our component to view
 the Form.
 
@@ -29,7 +31,7 @@ used to integrate formsflow.ai solution in your Vue.js based project.
 
 :beginner: [Documentation for TaskList component](./docs/components/TaskList.md)
 
-**FormViewSubmission component** - The component for viewing the the Forms Submission.
+**FormViewSubmission component** - The component for viewing the Forms Submission.
 
 :beginner: [Documentation for FormViewSubmission component](./docs/components/FormViewSubmission.md)
 
