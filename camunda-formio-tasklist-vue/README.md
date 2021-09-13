@@ -9,7 +9,7 @@ forms in a bundled solution.
 :inbox_tray: You can install it [NPM package manager](https://www.npmjs.com/package/camunda-formio-tasklist-vue).
 
 
-## :information_source: Things to look out when integrating
+## Things to look out when integrating :information_source:
 
 - Install the latest version of [Camunda-formio-tasklist-vue](https://www.npmjs.com/package/camunda-formio-tasklist-vue) and [bootstrap-vue](https://bootstrap-vue.org/)
 - Ensure you import the appropriate Vue component as defined in [TaskList View](https://github.com/AOT-Technologies/forms-flow-ai-extensions/blob/master/camunda-formio-tasklist-vue/src/views/TaskList.vue) and do the environment configuration in the integrated solution.
@@ -22,18 +22,14 @@ the Form.
 A sample project which was used for integration `camunda-formio-tasklist-vue`
 components can be found :point_right: [here](https://github.com/AOT-Technologies/service-flow-vue/).
 
-## Components in camunda-formio-tasklist-vue
+## Components :sparkles:
 
-### TaskList component
-
-The customizable component which can be used to integrate formsflow.ai
-solution in your Vue.js based project.
+**TaskList component** -  The customizable component which can be
+used to integrate formsflow.ai solution in your Vue.js based project.
 
 :beginner: [Documentation for TaskList component](./docs/components/TaskList.md)
 
-### FormViewSubmission component
-
-The component for viewing the the Forms Submission.
+**FormViewSubmission component** - The component for viewing the the Forms Submission.
 
 :beginner: [Documentation for FormViewSubmission component](./docs/components/FormViewSubmission.md)
 
@@ -63,6 +59,6 @@ npm run build --report
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
-## License
+## License :warning:
 
-Code is released under the [Apache License, Version 2.0](./LICENSE). :warning:
+Code is released under the [Apache License, Version 2.0](./LICENSE). 

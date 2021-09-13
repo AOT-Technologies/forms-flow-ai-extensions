@@ -7,8 +7,8 @@ History.
 
 | Name | Type |  Default | Description |
 | --- | --   | --- | ------- |
-|  formId   | string | undefined | Specify the formid of formio form submission you want to view.|
-|  submissionId   | string | undefined | Specify the formid of formio form submission you want to view.|
+|  formId  :triangular_flag_on_post: | string | undefined | Specify the formid of formio form submission you want to view.|
+|  submissionId  :triangular_flag_on_post: | string | undefined | Specify the formid of formio form submission you want to view.|
 
 ## Usage
 
