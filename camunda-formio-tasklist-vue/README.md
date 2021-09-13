@@ -4,20 +4,36 @@
 
 This is a NPM package for formsflow.ai solution. It can be used
 as a  Vue component build for to integrate Camunda Tasklist, associated
-forms in a bundled solution.  You can install it [NPM package manager](https://www.npmjs.com/package/camunda-formio-tasklist-vue).
+forms in a bundled solution.  You can install it :inbox_tray: [NPM package manager](https://www.npmjs.com/package/camunda-formio-tasklist-vue).
 
 
 ## Things to look out when integrating
 
 - Install the latest version of [Camunda-formio-tasklist-vue](https://www.npmjs.com/package/camunda-formio-tasklist-vue) and [bootstrap-vue](https://bootstrap-vue.org/)
 - Ensure you import the appropriate Vue component as defined in [TaskList View](https://github.com/AOT-Technologies/forms-flow-ai-extensions/blob/master/camunda-formio-tasklist-vue/src/views/TaskList.vue) and do the environment configuration in the integrated solution.
-- In your `main.ts` remember to import bootstrap-vue dependencies as [this example project](https://github.com/ann-aot/service-flow-vue/blob/main/src/main.ts).
+- In your `main.ts` remember to import bootstrap-vue dependencies.
+[Refer this example project](https://github.com/AOT-Technologies/service-flow-vue/blob/main/src/main.ts).
 - Write a seperate router in integration project for defining routers for
 Application History `view submission` using our component to view
 the Form.
 
-A sample project which was used for integration `camunda-formio-tasklist-vue`
-components can be found [here](https://github.com/AOT-Technologies/service-flow-vue/).
+:information_source: A sample project which was used for integration `camunda-formio-tasklist-vue`
+components can be found :point_right: [here](https://github.com/AOT-Technologies/service-flow-vue/).
+
+## Components in camunda-formio-tasklist-vue
+
+### TaskList component
+
+The customizable component which can be used to integrate formsflow.ai
+solution in your Vue.js based project.
+
+:beginner: [Documentation for TaskList component](./docs/components/TaskList.md)
+
+### FormViewSubmission component
+
+The component for viewing the the Forms Submission.
+
+:beginner: [Documentation for TaskList component](./docs/components/FormViewSubmission.md)
 
 ## Project Setup
 
@@ -44,21 +60,7 @@ npm run build --report
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-## Required Config Variables
-
-| Variable | Description |
-| --- | --- |
-|`KEYCLOAK_URL`| The URL of the Keycloak server. |
-|`KEYCLOAK_URL_REALM`| The realm of the Keycloak server. |
-|`KEYCLOAK_CLIENT_ID`| The client ID of the client that will be used to authenticate against Keycloak. |
-| `BPM_URL` | Specifies the Camunda Rest API URL. |
-|`FORM_IO_API_URL` | The URL of the form.io server |
-|`FORM_IO_RESOURCE_ID`| User forms form-Id |
-|`FORM_IO_REVIEWER_ID`| forms-flow-forms administrator role Id |
-|`FORM_IO_REVIEWER`| The role name used for designer users. Default value is `formsflow-designer` |
-|`FORM_FLOW_API_URL`| The URL of the form flow API  service. |
-|`FORMIO_ROLES`| The valid FORMIO_ROLES as part of formio service. |
 
 ## License
 
-Code released under the [Apache License, Version 2.0](./LICENSE).
+Code is released under the [Apache License, Version 2.0](./LICENSE). :warning:
