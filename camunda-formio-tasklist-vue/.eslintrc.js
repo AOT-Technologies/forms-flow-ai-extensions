@@ -28,5 +28,6 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": "off",
     "space-before-function-paren": ["warn", "always"],
     "semi": ["warn", "always"],
+    "eol-last": ["error", "always"]
   },
 };
