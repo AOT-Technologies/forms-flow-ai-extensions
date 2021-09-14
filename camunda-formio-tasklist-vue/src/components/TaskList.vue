@@ -477,7 +477,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   toggleassignee () {
     this.editAssignee = !this.editAssignee;
-    this.userSelected["code"] = this.task.assignee;
+    // this.userSelected["code"] = this.task.assignee;
   }
 
   setSelectedUserSearchBy (searchby: string, index: number) {
