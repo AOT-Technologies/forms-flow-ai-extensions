@@ -203,7 +203,7 @@
                   <div v-if="editAssignee" class="cft-user-edit">
                     <div class="cft-assignee-change-box">
                       <v-select
-                        :label="selectSearchType"
+                        label="selectSearchType"
                         :options="reviewerUsersList"
                         v-model="userSelected"
                         placeholder="Search by Lastname"
@@ -584,30 +584,31 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.applicationId = applicationIdResult.data.applicationId.value;
     await this.getGroupDetails();
   }
+
   async getTaskFormIODetails (taskId: string) {
     if (this.taskIdWebsocket === taskId) {
       this.showForm = false;
       this.formioUrl = "";
     }
-    CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl).then(
-      (result) => {
-        if (result.data["formUrl"]?.value) {
-          const formUrlPattern = result.data["formUrl"]?.value;
-          const { formioUrl, formId, submissionId } = getFormDetails(
-            formUrlPattern,
-            this.formIOApiUrl
-          );
+    else {
+      const formResult = await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl);
 
-          this.formioUrl = formioUrl;
-          this.submissionId = submissionId;
-          this.formId = formId;
-        }
-        this.showForm = true;
+      if(formResult.data.formUrl?.value) {
+        const formUrlPattern = formResult.data["formUrl"]?.value;
+        const { formioUrl, formId, submissionId } = getFormDetails(
+          formUrlPattern,
+          this.formIOApiUrl
+        );
+
+        this.formioUrl = formioUrl;
+        this.submissionId = submissionId;
+        this.formId = formId;
       }
-    );
+      this.showForm = true;
+    }
   }
 
-  async getTaskHistoryDetails (taskId: string) {
+  async getTaskHistoryDetails () {
     this.taskHistoryList = [];
 
     if (this.applicationId) {
@@ -621,27 +622,26 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async getTaskProcessDiagramDetails (task: TaskPayload) {
-    await CamundaRest.getProcessDiagramXML(
+    const getProcessResult = await CamundaRest.getProcessDiagramXML(
       this.token,
       task.processDefinitionId!,
       this.bpmApiUrl
-    ).then(async (res) => {
-      this.xmlData = res.data.bpmn20Xml;
-      const div = document.getElementById("canvas");
-      if (div) {
-        div.innerHTML = "";
-      }
-      const viewer = new BpmnViewer({
-        container: "#canvas",
-      });
-
-      try {
-        await viewer.importXML(this.xmlData);
-        viewer.get("canvas").zoom("fit-viewport");
-      } catch (err) {
-        console.error("error rendering process diagram", err); // eslint-disable-line no-console
-      }
+    )
+    this.xmlData = getProcessResult.data.bpmn20Xml;
+    const div = document.getElementById("canvas");
+    if (div) {
+      div.innerHTML = "";
+    }
+    const viewer = new BpmnViewer({
+      container: "#canvas",
     });
+
+    try {
+      await viewer.importXML(this.xmlData);
+      viewer.get("canvas").zoom("fit-viewport");
+    } catch (err) {
+      console.error("error rendering process diagram", err); // eslint-disable-line no-console
+    }
   }
 
   oncustomEventCallback = async (customEvent: CustomEventPayload) => {
@@ -688,34 +688,25 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async onClaim () {
-    CamundaRest.claim(
+    await CamundaRest.claim(
       this.token,
       this.task.id!,
       { userId: this.userName },
       this.bpmApiUrl
     )
-      .then(() => {
-        if (!SocketIOService.isConnected()) {
-          this.fetchTaskData(this.getFormsFlowTaskId);
-          this.reloadLHSTaskList();
-        }
-      })
-      .catch((error) => {
-        console.error("Error", error); // eslint-disable-line no-console
-      });
+    if (!SocketIOService.isConnected()) {
+      this.fetchTaskData(this.getFormsFlowTaskId);
+      this.reloadLHSTaskList();
+    }
   }
 
   async onUnClaim () {
     await CamundaRest.unclaim(this.token, this.task.id!, this.bpmApiUrl)
-      .then(async () => {
-        if (!SocketIOService.isConnected()) {
-          this.fetchTaskData(this.getFormsFlowTaskId);
-          this.reloadLHSTaskList();
-        }
-      })
-      .catch((error) => {
-        console.error("Error", error); // eslint-disable-line no-console
-      });
+
+    if (!SocketIOService.isConnected()) {
+      this.fetchTaskData(this.getFormsFlowTaskId);
+      this.reloadLHSTaskList();
+    }
   }
 
   async onSetassignee () {
@@ -725,36 +716,29 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       { userId: this.userSelected?.code },
       this.bpmApiUrl
     )
-      .then(async () => {
-        this.fetchTaskData(this.getFormsFlowTaskId);
-      })
-      .catch((error) => {
-        console.error("Error", error); // eslint-disable-line no-console
-      });
+    this.fetchTaskData(this.getFormsFlowTaskId);
     await this.toggleassignee();
     await this.reloadLHSTaskList();
   }
 
   async fetchFullTaskList (filterId: string, requestData: Payload) {
-    await CamundaRest.filterTaskList(
+    const taskList = await CamundaRest.filterTaskList(
       this.token,
       filterId,
       requestData,
       this.bpmApiUrl
-    ).then((result) => {
-      this.fulltasks = result.data;
-    });
+    )
+    this.fulltasks = taskList.data;
   }
 
   async fetchTaskListCount (filterId: string, requestData: Payload) {
-    await CamundaRest.filterTaskListCount(
+    const taskListCount = await CamundaRest.filterTaskListCount(
       this.token,
       filterId,
       requestData,
       this.bpmApiUrl
-    ).then((result) => {
-      this.tasklength = result.data.count;
-    });
+    )
+    this.tasklength = taskListCount.data.count;
   }
 
   async fetchPaginatedTaskList (
@@ -764,28 +748,22 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     max: number
   ) {
     this.selectedfilterId = filterId;
-    await CamundaRest.filterTaskListPagination(
+    const paginatedTaskResults = await CamundaRest.filterTaskListPagination(
       this.token,
       filterId,
       requestData,
       first,
       max,
       this.bpmApiUrl
-    ).then((result) => {
-      this.tasks = result.data;
-    });
+    )
+    this.tasks = paginatedTaskResults.data;
   }
 
   async updateTaskDatedetails (taskId: string, task: TaskPayload) {
     await CamundaRest.updateTasksByID(this.token, taskId, this.bpmApiUrl, task)
-      .then(async () => {
-        if (!SocketIOService.isConnected()) {
-          await this.reloadCurrentTask();
-        }
-      })
-      .catch((error) => {
-        console.error("Error", error); // eslint-disable-line no-console
-      });
+    if (!SocketIOService.isConnected()) {
+      await this.reloadCurrentTask();
+    }
   }
 
   async updateFollowUpDate () {
@@ -855,13 +833,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.task = res.data;
     if (this.task) {
       await this.getBPMTaskDetail(taskId);
-      await CamundaRest.getVariablesByProcessId(
+      await Promise.all([CamundaRest.getVariablesByProcessId(
         this.token,
         this.task.processInstanceId!,
         this.bpmApiUrl
-      );
-      await this.getTaskFormIODetails(taskId);
-      await this.getTaskHistoryDetails(taskId);
+      ), this.getTaskFormIODetails(taskId), 
+      this.getTaskHistoryDetails(),
+      ]);
       await this.getTaskProcessDiagramDetails(this.task);
     }
   }
@@ -983,13 +961,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     );
 
-    await CamundaRest.getUsersByMemberGroups(
+    const reviewerList = await CamundaRest.getUsersByMemberGroups(
       this.token,
       this.bpmApiUrl,
       reviewerGroup
-    ).then((response) => {
+    );
+    if(reviewerList) {
       this.reviewerUsersList = [];
-      response.data.forEach((user: UserPayload) => {
+      reviewerList.data.forEach((user: UserPayload) => {
         this.reviewerUsersList.push({
           code: user.id,
           email: user.email!,
@@ -997,7 +976,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           lastName: `${user.lastName!} ${user.firstName!}`,
         });
       });
-    });
+    }
 
     //We used two variables - taskId2 and taskIdValue because the router value from gettaskId
     // is always constant,so after calling the required task details from router to use other
