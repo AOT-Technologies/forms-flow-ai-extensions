@@ -203,10 +203,12 @@
                   <div v-if="editAssignee" class="cft-user-edit">
                     <div class="cft-assignee-change-box">
                       <v-select
-                        label="selectSearchType"
+                        :label="selectSearchType"
                         :options="reviewerUsersList"
+                        :filterable="false"
                         v-model="userSelected"
-                        placeholder="Search by Lastname"
+                        :placeholder="`Search by ${selectSearchType}`"
+                        @search="onUserSearch"
                         class="assignee-align float-left"
                       />
                       <i
@@ -626,7 +628,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.token,
       task.processDefinitionId!,
       this.bpmApiUrl
-    )
+    );
     this.xmlData = getProcessResult.data.bpmn20Xml;
     const div = document.getElementById("canvas");
     if (div) {
@@ -693,7 +695,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.task.id!,
       { userId: this.userName },
       this.bpmApiUrl
-    )
+    );
     if (!SocketIOService.isConnected()) {
       this.fetchTaskData(this.getFormsFlowTaskId);
       this.reloadLHSTaskList();
@@ -701,7 +703,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async onUnClaim () {
-    await CamundaRest.unclaim(this.token, this.task.id!, this.bpmApiUrl)
+    await CamundaRest.unclaim(this.token, this.task.id!, this.bpmApiUrl);
 
     if (!SocketIOService.isConnected()) {
       this.fetchTaskData(this.getFormsFlowTaskId);
@@ -715,7 +717,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.task.id!,
       { userId: this.userSelected?.code },
       this.bpmApiUrl
-    )
+    );
     this.fetchTaskData(this.getFormsFlowTaskId);
     await this.toggleassignee();
     await this.reloadLHSTaskList();
@@ -727,7 +729,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       filterId,
       requestData,
       this.bpmApiUrl
-    )
+    );
     this.fulltasks = taskList.data;
   }
 
@@ -737,7 +739,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       filterId,
       requestData,
       this.bpmApiUrl
-    )
+    );
     this.tasklength = taskListCount.data.count;
   }
 
@@ -755,12 +757,63 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       first,
       max,
       this.bpmApiUrl
-    )
+    );
     this.tasks = paginatedTaskResults.data;
   }
 
+  async onUserSearch (search: string, loading: any) {
+    console.log(loading);
+    if(search.length) {
+      loading(true);
+      this.reviewerUsersList = [];
+    }
+
+    if(this.selectSearchType === "firstName") {
+      const firstNameUserList = await CamundaRest.getUsersByFirstNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
+      if(firstNameUserList) {
+        firstNameUserList.data.forEach((user: any) => {
+          this.reviewerUsersList.push({
+            code: user.id,
+            email: user.email!,
+            firstName: `${user.firstName!} ${user.lastName!}`,
+            lastName: `${user.lastName!} ${user.firstName!}`,});
+        });
+        loading(false);
+      }
+    }
+
+    if(this.selectSearchType === "lastName") {
+      const lastNameUserList = await CamundaRest.getUsersByLastNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
+      if(lastNameUserList) {
+        lastNameUserList.data.forEach((user: any) => {
+          this.reviewerUsersList.push({
+            code: user.id,
+            email: user.email!,
+            firstName: `${user.firstName!} ${user.lastName!}`,
+            lastName: `${user.lastName!} ${user.firstName!}`,});
+        });
+        loading(false);
+      }
+    }
+
+    if(this.selectSearchType === "email") {
+      const emailUserList = await CamundaRest.getUsersByEmailGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
+      if(emailUserList) {
+        emailUserList.data.forEach((user: any) => {
+          this.reviewerUsersList.push({
+            code: user.id,
+            email: user.email!,
+            firstName: `${user.firstName!} ${user.lastName!}`,
+            lastName: `${user.lastName!} ${user.firstName!}`,});
+        });
+        loading(false);
+      }
+    }
+  }
+
+
   async updateTaskDatedetails (taskId: string, task: TaskPayload) {
-    await CamundaRest.updateTasksByID(this.token, taskId, this.bpmApiUrl, task)
+    await CamundaRest.updateTasksByID(this.token, taskId, this.bpmApiUrl, task);
     if (!SocketIOService.isConnected()) {
       await this.reloadCurrentTask();
     }
