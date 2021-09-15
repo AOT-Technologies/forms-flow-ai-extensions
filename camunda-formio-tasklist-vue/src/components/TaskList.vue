@@ -762,7 +762,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async onUserSearch (search: string, loading: any) {
-    console.log(loading);
     if(search.length) {
       loading(true);
       this.reviewerUsersList = [];
@@ -771,7 +770,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if(this.selectSearchType === "firstName") {
       const firstNameUserList = await CamundaRest.getUsersByFirstNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
       if(firstNameUserList) {
-        firstNameUserList.data.forEach((user: any) => {
+        firstNameUserList.data.forEach((user: UserPayload) => {
           this.reviewerUsersList.push({
             code: user.id,
             email: user.email!,
@@ -785,7 +784,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if(this.selectSearchType === "lastName") {
       const lastNameUserList = await CamundaRest.getUsersByLastNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
       if(lastNameUserList) {
-        lastNameUserList.data.forEach((user: any) => {
+        lastNameUserList.data.forEach((user: UserPayload) => {
           this.reviewerUsersList.push({
             code: user.id,
             email: user.email!,
@@ -799,7 +798,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if(this.selectSearchType === "email") {
       const emailUserList = await CamundaRest.getUsersByEmailGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
       if(emailUserList) {
-        emailUserList.data.forEach((user: any) => {
+        emailUserList.data.forEach((user: UserPayload) => {
           this.reviewerUsersList.push({
             code: user.id,
             email: user.email!,
