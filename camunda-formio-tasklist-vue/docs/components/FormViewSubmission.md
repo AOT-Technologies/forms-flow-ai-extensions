@@ -10,6 +10,8 @@ History.
 |  formId  :triangular_flag_on_post: | string | undefined | Specify the formid of formio form submission you want to view.|
 |  submissionId  :triangular_flag_on_post: | string | undefined | Specify the formid of formio form submission you want to view.|
 
+:triangular_flag_on_post:  - mandatory props to be passed
+
 ## Usage
 
 ```
