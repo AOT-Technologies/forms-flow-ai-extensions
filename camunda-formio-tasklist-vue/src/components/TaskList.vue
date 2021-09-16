@@ -27,7 +27,7 @@
           :formIOApiUrl="formIOApiUrl"
           :bpmApiUrl="bpmApiUrl"
           :tasks="tasks"
-          :Lentask="tasklength"
+          :tasklength="tasklength"
           :perPage="perPage"
           :selectedfilterId="selectedfilterId"
           :payload="payload"
