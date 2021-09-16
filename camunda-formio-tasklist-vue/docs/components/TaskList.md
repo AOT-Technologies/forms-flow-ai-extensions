@@ -22,22 +22,18 @@ solution in your Vue.js based project.
 ## Usage
 
 ```
-<template>
-    <CamundaTasklist
-      :bpmApiUrl="configs.BPM_URL"
-      :token="jwttoken"
-      :formIOApiUrl="configs.FORM_IO_API_URL"
-      :formIOResourceId="configs.FORM_IO_RESOURCE_ID"
-      :formIOReviewerId="configs.FORM_IO_REVIEWER_ID"
-      :formIOReviewer="configs.FORM_IO_REVIEWER"
-      :formsflowaiUrl="configs.FORM_FLOW_URL"
-      :formsflowaiApiUrl="configs.FORM_FLOW_API_URL"
-      :formIOUserRoles="configs.FORMIO_ROLES"
-      :getTaskId="getTaskId"
-      v-if="isServiceFLowEnabled"
-    />
-</template>
-<script>
 import CamundaTasklist from "camunda-formio-tasklist-vue/src/components/TaskList.vue";
-</script>
+
+<CamundaTasklist
+  :bpmApiUrl="configs.BPM_URL"
+  :token="jwttoken"
+  :formIOApiUrl="configs.FORM_IO_API_URL"
+  :formIOResourceId="configs.FORM_IO_RESOURCE_ID"
+  :formIOReviewerId="configs.FORM_IO_REVIEWER_ID"
+  :formIOReviewer="configs.FORM_IO_REVIEWER"
+  :formsflowaiUrl="configs.FORM_FLOW_URL"
+  :formsflowaiApiUrl="configs.FORM_FLOW_API_URL"
+  :formIOUserRoles="configs.FORMIO_ROLES"
+  :taskSortBy="priority"
+/>
 ```
