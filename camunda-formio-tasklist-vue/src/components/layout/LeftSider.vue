@@ -87,16 +87,26 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import {
+  Component, Mixins, Prop, Watch 
+} from "vue-property-decorator";
 import BaseMixin from "../mixins/BaseMixin.vue";
-import { CamundaRest } from "../../services/camunda-rest";
-import { Payload } from "../../models/Payload";
+import {
+  CamundaRest 
+} from "../../services/camunda-rest";
+import {
+  Payload 
+} from "../../models/Payload";
 import TaskListSearch from "../search/TaskListSearch.vue";
 import cloneDeep from "lodash/cloneDeep";
-import { getFormattedDateAndTime } from "../../services/format-time";
+import {
+  getFormattedDateAndTime 
+} from "../../services/format-time";
 import isEqual from "lodash/isEqual";
 import moment from "moment";
-import { namespace } from "vuex-class";
+import {
+  namespace 
+} from "vuex-class";
 
 const serviceFlowModule = namespace("serviceFlowModule");
 
@@ -163,7 +173,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
 
   setselectedTask (taskId: string) {
     this.setFormsFlowTaskId(taskId);
-    this.$root.$emit("call-fetchData", { selectedTaskId: taskId });
+    this.$root.$emit("call-fetchData", {
+      selectedTaskId: taskId 
+    });
   }
 
   getExactDate (date: Date) {
@@ -177,7 +189,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
 
   onSearchUpdateTasklistResult (queryList: object) {
     const requiredParams = {
-      ...{ sorting: this.payload["sorting"] },
+      ...{
+        sorting: this.payload["sorting"] 
+      },
       ...queryList,
     };
     if (!isEqual(this.payload, requiredParams)) {

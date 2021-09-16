@@ -823,8 +823,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     try {
       referenceobject["followUp"] = getISODateTime(
         this.setFollowup[
-          (this.getFormsFlowTaskCurrentPage - 1) * this.perPage +
-            this.getFormsFlowactiveIndex
+          (this.getFormsFlowTaskCurrentPage - 1) * this.perPage
+            + this.getFormsFlowactiveIndex
         ]!
       );
       await this.updateTaskDatedetails(this.task.id!, referenceobject);
@@ -838,8 +838,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     try {
       referenceobject["due"] = getISODateTime(
         this.setDue[
-          (this.getFormsFlowTaskCurrentPage - 1) * this.perPage +
-            this.getFormsFlowactiveIndex
+          (this.getFormsFlowTaskCurrentPage - 1) * this.perPage
+            + this.getFormsFlowactiveIndex
         ]!
       );
       await this.updateTaskDatedetails(this.task.id!, referenceobject);
@@ -852,8 +852,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const referenceobject = this.task;
     try {
       this.setDue[
-        (this.getFormsFlowTaskCurrentPage - 1) * this.perPage +
-          this.getFormsFlowactiveIndex
+        (this.getFormsFlowTaskCurrentPage - 1) * this.perPage
+          + this.getFormsFlowactiveIndex
       ] = null;
       referenceobject["due"] = null;
       await this.updateTaskDatedetails(this.task.id!, referenceobject);
@@ -867,8 +867,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     try {
       referenceobject["followUp"] = null;
       this.setFollowup[
-        (this.getFormsFlowTaskCurrentPage - 1) * this.perPage +
-          this.getFormsFlowactiveIndex
+        (this.getFormsFlowTaskCurrentPage - 1) * this.perPage
+          + this.getFormsFlowactiveIndex
       ] = null;
       await this.updateTaskDatedetails(this.task.id!, referenceobject);
     } catch {
@@ -993,9 +993,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.$root.$emit("call-pagination");
         } else {
           if (
-            this.selectedfilterId ||
-            (this.getFormsFlowTaskId &&
-              refreshedTaskId === this.getFormsFlowTaskId)
+            this.selectedfilterId
+            || (this.getFormsFlowTaskId
+              && refreshedTaskId === this.getFormsFlowTaskId)
           ) {
             if (this.task.assignee === this.userName) {
               this.getBPMTaskDetail(this.task.id!);
