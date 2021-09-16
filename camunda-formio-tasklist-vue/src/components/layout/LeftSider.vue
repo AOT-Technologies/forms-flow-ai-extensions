@@ -136,7 +136,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
 
   private getProcessDefinitions: Array<object> = [];
   private processDefinitionId = "";
-  private activeIndex = NaN;
+  // private activeIndex = NaN;
   private currentPage = 1;
 
   @Watch("currentPage")
@@ -144,7 +144,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     this.payload["firstResult"] = (newVal - 1) * this.perPage;
     this.payload["maxResults"] = this.perPage;
     if (this.currentPage !== this.getFormsFlowTaskCurrentPage) {
-      this.activeIndex = NaN;
+      // this.activeIndex = NaN;
     }
     this.setFormsFlowTaskCurrentPage(this.currentPage);
     this.$root.$emit("call-fetchPaginatedTaskList", {
@@ -212,12 +212,12 @@ export default class LeftSider extends Mixins(BaseMixin) {
     this.$root.$on("update-pagination-currentpage", (para: any) => {
       this.currentPage = para.page;
     });
-    this.$root.$on("update-activeIndex-pagination", (para: any) => {
-      this.activeIndex = para.activeindex;
-    });
-    if (this.getFormsFlowactiveIndex > 0) {
-      this.activeIndex = this.getFormsFlowactiveIndex;
-    }
+    // this.$root.$on("update-activeIndex-pagination", (para: any) => {
+    //   this.activeIndex = para.activeindex;
+    // });
+    // if (this.getFormsFlowactiveIndex > 0) {
+    //   this.activeIndex = this.getFormsFlowactiveIndex;
+    // }
     this.currentPage = this.getFormsFlowTaskCurrentPage;
     this.$root.$emit("call-fetchData", {
       selectedTaskId: this.getFormsFlowTaskId,
@@ -233,10 +233,10 @@ export default class LeftSider extends Mixins(BaseMixin) {
   resetPaginationStore () {
     if (this.getFormsFlowactiveIndex < 9) {
       this.setFormsFlowactiveIndex(this.getFormsFlowactiveIndex + 1);
-      this.activeIndex = this.getFormsFlowactiveIndex;
+      // this.activeIndex = this.getFormsFlowactiveIndex;
     } else if (this.getFormsFlowactiveIndex === 9) {
       this.setFormsFlowactiveIndex(0);
-      this.activeIndex = 0;
+      // this.activeIndex = 0;
       this.setFormsFlowTaskCurrentPage(this.getFormsFlowTaskCurrentPage + 1);
       this.currentPage = this.getFormsFlowTaskCurrentPage;
     }
@@ -245,7 +245,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   beforeDestroy () {
     this.$root.$off("call-pagination");
     this.$root.$off("update-pagination-currentpage");
-    this.$root.$off("update-activeIndex-pagination");
+    // this.$root.$off("update-activeIndex-pagination");
   }
 }
 </script>
