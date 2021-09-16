@@ -25,15 +25,15 @@ solution in your Vue.js based project.
 import CamundaTasklist from "camunda-formio-tasklist-vue/src/components/TaskList.vue";
 
 <CamundaTasklist
-  :bpmApiUrl="configs.BPM_URL"
-  :token="jwttoken"
-  :formIOApiUrl="configs.FORM_IO_API_URL"
-  :formIOResourceId="configs.FORM_IO_RESOURCE_ID"
-  :formIOReviewerId="configs.FORM_IO_REVIEWER_ID"
-  :formIOReviewer="configs.FORM_IO_REVIEWER"
-  :formsflowaiUrl="configs.FORM_FLOW_URL"
-  :formsflowaiApiUrl="configs.FORM_FLOW_API_URL"
-  :formIOUserRoles="configs.FORMIO_ROLES"
+  :bpmApiUrl="https://somewebsite.com/camunda/engine-rest"
+  :token="eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJrYTFKalB6Vy1EaHNFSE9vd2NZVHRJdW9sR3FqT0NhN1NYV0RFc"
+  :formIOApiUrl="https://random.com/api"
+  :formIOResourceId="3242affds123adfa"
+  :formIOReviewerId="123adsf123dafd1a"
+  :formIOReviewer="reviewer"
+  :formsflowaiUrl="https://yourwebsite.com"
+  :formsflowaiApiUrl="https://yourwebsite.com/api"
+  :formIOUserRoles="["forms-flow"]"
   :taskSortBy="priority"
 />
 ```
