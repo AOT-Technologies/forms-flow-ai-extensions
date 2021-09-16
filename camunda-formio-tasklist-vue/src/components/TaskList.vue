@@ -770,6 +770,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if(this.selectSearchType === "firstName") {
       const firstNameUserList = await CamundaRest.getUsersByFirstNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
       if(firstNameUserList) {
+        this.reviewerUsersList = [];
         firstNameUserList.data.forEach((user: UserPayload) => {
           this.reviewerUsersList.push({
             code: user.id,
@@ -784,6 +785,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if(this.selectSearchType === "lastName") {
       const lastNameUserList = await CamundaRest.getUsersByLastNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
       if(lastNameUserList) {
+        this.reviewerUsersList = [];
         lastNameUserList.data.forEach((user: UserPayload) => {
           this.reviewerUsersList.push({
             code: user.id,
@@ -798,6 +800,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if(this.selectSearchType === "email") {
       const emailUserList = await CamundaRest.getUsersByEmailGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
       if(emailUserList) {
+        this.reviewerUsersList = [];
         emailUserList.data.forEach((user: UserPayload) => {
           this.reviewerUsersList.push({
             code: user.id,
