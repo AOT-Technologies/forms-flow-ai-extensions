@@ -28,6 +28,7 @@ module.exports = {
     "semi": ["warn", "always"],
     "eol-last": ["error", "always"],
     "block-spacing": "error",
+    "operator-linebreak": ["error", "before"],
     "object-curly-newline": ["error", "always"],
     "@typescript-eslint/no-explicit-any": "off",
     "object-curly-spacing": ["error", "always"]
