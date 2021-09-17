@@ -11,7 +11,15 @@
       :taskSortBy="taskSortBy"
     />
     <b-row class="cft-service-task-list mt-1">
-      <b-col xl="3" lg="3" md="12" :class="containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'" v-if="maximize">
+      <b-col
+        xl="3"
+        lg="3"
+        md="12"
+        :class="
+          containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'
+        "
+        v-if="maximize"
+      >
         <LeftSider
           v-if="token && bpmApiUrl"
           :token="token"
@@ -29,7 +37,9 @@
         v-if="getFormsFlowTaskId && task"
         :lg="maximize ? 9 : 12"
         md="12"
-        :class="containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'"
+        :class="
+          containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'
+        "
       >
         <div class="cft-service-task-details">
           <b-row>
@@ -202,11 +212,17 @@
                       />
                       <i
                         @click="onSetassignee"
-                        class="fa fa-check cft-assignee-tickmark-icon cft-icon-border"
+                        class="
+                          fa fa-check
+                          cft-assignee-tickmark-icon cft-icon-border
+                        "
                       ></i>
                       <i
                         @click="toggleassignee"
-                        class="fa fa-times cft-assignee-cancel-icon cft-icon-border"
+                        class="
+                          fa fa-times
+                          cft-assignee-cancel-icon cft-icon-border
+                        "
                       ></i>
                       <b-dropdown
                         id="dropdown-right"
@@ -214,7 +230,9 @@
                         variant="primary"
                       >
                         <template #button-content>
-                          <span><i class="fa fa-filter cft-assignee-filter-icon" /></span>
+                          <span
+                            ><i class="fa fa-filter cft-assignee-filter-icon"
+                          /></span>
                         </template>
                         <b-dd-item
                           v-for="(row, index) in UserSearchListLabel"
@@ -273,19 +291,16 @@
                       spinner-type="none"
                       aria-busy="true"
                     >
-                      <!-- don't remove form-render class -->
-                      <formio
-                        v-if="formioUrl"
-                        :src="formioUrl"
-                        :options="
-                          task.assignee !== userName
-                            ? readFormOptions
-                            : editFormoptions
-                        "
-                        v-on:submit="onFormSubmitCallback"
-                        v-on:customEvent="oncustomEventCallback"
-                        class="form-render"
-                      ></formio>
+                      <div v-if="task.assignee === userName">
+                        <FormEdit
+                          :formioUrl="formioUrl"
+                          @onformsubmit="onFormSubmitCallback"
+                          @oncustomevent="oncustomEventCallback"
+                        />
+                      </div>
+                      <div v-else>
+                        <FormView :formioUrl="formioUrl"/>
+                      </div>
                     </b-overlay>
                   </div>
                 </b-tab>
@@ -324,7 +339,6 @@
 <script lang="ts">
 
 import "font-awesome/scss/font-awesome.scss";
-import "formiojs/dist/formio.full.min.css";
 import "vue2-datepicker/index.css";
 import "semantic-ui-css/semantic.min.css";
 import "../styles/user-styles.css";
@@ -364,9 +378,8 @@ import {
 import BpmnViewer from "bpmn-js";
 import DatePicker from "vue2-datepicker";
 import ExpandContract from "./addons/ExpandContract.vue";
-import {
-  Form 
-} from "vue-formio";
+import FormEdit from "./form/Edit.vue";
+import FormView from "./form/View.vue";
 import Header from "./layout/Header.vue";
 import LeftSider from "./layout/LeftSider.vue";
 import TaskHistory from "../components/addons/TaskHistory.vue";
@@ -382,7 +395,6 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 
 @Component({
   components: {
-    formio: Form,
     DatePicker,
     TaskHistory,
     Header,
@@ -390,6 +402,8 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
     vSelect,
     ExpandContract,
     BpmnViewer,
+    FormEdit,
+    FormView
   },
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
@@ -496,7 +510,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async onFormSubmitCallback (actionType = "") {
-    if (this.task.id!==null) {
+    if (this.task.id !== null) {
       await this.onBPMTaskFormSubmit(this.task.id!, actionType);
       await this.reloadTasks();
     }
@@ -587,21 +601,20 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async getBPMTaskDetail (taskId: string) {
-    await CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl).then(
-      async (result) => {
-        this.task = result.data;
-        await CamundaRest.getProcessDefinitionById(
-          this.token,
-          this.task.processDefinitionId!,
-          this.bpmApiUrl
-        ).then((res) => {
-          this.taskProcess = res.data.name;
-        });
-      }
+    const [taskResult, applicationIdResult] = await Promise.all([
+      CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl),
+      CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl),
+    ]);
+    const processResult = await CamundaRest.getProcessDefinitionById(
+      this.token,
+      taskResult.data.processDefinitionId,
+      this.bpmApiUrl
     );
+    this.task = taskResult.data;
+    this.taskProcess = processResult.data.name;
+    this.applicationId = applicationIdResult.data.applicationId.value;
     await this.getGroupDetails();
   }
-
   async getTaskFormIODetails (taskId: string) {
     if (this.taskIdWebsocket === taskId) {
       this.showForm = false;
@@ -629,17 +642,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   async getTaskHistoryDetails (taskId: string) {
     this.taskHistoryList = [];
-    const result = await CamundaRest.getVariablesByTaskId(
-      this.token,
-      taskId,
-      this.bpmApiUrl
-    );
 
-    if (result.data && result.data["applicationId"]?.value) {
-      this.applicationId = result.data["applicationId"].value;
+    if (this.applicationId) {
       const applicationHistoryList = await getformHistoryApi(
         this.formsflowaiApiUrl,
-        result.data["applicationId"].value,
+        this.applicationId,
         this.token
       );
       this.taskHistoryList = applicationHistoryList.applications;
@@ -896,7 +903,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async findTaskIdDetailsFromURLrouter (taskId: string, fulltasks: TaskPayload[]) {
+  async findTaskIdDetailsFromURLrouter (
+    taskId: string,
+    fulltasks: TaskPayload[]
+  ) {
     this.task = getTaskFromList(fulltasks, taskId);
     this.setFormsFlowTaskId(this.taskIdValue);
     const pos = fulltasks
