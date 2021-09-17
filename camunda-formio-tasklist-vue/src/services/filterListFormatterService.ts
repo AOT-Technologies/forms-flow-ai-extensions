@@ -1,4 +1,6 @@
-import { FilterPayload } from "../models/FilterPayload";
+import {
+  FilterPayload 
+} from "../models/FilterPayload";
 
 const compareFn = (a: FilterPayload,b: FilterPayload) => {
   const priority1=a?.properties?.priority||0;

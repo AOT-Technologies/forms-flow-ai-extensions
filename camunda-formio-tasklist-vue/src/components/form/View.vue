@@ -11,8 +11,12 @@
 
 <script lang="ts">
 import "formiojs/dist/formio.full.min.css";
-import { Component, Prop, Vue } from "vue-property-decorator";
-import { Form } from "vue-formio";
+import {
+  Component, Prop, Vue 
+} from "vue-property-decorator";
+import {
+  Form 
+} from "vue-formio";
 
 @Component({
   components: {

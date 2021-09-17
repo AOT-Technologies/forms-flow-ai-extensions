@@ -143,21 +143,43 @@
 
 <script lang="ts">
 import "../../styles/camundaFormIOTasklistSearch.scss";
-import { Component, Emit, Prop, Vue } from "vue-property-decorator";
-import { getFormattedDateAndTime } from "../../services/format-time";
-import { taskSearchFilters } from "../../services/search-constants";
+import {
+  Component, Emit, Prop, Vue 
+} from "vue-property-decorator";
+import {
+  getFormattedDateAndTime 
+} from "../../services/format-time";
+import {
+  taskSearchFilters 
+} from "../../services/search-constants";
 
 @Component
 export default class TaskSearchItem extends Vue {
-  @Prop({}) private query!: any;
-  @Prop({}) private index!: number;
-  @Prop({ default: taskSearchFilters }) private searchListElements!: any;
-  @Prop({ default: [] }) private searchVariableValue!: any;
-  @Prop({ default: [] }) private searchValueItem!: any;
-  @Prop({ default: [] }) private setDate!: Array<string>;
-  @Prop({ default: [] }) private showSearchstate!: Array<string>;
-  @Prop({ default: [] }) private showVariableValue!: Array<string>;
-  @Prop({ default: [] }) private operator!: Array<string>;
+  @Prop({
+  }) private query!: any;
+  @Prop({
+  }) private index!: number;
+  @Prop({
+    default: taskSearchFilters 
+  }) private searchListElements!: any;
+  @Prop({
+    default: [] 
+  }) private searchVariableValue!: any;
+  @Prop({
+    default: [] 
+  }) private searchValueItem!: any;
+  @Prop({
+    default: [] 
+  }) private setDate!: Array<string>;
+  @Prop({
+    default: [] 
+  }) private showSearchstate!: Array<string>;
+  @Prop({
+    default: [] 
+  }) private showVariableValue!: Array<string>;
+  @Prop({
+    default: [] 
+  }) private operator!: Array<string>;
 
   deleteSearchQueryElement (query: any, index: number) {
     this.$root.$emit("call-deleteSearchQueryElement", {

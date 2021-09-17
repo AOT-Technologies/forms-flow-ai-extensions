@@ -55,7 +55,9 @@
 
 <script lang="ts">
 import "../../styles/camundaFormIOTasklist.scss";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import {
+  Component, Prop, Vue 
+} from "vue-property-decorator";
 import {
   TASK_FILTER_LIST_DEFAULT_PARAM_CREATED,
   TASK_SORT_DEFAULT_ASSINGEE,
@@ -65,10 +67,16 @@ import {
   TASK_SORT_DEFAULT_PRIORITY,
   TaskListSortType,
 } from "../../models";
-import { Payload } from "../../models/Payload";
+import {
+  Payload 
+} from "../../models/Payload";
 import TaskSortOptions from "../sort/TaskListSortoptions.vue";
-import { namespace } from "vuex-class";
-import { sortingList } from "../../services";
+import {
+  namespace 
+} from "vuex-class";
+import {
+  sortingList 
+} from "../../services";
 
 const serviceFlowModule = namespace("serviceFlowModule");
 @Component({
@@ -104,7 +112,9 @@ export default class TaskListSort extends Vue {
           (option: { sortBy: string }) => option.sortBy === sortOption.sortBy
         )
       ) {
-        optionsArray.push({ ...sortOption });
+        optionsArray.push({
+          ...sortOption 
+        });
       }
     });
     return optionsArray;

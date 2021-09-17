@@ -45,10 +45,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import {
+  Component, Prop, Vue 
+} from "vue-property-decorator";
 import FormViewSubmission from "../FormViewSubmission.vue";
-import { TaskHistoryListPayload } from "../../models/TaskHistoryListPayload";
-import { getLocalDateTime } from "../../services/format-time";
+import {
+  TaskHistoryListPayload 
+} from "../../models/TaskHistoryListPayload";
+import {
+  getLocalDateTime 
+} from "../../services/format-time";
 
 @Component({
   components: {
@@ -56,7 +62,9 @@ import { getLocalDateTime } from "../../services/format-time";
   },
 })
 export default class TaskHistory extends Vue {
-  @Prop({ default: [] }) private taskHistoryList!: TaskHistoryListPayload[];
+  @Prop({
+    default: [] 
+  }) private taskHistoryList!: TaskHistoryListPayload[];
   @Prop() private applicationId!: string;
 
   private fId: string = "";

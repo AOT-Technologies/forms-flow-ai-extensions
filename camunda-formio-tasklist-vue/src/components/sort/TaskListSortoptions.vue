@@ -20,8 +20,12 @@
 
 <script lang="ts">
 import "../../styles/camundaFormIOTasklist.scss";
-import { Component, Emit, Prop, Vue } from "vue-property-decorator";
-import { TaskListSortType } from "../../models";
+import {
+  Component, Emit, Prop, Vue 
+} from "vue-property-decorator";
+import {
+  TaskListSortType 
+} from "../../models";
 
 @Component
 export default class TaskSortOptions extends Vue {
