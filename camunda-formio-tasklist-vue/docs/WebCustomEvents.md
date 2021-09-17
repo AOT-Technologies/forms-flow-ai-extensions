@@ -1,9 +1,9 @@
-## forms-flow-web Vue Events
+## forms-flow-web Vue Events 
 
  > This section elaborates  events used in forms-flow-web.
  >  The Form.io renderer uses the [EventEmitter3](https://github.com/primus/eventemitter3) library to manage all of the event handling that occurs within the renderer. Within the Form.io renderer, there are a number of events that are fired that allow you to respond to these events and then do something once they fire.
 
-## Events
+## :zap: Events
 
 | Name | Description  &nbsp;&nbsp;&nbsp;| Arguments &nbsp;&nbsp;&nbsp; | Example |
 | --- | --- | --- |--- |

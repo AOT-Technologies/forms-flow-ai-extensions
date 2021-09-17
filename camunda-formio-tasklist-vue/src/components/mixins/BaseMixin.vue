@@ -1,6 +1,10 @@
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { engine } from "../../services/constants";
+import {
+  Component, Prop, Vue, Watch 
+} from "vue-property-decorator";
+import {
+  engine 
+} from "../../services/constants";
 
 @Component
 export default class BaseMixin extends Vue {
@@ -13,7 +17,9 @@ export default class BaseMixin extends Vue {
   @Prop() protected readonly formsflowaiApiUrl!: string;
   @Prop() protected readonly formsflowaiUrl!: string;
   @Prop() protected readonly formIOUserRoles!: string;
-  @Prop({ default: "formflowai" }) public webSocketEncryptkey!: string;
+  @Prop({
+    default: "formflowai" 
+  }) public webSocketEncryptkey!: string;
 
   @Watch("token")
   ontokenChange (newVal: string) {
