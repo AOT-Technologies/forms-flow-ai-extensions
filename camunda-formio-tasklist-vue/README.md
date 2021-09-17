@@ -11,7 +11,7 @@ forms in a bundled solution.
 :inbox_tray: You can install it [NPM package manager](https://www.npmjs.com/package/camunda-formio-tasklist-vue).
 
 
-## Things to look out for when integrating :information_source:
+## :information_source: Things to look out for when integrating 
 
 - Install the latest version of [Camunda-formio-tasklist-vue](https://www.npmjs.com/package/camunda-formio-tasklist-vue) and [bootstrap-vue](https://bootstrap-vue.org/)
 - Ensure you import the appropriate Vue component as defined in [TaskList View](https://github.com/AOT-Technologies/forms-flow-ai-extensions/blob/master/camunda-formio-tasklist-vue/src/views/TaskList.vue) and do the environment configuration in the integrated solution.
@@ -24,7 +24,7 @@ the Form.
 A sample project which was used for integration `camunda-formio-tasklist-vue`
 components can be found :point_right: [here](https://github.com/AOT-Technologies/service-flow-vue/).
 
-## Components :sparkles:
+## :sparkles: Components 
 
 **TaskList component** -  The customizable component which can be
 used to integrate formsflow.ai solution in your Vue.js based project.
@@ -35,7 +35,9 @@ used to integrate formsflow.ai solution in your Vue.js based project.
 
 :beginner: [Documentation for FormViewSubmission component](./docs/components/FormViewSubmission.md)
 
-## Project Setup :oncoming_taxi:
+You can checkout the available **formio custom events** which can be used in camunda-formio-tasklist-vue [here](./docs/WebCustomEvents.md)
+
+## :oncoming_taxi: Project Setup 
 
 ### Local Project setup
 ```
@@ -60,7 +62,9 @@ npm run build --report
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
+If you are interested in contributing to the project :heart_eyes:, do checkout our [style guide to follow project guidelines](./docs/StyleGuide.md)
 
-## License :warning:
+
+## :warning: License 
 
 Code is released under the [Apache License, Version 2.0](./LICENSE). 
