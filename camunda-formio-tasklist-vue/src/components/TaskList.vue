@@ -8,6 +8,7 @@
       :perPage="perPage"
       :selectedfilterId="selectedfilterId"
       :payload="payload"
+      :taskSortBy="taskSortBy"
     />
     <b-row class="cft-service-task-list mt-1">
       <b-col
@@ -30,7 +31,6 @@
           :perPage="perPage"
           :selectedfilterId="selectedfilterId"
           :payload="payload"
-          :taskSortBy="taskSortBy"
         />
       </b-col>
       <b-col
