@@ -411,7 +411,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
   @Prop() private containerHeight!: string;
   @Prop({
-  default: "created"
+    default: "created"
   }) public taskSortBy!: string
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
