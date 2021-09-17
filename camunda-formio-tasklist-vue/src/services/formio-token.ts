@@ -7,8 +7,8 @@ export const authenticateFormio = (
   userEmail: any,
   formIOUserRoles: any
 ) => {
-  const STAFF_REVIEWER_ID =
-    formIOReviewereId || process.env.VUE_APP_REVIEWER_ROLE_ID;
+  const STAFF_REVIEWER_ID
+    = formIOReviewereId || process.env.VUE_APP_REVIEWER_ROLE_ID;
   const STAFF_REVIEWER = formIOReviewer || process.env.VUE_APP_REVIEWER_ROLE;
 
   const ROLES = [
@@ -29,8 +29,8 @@ export const authenticateFormio = (
     roles = [STAFF_REVIEWER_ID];
   }
 
-  const USER_RESOURCE_FORM_ID =
-    formIOResourceId || process.env.VUE_APP_USER_RESOURCE_ID;
+  const USER_RESOURCE_FORM_ID
+    = formIOResourceId || process.env.VUE_APP_USER_RESOURCE_ID;
 
   const FORMIO_TOKEN = jwt.sign(
     {

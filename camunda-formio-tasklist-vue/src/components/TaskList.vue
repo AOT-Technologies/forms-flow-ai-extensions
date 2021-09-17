@@ -433,14 +433,26 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private formId: string = "";
   private submissionId: string = "";
   private formioUrl: string = "";
-  private task: TaskPayload = {};
-  private setFollowup: Array<Date | null> = [];
-  private setDue: Array<Date | null> = [];
+  private task: TaskPayload = {
+  };
+  private setFollowup: Array<Date| null> = [];
+  private setDue: Array<Date| null> = [];
   private setGroup = null;
   private userSelected: UserListPayload = {
   };
   public perPage: number = 10;
   private tasklength: number = 0;
+  private editFormoptions: object = {
+    noAlerts: false,
+    i18n: {
+      en: {
+        error: "Please fix the errors before submitting again."
+      },
+    },
+  };
+  private readFormOptions: object = {
+    readOnly: true
+  };
   private filterList: FilterPayload[] = [];
   private editAssignee: boolean = false;
   private applicationId: string = "";

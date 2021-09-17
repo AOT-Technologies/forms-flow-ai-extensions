@@ -187,8 +187,8 @@ export const getDeletedVariableIndex = (
 ) => {
   for (let i = 0; i < queryList[key].length; i++) {
     if (
-      queryList[key][i]["name"] === deletequery["name"] &&
-      queryList[key]["value"] === deletequery["value"]
+      queryList[key][i]["name"] === deletequery["name"]
+      && queryList[key]["value"] === deletequery["value"]
     ) {
       queryList[key].splice(i, 1);
     }

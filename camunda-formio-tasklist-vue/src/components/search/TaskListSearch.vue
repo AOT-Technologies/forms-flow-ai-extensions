@@ -55,7 +55,6 @@ import TaskListAddSearchIgnoreCase from "./TaskListAddSearchIgnoreCase.vue";
 import TaskListSearchType from "./TaskListSearchType.vue";
 import TaskSearchItem from "./TaskSearchItem.vue";
 
-
 @Component({
   components: {
     TaskListAddSearchIgnoreCase,
@@ -142,8 +141,8 @@ export default class TaskListSearch extends Vue {
         this.isVariableTypeInSelectedSearchQuery = true;
       }
     } else {
-      this.operator[this.selectedSearchQueries.length - 1] =
-        item["compares"][0];
+      this.operator[this.selectedSearchQueries.length - 1]
+        = item["compares"][0];
       this.showSearchstate[this.selectedSearchQueries.length - 1] = "a";
       this.showVariableValue[this.selectedSearchQueries.length - 1] = "a";
       if (item.type === "variables") {
@@ -185,14 +184,14 @@ export default class TaskListSearch extends Vue {
 
   updateSearchQueryElement (searchitem: any, index: number) {
     if (
-      searchitem.type === "date" &&
-      this.selectedSearchQueries[index].type !== "date"
+      searchitem.type === "date"
+      && this.selectedSearchQueries[index].type !== "date"
     ) {
       this.makeInputNull(index);
     }
     if (
-      this.selectedSearchQueries[index].type === "date" &&
-      searchitem.type !== "date"
+      this.selectedSearchQueries[index].type === "date"
+      && searchitem.type !== "date"
     ) {
       this.makeInputNull(index);
     }
