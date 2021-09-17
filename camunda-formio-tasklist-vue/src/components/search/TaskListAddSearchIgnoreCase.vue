@@ -54,7 +54,9 @@
 
 <script lang="ts">
 import "../../styles/camundaFormIOTasklistSearch.scss";
-import { Component, Emit, Prop, Vue } from "vue-property-decorator";
+import {
+  Component, Emit, Prop, Vue 
+} from "vue-property-decorator";
 
 @Component
 export default class TaskListAddSearchIgnoreCase extends Vue {
@@ -82,9 +84,13 @@ export default class TaskListAddSearchIgnoreCase extends Vue {
     this.QList["variableValuesIgnoreCase"] = false;
     for (const variablevalue in this.variablesEndType) {
       this.QList[this.variablesEndType[variablevalue]] = true;
-      this.$root.$emit("call-updateTaskList", { queryList: this.QList });
+      this.$root.$emit("call-updateTaskList", {
+        queryList: this.QList 
+      });
     }
-    this.$root.$emit("call-updateTaskList", { queryList: this.QList });
+    this.$root.$emit("call-updateTaskList", {
+      queryList: this.QList 
+    });
   }
 }
 </script>

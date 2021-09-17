@@ -4,3 +4,4 @@
 when integrating.
 2. Import the components in relative order.
 3. Follow the [VueJS Style Guide when developing components](https://vuejs.org/v2/style-guide/).
+4. On developing your code, follow the [Eslint rules specified](../.eslintrc.js)

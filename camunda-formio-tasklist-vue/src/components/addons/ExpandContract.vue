@@ -20,14 +20,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from "vue-property-decorator";
+import {
+  Component, Mixins 
+} from "vue-property-decorator";
 import TaskListMixin from "../mixins/TaskListMixin.vue";
 
 @Component
 export default class ExpandContract extends Mixins(TaskListMixin) {
   clickMaxi () {
     this.maximize = !this.maximize;
-    this.$root.$emit("call-managerScreen", { maxi: this.maximize });
+    this.$root.$emit("call-managerScreen", {
+      maxi: this.maximize 
+    });
   }
 }
 </script>

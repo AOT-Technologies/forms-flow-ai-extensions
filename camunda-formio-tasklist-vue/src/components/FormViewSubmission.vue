@@ -8,9 +8,15 @@
 import "font-awesome/scss/font-awesome.scss";
 import "semantic-ui-css/semantic.min.css";
 import "../styles/user-styles.css";
-import { Component, Prop, Vue } from "vue-property-decorator";
-import { Form, Formio } from "vue-formio";
-import { getFormDetails } from "../services/get-formio";
+import {
+  Component, Prop, Vue 
+} from "vue-property-decorator";
+import {
+  Form, Formio 
+} from "vue-formio";
+import {
+  getFormDetails 
+} from "../services";
 
 @Component({
   components: {
@@ -39,7 +45,9 @@ export default class FormViewSubmission extends Vue {
     this.formUrl = window.location.href;
     this.checkLocalStorageValue();
 
-    const { formioUrl, formId, submissionId } = getFormDetails(
+    const {
+      formioUrl, formId, submissionId 
+    } = getFormDetails(
       this.formUrl,
       this.formIOProjectUrl
     );
@@ -53,8 +61,8 @@ export default class FormViewSubmission extends Vue {
     } else {
       this.fId = this.formid;
       this.sId = this.submissionid;
-      this.formioUrlLink =
-        this.formIOProjectUrl + "/form/" + this.fId + "/submission/" + this.sId;
+      this.formioUrlLink
+        = this.formIOProjectUrl + "/form/" + this.fId + "/submission/" + this.sId;
     }
     Formio.createForm(document.getElementById("formio"), this.formioUrlLink, {
       readOnly: true,

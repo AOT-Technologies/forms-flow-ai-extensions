@@ -3,7 +3,7 @@
   <div class="tasklist-container">
     <TaskListSearch
       @update-task-list="onSearchUpdateTasklistResult"
-      :tasklength="Lentask"
+      :tasklength="tasklength"
     />
     <b-list-group class="cft-list-container" v-if="tasks && tasks.length">
       <b-list-group-item
@@ -11,7 +11,7 @@
         v-for="(task, idx) in tasks"
         v-bind:key="task.id"
         v-on:click="toggle(idx)"
-        :class="{ 'cft-selected': idx == activeIndex }"
+        :class="{ 'cft-selected': task.id == getFormsFlowTaskId }"
       >
         <div @click="setselectedTask(task.id)" class="cft-select-task">
           <span class="cft-task-title font-weight-bold" data-title="Task Name">{{ task.name }}</span>
@@ -71,7 +71,7 @@
 
       <b-pagination
         v-model="currentPage"
-        :total-rows="Lentask"
+        :total-rows="tasklength"
         :per-page="perPage"
         class="cft-paginate"
       />
@@ -87,16 +87,24 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import {
+  Component, Mixins, Prop, Watch 
+} from "vue-property-decorator";
 import BaseMixin from "../mixins/BaseMixin.vue";
-import CamundaRest from "../../services/camunda-rest";
-import { Payload } from "../../models/Payload";
+import {
+  CamundaRest, getFormattedDateAndTime
+} from "../../services";
+
+import {
+  Payload 
+} from "../../models/Payload";
 import TaskListSearch from "../search/TaskListSearch.vue";
 import cloneDeep from "lodash/cloneDeep";
-import { getFormattedDateAndTime } from "../../services/format-time";
 import isEqual from "lodash/isEqual";
 import moment from "moment";
-import { namespace } from "vuex-class";
+import {
+  namespace 
+} from "vuex-class";
 
 const serviceFlowModule = namespace("serviceFlowModule");
 
@@ -107,7 +115,7 @@ const serviceFlowModule = namespace("serviceFlowModule");
 })
 export default class LeftSider extends Mixins(BaseMixin) {
   @Prop() private tasks!: Array<object>;
-  @Prop() private Lentask!: number;
+  @Prop() private tasklength!: number;
   @Prop() private perPage!: number;
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
@@ -128,8 +136,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
 
   private getProcessDefinitions: Array<object> = [];
   private processDefinitionId = "";
-  private activeIndex = NaN;
-  private sList: any;
+  // private activeIndex = NaN;
   private currentPage = 1;
 
   @Watch("currentPage")
@@ -137,7 +144,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     this.payload["firstResult"] = (newVal - 1) * this.perPage;
     this.payload["maxResults"] = this.perPage;
     if (this.currentPage !== this.getFormsFlowTaskCurrentPage) {
-      this.activeIndex = NaN;
+      // this.activeIndex = NaN;
     }
     this.setFormsFlowTaskCurrentPage(this.currentPage);
     this.$root.$emit("call-fetchPaginatedTaskList", {
@@ -163,7 +170,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
 
   setselectedTask (taskId: string) {
     this.setFormsFlowTaskId(taskId);
-    this.$root.$emit("call-fetchData", { selectedTaskId: taskId });
+    this.$root.$emit("call-fetchData", {
+      selectedTaskId: taskId 
+    });
   }
 
   getExactDate (date: Date) {
@@ -171,13 +180,15 @@ export default class LeftSider extends Mixins(BaseMixin) {
   }
 
   toggle (index: number) {
-    this.activeIndex = index;
-    this.setFormsFlowactiveIndex(this.activeIndex);
+    // this.activeIndex = index;
+    this.setFormsFlowactiveIndex(index);
   }
 
   onSearchUpdateTasklistResult (queryList: object) {
     const requiredParams = {
-      ...{ sorting: this.payload["sorting"] },
+      ...{
+        sorting: this.payload["sorting"] 
+      },
       ...queryList,
     };
     if (!isEqual(this.payload, requiredParams)) {
@@ -201,12 +212,12 @@ export default class LeftSider extends Mixins(BaseMixin) {
     this.$root.$on("update-pagination-currentpage", (para: any) => {
       this.currentPage = para.page;
     });
-    this.$root.$on("update-activeIndex-pagination", (para: any) => {
-      this.activeIndex = para.activeindex;
-    });
-    if (this.getFormsFlowactiveIndex > 0) {
-      this.activeIndex = this.getFormsFlowactiveIndex;
-    }
+    // this.$root.$on("update-activeIndex-pagination", (para: any) => {
+    //   this.activeIndex = para.activeindex;
+    // });
+    // if (this.getFormsFlowactiveIndex > 0) {
+    //   this.activeIndex = this.getFormsFlowactiveIndex;
+    // }
     this.currentPage = this.getFormsFlowTaskCurrentPage;
     this.$root.$emit("call-fetchData", {
       selectedTaskId: this.getFormsFlowTaskId,
@@ -222,10 +233,10 @@ export default class LeftSider extends Mixins(BaseMixin) {
   resetPaginationStore () {
     if (this.getFormsFlowactiveIndex < 9) {
       this.setFormsFlowactiveIndex(this.getFormsFlowactiveIndex + 1);
-      this.activeIndex = this.getFormsFlowactiveIndex;
+      // this.activeIndex = this.getFormsFlowactiveIndex;
     } else if (this.getFormsFlowactiveIndex === 9) {
       this.setFormsFlowactiveIndex(0);
-      this.activeIndex = 0;
+      // this.activeIndex = 0;
       this.setFormsFlowTaskCurrentPage(this.getFormsFlowTaskCurrentPage + 1);
       this.currentPage = this.getFormsFlowTaskCurrentPage;
     }
@@ -234,7 +245,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   beforeDestroy () {
     this.$root.$off("call-pagination");
     this.$root.$off("update-pagination-currentpage");
-    this.$root.$off("update-activeIndex-pagination");
+    // this.$root.$off("update-activeIndex-pagination");
   }
 }
 </script>

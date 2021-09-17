@@ -1,4 +1,6 @@
-import { engine, socketUrl } from "../services/constants";
+import {
+  engine, socketUrl 
+} from "../services/constants";
 import AES from "crypto-js/aes";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
@@ -41,7 +43,8 @@ function connectClient () {
     socket = new SockJS(websocketUrl);
     stompClient = Stomp.over(socket);
     stompClient.debug = null;
-    stompClient.connect({}, clientConnectCallback, clientErrorCallback);
+    stompClient.connect({
+    }, clientConnectCallback, clientErrorCallback);
   } else {
     clientErrorCallback("bpmApiUrl not set", true);
     reloadCallback(null, null, true);
@@ -64,10 +67,9 @@ disconnect = () => {
   stompClient.disconnect();
 };
 
-const SocketIOService = {
+export const SocketIOService = {
   connect,
   disconnect,
   isConnected,
 };
 
-export default SocketIOService;
