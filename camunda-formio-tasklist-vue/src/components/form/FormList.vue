@@ -43,8 +43,12 @@
 
 <script lang="ts">
 import "../../styles/camundaFormIOFormList.scss";
-import { Component, Prop, Vue } from "vue-property-decorator";
-import CamundaRest from "../../services/camunda-rest";
+import {
+  Component, Prop, Vue 
+} from "vue-property-decorator";
+import {
+  CamundaRest 
+} from "../../services/camunda-rest";
 
 @Component
 export default class FormList extends Vue {
@@ -53,7 +57,8 @@ export default class FormList extends Vue {
   private formNumPages: number = 1;
   private formcurrentPage: number = 1;
 
-  @Prop({}) private token!: string;
+  @Prop({
+  }) private token!: string;
   @Prop() private bpmApiUrl!: string;
 
   linkFormGen () {

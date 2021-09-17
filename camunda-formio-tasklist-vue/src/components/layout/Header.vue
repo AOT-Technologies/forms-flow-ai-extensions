@@ -25,6 +25,7 @@
         :selectedfilterId="selectedfilterId"
         :perPage="perPage"
         :payload="payload"
+        :taskSortBy="taskSortBy"
         />
       </div>
     </div>
@@ -32,13 +33,21 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop } from "vue-property-decorator";
+import {
+  Component, Mixins, Prop 
+} from "vue-property-decorator";
 import BaseMixin from "../mixins/BaseMixin.vue";
-import { FilterPayload } from "../../models/FilterPayload";
+import {
+  FilterPayload 
+} from "../../models/FilterPayload";
 import FormListModal from "../form/FormListModal.vue";
-import { Payload } from "../../models/Payload";
+import {
+  Payload 
+} from "../../models/Payload";
 import TaskListSort from "../sort/TaskListSort.vue";
-import { namespace } from "vuex-class";
+import {
+  namespace 
+} from "vuex-class";
 
 const serviceFlowModule = namespace("serviceFlowModule");
 
@@ -53,6 +62,7 @@ export default class Header extends Mixins(BaseMixin) {
   @Prop() private filterList!: FilterPayload[];
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
+  @Prop() private taskSortBy!: string
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
