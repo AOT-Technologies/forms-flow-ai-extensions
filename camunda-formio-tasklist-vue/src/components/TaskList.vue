@@ -30,6 +30,7 @@
           :perPage="perPage"
           :selectedfilterId="selectedfilterId"
           :payload="payload"
+          :taskSortBy="taskSortBy"
         />
       </b-col>
       <b-col
@@ -409,6 +410,9 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
   @Prop() private containerHeight!: string;
+  @Prop({
+  default: "created"
+  }) public taskSortBy!: string
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
