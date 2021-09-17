@@ -46,16 +46,14 @@ import {
 import {
   FilterSearchTypes,
   getDeletedVariableIndex,
+  getISODateTime,
   getVariableOperator,
   searchValueObject,
   taskSearchFilters,
-} from "../../services/search-constants";
+} from "../../services";
 import TaskListAddSearchIgnoreCase from "./TaskListAddSearchIgnoreCase.vue";
 import TaskListSearchType from "./TaskListSearchType.vue";
 import TaskSearchItem from "./TaskSearchItem.vue";
-import {
-  getISODateTime 
-} from "../../services/format-time";
 
 @Component({
   components: {

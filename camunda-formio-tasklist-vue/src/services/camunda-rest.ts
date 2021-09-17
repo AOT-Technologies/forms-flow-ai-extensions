@@ -1,9 +1,6 @@
 import {
-  engine, formExt 
-} from "../services/constants";
-import {
-  bpmAxios 
-} from "../services/axios";
+  bpmAxios, engine, formExt,
+} from "../services";
 
 export const CamundaRest = {
   async getProcessDefinitions (bearerToken: string, CamundaUrl: string) {

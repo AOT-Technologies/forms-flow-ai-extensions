@@ -51,10 +51,10 @@ import {
 import FormViewSubmission from "../FormViewSubmission.vue";
 import {
   TaskHistoryListPayload 
-} from "../../models/TaskHistoryListPayload";
+} from "../../models";
 import {
   getLocalDateTime 
-} from "../../services/format-time";
+} from "../../services";
 
 @Component({
   components: {

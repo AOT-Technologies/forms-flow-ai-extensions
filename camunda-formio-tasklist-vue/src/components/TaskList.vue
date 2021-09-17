@@ -27,7 +27,7 @@
           :formIOApiUrl="formIOApiUrl"
           :bpmApiUrl="bpmApiUrl"
           :tasks="tasks"
-          :Lentask="tasklength"
+          :tasklength="tasklength"
           :perPage="perPage"
           :selectedfilterId="selectedfilterId"
           :payload="payload"
@@ -410,9 +410,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
   @Prop() private containerHeight!: string;
   @Prop({
-    default: "lastName"
-  }) userListType!: string;
-  @Prop({
     default: "created"
   }) public taskSortBy!: string
 
@@ -640,7 +637,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
   }
 
-  async getTaskHistoryDetails (taskId: string) {
+  async getTaskHistoryDetails () {
     this.taskHistoryList = [];
 
     if (this.applicationId) {
@@ -898,7 +895,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.bpmApiUrl
       );
       await this.getTaskFormIODetails(taskId);
-      await this.getTaskHistoryDetails(taskId);
+      await this.getTaskHistoryDetails();
       await this.getTaskProcessDiagramDetails(this.task);
     }
   }
@@ -915,9 +912,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       })
       .indexOf(this.taskIdValue);
     this.setFormsFlowactiveIndex(pos % this.perPage);
-    this.$root.$emit("update-activeIndex-pagination", {
-      activeindex: this.getFormsFlowactiveIndex,
-    });
+    // this.$root.$emit("update-activeIndex-pagination", {
+    //   activeindex: this.getFormsFlowactiveIndex,
+    // });
     this.setFormsFlowTaskCurrentPage(Math.floor(pos / this.perPage) + 1);
     this.$root.$emit("update-pagination-currentpage", {
       page: this.getFormsFlowTaskCurrentPage,

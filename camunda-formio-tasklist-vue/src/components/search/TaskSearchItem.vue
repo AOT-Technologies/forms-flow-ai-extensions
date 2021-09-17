@@ -147,11 +147,9 @@ import {
   Component, Emit, Prop, Vue 
 } from "vue-property-decorator";
 import {
-  getFormattedDateAndTime 
-} from "../../services/format-time";
-import {
-  taskSearchFilters 
-} from "../../services/search-constants";
+  getFormattedDateAndTime, taskSearchFilters
+} from "../../services";
+
 
 @Component
 export default class TaskSearchItem extends Vue {
