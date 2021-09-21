@@ -26,6 +26,7 @@
         :perPage="perPage"
         :payload="payload"
         :taskSortBy="taskSortBy"
+        :taskSortOrder="taskSortOrder"
         />
       </div>
     </div>
@@ -60,6 +61,7 @@ export default class Header extends Mixins(BaseMixin) {
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
   @Prop() private taskSortBy!: string
+  @Prop() private taskSortOrder!: string
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
