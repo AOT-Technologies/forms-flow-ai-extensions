@@ -9,6 +9,7 @@
       :selectedfilterId="selectedfilterId"
       :payload="payload"
       :taskSortBy="taskSortBy"
+      :taskSortOrder="taskSortOrder"
     />
     <b-row class="cft-service-task-list mt-1">
       <b-col
@@ -412,7 +413,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop({
     default: "created"
   }) public taskSortBy!: string
-
+  @Prop({
+    default: "desc"
+  }) public taskSortOrder!: string
+  
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
   @StoreServiceFlowModule.Getter("getFormsFlowTaskId")
