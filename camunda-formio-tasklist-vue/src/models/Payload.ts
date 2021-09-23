@@ -1,6 +1,6 @@
 import {
   TaskListSortType 
-} from "@/services/";
+} from "../services/";
 export interface Payload {
   active?: boolean;
   sorting: TaskListSortType[];

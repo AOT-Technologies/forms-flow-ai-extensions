@@ -38,3 +38,8 @@ export const TASK_SORT_DEFAULT_PRIORITY: TaskListSortType = {
   sortOrder: "desc",
   label: "Priority"
 };
+
+export enum SORT_ORDER {
+  ASCENDING = "asc",
+  DESCENDING = "desc"
+}
