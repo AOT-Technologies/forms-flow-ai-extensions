@@ -11,3 +11,9 @@ export interface UserListPayload {
     firstName?: string;
     lastName?: string;
 }
+
+export enum SEARCH_OPTION_TYPE {
+    FIRST_NAME = 'firstName',
+    LAST_NAME = 'lastName',
+    EMAIL = 'email',
+}

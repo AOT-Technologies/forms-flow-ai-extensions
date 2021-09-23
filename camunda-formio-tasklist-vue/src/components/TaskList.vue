@@ -371,11 +371,12 @@ import {
   FormRequestPayload, 
   GroupListPayload, 
   Payload, 
+  SEARCH_OPTION_TYPE,
   TaskHistoryListPayload, 
   TaskPayload, 
   UserListPayload, 
   UserPayload, 
-  UserSearchListLabelPayload 
+  UserSearchListLabelPayload, 
 } from "../models";
 import BpmnViewer from "bpmn-js";
 import DatePicker from "vue2-datepicker";
@@ -615,7 +616,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       const formResult = await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl);
 
       if(formResult.data.formUrl?.value) {
-        const formUrlPattern = formResult.data["formUrl"]?.value;
+        const formUrlPattern = formResult.data.formUrl?.value;
         const {
           formioUrl, formId, submissionId 
         } = getFormDetails(
@@ -792,7 +793,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.reviewerUsersList = [];
     }
 
-    if(this.selectSearchType === "firstName") {
+    if(this.selectSearchType === SEARCH_OPTION_TYPE.FIRST_NAME) {
       const firstNameUserList = await CamundaRest.getUsersByFirstNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
       if(firstNameUserList) {
         this.reviewerUsersList = [];
@@ -808,7 +809,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     }
 
-    if(this.selectSearchType === "lastName") {
+    if(this.selectSearchType === SEARCH_OPTION_TYPE.LAST_NAME) {
       const lastNameUserList = await CamundaRest.getUsersByLastNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
       if(lastNameUserList) {
         this.reviewerUsersList = [];
@@ -824,7 +825,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     }
 
-    if(this.selectSearchType === "email") {
+    if(this.selectSearchType === SEARCH_OPTION_TYPE.EMAIL) {
       const emailUserList = await CamundaRest.getUsersByEmailGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
       if(emailUserList) {
         this.reviewerUsersList = [];
