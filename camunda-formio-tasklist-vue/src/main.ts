@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import {
-  BootstrapVue, BootstrapVueIcons 
+  BootstrapVue
 } from "bootstrap-vue";
 import App from "./App.vue";
 import Vue from "vue";
@@ -11,7 +11,6 @@ import store from "./store/index";
 Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
-Vue.use(BootstrapVueIcons);
 
 new Vue({
   router,
