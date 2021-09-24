@@ -107,7 +107,6 @@ export default class TaskListSort extends Vue {
       label: string;
       sortBy: string;
     }[] = [];
-
     sortingList.forEach((sortOption) => {
       if (
         !options.some(

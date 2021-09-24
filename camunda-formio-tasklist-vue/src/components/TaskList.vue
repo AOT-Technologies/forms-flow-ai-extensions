@@ -390,6 +390,7 @@ import {
   namespace 
 } from "vuex-class";
 import serviceFlowModule from "../store/modules/serviceFlow-module";
+import { sortByPriorityList } from "../services/filterListFormatterService";
 import vSelect from "vue-select";
 
 const StoreServiceFlowModule = namespace("serviceFlowModule");
