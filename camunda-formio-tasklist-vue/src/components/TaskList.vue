@@ -382,9 +382,9 @@ import DatePicker from "vue2-datepicker";
 import ExpandContract from "./addons/ExpandContract.vue";
 import FormEdit from "./form/Edit.vue";
 import FormView from "./form/View.vue";
-import Header from "./layout/Header.vue";
-import LeftSider from "./layout/LeftSider.vue";
-import TaskHistory from "../components/addons/TaskHistory.vue";
+// import Header from "./layout/Header.vue";
+// import LeftSider from "./layout/LeftSider.vue";
+// import TaskHistory from "../components/addons/TaskHistory.vue";
 import TaskListMixin from "./mixins/TaskListMixin.vue";
 import moment from "moment";
 import {
@@ -398,9 +398,9 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 @Component({
   components: {
     DatePicker,
-    TaskHistory,
-    Header,
-    LeftSider,
+    TaskHistory: () => import ("../components/addons/TaskHistory.vue"),
+    Header: () => import ("./layout/Header.vue"),
+    LeftSider: () => import("./layout/LeftSider.vue"),
     vSelect,
     ExpandContract,
     BpmnViewer,
