@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export function bpmAxios (bearerToken: string, CamundaUrl: any) {
+export function bpmAxios (bearerToken: string, CamundaUrl: string) {
   return axios.create({
     baseURL: CamundaUrl,
     withCredentials: false,
@@ -11,3 +11,32 @@ export function bpmAxios (bearerToken: string, CamundaUrl: any) {
     },
   });
 }
+
+export const httpPOSTRequest = async (
+  url: string,
+  data: any,
+  bearerToken: string,
+  isBearer = true
+) => {
+  return axios.post(url, data, {
+    headers: {
+      Authorization: isBearer ? `Bearer ${bearerToken}` : bearerToken,
+    },
+  });
+};
+
+export const httpGETRequest = async (
+  url: string,
+  data: any,
+  bearerToken: string,
+  isBearer = true
+) => {
+  const response = await axios.get(url, {
+    params: data,
+    headers: {
+      Authorization: isBearer ? `Bearer ${bearerToken}` : bearerToken,
+    },
+  });
+  return response?.data;
+
+};

@@ -1,5 +1,9 @@
-import { FormsFlowStateModelIF } from '../../interfaces';
-import { FormsFlowstateModel } from '../state';
+import {
+  FormsFlowStateModelIF 
+} from '../../interfaces';
+import {
+  FormsFlowstateModel 
+} from '../state';
 
 export default {
   namespaced: true,

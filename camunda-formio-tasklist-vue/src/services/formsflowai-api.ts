@@ -1,48 +1,27 @@
-import axios from "axios";
-
-export const httpPOSTRequest = (
-  url: string,
-  data: any,
-  token: string,
-  isBearer = true
-) => {
-  return axios.post(url, data, {
-    headers: {
-      Authorization: isBearer ? `Bearer ${token}` : token,
-    },
-  });
-};
-
-export const httpGETRequest = (
-  url: string,
-  data: any,
-  token: string,
-  isBearer = true
-) => {
-  return axios.get(url, {
-    params: data,
-    headers: {
-      Authorization: isBearer ? `Bearer ${token}` : token,
-    },
-  });
-};
+import {
+  httpGETRequest, httpPOSTRequest 
+} from "./axios";
+import {
+  ApplicationCreatePayload
+} from "../models/ApplicationCreatePayload";
 
 export const formApplicationSubmit = (
   Apiurl: string,
-  data: any,
+  data: ApplicationCreatePayload,
   token: string
 ) => {
   return httpPOSTRequest(Apiurl + "/application/create", data, token);
 };
 
-export const getformHistoryApi = (
+export const getformHistoryApi = async (
   ApiUrl: string,
   applicationId: string,
   token: string
 ) => {
   return httpGETRequest(
     ApiUrl + "/application/" + applicationId + "/history",
-    {},
+    {
+    },
     token
   );
 };

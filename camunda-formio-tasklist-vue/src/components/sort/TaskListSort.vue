@@ -54,16 +54,31 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import {
-  TASK_FILTER_LIST_DEFAULT_PARAM,
-  sortingList,
-} from "../../services/utils";
 import "../../styles/camundaFormIOTasklist.scss";
-import { Payload } from "../../models/Payload";
+import {
+  Component, Prop, Vue 
+} from "vue-property-decorator";
+import {
+  TASK_FILTER_LIST_DEFAULT_PARAM_CREATED,
+  TASK_SORT_DEFAULT_ASSINGEE,
+  TASK_SORT_DEFAULT_DUE_DATE,
+  TASK_SORT_DEFAULT_FOLLOW_UP_DATE,
+  TASK_SORT_DEFAULT_PARAM_NAME,
+  TASK_SORT_DEFAULT_PRIORITY,
+  TaskListSortType,
+  SORT_ORDER
+} from "../../models";
+import {
+  Payload 
+} from "../../models/Payload";
 import TaskSortOptions from "../sort/TaskListSortoptions.vue";
-import {TaskListSortElement} from "../../models/sorting";
-import { namespace } from "vuex-class";
+import {
+  namespace 
+} from "vuex-class";
+import {
+  sortingList 
+} from "../../services";
+
 const serviceFlowModule = namespace("serviceFlowModule");
 @Component({
   components: {
@@ -74,35 +89,41 @@ export default class TaskListSort extends Vue {
   @Prop() private perPage!: number;
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
+  @Prop() private taskSortBy!: string
+  @Prop() private taskSortOrder!: string
+
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
   public setFormsFlowTaskCurrentPage: any;
-  private sortList: TaskListSortElement[] = TASK_FILTER_LIST_DEFAULT_PARAM;
-  private sortOptions: Array<object> = [];
-  private updateSortOptions: Array<object> = [];
+  private sortList: TaskListSortType[] = [];
+  private sortOptions: TaskListSortType[] = [];
+  private updateSortOptions: TaskListSortType[] = [];
   private setupdateSortListDropdownindex = 0;
 
-  getOptions (options: TaskListSortElement[]) {
+  getOptions (options: TaskListSortType[]) {
     const optionsArray: {
       sortOrder: string;
       label: string;
       sortBy: string;
     }[] = [];
+
     sortingList.forEach((sortOption) => {
       if (
         !options.some(
           (option: { sortBy: string }) => option.sortBy === sortOption.sortBy
         )
       ) {
-        optionsArray.push({ ...sortOption });
+        optionsArray.push({
+          ...sortOption 
+        });
       }
     });
     return optionsArray;
   }
 
 
-  addSort (sort: TaskListSortElement) {
+  addSort (sort: TaskListSortType) {
     this.sortList.push(sort);
     if (this.sortList.length === sortingList.length) {
       this.updateSortOptions = this.sortOptions;
@@ -122,7 +143,7 @@ export default class TaskListSort extends Vue {
     });
   }
 
-  updateSort (sort: TaskListSortElement, index: number) {
+  updateSort (sort: TaskListSortType, index: number) {
     this.sortList[index].label = sort.label;
     this.sortList[index].sortBy = sort.sortBy;
     this.sortOptions = this.getOptions(this.sortList);
@@ -139,7 +160,7 @@ export default class TaskListSort extends Vue {
     });
   }
 
-  deleteSort (sort: TaskListSortElement, index: number) {
+  deleteSort (sort: TaskListSortType, index: number) {
     this.sortList.splice(index, 1);
     this.updateSortOptions = [];
     this.sortOptions = this.getOptions(this.sortList);
@@ -174,8 +195,66 @@ export default class TaskListSort extends Vue {
       maxResults: this.perPage,
     });
   }
-
+  getTaskSortOption () {
+    /**
+   * "created" is the default TaskSortBy and "desc" is the deafult TaskSortOrder
+   */
+    const sortOptionsDetails = {
+    } as TaskListSortType;
+    if (TASK_SORT_DEFAULT_DUE_DATE.sortBy === this.taskSortBy){
+      sortOptionsDetails.sortBy = TASK_SORT_DEFAULT_DUE_DATE.sortBy;
+      sortOptionsDetails.label = TASK_SORT_DEFAULT_DUE_DATE.label;
+      sortOptionsDetails.sortOrder = TASK_SORT_DEFAULT_DUE_DATE.sortOrder;
+      if (this.taskSortOrder === SORT_ORDER.ASCENDING){
+        sortOptionsDetails.sortOrder = SORT_ORDER.ASCENDING;
+      }
+    }
+    else if (TASK_SORT_DEFAULT_FOLLOW_UP_DATE.sortBy === this.taskSortBy){
+      sortOptionsDetails.sortBy = TASK_SORT_DEFAULT_FOLLOW_UP_DATE.sortBy;
+      sortOptionsDetails.label = TASK_SORT_DEFAULT_FOLLOW_UP_DATE.label;
+      sortOptionsDetails.sortOrder = TASK_SORT_DEFAULT_FOLLOW_UP_DATE.sortOrder;
+      if (this.taskSortOrder === SORT_ORDER.ASCENDING){
+        sortOptionsDetails.sortOrder = SORT_ORDER.ASCENDING;
+      }
+    }
+    else if (TASK_SORT_DEFAULT_PARAM_NAME.sortBy === this.taskSortBy){
+      sortOptionsDetails.sortBy = TASK_SORT_DEFAULT_PARAM_NAME.sortBy;
+      sortOptionsDetails.label = TASK_SORT_DEFAULT_PARAM_NAME.label;
+      sortOptionsDetails.sortOrder = TASK_SORT_DEFAULT_PARAM_NAME.sortOrder;
+      if (this.taskSortOrder === SORT_ORDER.ASCENDING){
+        sortOptionsDetails.sortOrder = SORT_ORDER.ASCENDING;
+      }
+    }
+    else if (TASK_SORT_DEFAULT_ASSINGEE.sortBy === this.taskSortBy){
+      sortOptionsDetails.sortBy = TASK_SORT_DEFAULT_ASSINGEE.sortBy;
+      sortOptionsDetails.label = TASK_SORT_DEFAULT_ASSINGEE.label;
+      sortOptionsDetails.sortOrder = TASK_SORT_DEFAULT_ASSINGEE.sortOrder;
+      if (this.taskSortOrder === SORT_ORDER.ASCENDING){
+        sortOptionsDetails.sortOrder = SORT_ORDER.ASCENDING;
+      }
+    }
+    else if (TASK_SORT_DEFAULT_PRIORITY.sortBy === this.taskSortBy){
+      sortOptionsDetails.sortBy = TASK_SORT_DEFAULT_PRIORITY.sortBy;
+      sortOptionsDetails.label = TASK_SORT_DEFAULT_PRIORITY.label;
+      sortOptionsDetails.sortOrder = TASK_SORT_DEFAULT_PRIORITY.sortOrder;
+      if (this.taskSortOrder === SORT_ORDER.ASCENDING){
+        sortOptionsDetails.sortOrder = SORT_ORDER.ASCENDING;
+      }
+    } else 
+    {
+      // created is the default task sort by
+      sortOptionsDetails.sortBy = TASK_FILTER_LIST_DEFAULT_PARAM_CREATED.sortBy;
+      sortOptionsDetails.label = TASK_FILTER_LIST_DEFAULT_PARAM_CREATED.label;
+      sortOptionsDetails.sortOrder = TASK_FILTER_LIST_DEFAULT_PARAM_CREATED.sortOrder;
+      if (this.taskSortOrder === SORT_ORDER.ASCENDING){
+        sortOptionsDetails.sortOrder = SORT_ORDER.ASCENDING;
+      }
+    }
+    this.payload.sorting = [sortOptionsDetails];
+    this.sortList = this.payload.sorting;
+  }
   mounted () {
+    this.getTaskSortOption();
     this.sortOptions = this.getOptions(this.sortList);
   }
 }

@@ -45,9 +45,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import FormViewSubmission from "../components/FormViewSubmission.vue";
-import { getLocalDateTime } from "../services/format-time";
+import {
+  Component, Prop, Vue 
+} from "vue-property-decorator";
+import FormViewSubmission from "../FormViewSubmission.vue";
+import {
+  TaskHistoryListPayload 
+} from "../../models";
+import {
+  getLocalDateTime 
+} from "../../services";
 
 @Component({
   components: {
@@ -55,7 +62,9 @@ import { getLocalDateTime } from "../services/format-time";
   },
 })
 export default class TaskHistory extends Vue {
-  @Prop({ default: [] }) private taskHistoryList!: Array<object>;
+  @Prop({
+    default: [] 
+  }) private taskHistoryList!: TaskHistoryListPayload[];
   @Prop() private applicationId!: string;
 
   private fId: string = "";
@@ -71,7 +80,7 @@ export default class TaskHistory extends Vue {
   //   this.sId = submissionId;
   // }
 
-  formatURL (url: any) {
+  formatURL (url: string) {
     const currentUrl = window.location.protocol + "//" + window.location.host;
     const a = document.createElement("a");
     a.href = url;
