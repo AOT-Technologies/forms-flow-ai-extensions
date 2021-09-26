@@ -89,12 +89,7 @@
                   <DatePicker
                     type="datetime"
                     placeholder="Set Follow-up date"
-                    v-model="
-                      setFollowup[
-                        (getFormsFlowTaskCurrentPage - 1) * perPage +
-                          getFormsFlowactiveIndex
-                      ]
-                    "
+                    v-model="task.followUp"
                     @change="updateFollowUpDate"
                   ></DatePicker>
                 </span>
@@ -116,12 +111,7 @@
                   <DatePicker
                     type="datetime"
                     placeholder="Set Due Date"
-                    v-model="
-                      setDue[
-                        (getFormsFlowTaskCurrentPage - 1) * perPage +
-                          getFormsFlowactiveIndex
-                      ]
-                    "
+                    v-model="task.due"
                     @change="updateDueDate"
                   ></DatePicker>
                 </span>
@@ -441,8 +431,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private formioUrl: string = "";
   private task: TaskPayload = {
   };
-  private setFollowup: Array<Date | null> = [];
-  private setDue: Array<Date | null> = [];
   private setGroup = null;
   private userSelected: UserListPayload = {
   };
@@ -852,13 +840,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async updateFollowUpDate () {
     const referenceobject = this.task;
     try {
-      referenceobject["followUp"] = getISODateTime(
-        this.setFollowup[
-          (this.getFormsFlowTaskCurrentPage - 1) * this.perPage
-            + this.getFormsFlowactiveIndex
-        ]!
-      );
-      await this.updateTaskDatedetails(this.task.id!, referenceobject);
+      if(this.task?.followUp !== null) {
+        referenceobject.followUp = getISODateTime(
+        this.task?.followUp
+        );
+        await this.updateTaskDatedetails(this.task.id!, referenceobject);
+      }
     } catch {
       console.warn("Follow date error"); // eslint-disable-line no-console
     }
@@ -867,13 +854,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async updateDueDate () {
     const referenceobject = this.task;
     try {
-      referenceobject["due"] = getISODateTime(
-        this.setDue[
-          (this.getFormsFlowTaskCurrentPage - 1) * this.perPage
-            + this.getFormsFlowactiveIndex
-        ]!
-      );
-      await this.updateTaskDatedetails(this.task.id!, referenceobject);
+      if(this.task?.due !== null) {
+        referenceobject["due"] = getISODateTime(
+        this.task?.due
+        );
+        await this.updateTaskDatedetails(this.task.id!, referenceobject);
+      }
     } catch {
       console.warn("Due date error"); // eslint-disable-line no-console
     }
@@ -882,10 +868,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async removeDueDate () {
     const referenceobject = this.task;
     try {
-      this.setDue[
-        (this.getFormsFlowTaskCurrentPage - 1) * this.perPage
-          + this.getFormsFlowactiveIndex
-      ] = null;
       referenceobject["due"] = null;
       await this.updateTaskDatedetails(this.task.id!, referenceobject);
     } catch {
@@ -897,10 +879,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const referenceobject = this.task;
     try {
       referenceobject["followUp"] = null;
-      this.setFollowup[
-        (this.getFormsFlowTaskCurrentPage - 1) * this.perPage
-          + this.getFormsFlowactiveIndex
-      ] = null;
       await this.updateTaskDatedetails(this.task.id!, referenceobject);
     } catch {
       console.warn("Follow up date error"); // eslint-disable-line no-console
