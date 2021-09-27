@@ -295,11 +295,13 @@
                       aria-busy="true"
                     >
                       <div v-if="task.assignee === userName">
+                        <transition name="fade">
                         <FormEdit
                           :formioUrl="formioUrl"
                           @onformsubmit="onFormSubmitCallback"
                           @oncustomevent="oncustomEventCallback"
                         />
+                        </transition>
                       </div>
                       <div v-else>
                         <FormView :formioUrl="formioUrl"/>
@@ -786,18 +788,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     if(this.selectSearchType === "firstName") {
       const firstNameUserList = await CamundaRest.getUsersByFirstNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
-      if(firstNameUserList) {
-        this.reviewerUsersList = [];
-        firstNameUserList.data.forEach((user: UserPayload) => {
-          this.reviewerUsersList.push({
-            code: user.id,
-            email: user.email!,
-            firstName: `${user.firstName!} ${user.lastName!}`,
-            lastName: `${user.lastName!} ${user.firstName!}`,
-          });
+      this.reviewerUsersList = [];
+      firstNameUserList.data.forEach((user: UserPayload) => {
+        this.reviewerUsersList.push({
+          code: user.id,
+          email: user.email!,
+          firstName: `${user.firstName!} ${user.lastName!}`,
+          lastName: `${user.lastName!} ${user.firstName!}`,
         });
-        loading(false);
-      }
+      });
+      loading(false);
     }
 
     if(this.selectSearchType === "lastName") {
@@ -903,6 +903,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.getBPMTaskDetail(taskId),
         this.getTaskFormIODetails(taskId),
       ]);
+      //await is so not used for this promise, as if a user doesn't want to wait for the history and proces diagram to load
       Promise.all([
         this.getTaskHistoryDetails(),
         this.getTaskProcessDiagramDetails(this.task.processDefinitionId!)
