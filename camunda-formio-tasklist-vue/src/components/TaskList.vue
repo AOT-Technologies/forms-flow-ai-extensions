@@ -58,7 +58,7 @@
               class="cft-task-name"
               v-b-tooltip.hover
               title="Process Name"
-              >{{ taskProcess }}</span
+              >{{ task.taskProcess }}</span
             >
           </b-row>
           <br />
@@ -67,7 +67,7 @@
               class="cft-application-id"
               v-b-tooltip.hover
               title="Application Id"
-              >Application ID # {{ applicationId }}</span
+              >Application ID # {{ task.applicationId }}</span
             >
           </b-row>
           <div class="cft-actionable-container">
@@ -310,7 +310,7 @@
                 <b-tab title="History">
                   <TaskHistory
                     :taskHistoryList="taskHistoryList"
-                    :applicationId="applicationId"
+                    :applicationId="task.applicationId"
                   />
                 </b-tab>
                 <b-tab
@@ -434,7 +434,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   private tasks: TaskPayload[] = [];
   private fulltasks: TaskPayload[] = [];
-  private taskProcess: string = "";
   private formId: string = "";
   private submissionId: string = "";
   private formioUrl: string = "";
@@ -449,7 +448,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private tasklength: number = 0;
   private filterList: FilterPayload[] = [];
   private editAssignee: boolean = false;
-  private applicationId: string = "";
   private groupList: GroupListPayload[] = [];
   private groupListNames?: Array<string> = [];
   private groupListItems: string[] = [];
@@ -562,7 +560,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           value: this.formioUrl,
         },
         applicationId: {
-          value: this.applicationId,
+          value: this.task?.applicationId,
         },
       },
     };
@@ -601,8 +599,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     );
     this.task = taskResult.data;
-    this.taskProcess = processResult.data.name;
-    this.applicationId = applicationIdResult.data.applicationId.value;
+    this.task.taskProcess = processResult.data.name;
+    this.task.applicationId = applicationIdResult.data.applicationId.value;
     await this.getGroupDetails();
   }
 
@@ -634,20 +632,20 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async getTaskHistoryDetails () {
     this.taskHistoryList = [];
 
-    if (this.applicationId) {
+    if (this.task?.applicationId) {
       const applicationHistoryList = await getformHistoryApi(
         this.formsflowaiApiUrl,
-        this.applicationId,
+        this.task.applicationId,
         this.token
       );
       this.taskHistoryList = applicationHistoryList.applications;
     }
   }
 
-  async getTaskProcessDiagramDetails (task: TaskPayload) {
+  async getTaskProcessDiagramDetails (processDefinitionId: string) {
     const getProcessResult = await CamundaRest.getProcessDiagramXML(
       this.token,
-      task.processDefinitionId!,
+      processDefinitionId,
       this.bpmApiUrl
     );
     this.xmlData = getProcessResult.data.bpmn20Xml;
@@ -906,6 +904,17 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
+  async fetchTaskDetails (taskId: string) {
+      await Promise.all([
+        this.getBPMTaskDetail(taskId),
+        this.getTaskFormIODetails(taskId),
+      ]);
+      Promise.all([
+        this.getTaskHistoryDetails(),
+        this.getTaskProcessDiagramDetails(this.task.processDefinitionId!)
+      ]);  
+  }  
+
   async fetchTaskData (taskId: string) {
     const res = await CamundaRest.getTaskById(
       this.token,
@@ -915,14 +924,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.task = res.data;
     if (this.task) {
       await this.getBPMTaskDetail(taskId);
-      await Promise.all([CamundaRest.getVariablesByProcessId(
-        this.token,
-        this.task.processInstanceId!,
-        this.bpmApiUrl
-      ), this.getTaskFormIODetails(taskId), 
-      this.getTaskHistoryDetails(),
+      await Promise.all([
+      this.getTaskFormIODetails(taskId),
+      this.getTaskProcessDiagramDetails(this.task.processDefinitionId!)
       ]);
-      await this.getTaskProcessDiagramDetails(this.task);
+      // await this.getTaskProcessDiagramDetails(this.task);
     }
   }
 
@@ -954,7 +960,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.$root.$on("call-fetchData", async (para: any) => {
       this.editAssignee = false;
       this.setFormsFlowTaskId(para.selectedTaskId);
-      await this.fetchTaskData(this.getFormsFlowTaskId);
+      await this.fetchTaskDetails(this.getFormsFlowTaskId);
     });
 
     this.$root.$on("call-fetchPaginatedTaskList", async (para: any) => {
