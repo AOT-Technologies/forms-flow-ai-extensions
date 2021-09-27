@@ -10,10 +10,10 @@
         button
         v-for="(task, idx) in tasks"
         v-bind:key="task.id"
-        v-on:click="toggle(idx)"
+        @click="toggle(idx); showTaskDetails(task.id)"
         :class="{ 'cft-selected': task.id == getFormsFlowTaskId }"
+        class="cft-select-task"
       >
-        <div @click="setselectedTask(task.id)" class="cft-select-task">
           <span class="cft-task-title font-weight-bold" data-title="Task Name">{{ task.name }}</span>
           <b-row>
             <b-col cols="7">
@@ -66,7 +66,6 @@
               </b-col>
             </div>
           </b-row>
-        </div>
       </b-list-group-item>
 
       <b-pagination
@@ -136,16 +135,12 @@ export default class LeftSider extends Mixins(BaseMixin) {
 
   private getProcessDefinitions: Array<object> = [];
   private processDefinitionId = "";
-  // private activeIndex = NaN;
   private currentPage = 1;
 
   @Watch("currentPage")
   onPageChange (newVal: number) {
     this.payload["firstResult"] = (newVal - 1) * this.perPage;
     this.payload["maxResults"] = this.perPage;
-    if (this.currentPage !== this.getFormsFlowTaskCurrentPage) {
-      // this.activeIndex = NaN;
-    }
     this.setFormsFlowTaskCurrentPage(this.currentPage);
     this.$root.$emit("call-fetchPaginatedTaskList", {
       filterId: this.selectedfilterId,
@@ -168,7 +163,8 @@ export default class LeftSider extends Mixins(BaseMixin) {
     return process && process[dataKey];
   }
 
-  setselectedTask (taskId: string) {
+  showTaskDetails (taskId: string) {
+    console.log("showTaskDetails", taskId);
     this.setFormsFlowTaskId(taskId);
     this.$root.$emit("call-fetchData", {
       selectedTaskId: taskId 
@@ -191,11 +187,15 @@ export default class LeftSider extends Mixins(BaseMixin) {
       },
       ...queryList,
     };
+    console.log("onSearchUpdateTasklistResult - callfetchTaskList", this.selectedfilterId);
+
     if (!isEqual(this.payload, requiredParams)) {
       this.$root.$emit("call-fetchTaskListCount", {
         filterId: this.selectedfilterId,
         requestData: cloneDeep(requiredParams),
       });
+    
+      console.log("onSearchUpdateTasklistResult - callfetchPaginatedTaskList", this.selectedfilterId);
       this.$root.$emit("call-fetchPaginatedTaskList", {
         filterId: this.selectedfilterId,
         requestData: cloneDeep(requiredParams),

@@ -2,6 +2,8 @@ export interface TaskPayload {
   id?: string;
   name?: string;
   assignee?: string;
+  applicationId?: string;
+  taskProcess?: string;
   created?: string;
   due?: string|null;
   followUp?: string|null;
