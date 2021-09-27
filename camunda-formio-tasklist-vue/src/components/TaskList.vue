@@ -783,50 +783,44 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     if(this.selectSearchType === SEARCH_OPTION_TYPE.FIRST_NAME) {
       const firstNameUserList = await CamundaRest.getUsersByFirstNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
-      if(firstNameUserList) {
-        this.reviewerUsersList = [];
-        firstNameUserList.data.forEach((user: UserPayload) => {
-          this.reviewerUsersList.push({
-            code: user.id,
-            email: user.email!,
-            firstName: `${user.firstName!} ${user.lastName!}`,
-            lastName: `${user.lastName!} ${user.firstName!}`,
-          });
+      this.reviewerUsersList = [];
+      firstNameUserList.data.forEach((user: UserPayload) => {
+        this.reviewerUsersList.push({
+          code: user.id,
+          email: user.email!,
+          firstName: `${user.firstName!} ${user.lastName!}`,
+          lastName: `${user.lastName!} ${user.firstName!}`,
         });
-        loading(false);
-      }
+      });
+      loading(false);
     }
 
     if(this.selectSearchType === SEARCH_OPTION_TYPE.LAST_NAME) {
       const lastNameUserList = await CamundaRest.getUsersByLastNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
-      if(lastNameUserList) {
-        this.reviewerUsersList = [];
-        lastNameUserList.data.forEach((user: UserPayload) => {
-          this.reviewerUsersList.push({
-            code: user.id,
-            email: user.email!,
-            firstName: `${user.firstName!} ${user.lastName!}`,
-            lastName: `${user.lastName!} ${user.firstName!}`,
-          });
+      this.reviewerUsersList = [];
+      lastNameUserList.data.forEach((user: UserPayload) => {
+        this.reviewerUsersList.push({
+          code: user.id,
+          email: user.email!,
+          firstName: `${user.firstName!} ${user.lastName!}`,
+          lastName: `${user.lastName!} ${user.firstName!}`,
         });
-        loading(false);
-      }
+      });
+      loading(false);
     }
 
     if(this.selectSearchType === SEARCH_OPTION_TYPE.EMAIL) {
       const emailUserList = await CamundaRest.getUsersByEmailGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
-      if(emailUserList) {
-        this.reviewerUsersList = [];
-        emailUserList.data.forEach((user: UserPayload) => {
-          this.reviewerUsersList.push({
-            code: user.id,
-            email: user.email!,
-            firstName: `${user.firstName!} ${user.lastName!}`,
-            lastName: `${user.lastName!} ${user.firstName!}`,
-          });
+      this.reviewerUsersList = [];
+      emailUserList.data.forEach((user: UserPayload) => {
+        this.reviewerUsersList.push({
+          code: user.id,
+          email: user.email!,
+          firstName: `${user.firstName!} ${user.lastName!}`,
+          lastName: `${user.lastName!} ${user.firstName!}`,
         });
-        loading(false);
-      }
+      });
+      loading(false);
     }
   }
 
