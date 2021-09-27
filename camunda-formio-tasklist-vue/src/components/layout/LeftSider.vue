@@ -89,7 +89,7 @@
 import {
   Component, Mixins, Prop, Watch 
 } from "vue-property-decorator";
-import BaseMixin from "../mixins/BaseMixin.vue";
+import BaseMixin from "../../mixins/BaseMixin.vue";
 import {
   CamundaRest, getFormattedDateAndTime
 } from "../../services";

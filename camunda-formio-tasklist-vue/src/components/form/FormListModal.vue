@@ -105,7 +105,7 @@ import {
   FormListItemsPayload,
   FormioSubmissionPayload 
 } from "../../models";
-import BaseMixin from "../mixins/BaseMixin.vue";
+import BaseMixin from "../../mixins/BaseMixin.vue";
 import {
   CamundaRest 
 } from "../../services/camunda-rest";
