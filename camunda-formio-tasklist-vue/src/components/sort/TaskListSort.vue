@@ -59,25 +59,22 @@ import {
   Component, Prop, Vue 
 } from "vue-property-decorator";
 import {
+  Payload,
   TASK_FILTER_LIST_DEFAULT_PARAM_CREATED,
   TASK_SORT_DEFAULT_ASSINGEE,
   TASK_SORT_DEFAULT_DUE_DATE,
   TASK_SORT_DEFAULT_FOLLOW_UP_DATE,
   TASK_SORT_DEFAULT_PARAM_NAME,
   TASK_SORT_DEFAULT_PRIORITY,
+  TASK_SORTING_FULL_LIST,
   TaskListSortType,
   SORT_ORDER
 } from "../../models";
-import {
-  Payload 
-} from "../../models/Payload";
 import TaskSortOptions from "../sort/TaskListSortoptions.vue";
 import {
   namespace 
 } from "vuex-class";
-import {
-  sortingList 
-} from "../../services";
+
 
 const serviceFlowModule = namespace("serviceFlowModule");
 @Component({
@@ -107,7 +104,7 @@ export default class TaskListSort extends Vue {
       sortBy: string;
     }[] = [];
 
-    sortingList.forEach((sortOption) => {
+    TASK_SORTING_FULL_LIST.forEach((sortOption) => {
       if (
         !options.some(
           (option: { sortBy: string }) => option.sortBy === sortOption.sortBy
@@ -121,15 +118,7 @@ export default class TaskListSort extends Vue {
     return optionsArray;
   }
 
-
-  addSort (sort: TaskListSortType) {
-    this.sortList.push(sort);
-    if (this.sortList.length === sortingList.length) {
-      this.updateSortOptions = this.sortOptions;
-      this.sortOptions = [];
-    } else {
-      this.sortOptions = this.getOptions(this.sortList);
-    }
+  afterSortApiCalls() {
     this.setFormsFlowTaskCurrentPage(1);
     this.$root.$emit("update-pagination-currentpage", {
       page: this.getFormsFlowTaskCurrentPage,
@@ -140,6 +129,19 @@ export default class TaskListSort extends Vue {
       firstResult: (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
       maxResults: this.perPage,
     });
+  }
+
+
+  addSort (sort: TaskListSortType) {
+    this.sortList.push(sort);
+    if (this.sortList.length === TASK_SORTING_FULL_LIST.length) {
+      this.updateSortOptions = this.sortOptions;
+      this.sortOptions = [];
+    } else {
+      this.sortOptions = this.getOptions(this.sortList);
+    }
+    
+    this.afterSortApiCalls();
   }
 
   updateSort (sort: TaskListSortType, index: number) {
@@ -147,16 +149,8 @@ export default class TaskListSort extends Vue {
     this.sortList[index].sortBy = sort.sortBy;
     this.sortOptions = this.getOptions(this.sortList);
     this.payload["sorting"] = this.sortList;
-    this.setFormsFlowTaskCurrentPage(1);
-    this.$root.$emit("update-pagination-currentpage", {
-      page: this.getFormsFlowTaskCurrentPage,
-    });
-    this.$root.$emit("call-fetchPaginatedTaskList", {
-      filterId: this.selectedfilterId,
-      requestData: this.payload,
-      firstResult: (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
-      maxResults: this.perPage,
-    });
+    
+    this.afterSortApiCalls();
   }
 
   deleteSort (sort: TaskListSortType, index: number) {
@@ -164,16 +158,8 @@ export default class TaskListSort extends Vue {
     this.updateSortOptions = [];
     this.sortOptions = this.getOptions(this.sortList);
     this.payload["sorting"] = this.sortList;
-    this.setFormsFlowTaskCurrentPage(1);
-    this.$root.$emit("update-pagination-currentpage", {
-      page: this.getFormsFlowTaskCurrentPage,
-    });
-    this.$root.$emit("call-fetchPaginatedTaskList", {
-      filterId: this.selectedfilterId,
-      requestData: this.payload,
-      firstResult: (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
-      maxResults: this.perPage,
-    });
+    
+    this.afterSortApiCalls();
   }
 
   toggleSort (index: number) {
@@ -183,77 +169,47 @@ export default class TaskListSort extends Vue {
       this.sortList[index].sortOrder = "asc";
     }
     this.payload["sorting"] = this.sortList;
-    this.setFormsFlowTaskCurrentPage(1);
-    this.$root.$emit("update-pagination-currentpage", {
-      page: this.getFormsFlowTaskCurrentPage,
-    });
-    this.$root.$emit("call-fetchPaginatedTaskList", {
-      filterId: this.selectedfilterId,
-      requestData: this.payload,
-      firstResult: (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
-      maxResults: this.perPage,
-    });
+    
+    this.afterSortApiCalls();
   }
-  getTaskSortOption () {
+
+  getDefaultTaskSortOption () {
     /**
    * "created" is the default TaskSortBy and "desc" is the deafult TaskSortOrder
    */
-    const sortOptionsDetails = {
-    } as TaskListSortType;
-    if (TASK_SORT_DEFAULT_DUE_DATE.sortBy === this.taskSortBy){
-      sortOptionsDetails.sortBy = TASK_SORT_DEFAULT_DUE_DATE.sortBy;
-      sortOptionsDetails.label = TASK_SORT_DEFAULT_DUE_DATE.label;
-      sortOptionsDetails.sortOrder = TASK_SORT_DEFAULT_DUE_DATE.sortOrder;
-      if (this.taskSortOrder === SORT_ORDER.ASCENDING){
-        sortOptionsDetails.sortOrder = SORT_ORDER.ASCENDING;
-      }
+
+    if (this.taskSortBy === TASK_SORT_DEFAULT_DUE_DATE.sortBy) {
+      this.sortList = [TASK_SORT_DEFAULT_DUE_DATE];
     }
-    else if (TASK_SORT_DEFAULT_FOLLOW_UP_DATE.sortBy === this.taskSortBy){
-      sortOptionsDetails.sortBy = TASK_SORT_DEFAULT_FOLLOW_UP_DATE.sortBy;
-      sortOptionsDetails.label = TASK_SORT_DEFAULT_FOLLOW_UP_DATE.label;
-      sortOptionsDetails.sortOrder = TASK_SORT_DEFAULT_FOLLOW_UP_DATE.sortOrder;
-      if (this.taskSortOrder === SORT_ORDER.ASCENDING){
-        sortOptionsDetails.sortOrder = SORT_ORDER.ASCENDING;
-      }
+
+    else if (this.taskSortBy === TASK_SORT_DEFAULT_FOLLOW_UP_DATE.sortBy) {
+      this.sortList = [TASK_SORT_DEFAULT_FOLLOW_UP_DATE];
     }
-    else if (TASK_SORT_DEFAULT_PARAM_NAME.sortBy === this.taskSortBy){
-      sortOptionsDetails.sortBy = TASK_SORT_DEFAULT_PARAM_NAME.sortBy;
-      sortOptionsDetails.label = TASK_SORT_DEFAULT_PARAM_NAME.label;
-      sortOptionsDetails.sortOrder = TASK_SORT_DEFAULT_PARAM_NAME.sortOrder;
-      if (this.taskSortOrder === SORT_ORDER.ASCENDING){
-        sortOptionsDetails.sortOrder = SORT_ORDER.ASCENDING;
-      }
+
+    else if (this.taskSortBy === TASK_SORT_DEFAULT_PARAM_NAME.sortBy) {
+      this.sortList = [TASK_SORT_DEFAULT_FOLLOW_UP_DATE];
     }
-    else if (TASK_SORT_DEFAULT_ASSINGEE.sortBy === this.taskSortBy){
-      sortOptionsDetails.sortBy = TASK_SORT_DEFAULT_ASSINGEE.sortBy;
-      sortOptionsDetails.label = TASK_SORT_DEFAULT_ASSINGEE.label;
-      sortOptionsDetails.sortOrder = TASK_SORT_DEFAULT_ASSINGEE.sortOrder;
-      if (this.taskSortOrder === SORT_ORDER.ASCENDING){
-        sortOptionsDetails.sortOrder = SORT_ORDER.ASCENDING;
-      }
+
+    else if (this.taskSortBy === TASK_SORT_DEFAULT_ASSINGEE.sortBy) {
+      this.sortList = [TASK_SORT_DEFAULT_FOLLOW_UP_DATE];
     }
-    else if (TASK_SORT_DEFAULT_PRIORITY.sortBy === this.taskSortBy){
-      sortOptionsDetails.sortBy = TASK_SORT_DEFAULT_PRIORITY.sortBy;
-      sortOptionsDetails.label = TASK_SORT_DEFAULT_PRIORITY.label;
-      sortOptionsDetails.sortOrder = TASK_SORT_DEFAULT_PRIORITY.sortOrder;
-      if (this.taskSortOrder === SORT_ORDER.ASCENDING){
-        sortOptionsDetails.sortOrder = SORT_ORDER.ASCENDING;
-      }
-    } else 
-    {
-      // created is the default task sort by
-      sortOptionsDetails.sortBy = TASK_FILTER_LIST_DEFAULT_PARAM_CREATED.sortBy;
-      sortOptionsDetails.label = TASK_FILTER_LIST_DEFAULT_PARAM_CREATED.label;
-      sortOptionsDetails.sortOrder = TASK_FILTER_LIST_DEFAULT_PARAM_CREATED.sortOrder;
-      if (this.taskSortOrder === SORT_ORDER.ASCENDING){
-        sortOptionsDetails.sortOrder = SORT_ORDER.ASCENDING;
-      }
+
+    else if (this.taskSortBy === TASK_SORT_DEFAULT_PRIORITY.sortBy) {
+      this.sortList = [TASK_SORT_DEFAULT_FOLLOW_UP_DATE];
     }
-    this.payload.sorting = [sortOptionsDetails];
-    this.sortList = this.payload.sorting;
+
+    else {
+      this.sortList = [TASK_FILTER_LIST_DEFAULT_PARAM_CREATED];
+    }
+
+    if (this.taskSortOrder === SORT_ORDER.ASCENDING){
+      this.sortList[0].sortOrder = SORT_ORDER.ASCENDING;
+    }
+    this.payload.sorting = this.sortList;
   }
+
   mounted () {
-    this.getTaskSortOption();
+    this.getDefaultTaskSortOption();
     this.sortOptions = this.getOptions(this.sortList);
   }
 }
