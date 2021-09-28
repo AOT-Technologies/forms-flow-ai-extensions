@@ -8,5 +8,5 @@ import {
 * @returns if the logged in user is authorized or not
 */
 export function isAllowedUser(userDetails: UserDetailFromToken, allowedGroup: string): boolean {
-  return !userDetails?.resource_access?.["forms-flow-web"]?.roles.includes(allowedGroup);
+  return userDetails?.resource_access?.["forms-flow-web"]?.roles.includes(allowedGroup);
 }
