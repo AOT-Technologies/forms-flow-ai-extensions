@@ -212,12 +212,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     this.$root.$on("update-pagination-currentpage", (para: any) => {
       this.currentPage = para.page;
     });
-    // this.$root.$on("update-activeIndex-pagination", (para: any) => {
-    //   this.activeIndex = para.activeindex;
-    // });
-    // if (this.getFormsFlowactiveIndex > 0) {
-    //   this.activeIndex = this.getFormsFlowactiveIndex;
-    // }
+    
     this.currentPage = this.getFormsFlowTaskCurrentPage;
     this.$root.$emit("call-fetchData", {
       selectedTaskId: this.getFormsFlowTaskId,
