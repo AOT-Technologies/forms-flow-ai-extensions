@@ -865,7 +865,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.getBPMTaskDetail(taskId),
       this.getTaskFormIODetails(taskId),
     ]);
-    //await is so not used for this promise, as if a user doesn't want to wait for the history and proces diagram to load
+    /*await is not used for this promise, as if a user doesn't want to wait for
+     the history and proces diagram to load */
     Promise.all([
       this.getTaskHistoryDetails(),
       this.getTaskProcessDiagramDetails(this.task.processDefinitionId!)
@@ -900,9 +901,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       })
       .indexOf(this.taskIdValue);
     this.setFormsFlowactiveIndex(pos % this.perPage);
-    this.$root.$emit("update-activeIndex-pagination", {
-      activeindex: this.getFormsFlowactiveIndex,
-    });
     this.setFormsFlowTaskCurrentPage(Math.floor(pos / this.perPage) + 1);
     this.$root.$emit("update-pagination-currentpage", {
       page: this.getFormsFlowTaskCurrentPage,
