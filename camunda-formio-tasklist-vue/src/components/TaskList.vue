@@ -779,13 +779,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if(this.selectSearchType === SEARCH_OPTION_TYPE.FIRST_NAME) {
       const firstNameUserList = await CamundaRest.getUsersByFirstNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
       this.reviewerUsersList = [];
-      firstNameUserList.data.forEach((user: UserPayload) => {
-        this.reviewerUsersList.push({
-          code: user.id,
-          email: user.email!,
-          firstName: `${user.firstName!} ${user.lastName!}`,
-          lastName: `${user.lastName!} ${user.firstName!}`,
-        });
+      firstNameUserList.data.map((user: UserPayload) => {
+        this.reviewerUsersList.push(UserListObject(user));
       });
       loading(false);
     }
