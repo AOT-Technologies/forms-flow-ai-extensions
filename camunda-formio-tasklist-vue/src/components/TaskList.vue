@@ -556,7 +556,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           value: this.formioUrl,
         },
         applicationId: {
-          value: this.task?.applicationId,
+          value: this.task.applicationId!,
         },
       },
     };
@@ -899,15 +899,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async fetchTaskDetails (taskId: string) {
-      await Promise.all([
-        this.getBPMTaskDetail(taskId),
-        this.getTaskFormIODetails(taskId),
-      ]);
-      //await is so not used for this promise, as if a user doesn't want to wait for the history and proces diagram to load
-      Promise.all([
-        this.getTaskHistoryDetails(),
-        this.getTaskProcessDiagramDetails(this.task.processDefinitionId!)
-      ]);  
+    await Promise.all([
+      this.getBPMTaskDetail(taskId),
+      this.getTaskFormIODetails(taskId),
+    ]);
+    //await is so not used for this promise, as if a user doesn't want to wait for the history and proces diagram to load
+    Promise.all([
+      this.getTaskHistoryDetails(),
+      this.getTaskProcessDiagramDetails(this.task.processDefinitionId!)
+    ]);  
   }  
 
   async fetchTaskData (taskId: string) {
@@ -920,8 +920,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if (this.task) {
       await this.getBPMTaskDetail(taskId);
       await Promise.all([
-      this.getTaskFormIODetails(taskId),
-      this.getTaskProcessDiagramDetails(this.task.processDefinitionId!)
+        this.getTaskFormIODetails(taskId),
+        this.getTaskProcessDiagramDetails(this.task.processDefinitionId!)
       ]);
     }
   }
