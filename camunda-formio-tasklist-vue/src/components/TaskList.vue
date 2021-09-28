@@ -364,6 +364,7 @@ import {
   SEARCH_OPTION_TYPE,
   TaskHistoryListPayload, 
   TaskPayload, 
+  UserListObject,
   UserListPayload, 
   UserPayload, 
   UserSearchListLabelPayload, 
@@ -784,13 +785,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if(this.selectSearchType === SEARCH_OPTION_TYPE.FIRST_NAME) {
       const firstNameUserList = await CamundaRest.getUsersByFirstNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
       this.reviewerUsersList = [];
-      firstNameUserList.data.forEach((user: UserPayload) => {
-        this.reviewerUsersList.push({
-          code: user.id,
-          email: user.email!,
-          firstName: `${user.firstName!} ${user.lastName!}`,
-          lastName: `${user.lastName!} ${user.firstName!}`,
-        });
+      firstNameUserList.data.map((user: UserPayload) => {
+        this.reviewerUsersList.push(UserListObject(user));
       });
       loading(false);
     }
@@ -798,13 +794,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if(this.selectSearchType === SEARCH_OPTION_TYPE.LAST_NAME) {
       const lastNameUserList = await CamundaRest.getUsersByLastNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
       this.reviewerUsersList = [];
-      lastNameUserList.data.forEach((user: UserPayload) => {
-        this.reviewerUsersList.push({
-          code: user.id,
-          email: user.email!,
-          firstName: `${user.firstName!} ${user.lastName!}`,
-          lastName: `${user.lastName!} ${user.firstName!}`,
-        });
+      lastNameUserList.data.map((user: UserPayload) => {
+        this.reviewerUsersList.push(UserListObject(user));
       });
       loading(false);
     }
@@ -812,16 +803,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if(this.selectSearchType === SEARCH_OPTION_TYPE.EMAIL) {
       const emailUserList = await CamundaRest.getUsersByEmailGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
       this.reviewerUsersList = [];
-      emailUserList.data.forEach((user: UserPayload) => {
-        this.reviewerUsersList.push({
-          code: user.id,
-          email: user.email!,
-          firstName: `${user.firstName!} ${user.lastName!}`,
-          lastName: `${user.lastName!} ${user.firstName!}`,
-        });
+      emailUserList.data.map((user: UserPayload) => {
+        this.reviewerUsersList.push(UserListObject(user));
       });
       loading(false);
     }
+    loading(false);
   }
 
   async updateTaskDatedetails (taskId: string, task: TaskPayload) {
@@ -1024,12 +1011,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if(reviewerList) {
       this.reviewerUsersList = [];
       reviewerList.data.forEach((user: UserPayload) => {
-        this.reviewerUsersList.push({
-          code: user.id,
-          email: user.email!,
-          firstName: `${user.firstName!} ${user.lastName!}`,
-          lastName: `${user.lastName!} ${user.firstName!}`,
-        });
+        this.reviewerUsersList.push(UserListObject(user));
       });
     }
 
