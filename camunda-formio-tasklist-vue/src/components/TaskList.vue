@@ -875,13 +875,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.task = res.data;
     if (this.task) {
       await this.getBPMTaskDetail(taskId);
-      await Promise.all([CamundaRest.getVariablesByProcessId(
+      await CamundaRest.getVariablesByProcessId(
         this.token,
         this.task.processInstanceId!,
         this.bpmApiUrl
-      ), this.getTaskFormIODetails(taskId), 
-      this.getTaskHistoryDetails(),
-      ]);
+      );
+      await this.getTaskFormIODetails(taskId);
+      await this.getTaskHistoryDetails();
       await this.getTaskProcessDiagramDetails(this.task);
     }
   }
