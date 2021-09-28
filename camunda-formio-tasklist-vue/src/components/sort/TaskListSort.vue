@@ -95,11 +95,10 @@ export default class TaskListSort extends Vue {
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
-  public setFormsFlowTaskCurrentPage: any;
+  private setFormsFlowTaskCurrentPage: any;
   private sortList: TaskListSortType[] = [];
   private sortOptions: TaskListSortType[] = [];
   private updateSortOptions: TaskListSortType[] = [];
-  private setupdateSortListDropdownindex = 0;
 
   getOptions (options: TaskListSortType[]) {
     const optionsArray: {
