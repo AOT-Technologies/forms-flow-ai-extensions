@@ -192,7 +192,6 @@ export default class LeftSider extends Mixins(BaseMixin) {
         requestData: cloneDeep(requiredParams),
       });
     
-      console.log("onSearchUpdateTasklistResult - callfetchPaginatedTaskList", this.selectedfilterId);
       this.$root.$emit("call-fetchPaginatedTaskList", {
         filterId: this.selectedfilterId,
         requestData: cloneDeep(requiredParams),
