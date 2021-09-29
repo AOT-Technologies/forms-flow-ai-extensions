@@ -864,7 +864,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     await Promise.all([
       this.getBPMTaskDetail(taskId),
       this.getTaskFormIODetails(taskId),
-    ]);
+    ]);    
     /*await is not used for this promise, as if a user doesn't want to wait for
      the history and proces diagram to load */
     Promise.all([
@@ -911,7 +911,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
     this.setFormsFlowactiveIndex(NaN);
-    this.$root.$on("call-fetchData", async (para: any) => {
+    this.$root.$on("call-fetchTaskDetails", async (para: any) => {
       this.editAssignee = false;
       this.setFormsFlowTaskId(para.selectedTaskId);
       await this.fetchTaskDetails(this.getFormsFlowTaskId);
@@ -1033,7 +1033,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   beforeDestroy () {
     SocketIOService.disconnect();
-    this.$root.$off("call-fetchData");
+    this.$root.$off("call-fetchTaskDetails");
     this.$root.$off("call-fetchPaginatedTaskList");
     this.$root.$off("call-fetchTaskListCount");
     this.$root.$off("call-managerScreen");

@@ -154,6 +154,14 @@ export default class LeftSider extends Mixins(BaseMixin) {
     return moment(date).fromNow();
   }
 
+  getExactDate (date: Date) {
+    return getFormattedDateAndTime(date);
+  }
+
+  toggle (index: number) {
+    this.setFormsFlowactiveIndex(index);
+  }
+
   getProcessDataFromList (
     processList: any[],
     processId: string,
@@ -164,20 +172,10 @@ export default class LeftSider extends Mixins(BaseMixin) {
   }
 
   showTaskDetails (taskId: string) {
-    console.log("showTaskDetails", taskId);
     this.setFormsFlowTaskId(taskId);
-    this.$root.$emit("call-fetchData", {
+    this.$root.$emit("call-fetchTaskDetails", {
       selectedTaskId: taskId 
     });
-  }
-
-  getExactDate (date: Date) {
-    return getFormattedDateAndTime(date);
-  }
-
-  toggle (index: number) {
-    // this.activeIndex = index;
-    this.setFormsFlowactiveIndex(index);
   }
 
   onSearchUpdateTasklistResult (queryList: object) {
@@ -187,7 +185,6 @@ export default class LeftSider extends Mixins(BaseMixin) {
       },
       ...queryList,
     };
-    console.log("onSearchUpdateTasklistResult - callfetchTaskList", this.selectedfilterId);
 
     if (!isEqual(this.payload, requiredParams)) {
       this.$root.$emit("call-fetchTaskListCount", {
@@ -214,9 +211,6 @@ export default class LeftSider extends Mixins(BaseMixin) {
     });
     
     this.currentPage = this.getFormsFlowTaskCurrentPage;
-    this.$root.$emit("call-fetchData", {
-      selectedTaskId: this.getFormsFlowTaskId,
-    });
 
     CamundaRest.getProcessDefinitions(this.token, this.bpmApiUrl).then(
       (response) => {
@@ -240,7 +234,6 @@ export default class LeftSider extends Mixins(BaseMixin) {
   beforeDestroy () {
     this.$root.$off("call-pagination");
     this.$root.$off("update-pagination-currentpage");
-    // this.$root.$off("update-activeIndex-pagination");
   }
 }
 </script>
