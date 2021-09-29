@@ -14,7 +14,7 @@
         <i class="fa fa-times"></i>
       </span>
       <b-nav-item-dropdown
-        :text="sortList[idx].label"
+        :text="sort.label"
         v-b-tooltip.hover
          class="pl-1"
         title="Click To Change Field for Sorting"
@@ -54,7 +54,6 @@
 </template>
 
 <script lang="ts">
-import "../../styles/camundaFormIOTasklist.scss";
 import {
   Component, Prop, Vue 
 } from "vue-property-decorator";
@@ -68,7 +67,7 @@ import {
   TASK_SORT_DEFAULT_PRIORITY,
   TASK_SORTING_FULL_LIST,
   TaskListSortType,
-  SORT_ORDER
+  SORT_ORDER,
 } from "../../models";
 import TaskSortOptions from "../sort/TaskListSortoptions.vue";
 import {
@@ -86,8 +85,8 @@ export default class TaskListSort extends Vue {
   @Prop() private perPage!: number;
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
-  @Prop() private taskSortBy!: string
-  @Prop() private taskSortOrder!: string
+  @Prop() private defaultTaskSortBy!: string
+  @Prop() private defaultTaskSortOrder!: string
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -98,12 +97,7 @@ export default class TaskListSort extends Vue {
   private updateSortOptions: TaskListSortType[] = [];
 
   getOptions (options: TaskListSortType[]) {
-    const optionsArray: {
-      sortOrder: string;
-      label: string;
-      sortBy: string;
-    }[] = [];
-
+    const optionsArray: TaskListSortType[] = [];
     TASK_SORTING_FULL_LIST.forEach((sortOption) => {
       if (
         !options.some(
@@ -118,7 +112,7 @@ export default class TaskListSort extends Vue {
     return optionsArray;
   }
 
-  afterSortApiCalls() {
+  updateOnSortAction() {
     this.setFormsFlowTaskCurrentPage(1);
     this.$root.$emit("update-pagination-currentpage", {
       page: this.getFormsFlowTaskCurrentPage,
@@ -141,60 +135,58 @@ export default class TaskListSort extends Vue {
       this.sortOptions = this.getOptions(this.sortList);
     }
     
-    this.afterSortApiCalls();
+    this.updateOnSortAction();
   }
 
   updateSort (sort: TaskListSortType, index: number) {
-    this.sortList[index].label = sort.label;
-    this.sortList[index].sortBy = sort.sortBy;
+    this.sortList[index] = sort;
     this.sortOptions = this.getOptions(this.sortList);
-    this.payload["sorting"] = this.sortList;
+    this.payload.sorting = this.sortList;
     
-    this.afterSortApiCalls();
+    this.updateOnSortAction();
   }
 
   deleteSort (sort: TaskListSortType, index: number) {
     this.sortList.splice(index, 1);
     this.updateSortOptions = [];
     this.sortOptions = this.getOptions(this.sortList);
-    this.payload["sorting"] = this.sortList;
+    this.payload.sorting = this.sortList;
     
-    this.afterSortApiCalls();
+    this.updateOnSortAction();
   }
 
   toggleSort (index: number) {
-    if (this.sortList[index].sortOrder === "asc")
-      this.sortList[index].sortOrder = "desc";
+    if (this.sortList[index].sortOrder === SORT_ORDER.ASCENDING)
+      this.sortList[index].sortOrder = SORT_ORDER.DESCENDING;
     else {
-      this.sortList[index].sortOrder = "asc";
+      this.sortList[index].sortOrder = SORT_ORDER.ASCENDING;
     }
-    this.payload["sorting"] = this.sortList;
+    this.payload.sorting = this.sortList;
     
-    this.afterSortApiCalls();
+    this.updateOnSortAction();
   }
 
   getDefaultTaskSortOption () {
     /**
    * "created" is the default TaskSortBy and "desc" is the deafult TaskSortOrder
    */
-
-    if (this.taskSortBy === TASK_SORT_DEFAULT_DUE_DATE.sortBy) {
+    if (this.defaultTaskSortBy === TASK_SORT_DEFAULT_DUE_DATE.sortBy) {
       this.sortList = [TASK_SORT_DEFAULT_DUE_DATE];
     }
 
-    else if (this.taskSortBy === TASK_SORT_DEFAULT_FOLLOW_UP_DATE.sortBy) {
+    else if (this.defaultTaskSortBy === TASK_SORT_DEFAULT_FOLLOW_UP_DATE.sortBy) {
       this.sortList = [TASK_SORT_DEFAULT_FOLLOW_UP_DATE];
     }
 
-    else if (this.taskSortBy === TASK_SORT_DEFAULT_PARAM_NAME.sortBy) {
+    else if (this.defaultTaskSortBy === TASK_SORT_DEFAULT_PARAM_NAME.sortBy) {
       this.sortList = [TASK_SORT_DEFAULT_FOLLOW_UP_DATE];
     }
 
-    else if (this.taskSortBy === TASK_SORT_DEFAULT_ASSINGEE.sortBy) {
+    else if (this.defaultTaskSortBy === TASK_SORT_DEFAULT_ASSINGEE.sortBy) {
       this.sortList = [TASK_SORT_DEFAULT_FOLLOW_UP_DATE];
     }
 
-    else if (this.taskSortBy === TASK_SORT_DEFAULT_PRIORITY.sortBy) {
+    else if (this.defaultTaskSortBy === TASK_SORT_DEFAULT_PRIORITY.sortBy) {
       this.sortList = [TASK_SORT_DEFAULT_FOLLOW_UP_DATE];
     }
 
@@ -202,7 +194,7 @@ export default class TaskListSort extends Vue {
       this.sortList = [TASK_FILTER_LIST_DEFAULT_PARAM_CREATED];
     }
 
-    if (this.taskSortOrder === SORT_ORDER.ASCENDING){
+    if (this.defaultTaskSortOrder === SORT_ORDER.ASCENDING){
       this.sortList[0].sortOrder = SORT_ORDER.ASCENDING;
     }
     this.payload.sorting = this.sortList;

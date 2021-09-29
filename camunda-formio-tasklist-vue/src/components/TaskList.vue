@@ -8,8 +8,8 @@
       :perPage="perPage"
       :selectedfilterId="selectedfilterId"
       :payload="payload"
-      :taskSortBy="taskSortBy"
-      :taskSortOrder="taskSortOrder"
+      :defaultTaskSortBy="defaultTaskSortBy"
+      :defaultTaskSortOrder="defaultTaskSortOrder"
     />
     <b-row class="cft-service-task-list mt-1">
       <b-col
@@ -401,10 +401,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private containerHeight!: string;
   @Prop({
     default: "created"
-  }) public taskSortBy!: string
+  }) public defaultTaskSortBy!: string
   @Prop({
     default: "desc"
-  }) public taskSortOrder!: string
+  }) public defaultTaskSortOrder!: string
   
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -704,8 +704,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     );
     if (!SocketIOService.isConnected()) {
-      this.fetchTaskData(this.getFormsFlowTaskId);
-      this.reloadLHSTaskList();
+      await this.getBPMTaskDetail(this.getFormsFlowTaskId);
+      await this.reloadLHSTaskList();
     }
   }
 
@@ -713,8 +713,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     await CamundaRest.unclaim(this.token, this.task.id!, this.bpmApiUrl);
 
     if (!SocketIOService.isConnected()) {
-      this.fetchTaskData(this.getFormsFlowTaskId);
-      this.reloadLHSTaskList();
+      await this.getBPMTaskDetail(this.getFormsFlowTaskId);
+      await this.reloadLHSTaskList();
     }
   }
 
@@ -727,7 +727,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       },
       this.bpmApiUrl
     );
-    this.fetchTaskData(this.getFormsFlowTaskId);
+    await this.getBPMTaskDetail(this.getFormsFlowTaskId);
     await this.toggleassignee();
     await this.reloadLHSTaskList();
   }
@@ -873,21 +873,21 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     ]);  
   }  
 
-  async fetchTaskData (taskId: string) {
-    const res = await CamundaRest.getTaskById(
-      this.token,
-      taskId,
-      this.bpmApiUrl
-    );
-    this.task = res.data;
-    if (this.task) {
-      await this.getBPMTaskDetail(taskId);
-      await Promise.all([
-        this.getTaskFormIODetails(taskId),
-        this.getTaskProcessDiagramDetails(this.task.processDefinitionId!)
-      ]);
-    }
-  }
+  // async fetchTaskData (taskId: string) {
+  //   const res = await CamundaRest.getTaskById(
+  //     this.token,
+  //     taskId,
+  //     this.bpmApiUrl
+  //   );
+  //   this.task = res.data;
+  //   if (this.task) {
+  //     await this.getBPMTaskDetail(taskId);
+  //     await Promise.all([
+  //       this.getTaskFormIODetails(taskId),
+  //       this.getTaskProcessDiagramDetails(this.task.processDefinitionId!)
+  //     ]);
+  //   }
+  // }
 
   async findTaskIdDetailsFromURLrouter (
     taskId: string,
@@ -992,8 +992,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           ) {
             if (this.task.assignee === this.userName) {
               this.getBPMTaskDetail(this.task.id!);
-            } else {
-              this.fetchTaskData(this.getFormsFlowTaskId);
+            } 
+            else {
+              this.fetchTaskDetails(this.getFormsFlowTaskId);
             }
           }
           if (this.selectedfilterId) {
@@ -1026,7 +1027,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if (this.taskId2 !== "") {
       await this.fetchFullTaskList(this.selectedfilterId, this.payload);
       await this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
-      await this.fetchTaskData(this.taskId2);
+      await this.fetchTaskDetails(this.taskId2);
       this.taskId2 = "";
     }
   }

@@ -4,39 +4,39 @@ export interface TaskListSortType {
   label: string;
 }
 export const TASK_FILTER_LIST_DEFAULT_PARAM_CREATED: TaskListSortType = {
-  sortBy: "created",
   sortOrder: "desc",
-  label: "Created"
+  label: "Created",
+  sortBy: "created",
 };
 
 export const TASK_SORT_DEFAULT_DUE_DATE: TaskListSortType = {
-  sortBy: "dueDate",
   sortOrder: "desc",
-  label: "Due Date"
+  label: "Due Date",
+  sortBy: "dueDate",
 };
 
 export const TASK_SORT_DEFAULT_FOLLOW_UP_DATE: TaskListSortType = {
-  sortBy: "followUpDate",
   sortOrder: "desc",
-  label: "Follow-up Date"
+  label: "Follow-up Date",
+  sortBy: "followUpDate",
 };
 
 export const TASK_SORT_DEFAULT_PARAM_NAME: TaskListSortType = {
-  sortBy: "name",
   sortOrder: "desc",
-  label: "Task Name"
+  label: "Task Name",
+  sortBy: "name",
 };
 
 export const TASK_SORT_DEFAULT_ASSINGEE: TaskListSortType = {
-  sortBy: "assignee",
   sortOrder: "desc",
-  label: "Assignee"
+  label: "Assignee",
+  sortBy: "assignee",
 };
 
 export const TASK_SORT_DEFAULT_PRIORITY: TaskListSortType = {
-  sortBy: "priority",
   sortOrder: "desc",
-  label: "Priority"
+  label: "Priority",
+  sortBy: "priority",
 };
 
 export enum SORT_ORDER {
@@ -44,11 +44,32 @@ export enum SORT_ORDER {
   DESCENDING = "desc"
 }
 
+// export const TASK_SORTING_FULL_LIST = [
+//   TASK_FILTER_LIST_DEFAULT_PARAM_CREATED,
+//   TASK_SORT_DEFAULT_DUE_DATE,
+//   TASK_SORT_DEFAULT_FOLLOW_UP_DATE,
+//   TASK_SORT_DEFAULT_PARAM_NAME,
+//   TASK_SORT_DEFAULT_ASSINGEE,
+//   TASK_SORT_DEFAULT_PRIORITY
+// ];
+
 export const TASK_SORTING_FULL_LIST = [
-  TASK_FILTER_LIST_DEFAULT_PARAM_CREATED,
-  TASK_SORT_DEFAULT_DUE_DATE,
-  TASK_SORT_DEFAULT_FOLLOW_UP_DATE,
-  TASK_SORT_DEFAULT_PARAM_NAME,
-  TASK_SORT_DEFAULT_ASSINGEE,
-  TASK_SORT_DEFAULT_PRIORITY
+  {
+    "sortOrder": "desc", "label": "Created", "sortBy": "created" 
+  },
+  {
+    "sortOrder": "desc", "label": "Due Date", "sortBy": "dueDate" 
+  },
+  {
+    "sortOrder": "desc", "label": "Follow-up Date", "sortBy": "followUpDate" 
+  },
+  {
+    "sortOrder": "desc", "label": "Task Name", "sortBy": "name" 
+  },
+  {
+    "sortOrder": "desc", "label": "Assignee", "sortBy": "assignee" 
+  },
+  {
+    "sortOrder": "desc", "label": "Priority", "sortBy": "priority" 
+  }
 ];
