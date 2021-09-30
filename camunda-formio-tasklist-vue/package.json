@@ -21,6 +21,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "lint-fix": "vue-cli-service lint --fix",
     "build-package": "vue-cli-service build --target lib --name camunda-formio-tasklist-vue ./src/components/index.js",
     "build-report": "vue-cli-service build --report"
   },

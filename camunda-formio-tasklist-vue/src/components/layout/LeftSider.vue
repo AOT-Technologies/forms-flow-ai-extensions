@@ -87,13 +87,12 @@
 
 <script lang="ts">
 import {
+  CamundaRest, getFormattedDateAndTime
+} from "../../services";
+import {
   Component, Mixins, Prop, Watch 
 } from "vue-property-decorator";
 import BaseMixin from "../../mixins/BaseMixin.vue";
-import {
-  CamundaRest, getFormattedDateAndTime
-} from "../../services";
-
 import {
   Payload 
 } from "../../models/Payload";

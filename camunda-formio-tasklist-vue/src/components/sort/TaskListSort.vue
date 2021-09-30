@@ -59,15 +59,15 @@ import {
 } from "vue-property-decorator";
 import {
   Payload,
+  SORT_ORDER,
   TASK_FILTER_LIST_DEFAULT_PARAM_CREATED,
+  TASK_SORTING_FULL_LIST,
   TASK_SORT_DEFAULT_ASSINGEE,
   TASK_SORT_DEFAULT_DUE_DATE,
   TASK_SORT_DEFAULT_FOLLOW_UP_DATE,
   TASK_SORT_DEFAULT_PARAM_NAME,
   TASK_SORT_DEFAULT_PRIORITY,
-  TASK_SORTING_FULL_LIST,
   TaskListSortType,
-  SORT_ORDER,
 } from "../../models";
 import TaskSortOptions from "../sort/TaskListSortoptions.vue";
 import {

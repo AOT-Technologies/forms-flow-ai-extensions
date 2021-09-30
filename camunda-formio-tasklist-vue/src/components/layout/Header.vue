@@ -37,10 +37,10 @@
 import {
   Component, Mixins, Prop 
 } from "vue-property-decorator";
-import BaseMixin from "../../mixins/BaseMixin.vue";
 import {
   FilterPayload, Payload
 } from "../../models";
+import BaseMixin from "../../mixins/BaseMixin.vue";
 import FormListModal from "../form/FormListModal.vue";
 import TaskListSort from "../sort/TaskListSort.vue";
 import {

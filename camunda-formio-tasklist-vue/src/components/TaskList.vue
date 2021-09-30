@@ -1004,31 +1004,33 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     );
 
-    const reviewerList = await CamundaRest.getUsersByMemberGroups(
-      this.token,
-      this.bpmApiUrl,
-      reviewerGroup
-    );
-    if(reviewerList) {
-      this.reviewerUsersList = [];
-      reviewerList.data.forEach((user: UserPayload) => {
-        this.reviewerUsersList.push(UserListObject(user));
-      });
-    }
+    if(this.getFormsFlowTaskId) {
+      const reviewerList = await CamundaRest.getUsersByMemberGroups(
+        this.token,
+        this.bpmApiUrl,
+        reviewerGroup
+      );
+      if(reviewerList) {
+        this.reviewerUsersList = [];
+        reviewerList.data.forEach((user: UserPayload) => {
+          this.reviewerUsersList.push(UserListObject(user));
+        });
+      }
 
-    //We used two variables - taskId2 and taskIdValue because the router value from gettaskId
-    // is always constant,so after calling the required task details from router to use other
-    // tasks in list we need to set taskId2 value as ''
-    if (this.taskId2 !== this.taskIdValue) {
-      this.taskId2 = this.taskIdValue;
-    } else {
-      this.taskId2 = "";
-    }
-    if (this.taskId2 !== "") {
-      await this.fetchFullTaskList(this.selectedfilterId, this.payload);
-      await this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
-      await this.fetchTaskDetails(this.taskId2);
-      this.taskId2 = "";
+      //We used two variables - taskId2 and taskIdValue because the router value from gettaskId
+      // is always constant,so after calling the required task details from router to use other
+      // tasks in list we need to set taskId2 value as ''
+      if (this.taskId2 !== this.taskIdValue) {
+        this.taskId2 = this.taskIdValue;
+      } else {
+        this.taskId2 = "";
+      }
+      if (this.taskId2 !== "") {
+        await this.fetchFullTaskList(this.selectedfilterId, this.payload);
+        await this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
+        await this.fetchTaskDetails(this.taskId2);
+        this.taskId2 = "";
+      }
     }
   }
 

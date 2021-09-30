@@ -99,6 +99,9 @@
 <script lang="ts">
 import "../../styles/camundaFormIOFormList.scss";
 import {
+  CamundaRest, FORMLIST_FIELDS, formApplicationSubmit 
+} from "../../services";
+import {
   Component, Mixins 
 } from "vue-property-decorator";
 import {
@@ -108,9 +111,6 @@ import {
   FormioSubmissionPayload 
 } from "../../models";
 import BaseMixin from "../../mixins/BaseMixin.vue";
-import {
-  CamundaRest, formApplicationSubmit, FORMLIST_FIELDS 
-} from "../../services";
 import {
   Form 
 } from "vue-formio";
