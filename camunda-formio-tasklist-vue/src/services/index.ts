@@ -8,6 +8,7 @@ export * from "./formio-token";
 export * from "./formsflowai-api";
 export * from "./get-formio";
 export * from "./search-constants";
+export * from "./SortOptions";
 export * from "./SocketIOServices";
-export * from "../models/sortOptions";
+export * from "../models/SortOptions";
 export * from "./utils";

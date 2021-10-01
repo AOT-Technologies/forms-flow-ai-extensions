@@ -1,7 +1,7 @@
 <template>
-  <b-col id="cftf-dpdown-container" class="d-flex flex-row pl-2">
+  <b-col id="cftf-sort-container" class="d-flex flex-row pl-2">
     <b-row
-      class="cftf-dpdown-box mx-1 border"
+      class="cftf-sort-box mx-1 border"
       v-for="(sort, idx) in sortList"
       :key="sort.sortBy"
     >
@@ -45,8 +45,8 @@
       </a>
     </b-row>
     <TaskSortOptions
+      v-if="sortList.length !== fullTaskSortLength"
       :sortOptions="sortOptions"
-      :updateSortOptions="updateSortOptions"
       @add-sort="addSort"
     >
     </TaskSortOptions>
@@ -59,6 +59,9 @@ import {
 } from "vue-property-decorator";
 import {
   Payload,
+  TaskListSortType,
+} from "../../models";
+import {
   SORT_ORDER,
   TASK_FILTER_LIST_DEFAULT_PARAM_CREATED,
   TASK_SORTING_FULL_LIST,
@@ -67,8 +70,7 @@ import {
   TASK_SORT_DEFAULT_FOLLOW_UP_DATE,
   TASK_SORT_DEFAULT_PARAM_NAME,
   TASK_SORT_DEFAULT_PRIORITY,
-  TaskListSortType,
-} from "../../models";
+} from "../../services";
 import TaskSortOptions from "../sort/TaskListSortoptions.vue";
 import {
   namespace 
@@ -112,6 +114,10 @@ export default class TaskListSort extends Vue {
     return optionsArray;
   }
 
+  get fullTaskSortLength () {
+    return TASK_SORTING_FULL_LIST.length;
+  }
+
   updateOnSortAction() {
     this.setFormsFlowTaskCurrentPage(1);
     this.$root.$emit("update-pagination-currentpage", {
@@ -139,7 +145,13 @@ export default class TaskListSort extends Vue {
   }
 
   updateSort (sort: TaskListSortType, index: number) {
-    this.sortList[index] = sort;
+    if (this.sortList[index].sortOrder === SORT_ORDER.ASCENDING) {
+      this.sortList[index] = sort;
+      this.sortList[index].sortOrder = SORT_ORDER.ASCENDING;
+    }
+    else {
+      this.sortList[index] = sort;
+    }
     this.sortOptions = this.getOptions(this.sortList);
     this.payload.sorting = this.sortList;
     
