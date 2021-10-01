@@ -936,7 +936,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const userDetails = JSON.parse(localStorage.getItem('UserDetails') ?? "") as UserDetailFromToken;
     this.isUserAllowed = isAllowedUser(userDetails, this.formIOReviewer);
     if (!this.isUserAllowed){
-      console.log("user not allowed");
       return;
     }
     this.setFormsFlowTaskCurrentPage(1);
