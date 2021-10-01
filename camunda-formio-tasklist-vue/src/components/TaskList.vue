@@ -286,15 +286,15 @@
                     >
                       <div v-if="task.assignee === userName">
                         <transition name="fade">
-                        <FormEdit
-                          :formioUrl="formioUrl"
-                          @onformsubmit="onFormSubmitCallback"
-                          @oncustomevent="oncustomEventCallback"
-                        />
+                          <FormEdit
+                            :formioUrl="formioUrl"
+                            @onformsubmit="onFormSubmitCallback"
+                            @oncustomevent="oncustomEventCallback"
+                          />
                         </transition>
                       </div>
                       <div v-else>
-                        <FormView :formioUrl="formioUrl"/>
+                        <FormView :formioUrl="formioUrl" />
                       </div>
                     </b-overlay>
                   </div>
@@ -351,25 +351,25 @@ import {
   getUserName,
   getformHistoryApi,
   reviewerGroup,
-  sortByPriorityList
+  sortByPriorityList,
 } from "../services";
 import {
   Component, Mixins, Prop 
 } from "vue-property-decorator";
 import {
-  CustomEventPayload, 
-  FilterPayload, 
-  FormRequestActionPayload, 
-  FormRequestPayload, 
-  GroupListPayload, 
-  Payload, 
+  CustomEventPayload,
+  FilterPayload,
+  FormRequestActionPayload,
+  FormRequestPayload,
+  GroupListPayload,
+  Payload,
   SEARCH_OPTION_TYPE,
-  TaskHistoryListPayload, 
-  TaskPayload, 
+  TaskHistoryListPayload,
+  TaskPayload,
   UserListObject,
-  UserListPayload, 
-  UserPayload, 
-  UserSearchListLabelPayload, 
+  UserListPayload,
+  UserPayload,
+  UserSearchListLabelPayload,
 } from "../models";
 import BpmnViewer from "bpmn-js";
 import DatePicker from "vue2-datepicker";
@@ -386,26 +386,28 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 @Component({
   components: {
     DatePicker,
-    TaskHistory: () => import ("../components/addons/TaskHistory.vue"),
-    Header: () => import ("./layout/Header.vue"),
+    TaskHistory: () => import("../components/addons/TaskHistory.vue"),
+    Header: () => import("./layout/Header.vue"),
     LeftSider: () => import("./layout/LeftSider.vue"),
     vSelect,
     ExpandContract: () => import("./addons/ExpandContract.vue"),
     BpmnViewer,
     FormEdit: () => import("./form/Edit.vue"),
-    FormView: () => import("./form/View.vue")
+    FormView: () => import("./form/View.vue"),
   },
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
   @Prop() private containerHeight!: string;
   @Prop({
-    default: "created"
-  }) public defaultTaskSortBy!: string
+    default: "created",
+  })
+  public defaultTaskSortBy!: string;
   @Prop({
-    default: "desc"
-  }) public defaultTaskSortOrder!: string
-  
+    default: "desc",
+  })
+  public defaultTaskSortOrder!: string;
+
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
   @StoreServiceFlowModule.Getter("getFormsFlowTaskId")
@@ -470,12 +472,23 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.userName = getUserName();
   }
 
-  timedifference (date: Date) {
+  timedifference(date: Date) {
     return moment(date).fromNow();
   }
 
-  toggleassignee () {
+  async toggleassignee () {
     this.editAssignee = !this.editAssignee;
+    const reviewerList = await CamundaRest.getUsersByMemberGroups(
+      this.token,
+      this.bpmApiUrl,
+      reviewerGroup
+    );
+    if (reviewerList) {
+      this.reviewerUsersList = [];
+      reviewerList.data.forEach((user: UserPayload) => {
+        this.reviewerUsersList.push(UserListObject(user));
+      });
+    }
   }
 
   setSelectedUserSearchBy (searchby: string, index: number) {
@@ -555,12 +568,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         formRequestFormat.variables,
         {
           action: {
-            value: actionType 
-          } 
+            value: actionType,
+          },
         }
       );
       formRequestFormat = {
-        variables: newformRequestFormat 
+        variables: newformRequestFormat,
       };
     }
 
@@ -594,11 +607,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if (this.taskIdWebsocket === taskId) {
       this.showForm = false;
       this.formioUrl = "";
-    }
-    else {
-      const formResult = await CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl);
+    } else {
+      const formResult = await CamundaRest.getVariablesByTaskId(
+        this.token,
+        taskId,
+        this.bpmApiUrl
+      );
 
-      if(formResult.data.formUrl?.value) {
+      if (formResult.data.formUrl?.value) {
         const formUrlPattern = formResult.data.formUrl?.value;
         const {
           formioUrl, formId, submissionId 
@@ -628,7 +644,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async getTaskProcessDiagramDetails (processDefinitionId: string) {
+  async getTaskProcessDiagramDetails(processDefinitionId: string) {
     const getProcessResult = await CamundaRest.getProcessDiagramXML(
       this.token,
       processDefinitionId,
@@ -699,7 +715,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.token,
       this.task.id!,
       {
-        userId: this.userName 
+        userId: this.userName,
       },
       this.bpmApiUrl
     );
@@ -723,7 +739,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.token,
       this.task.id!,
       {
-        userId: this.userSelected?.code 
+        userId: this.userSelected?.code,
       },
       this.bpmApiUrl
     );
@@ -771,13 +787,18 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async onUserSearch (search: string, loading: any) {
-    if(search.length) {
+    if (search.length) {
       loading(true);
       this.reviewerUsersList = [];
     }
 
-    if(this.selectSearchType === SEARCH_OPTION_TYPE.FIRST_NAME) {
-      const firstNameUserList = await CamundaRest.getUsersByFirstNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
+    if (this.selectSearchType === SEARCH_OPTION_TYPE.FIRST_NAME) {
+      const firstNameUserList = await CamundaRest.getUsersByFirstNameGroups(
+        this.token,
+        this.bpmApiUrl,
+        search,
+        reviewerGroup
+      );
       this.reviewerUsersList = [];
       firstNameUserList.data.map((user: UserPayload) => {
         this.reviewerUsersList.push(UserListObject(user));
@@ -785,8 +806,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       loading(false);
     }
 
-    if(this.selectSearchType === SEARCH_OPTION_TYPE.LAST_NAME) {
-      const lastNameUserList = await CamundaRest.getUsersByLastNameGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
+    if (this.selectSearchType === SEARCH_OPTION_TYPE.LAST_NAME) {
+      const lastNameUserList = await CamundaRest.getUsersByLastNameGroups(
+        this.token,
+        this.bpmApiUrl,
+        search,
+        reviewerGroup
+      );
       this.reviewerUsersList = [];
       lastNameUserList.data.map((user: UserPayload) => {
         this.reviewerUsersList.push(UserListObject(user));
@@ -794,8 +820,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       loading(false);
     }
 
-    if(this.selectSearchType === SEARCH_OPTION_TYPE.EMAIL) {
-      const emailUserList = await CamundaRest.getUsersByEmailGroups(this.token, this.bpmApiUrl, search, reviewerGroup);
+    if (this.selectSearchType === SEARCH_OPTION_TYPE.EMAIL) {
+      const emailUserList = await CamundaRest.getUsersByEmailGroups(
+        this.token,
+        this.bpmApiUrl,
+        search,
+        reviewerGroup
+      );
       this.reviewerUsersList = [];
       emailUserList.data.map((user: UserPayload) => {
         this.reviewerUsersList.push(UserListObject(user));
@@ -815,10 +846,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async updateFollowUpDate () {
     const referenceobject = this.task;
     try {
-      if(this.task?.followUp !== null) {
-        referenceobject.followUp = getISODateTime(
-        this.task?.followUp
-        );
+      if (this.task?.followUp !== null) {
+        referenceobject.followUp = getISODateTime(this.task?.followUp);
         await this.updateTaskDatedetails(this.task.id!, referenceobject);
       }
     } catch {
@@ -829,10 +858,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async updateDueDate () {
     const referenceobject = this.task;
     try {
-      if(this.task?.due !== null) {
-        referenceobject["due"] = getISODateTime(
-        this.task?.due
-        );
+      if (this.task?.due !== null) {
+        referenceobject["due"] = getISODateTime(this.task?.due);
         await this.updateTaskDatedetails(this.task.id!, referenceobject);
       }
     } catch {
@@ -864,30 +891,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     await Promise.all([
       this.getBPMTaskDetail(taskId),
       this.getTaskFormIODetails(taskId),
-    ]);    
+    ]);
     /*await is not used for this promise, as if a user doesn't want to wait for
      the history and proces diagram to load */
     Promise.all([
       this.getTaskHistoryDetails(),
-      this.getTaskProcessDiagramDetails(this.task.processDefinitionId!)
-    ]);  
-  }  
-
-  // async fetchTaskData (taskId: string) {
-  //   const res = await CamundaRest.getTaskById(
-  //     this.token,
-  //     taskId,
-  //     this.bpmApiUrl
-  //   );
-  //   this.task = res.data;
-  //   if (this.task) {
-  //     await this.getBPMTaskDetail(taskId);
-  //     await Promise.all([
-  //       this.getTaskFormIODetails(taskId),
-  //       this.getTaskProcessDiagramDetails(this.task.processDefinitionId!)
-  //     ]);
-  //   }
-  // }
+      this.getTaskProcessDiagramDetails(this.task.processDefinitionId!),
+    ]);
+  }
 
   async findTaskIdDetailsFromURLrouter (
     taskId: string,
@@ -945,17 +956,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.userEmail,
       this.formIOUserRoles
     );
-    await CamundaRest.filterList(this.token, this.bpmApiUrl).then(
-      async (response) => {
-        this.filterList = sortByPriorityList(response.data);
-        this.selectedfilterId = findFilterKeyOfAllTask(
-          this.filterList,
-          ALL_FILTER
-        );
-        await this.fetchTaskListCount(this.selectedfilterId, this.payload);
-        await this.reloadLHSTaskList();
-      }
+    const filterListResult = await CamundaRest.filterList(
+      this.token,
+      this.bpmApiUrl
     );
+    this.filterList = sortByPriorityList(filterListResult.data);
+    this.selectedfilterId = findFilterKeyOfAllTask(this.filterList, ALL_FILTER);
+    await this.fetchTaskListCount(this.selectedfilterId, this.payload);
+    await this.reloadLHSTaskList();
 
     if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
@@ -992,8 +1000,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           ) {
             if (this.task.assignee === this.userName) {
               this.getBPMTaskDetail(this.task.id!);
-            } 
-            else {
+            } else {
               this.fetchTaskDetails(this.getFormsFlowTaskId);
             }
           }
@@ -1004,33 +1011,19 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     );
 
-    if(this.getFormsFlowTaskId) {
-      const reviewerList = await CamundaRest.getUsersByMemberGroups(
-        this.token,
-        this.bpmApiUrl,
-        reviewerGroup
-      );
-      if(reviewerList) {
-        this.reviewerUsersList = [];
-        reviewerList.data.forEach((user: UserPayload) => {
-          this.reviewerUsersList.push(UserListObject(user));
-        });
-      }
-
-      //We used two variables - taskId2 and taskIdValue because the router value from gettaskId
-      // is always constant,so after calling the required task details from router to use other
-      // tasks in list we need to set taskId2 value as ''
-      if (this.taskId2 !== this.taskIdValue) {
-        this.taskId2 = this.taskIdValue;
-      } else {
-        this.taskId2 = "";
-      }
-      if (this.taskId2 !== "") {
-        await this.fetchFullTaskList(this.selectedfilterId, this.payload);
-        await this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
-        await this.fetchTaskDetails(this.taskId2);
-        this.taskId2 = "";
-      }
+    //We used two variables - taskId2 and taskIdValue because the router value from gettaskId
+    // is always constant,so after calling the required task details from router to use other
+    // tasks in list we need to set taskId2 value as ''
+    if (this.taskId2 !== this.taskIdValue) {
+      this.taskId2 = this.taskIdValue;
+    } else {
+      this.taskId2 = "";
+    }
+    if (this.taskId2 !== "") {
+      await this.fetchFullTaskList(this.selectedfilterId, this.payload);
+      await this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
+      await this.fetchTaskDetails(this.taskId2);
+      this.taskId2 = "";
     }
   }
 
