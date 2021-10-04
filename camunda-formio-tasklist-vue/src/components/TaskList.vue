@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <div>
     <b-container fluid class="task-outer-container" v-if="isUserAllowed">
       <Header
         v-if="token && bpmApiUrl && maximize"
@@ -341,7 +341,7 @@
           UnAuthorized User
         </div>
     </b-container>
-  </b-container>
+  </div>
 </template>
 <script lang="ts">
 import "font-awesome/scss/font-awesome.scss";
@@ -933,7 +933,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async mounted () {
-    const userDetails = JSON.parse(localStorage.getItem('UserDetails') ?? "") as UserDetailFromToken;
+    const decodeToken = JSON.parse(atob(this.token.split(".")[1]));
+    const userDetails = JSON.parse(localStorage.getItem('UserDetails') ?? decodeToken ?? "")  as UserDetailFromToken;
     this.isUserAllowed = isAllowedUser(userDetails, this.formIOReviewer);
     if (!this.isUserAllowed){
       return;
