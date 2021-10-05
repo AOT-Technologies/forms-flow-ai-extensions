@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <b-container fluid class="task-outer-container" v-if="isUserAllowed">
+  <b-container fluid>
+    <div class="task-outer-container" v-if="isUserAllowed">
       <Header
         v-if="token && bpmApiUrl && maximize"
         :token="token"
@@ -335,13 +335,13 @@
           </b-row>
         </b-col>
       </b-row>
-    </b-container>
-    <b-container v-else>
+    </div>
+    <div v-else>
         <div class="alert alert-danger mt-4" role="alert">
           UnAuthorized User
         </div>
-    </b-container>
-  </div>
+    </div>
+  </b-container>
 </template>
 <script lang="ts">
 import "font-awesome/scss/font-awesome.scss";
@@ -933,7 +933,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async mounted () {
-    const decodeToken = JSON.parse(atob(this.token.split(".")[1]));
+    const decodeToken = atob(this.token.split(".")[1]);
     const userDetails = JSON.parse(localStorage.getItem('UserDetails') ?? decodeToken ?? "")  as UserDetailFromToken;
     this.isUserAllowed = isAllowedUser(userDetails, this.formIOReviewer);
     if (!this.isUserAllowed){
