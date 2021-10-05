@@ -10,5 +10,5 @@ export * from "./get-formio";
 export * from "./search-constants";
 export * from "./SortOptions";
 export * from "./SocketIOServices";
-export * from "../models/SortOptions";
+export * from "./LodashClone";
 export * from "./utils";

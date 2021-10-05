@@ -87,20 +87,16 @@
 
 <script lang="ts">
 import {
-  CamundaRest, getFormattedDateAndTime
+  CamundaRest, cloneDeep, getFormattedDateAndTime, isEqual
 } from "../../services";
 import {
   Component, Mixins, Prop, Watch 
 } from "vue-property-decorator";
-import {
-  cloneDeep, isEqual 
-} from "lodash/core";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import {
   Payload 
 } from "../../models/Payload";
 import TaskListSearch from "../search/TaskListSearch.vue";
-// import isEqual from "lodash/isEqual";
 import moment from "moment";
 import {
   namespace 
@@ -182,7 +178,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   onSearchUpdateTasklistResult (queryList: object) {
     const requiredParams = {
       ...{
-        sorting: this.payload["sorting"] 
+        sorting: this.payload?.sorting 
       },
       ...queryList,
     };
