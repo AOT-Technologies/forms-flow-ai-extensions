@@ -92,13 +92,15 @@ import {
 import {
   Component, Mixins, Prop, Watch 
 } from "vue-property-decorator";
+import {
+  cloneDeep, isEqual 
+} from "lodash/core";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import {
   Payload 
 } from "../../models/Payload";
 import TaskListSearch from "../search/TaskListSearch.vue";
-import cloneDeep from "lodash/cloneDeep";
-import isEqual from "lodash/isEqual";
+// import isEqual from "lodash/isEqual";
 import moment from "moment";
 import {
   namespace 
