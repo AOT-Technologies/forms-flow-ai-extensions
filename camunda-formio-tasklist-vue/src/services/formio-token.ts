@@ -25,9 +25,9 @@ export const authenticateFormio = (
       roles = roles.concat(roleData.id);
     }
   }
-  if (roles.length === 0) {
-    roles = [STAFF_REVIEWER_ID];
-  }
+  // if (roles.length === 0) {
+  //   roles = [STAFF_REVIEWER_ID];
+  // }
 
   const USER_RESOURCE_FORM_ID
     = formIOResourceId || process.env.VUE_APP_USER_RESOURCE_ID;
