@@ -97,6 +97,7 @@
 </template>
 
 <script lang="ts">
+import "semantic-ui-css/semantic.min.css";
 import "../../styles/camundaFormIOFormList.scss";
 import {
   CamundaRest, FORMLIST_FIELDS, formApplicationSubmit 

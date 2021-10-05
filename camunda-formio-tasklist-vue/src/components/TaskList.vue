@@ -86,12 +86,13 @@
                   </b-tooltip>
                 </span>
                 <span v-else>
-                  <DatePicker
-                    type="datetime"
-                    placeholder="Set Follow-up date"
-                    v-model="task.followUp"
-                    @change="updateFollowUpDate"
-                  ></DatePicker>
+                  <b-form-datepicker
+                  size="sm"
+                  v-model="task.followUp"
+                  @input="updateFollowUpDate"
+                  placeholder="Set Followup Date"
+                  locale="en"
+                  />
                 </span>
               </b-col>
               <b-col cols="2" class="align-self-center">
@@ -108,12 +109,13 @@
                   </b-tooltip>
                 </span>
                 <span v-else>
-                  <DatePicker
-                    type="datetime"
-                    placeholder="Set Due Date"
-                    v-model="task.due"
-                    @change="updateDueDate"
-                  ></DatePicker>
+                  <b-form-datepicker
+                  size="sm"
+                  v-model="task.due"
+                  @input="updateDueDate"
+                  placeholder="Set Due Date"
+                  locale="en"
+                  />
                 </span>
               </b-col>
               <b-col cols="3" class="align-self-center">
@@ -333,8 +335,6 @@
 
 <script lang="ts">
 import "font-awesome/scss/font-awesome.scss";
-import "vue2-datepicker/index.css";
-import "semantic-ui-css/semantic.min.css";
 import "../styles/user-styles.css";
 import "../styles/camundaFormIOTasklist.scss";
 import {
@@ -372,7 +372,6 @@ import {
   UserSearchListLabelPayload,
 } from "../models";
 import BpmnViewer from "bpmn-js";
-import DatePicker from "vue2-datepicker";
 import TaskListMixin from "../mixins/TaskListMixin.vue";
 import moment from "moment";
 import {
@@ -385,7 +384,6 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 
 @Component({
   components: {
-    DatePicker,
     TaskHistory: () => import("../components/addons/TaskHistory.vue"),
     Header: () => import("./layout/Header.vue"),
     LeftSider: () => import("./layout/LeftSider.vue"),
