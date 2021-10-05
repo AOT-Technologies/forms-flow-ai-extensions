@@ -33,7 +33,6 @@
     "crypto-js": "4.0.0",
     "font-awesome": "^4.7.0",
     "jsonwebtoken": "^8.5.1",
-    "lodash.isequal": "^4.5.0",
     "moment": "^2.29.1",
     "semantic-ui-css": "^2.4.1",
     "sockjs-client": "^1.5.1",
