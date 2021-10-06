@@ -11,3 +11,4 @@ export * from "./search-constants";
 export * from "./SocketIOServices";
 export * from "../models/sortOptions";
 export * from "./utils";
+export * from "./auth";
