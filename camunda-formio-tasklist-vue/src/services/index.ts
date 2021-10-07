@@ -12,3 +12,4 @@ export * from "./SortOptions";
 export * from "./SocketIOServices";
 export * from "./LodashClone";
 export * from "./utils";
+export * from "./auth";

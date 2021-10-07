@@ -1,5 +1,6 @@
 <template>
-  <b-container fluid class="task-outer-container">
+  <b-container fluid>
+    <div class="task-outer-container" v-if="isUserAllowed">
     <Header
       v-if="token && bpmApiUrl && maximize"
       :token="token"
@@ -330,9 +331,14 @@
         </b-row>
       </b-col>
     </b-row>
+  </div>
+    <div v-else>
+        <div class="alert alert-danger mt-4" role="alert">
+          UnAuthorized User
+        </div>
+    </div>
   </b-container>
 </template>
-
 <script lang="ts">
 import "font-awesome/scss/font-awesome.scss";
 import "../styles/user-styles.css";
@@ -349,25 +355,27 @@ import {
   getTaskFromList,
   getUserName,
   getformHistoryApi,
+  isAllowedUser,
   reviewerGroup,
-  sortByPriorityList,
+  sortByPriorityList
 } from "../services";
 import {
   Component, Mixins, Prop 
 } from "vue-property-decorator";
 import {
-  CustomEventPayload,
-  FilterPayload,
-  FormRequestActionPayload,
-  FormRequestPayload,
-  GroupListPayload,
-  Payload,
+  CustomEventPayload, 
+  FilterPayload, 
+  FormRequestActionPayload, 
+  FormRequestPayload, 
+  GroupListPayload, 
+  Payload, 
   SEARCH_OPTION_TYPE,
-  TaskHistoryListPayload,
+  TaskHistoryListPayload, 
   TaskListSortType,
-  TaskPayload,
+  TaskPayload, 
+  UserDetailFromToken, 
   UserListObject,
-  UserListPayload,
+  UserListPayload, 
   UserPayload,
   UserSearchListLabelPayload,
 } from "../models";
@@ -456,7 +464,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private showForm: boolean = false;
   private activeUserSearchindex = 1;
   private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
-
+  private isUserAllowed: boolean = false
+  
   checkforTaskID () {
     if (this.getTaskId) {
       this.taskIdValue = this.getTaskId;
@@ -917,6 +926,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async mounted () {
+    const decodeToken = atob(this.token.split(".")[1]);
+    const userDetails = JSON.parse(localStorage.getItem('UserDetails') ?? decodeToken ?? "")  as UserDetailFromToken;
+    this.isUserAllowed = isAllowedUser(userDetails, this.formIOReviewer);
+    if (!this.isUserAllowed){
+      return;
+    }
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
     this.setFormsFlowactiveIndex(NaN);
