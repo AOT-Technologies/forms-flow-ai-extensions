@@ -984,7 +984,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     SocketIOService.connect(
       this.webSocketEncryptkey,
-      (refreshedTaskId: string, eventName: string, error: string) => {
+      (refreshedTaskId: string, eventName: string, error: string, isUpdateEvent: any) => {
+        console.log(isUpdateEvent);
         this.taskIdWebsocket = refreshedTaskId;
         if (error) {
           this.$bvToast.toast(
@@ -1005,7 +1006,18 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           this.fetchTaskListCount(this.selectedfilterId, this.payload);
           this.reloadLHSTaskList();
           this.$root.$emit("call-pagination");
-        } else {
+        }
+        
+        else if (this.selectedfilterId) {
+          if(isUpdateEvent) {
+            if(getTaskFromList(this.tasks, this.taskIdWebsocket)) {
+              this.fetchTaskListCount(this.selectedfilterId, this.payload);
+              this.reloadLHSTaskList();
+            }
+          }
+        }
+        
+        else {
           if (
             this.selectedfilterId
             || (this.getFormsFlowTaskId
