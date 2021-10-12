@@ -9,8 +9,8 @@
       :perPage="perPage"
       :selectedfilterId="selectedfilterId"
       :payload="payload"
-      :defaultTaskSortBy="defaultTaskSortBy"
-      :defaultTaskSortOrder="defaultTaskSortOrder"
+      :defaultTaskSortBy="taskSortBy"
+      :defaultTaskSortOrder="taskSortOrder"
     />
     <b-row class="cft-service-task-list mt-1">
       <b-col
@@ -279,7 +279,7 @@
             <div class="height-100">
               <b-tabs pills class="height-100" content-class="mt-3">
                 <b-tab title="Form" active>
-                  <div v-if="showForm" class="ml-4 mr-4 form-tab-conatiner">
+                  <div class="ml-4 mr-4 form-tab-conatiner">
                     <b-overlay
                       :show="task.assignee !== userName"
                       variant="light"
@@ -348,7 +348,7 @@ import {
   CamundaRest,
   SEARCH_USERS_BY,
   SocketIOService,
-  authenticateFormio,
+  authenticateFormio, 
   findFilterKeyOfAllTask,
   getFormDetails,
   getISODateTime,
@@ -408,11 +408,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop({
     default: "created",
   })
-  public defaultTaskSortBy!: string;
+  public taskSortBy!: string;
   @Prop({
     default: "desc",
   })
-  public defaultTaskSortOrder!: string;
+  public taskSortOrder!: string;
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -459,9 +459,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private selectSearchType: string = "lastName";
   private taskIdValue: string = "";
   private taskId2: string = "";
-  private taskIdWebsocket: string = "";
-  private eventNameWebSocket: string = "";
-  private showForm: boolean = false;
+  // private taskIdWebsocket: string = "";
   private activeUserSearchindex = 1;
   private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
   private isUserAllowed: boolean = false
@@ -611,30 +609,24 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async getTaskFormIODetails (taskId: string) {
-    if (this.taskIdWebsocket === taskId) {
-      this.showForm = false;
-      this.formioUrl = "";
-    } else {
-      const formResult = await CamundaRest.getVariablesByTaskId(
-        this.token,
-        taskId,
-        this.bpmApiUrl
+    const formResult = await CamundaRest.getVariablesByTaskId(
+      this.token,
+      taskId,
+      this.bpmApiUrl
+    );
+
+    if (formResult.data.formUrl?.value) {
+      const formUrlPattern = formResult.data.formUrl?.value;
+      const {
+        formioUrl, formId, submissionId 
+      } = getFormDetails(
+        formUrlPattern,
+        this.formIOApiUrl
       );
 
-      if (formResult.data.formUrl?.value) {
-        const formUrlPattern = formResult.data.formUrl?.value;
-        const {
-          formioUrl, formId, submissionId 
-        } = getFormDetails(
-          formUrlPattern,
-          this.formIOApiUrl
-        );
-
-        this.formioUrl = formioUrl;
-        this.submissionId = submissionId;
-        this.formId = formId;
-      }
-      this.showForm = true;
+      this.formioUrl = formioUrl;
+      this.submissionId = submissionId;
+      this.formId = formId;
     }
   }
 
@@ -717,6 +709,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
   }
 
+  async reloadLHSTaskListWithCount() {
+    await Promise.all([this.reloadLHSTaskList(),this.fetchTaskListCount(this.selectedfilterId, this.payload)]);
+  }
+
   async onClaim () {
     await CamundaRest.claim(
       this.token,
@@ -750,9 +746,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       },
       this.bpmApiUrl
     );
-    await this.getBPMTaskDetail(this.getFormsFlowTaskId);
-    await this.toggleassignee();
-    await this.reloadLHSTaskList();
+    await this.toggleassignee(); 
+    if (!SocketIOService.isConnected()) {
+      await this.getBPMTaskDetail(this.getFormsFlowTaskId);
+      await this.reloadLHSTaskList();
+    }
   }
 
   async fetchFullTaskList (filterId: string, requestData: Payload) {
@@ -911,7 +909,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     taskId: string,
     fulltasks: TaskPayload[]
   ) {
-    this.task = getTaskFromList(fulltasks, taskId);
+    this.task = getTaskFromList(fulltasks, taskId)!;
     this.setFormsFlowTaskId(this.taskIdValue);
     const pos = fulltasks
       .map(function (e: TaskPayload) {
@@ -975,8 +973,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
     this.filterList = sortByPriorityList(filterListResult.data);
     this.selectedfilterId = findFilterKeyOfAllTask(this.filterList, ALL_FILTER);
-    await this.fetchTaskListCount(this.selectedfilterId, this.payload);
-    await this.reloadLHSTaskList();
+    await this.reloadLHSTaskListWithCount();
 
     if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
@@ -984,9 +981,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     SocketIOService.connect(
       this.webSocketEncryptkey,
-      (refreshedTaskId: string, eventName: string, error: string, isUpdateEvent: any) => {
-        console.log(isUpdateEvent);
-        this.taskIdWebsocket = refreshedTaskId;
+      (refreshedTaskId: string, eventName: string, isUpdateEvent: any, error: string) => {
+        // this.taskIdWebsocket = refreshedTaskId;
         if (error) {
           this.$bvToast.toast(
             `WebSocket is not connected which will cause
@@ -1002,35 +998,29 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           );
         }
 
-        if (eventName === "create") {
-          this.fetchTaskListCount(this.selectedfilterId, this.payload);
-          this.reloadLHSTaskList();
-          this.$root.$emit("call-pagination");
-        }
-        
-        else if (this.selectedfilterId) {
-          if(isUpdateEvent) {
-            if(getTaskFromList(this.tasks, this.taskIdWebsocket)) {
-              this.fetchTaskListCount(this.selectedfilterId, this.payload);
-              this.reloadLHSTaskList();
+        // missing condition on Complete eventName
+        else {
+          if (this.selectedfilterId) {
+          // in case of update event update TaskList
+            if(eventName === "update") {
+              if(getTaskFromList(this.tasks, refreshedTaskId)) {
+                this.reloadLHSTaskList();
+              }
+            }
+
+            else if (eventName === "create") {
+              this.reloadLHSTaskListWithCount();
+              this.$root.$emit("call-pagination");
             }
           }
-        }
         
-        else {
-          if (
-            this.selectedfilterId
-            || (this.getFormsFlowTaskId
-              && refreshedTaskId === this.getFormsFlowTaskId)
-          ) {
-            if (this.task.assignee === this.userName) {
+          if (this.getFormsFlowTaskId && refreshedTaskId === this.getFormsFlowTaskId)
+          {
+            if (this.task.assignee !== this.userName) {
               this.getBPMTaskDetail(this.task.id!);
             } else {
               this.fetchTaskDetails(this.getFormsFlowTaskId);
             }
-          }
-          if (this.selectedfilterId) {
-            this.reloadLHSTaskList();
           }
         }
       }

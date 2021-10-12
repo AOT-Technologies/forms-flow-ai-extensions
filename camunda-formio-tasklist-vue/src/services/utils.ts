@@ -3,8 +3,7 @@ import {
 } from "../models";
 
 export const getTaskFromList = (tasks: TaskPayload[], taskId: string) => {
-  const task = tasks.find(task => task.id === taskId);
-  return task;
+  return tasks.find(task => task.id === taskId);
 };
 
 export const findFilterKeyOfAllTask = (array: FilterPayload[], value: string) => {

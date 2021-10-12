@@ -14,6 +14,9 @@ let clientErrorCallback: any = null;
 let disconnect: any = null;
 
 const token: string| null = localStorage.getItem("authToken");
+const getBpmUrl = () => {
+  return localStorage.getItem("bpmApiUrl");
+};
 
 const isConnected = () => {
   return stompClient?.connected || null;
@@ -30,14 +33,12 @@ const clientConnectCallback = () => {
            For update can assume with current filter only if the same list has the taskId available of the updated one then only Refresh.
            (Would fail in filter/Search on the Same params)
         */
-      const isUpdateEvent = taskUpdate.eventName==="update";
-      reloadCallback(taskUpdate.id, taskUpdate?.eventName, isUpdateEvent);
+      reloadCallback(taskUpdate.id, taskUpdate?.eventName);
     });
   }
 };
-const getBpmUrl = () => {
-  return localStorage.getItem("bpmApiUrl");
-};
+
+/*main connect function which is being getting called by a component*/
 function connectClient () {
   if (getBpmUrl()) {
     const BPM_BASE_URL_SOCKET_IO = getBpmUrl()?.replace(
