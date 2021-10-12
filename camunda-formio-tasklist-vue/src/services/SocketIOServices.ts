@@ -24,7 +24,14 @@ const clientConnectCallback = () => {
     clearTimeout(interval);
     stompClient.subscribe("/topic/task-event", function (output: any) {
       const taskUpdate = JSON.parse(output.body);
-      reloadCallback(taskUpdate.id, taskUpdate?.eventName);
+      /* taskUpdate format
+           {id:"taskId", eventName:"complete/update/create"}
+           On Complete/ create the pagination can change so Would need a refresh
+           For update can assume with current filter only if the same list has the taskId available of the updated one then only Refresh.
+           (Would fail in filter/Search on the Same params)
+        */
+      const isUpdateEvent = taskUpdate.eventName==="update";
+      reloadCallback(taskUpdate.id, taskUpdate?.eventName, isUpdateEvent);
     });
   }
 };
