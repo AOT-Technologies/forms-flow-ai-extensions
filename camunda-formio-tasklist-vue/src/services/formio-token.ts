@@ -19,8 +19,11 @@ export const authenticateFormio = (
   ];
 
   let roles: any[] = [];
+  console.log(formIOUserRoles);
+  console.log(ROLES);
   for (let i = 0; i < formIOUserRoles.length; i++) {
     const roleData = ROLES.find((x) => x.title === formIOUserRoles[i]);
+    console.log(roleData);
     if (roleData) {
       roles = roles.concat(roleData.id);
     }
@@ -44,6 +47,6 @@ export const authenticateFormio = (
     },
     "--- change me now ---"
   );
-
+  console.log(roles);
   localStorage.setItem("formioToken", FORMIO_TOKEN);
 };
