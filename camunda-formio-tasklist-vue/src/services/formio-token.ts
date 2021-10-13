@@ -21,16 +21,15 @@ export const authenticateFormio = (
   let roles: any[] = [];
   console.log(formIOUserRoles);
   console.log(ROLES);
-  for (let i = 0; i < formIOUserRoles.length; i++) {
-    const roleData = ROLES.find((x) => x.title === formIOUserRoles[i]);
+
+  const UserRoles = formIOUserRoles.split(",");
+  for (let i = 0; i < UserRoles.length; i++) {
+    const roleData = ROLES.find((x) => x.title === UserRoles[i]);
     console.log(roleData);
     if (roleData) {
       roles = roles.concat(roleData.id);
     }
   }
-  // if (roles.length === 0) {
-  //   roles = [STAFF_REVIEWER_ID];
-  // }
 
   const USER_RESOURCE_FORM_ID
     = formIOResourceId || process.env.VUE_APP_USER_RESOURCE_ID;
@@ -47,6 +46,6 @@ export const authenticateFormio = (
     },
     "--- change me now ---"
   );
-  console.log(roles);
+  console.log(FORMIO_TOKEN);
   localStorage.setItem("formioToken", FORMIO_TOKEN);
 };
