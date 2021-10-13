@@ -14,12 +14,11 @@
         :class="{ 'cft-selected': task.id == getFormsFlowTaskId }"
         class="cft-select-task"
       >
-          <span class="cft-task-title font-weight-bold" data-title="Task Name">{{ task.name }}</span>
+          <span class="cft-task-title font-weight-bold">{{ task.name }}</span>
           <b-row>
             <b-col cols="7">
               <div
                 class="cft-process-title"
-                data-tile="Process Definition Name"
               >
                 {{
                   getProcessDataFromList(
@@ -31,7 +30,7 @@
               </div>
             </b-col>
             <b-col cols="5">
-              <div class="cft-task-assignee" data-title="Task assignee">
+              <div class="cft-task-assignee">
                 {{ task.assignee }}
               </div>
             </b-col>
