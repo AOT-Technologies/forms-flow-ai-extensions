@@ -1001,24 +1001,32 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         // missing condition on Complete eventName
         else {
           if (this.selectedfilterId) {
-          // in case of update event update TaskList
+          /* in case of update event update TaskLis if the updated taskId is in
+          the current paginated tasklist for the user only refresh */
             if(eventName === "update") {
               if(getTaskFromList(this.tasks, refreshedTaskId)) {
                 this.reloadLHSTaskList();
               }
             }
 
+            // In case of a new task is being created
             else if (eventName === "create") {
               this.reloadLHSTaskListWithCount();
               this.$root.$emit("call-pagination");
+            }
+            else {
+              this.reloadLHSTaskListWithCount();
             }
           }
         
           if (this.getFormsFlowTaskId && refreshedTaskId === this.getFormsFlowTaskId)
           {
-            if (this.task.assignee !== this.userName) {
+            //condition to remove the form input when a user is typing in the form by task refresh
+            if (this.task.assignee === this.userName) {
               this.getBPMTaskDetail(this.task.id!);
-            } else {
+            } 
+            // If task is not being claimed, then reload the full task details
+            else {
               this.fetchTaskDetails(this.getFormsFlowTaskId);
             }
           }

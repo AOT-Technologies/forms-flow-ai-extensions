@@ -7,8 +7,8 @@ solution in your Vue.js based project.
 
 | Name | Type |  Default | Description |
 | --- | --   | --- | ------- |
-|  bpmApiUrl :triangular_flag_on_post: | string | undefined | Prop to specify the Camunda Rest API URL from which the TaskList is being generated. Use Camunda Rest API URL used in formsflow.ai installation.|
-|  token :triangular_flag_on_post:  | string | undefined | Prop to pass the JWT token used for authorising application.|
+|  bpmApiUrl :triangular_flag_on_post: | string | undefined | To specify the Camunda Rest API URL from which the TaskList is being generated. Use Camunda Rest API URL used in formsflow.ai installation.|
+|  token :triangular_flag_on_post:  | string | undefined | To pass the JWT token used for authorising TaskList component.|
 |  formIOApiUrl :triangular_flag_on_post: | string | undefined | The URL of the form.io server for showing forms |
 | formIOResourceId :triangular_flag_on_post: | string | undefined | User forms form-Id obtained from formio for role based access. |
 | formIOReviewerId :triangular_flag_on_post: | string | undefined | forms-flow-forms Reviewer role Id from formio for role based access. |

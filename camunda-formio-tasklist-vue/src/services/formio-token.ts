@@ -20,17 +20,10 @@ export const authenticateFormio = (
 
   let roles: any[] = [];
   const UserRoles = formIOUserRoles.split(",");
-  console.log(formIOUserRoles);
-  console.log(UserRoles);
-  console.log(roles);
 
-  console.log(UserRoles.length);
   for (let i = 0; i < UserRoles.length; i++) {
-    console.log(UserRoles[i]);
     const roleData = ROLES.find((x) => x.title === UserRoles[i]);
-    console.log(roleData);
     if (roleData) {
-      console.log(roleData);
       roles = roles.concat(roleData.id);
     }
   }
@@ -50,7 +43,6 @@ export const authenticateFormio = (
     },
     "--- change me now ---"
   );
-  console.log("Roles", roles);
-  console.log(FORMIO_TOKEN);
+
   localStorage.setItem("formioToken", FORMIO_TOKEN);
 };

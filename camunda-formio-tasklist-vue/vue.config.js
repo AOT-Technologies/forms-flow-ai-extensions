@@ -1,5 +1,3 @@
-const webpack = require('webpack');
-
 module.exports = {
   runtimeCompiler: true,
   devServer: {
@@ -13,14 +11,5 @@ module.exports = {
         }
       }
     }
-  },
-  configureWebpack: {
-    plugins: [
-      new webpack.IgnorePlugin(
-        {
-          resourceRegExp: /^\.\/locale$/,
-          contextRegExp: /moment$/
-        })
-    ]
   }
 };
