@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-row>
-      <b-col cols="10">
+      <b-col cols="9">
         <b-nav-item-dropdown
           split
           text="Filter Tasks"
@@ -20,7 +20,7 @@
           </b-dropdown-item-button>
         </b-nav-item-dropdown>
       </b-col>
-      <b-col cols="2">
+      <b-col cols="3">
         <span class="cft-search-total" title="Total number of tasks.">
           {{ tasklength }}
         </span>

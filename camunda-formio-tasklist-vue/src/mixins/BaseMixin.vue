@@ -4,7 +4,7 @@ import {
 } from "vue-property-decorator";
 import {
   engine 
-} from "../../services/constants";
+} from "../services";
 
 @Component
 export default class BaseMixin extends Vue {

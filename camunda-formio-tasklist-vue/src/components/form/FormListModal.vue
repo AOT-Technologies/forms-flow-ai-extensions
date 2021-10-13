@@ -1,6 +1,6 @@
 <template>
   <div class="cftf-form-conatiner cft-text-font">
-    <b-button variant="primary" v-b-modal.modal-multi-1>
+    <b-button variant="primary" v-b-modal.modal-multi-1 @click="formListItems">
       <span ref="btn-show">
         <i class="fa fa-wpforms"> Forms</i>
       </span>
@@ -24,6 +24,7 @@
       </template>
       <div>
         <b-table
+          v-if="formitems.length > 0"
           sort-icon-left
           bordered
           hover
@@ -50,6 +51,7 @@
         </b-table>
 
         <b-pagination
+          v-if="formitems.length > 0"
           v-model="formcurrentPage"
           :per-page="formperPage"
           :total-rows="totalrows"
@@ -95,7 +97,11 @@
 </template>
 
 <script lang="ts">
+import "semantic-ui-css/semantic.min.css";
 import "../../styles/camundaFormIOFormList.scss";
+import {
+  CamundaRest, FORMLIST_FIELDS, formApplicationSubmit 
+} from "../../services";
 import {
   Component, Mixins 
 } from "vue-property-decorator";
@@ -105,13 +111,7 @@ import {
   FormListItemsPayload,
   FormioSubmissionPayload 
 } from "../../models";
-import BaseMixin from "../mixins/BaseMixin.vue";
-import {
-  CamundaRest 
-} from "../../services/camunda-rest";
-import {
-  formApplicationSubmit, FORMLIST_FIELDS 
-} from "../../services";
+import BaseMixin from "../../mixins/BaseMixin.vue";
 import {
   Form 
 } from "vue-formio";
@@ -137,6 +137,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
   }
 
   formListItems () {
+    this.formitems = [];
     CamundaRest.listForms(this.token, this.bpmApiUrl).then(response => {
       response.data.forEach((form: FormListItemsPayload) => {
         this.formitems.push(form);
@@ -194,8 +195,5 @@ export default class FormListModal extends Mixins(BaseMixin) {
     }
   };
 
-  mounted () {
-    this.formListItems();
-  }
 }
 </script>

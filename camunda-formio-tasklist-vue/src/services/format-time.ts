@@ -1,6 +1,6 @@
 import moment from "moment";
 
-export const getISODateTime = (date?: Date) => {
+export const getISODateTime = (date?: Date | string) => {
   if (date) {
     return moment(date).format("YYYY-MM-DD[T]HH:mm:ss.SSSZZ");
   }

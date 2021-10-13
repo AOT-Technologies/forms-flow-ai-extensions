@@ -282,8 +282,6 @@ export default class TaskListSearch extends Vue {
   }
 
   mounted () {
-    this.onSearchUpdateTasklistResult();
-
     this.$root.$on("call-deleteSearchQueryElement", (para: any) => {
       this.deleteSearchQueryElement(para.query, para.index);
     });

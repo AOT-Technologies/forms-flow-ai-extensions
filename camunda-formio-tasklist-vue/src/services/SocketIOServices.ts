@@ -14,6 +14,9 @@ let clientErrorCallback: any = null;
 let disconnect: any = null;
 
 const token: string| null = localStorage.getItem("authToken");
+const getBpmUrl = () => {
+  return localStorage.getItem("bpmApiUrl");
+};
 
 const isConnected = () => {
   return stompClient?.connected || null;
@@ -24,13 +27,18 @@ const clientConnectCallback = () => {
     clearTimeout(interval);
     stompClient.subscribe("/topic/task-event", function (output: any) {
       const taskUpdate = JSON.parse(output.body);
+      /* taskUpdate format
+           {id:"taskId", eventName:"complete/update/create"}
+           On Complete/ create the pagination can change so Would need a refresh
+           For update can assume with current filter only if the same list has the taskId available of the updated one then only Refresh.
+           (Would fail in filter/Search on the Same params)
+        */
       reloadCallback(taskUpdate.id, taskUpdate?.eventName);
     });
   }
 };
-const getBpmUrl = () => {
-  return localStorage.getItem("bpmApiUrl");
-};
+
+/*main connect function which is being getting called by a component*/
 function connectClient () {
   if (getBpmUrl()) {
     const BPM_BASE_URL_SOCKET_IO = getBpmUrl()?.replace(
