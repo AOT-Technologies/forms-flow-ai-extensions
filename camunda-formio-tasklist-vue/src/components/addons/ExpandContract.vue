@@ -23,7 +23,7 @@
 import {
   Component, Mixins 
 } from "vue-property-decorator";
-import TaskListMixin from "../mixins/TaskListMixin.vue";
+import TaskListMixin from "../../mixins/TaskListMixin.vue";
 
 @Component
 export default class ExpandContract extends Mixins(TaskListMixin) {

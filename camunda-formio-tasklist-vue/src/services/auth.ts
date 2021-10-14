@@ -8,5 +8,6 @@ import {
 * @returns if the logged in user is authorized or not
 */
 export function isAllowedUser(userDetails: UserDetailFromToken, allowedGroup: string): boolean {
+  /* eslint-disable camelcase */
   return userDetails?.resource_access?.["forms-flow-web"]?.roles.includes(allowedGroup);
 }

@@ -10,6 +10,7 @@
 </template>
 
 <script lang="ts">
+import "semantic-ui-css/semantic.min.css";
 import "formiojs/dist/formio.full.min.css";
 import {
   Component, Prop, Vue 

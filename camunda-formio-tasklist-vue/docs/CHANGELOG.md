@@ -1,6 +1,10 @@
 # Changes for camunda-formio-tasklist-vue
 
-## v1.0.11, 
+## v1.0.13,
+
+- Authorisation based on group name details
+
+## v1.0.12, 2021-08-27
 
 #### Fixes
 

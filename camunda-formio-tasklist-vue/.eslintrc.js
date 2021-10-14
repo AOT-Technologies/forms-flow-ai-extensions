@@ -16,6 +16,7 @@ module.exports = {
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
     "vue/no-unused-components": "error",
     "camelcase": "warn",
+    "sort-imports": "warn",
     "vue/valid-template-root": "warn",
     "indent": ["warn", 2],
     "eqeqeq": "warn",
