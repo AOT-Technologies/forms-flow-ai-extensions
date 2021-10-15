@@ -334,7 +334,7 @@
   </div>
     <div v-else>
         <div class="alert alert-danger mt-4" role="alert">
-          UnAuthorized User
+           You are not in keycloak reviewer group. Contact Administrator for the access
         </div>
     </div>
   </b-container>
@@ -373,7 +373,6 @@ import {
   TaskHistoryListPayload, 
   TaskListSortType,
   TaskPayload, 
-  UserDetailFromToken, 
   UserListObject,
   UserListPayload, 
   UserPayload,
@@ -924,12 +923,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async mounted () {
-    const decodeToken = atob(this.token.split(".")[1]);
-    const userDetails = JSON.parse(localStorage.getItem('UserDetails') ?? decodeToken ?? "")  as UserDetailFromToken;
-    this.isUserAllowed = isAllowedUser(userDetails, this.formIOReviewer);
-    if (!this.isUserAllowed){
-      return;
-    }
+    this.isUserAllowed = isAllowedUser(this.formIOReviewer, this.formIOUserRoles);
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
     this.setFormsFlowactiveIndex(NaN);
@@ -1059,8 +1053,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if (this.$store.hasModule("serviceFlowModule")) {
       this.$store.unregisterModule("serviceFlowModule");
     }
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("UserDetails");
   }
   beforeCreate () {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("UserDetails");
     if (!this.$store.hasModule("serviceFlowModule")) {
       this.$store.registerModule("serviceFlowModule", serviceFlowModule);
     }

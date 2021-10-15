@@ -22,12 +22,15 @@ import {
   Component, Prop, Vue 
 } from "vue-property-decorator";
 import CamundaTasklist from "@/components/TaskList.vue";
+
 @Component({
   components: {
     CamundaTasklist,
   },
 })
+
 export default class TaskList extends Vue {
+  
   @Prop() private getTaskId!: string;
   public configs = {
     token: "Bearer Token",
