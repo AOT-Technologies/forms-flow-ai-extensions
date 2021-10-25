@@ -334,7 +334,7 @@
   </div>
     <div v-else>
         <div class="alert alert-danger mt-4" role="alert">
-           You are not in keycloak reviewer group. Contact Administrator for the access
+          You don't have access. Contact your administrator.
         </div>
     </div>
   </b-container>
@@ -379,6 +379,12 @@ import {
   UserSearchListLabelPayload,
 } from "../models";
 import BpmnViewer from "bpmn-js";
+import ExpandContract from "./addons/ExpandContract.vue";
+import FormEdit from "./form/Edit.vue";
+import FormView from "./form/View.vue";
+import Header from "./layout/Header.vue";
+import LeftSider from "./layout/LeftSider.vue";
+import TaskHistory from "../components/addons/TaskHistory.vue";
 import TaskListMixin from "../mixins/TaskListMixin.vue";
 import moment from "moment";
 import {
@@ -391,14 +397,14 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 
 @Component({
   components: {
-    TaskHistory: () => import("../components/addons/TaskHistory.vue"),
-    Header: () => import("./layout/Header.vue"),
-    LeftSider: () => import("./layout/LeftSider.vue"),
+    TaskHistory,
+    Header,
+    LeftSider,
     vSelect,
-    ExpandContract: () => import("./addons/ExpandContract.vue"),
+    ExpandContract,
     BpmnViewer,
-    FormEdit: () => import("./form/Edit.vue"),
-    FormView: () => import("./form/View.vue"),
+    FormEdit,
+    FormView,
   },
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
