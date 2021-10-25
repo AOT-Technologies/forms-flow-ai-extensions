@@ -1,6 +1,6 @@
 import {
   httpGETRequest, httpPOSTRequest 
-} from "./axios";
+} from "./Axios";
 import {
   ApplicationCreatePayload
 } from "../models/ApplicationCreatePayload";
