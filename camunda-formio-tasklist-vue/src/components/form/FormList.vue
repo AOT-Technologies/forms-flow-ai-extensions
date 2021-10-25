@@ -48,7 +48,7 @@ import {
 } from "vue-property-decorator";
 import {
   CamundaRest 
-} from "../../services/camunda-rest";
+} from "../../services";
 
 @Component
 export default class FormList extends Vue {
