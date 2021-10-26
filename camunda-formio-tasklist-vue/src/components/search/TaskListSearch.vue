@@ -86,13 +86,7 @@ export default class TaskListSearch extends Vue {
   private setDate: Array<string> = [];
 
   updateSearchQueryOperators (operator: any, index: number) {
-    console.log(this.operator);
     if (this.searchValueItem[index] || this.setDate[index]) {
-      console.log(searchValueObject(
-        this.selectedSearchQueries[index].key,
-        this.selectedSearchQueries[index].operator
-      ));
-      console.log(this.operator[index]);
       delete this.queryList[
         searchValueObject(
           this.selectedSearchQueries[index].key,
@@ -171,10 +165,6 @@ export default class TaskListSearch extends Vue {
         this.queryList
       );
     } else {
-      console.log(searchValueObject(
-        this.selectedSearchQueries[index].key,
-        this.operator[index]
-      ));
       delete this.queryList[
         searchValueObject(
           this.selectedSearchQueries[index].key,

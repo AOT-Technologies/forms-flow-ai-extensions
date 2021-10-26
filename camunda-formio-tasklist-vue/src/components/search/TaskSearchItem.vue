@@ -61,6 +61,7 @@
           @change="updateSearchQueryOperators(operator[index], index)"
           :options="query.compares"
           plain
+          size='sm'
         />
       </b-col>
       <b-col cols="8">
@@ -210,7 +211,6 @@ export default class TaskSearchItem extends Vue {
   }
 
   updateSearchQueryOperators (operator: string, index: number) {
-    console.log("Entered");
     this.$root.$emit("call-updateSearchQueryOperators", {
       operator: operator,
       index: index,
