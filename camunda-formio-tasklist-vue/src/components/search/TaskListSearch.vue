@@ -52,7 +52,7 @@ import {
   taskSearchFilters,
 } from "../../services";
 import {
-  SearchOptionPayload
+  SearchOptionPayload,
 } from "../../models";
 import TaskListAddSearchIgnoreCase from "./TaskListAddSearchIgnoreCase.vue";
 import TaskListSearchType from "./TaskListSearchType.vue";
@@ -73,8 +73,8 @@ export default class TaskListSearch extends Vue {
   private searchListElements: any = taskSearchFilters;
   private queryType: string = "ALL";
   private selectedSearchQueries: SearchOptionPayload[] = [];
-  private searchValueItem: any = [];
-  private searchVariableValue: any = [];
+  private searchValueItem: Array<string> = [];
+  private searchVariableValue: Array<string> = [];
   private operator: Array<string> = [];
   private showSearchstate: Array<string> = []; //3 states - a, i, s
   private showVariableValue: Array<string> = [];
@@ -100,7 +100,21 @@ export default class TaskListSearch extends Vue {
           this.operator[index],
           index
         );
-      } else {
+      }
+
+      else if(this.selectedSearchQueries[index].type === "variables") {
+        console.log("Enter variable");
+        console.log(this.selectedSearchQueries[index]?.key);
+        console.log(this.queryList[this.selectedSearchQueries[index].key]);
+        this.selectedSearchQueries[index].operator = this.operator[index];
+
+        console.log(this.queryList.processVariables);
+        for(const idx in this.queryList[this.selectedSearchQueries[index].key]) {
+          console.log(idx);
+        }
+      }
+      
+      else {
         this.setSearchQueryValue(
           this.searchValueItem[index],
           this.selectedSearchQueries[index],
@@ -177,7 +191,7 @@ export default class TaskListSearch extends Vue {
 
     this.isVariableTypeInSelectedSearchQuery = false;
     for (const idx in this.selectedSearchQueries) {
-      if (this.selectedSearchQueries[idx]["type"] === "variables") {
+      if (this.selectedSearchQueries[idx]?.type === "variables") {
         this.isVariableTypeInSelectedSearchQuery = true;
       }
     }

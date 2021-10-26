@@ -9,8 +9,8 @@ export const taskSearchFilters = [
   {
     label: "Task Variables",
     key: "taskVariables",
-    compares: [">", ">=", "=", "!=", "<", "<="],
-    values: ["gt", "gte", "eq", "neq", "lt", "lte"],
+    compares: ["=", ">", ">=", "!=", "<", "<="],
+    values: ["eq", "gt", "gte", "neq", "lt", "lte"],
     type: FilterSearchTypes.VARIABLES,
     variable: "",
     name: "",
@@ -19,8 +19,8 @@ export const taskSearchFilters = [
   {
     label: "Process Variables",
     key: "processVariables",
-    compares: [">", ">=", "=", "!=", "<", "<="],
-    values: ["gt", "gte", "eq", "neq", "lt", "lte"],
+    compares: ["=", ">", ">=", "!=", "<", "<="],
+    values: ["eq", "gt", "gte", "neq", "lt", "lte"],
     type: FilterSearchTypes.VARIABLES,
     variable: "",
     name: "",
