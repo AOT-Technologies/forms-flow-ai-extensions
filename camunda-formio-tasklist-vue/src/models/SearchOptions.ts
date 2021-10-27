@@ -8,3 +8,37 @@ export interface SearchOptionPayload {
     name: string;
     operator: string;
 }
+
+export interface VariablePayload {
+    name: string;
+    operator: string;
+    value: string;
+}
+
+export interface TaskVariablesPayload {
+    taskVariables?: Array<VariablePayload>;
+    processVariables?: Array<VariablePayload>;
+}
+
+export interface SearchQueryPayload {
+    taskVariables?: Array<VariablePayload>;
+    processVariables?: Array<VariablePayload>;
+    variableNamesIgnoreCase?: string;
+    variableValuesIgnoreCase?: string;
+    dueBefore?: string;
+    dueAfter?: string;
+    followUpBefore?: string;
+    followUpAfter?: string;
+    createdBefore?: string;
+    createdAfter?: string;
+    nameLike?: string;
+    name?: string;
+    priority?: string;
+    descriptionLike?: string;
+    description?: string;
+    assigneeLike?: string;
+    assignee?: string;
+    processDefinitionNameLike?: string;
+    processDefinitionName?: string;
+    candidateGroup?: string;
+}

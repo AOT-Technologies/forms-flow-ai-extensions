@@ -174,8 +174,6 @@ export const searchValueObject = (searchValue: string, operator: string) => {
     return `${searchValue}Before`;
   } else if (operator === FILTER_OPERATOR_TYPES.AFTER) {
     return `${searchValue}After`;
-  } else {
-    return `cft-none`;
   }
 };
 

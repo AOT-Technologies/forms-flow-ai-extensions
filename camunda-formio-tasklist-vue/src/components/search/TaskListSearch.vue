@@ -53,6 +53,7 @@ import {
 } from "../../services";
 import {
   SearchOptionPayload,
+  SearchQueryPayload
 } from "../../models";
 import TaskListAddSearchIgnoreCase from "./TaskListAddSearchIgnoreCase.vue";
 import TaskListSearchType from "./TaskListSearchType.vue";
@@ -78,7 +79,7 @@ export default class TaskListSearch extends Vue {
   private operator: Array<string> = [];
   private showSearchstate: Array<string> = []; //3 states - a, i, s
   private showVariableValue: Array<string> = [];
-  private queryList: any = {
+  private queryList: SearchQueryPayload = {
     taskVariables: [],
     processVariables: [],
   };
@@ -105,12 +106,13 @@ export default class TaskListSearch extends Vue {
       else if(this.selectedSearchQueries[index].type === "variables") {
         console.log("Enter variable");
         console.log(this.selectedSearchQueries[index]?.key);
-        console.log(this.queryList[this.selectedSearchQueries[index].key]);
-        this.selectedSearchQueries[index].operator = this.operator[index];
-
-        console.log(this.queryList.processVariables);
-        for(const idx in this.queryList[this.selectedSearchQueries[index].key]) {
-          console.log(idx);
+        console.log("Enter");
+        console.log(this.queryList[this.selectedSearchQueries[index]?.key]);
+        const Dkey = this.selectedSearchQueries[index]?.key;
+        for(let i=0;i<this.queryList[Dkey].length;i++) {
+          if (this.queryList[Dkey]["name"] === this.searchVariableValue[index] && this.queryList[Dkey]["value"] === this.searchValueItem[index]) {
+            this.queryList[Dkey][i]["operator"] = this.operator[index];
+          }
         }
       }
       

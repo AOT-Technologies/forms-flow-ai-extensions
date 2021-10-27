@@ -454,7 +454,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private selectedfilterId: string = "";
   private xmlData!: string;
   private payload: Payload = {
-    active: true,
     sorting: [] as TaskListSortType[],
     firstResult: 0,
     maxResults: this.perPage,
