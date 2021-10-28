@@ -1,8 +1,18 @@
 # Changes for camunda-formio-tasklist-vue
 
-## v1.0.13,
+## v1.0.14, 2021-10-25 
 
-- Authorisation based on group name details
+#### Added
+
+- Add new props `taskSortBy` and `taskSortOrder` to change default task sorting options 
+- Add new prop `containerHeight` to adjust the height values of Vue component, in case of Vue component is too much for your integrated application
+- Allow authorisation to tasklist based on `formioReviewer` prop
+
+#### Modified
+
+- TaskList Performance optimisation
+- Remove redundant API calls
+- Claim user SearchBy implemented using API calls
 
 ## v1.0.12, 2021-08-27
 
