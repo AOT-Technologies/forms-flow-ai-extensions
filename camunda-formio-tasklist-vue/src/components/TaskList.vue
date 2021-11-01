@@ -312,6 +312,7 @@
                   class="cft-diagram-container"
                   id="diagramContainer"
                   title="Diagram"
+                  @click="getDiagramDetails"
                 >
                   <div class="diagram-full-screen" id="canvas"></div>
                 </b-tab>
@@ -662,13 +663,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const viewer = new BpmnViewer({
       container: "#canvas",
     });
+    await viewer.importXML(this.xmlData);
+    viewer.get("canvas").zoom("fit-viewport");
+  }
 
-    try {
-      await viewer.importXML(this.xmlData);
-      viewer.get("canvas").zoom("fit-viewport");
-    } catch (err) {
-      console.error("error rendering process diagram", err); // eslint-disable-line no-console
-    }
+  async getDiagramDetails() {
+    await this.getTaskProcessDiagramDetails(this.task.processDefinitionId!);
   }
 
   oncustomEventCallback = async (customEvent: CustomEventPayload) => {
