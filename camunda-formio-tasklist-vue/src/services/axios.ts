@@ -18,7 +18,7 @@ export function bpmAxiosWithHal (bearerToken: string, CamundaUrl: string) {
     withCredentials: false,
     headers: {
       "Access-Control-Allow-Origin": "*",
-      "Content-Type": "application/hal+json",
+      "Accept": "application/hal+json",
       Authorization: `Bearer ${bearerToken}`,
     },
   });
