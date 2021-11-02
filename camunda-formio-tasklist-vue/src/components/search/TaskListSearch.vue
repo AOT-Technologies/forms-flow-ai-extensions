@@ -91,7 +91,7 @@ export default class TaskListSearch extends Vue {
       delete this.queryList[
         searchValueObject(
           this.selectedSearchQueries[index].key,
-          this.selectedSearchQueries[index].operator
+          this.operator[index]
         )
       ];
       if (this.selectedSearchQueries[index].type === "date") {
@@ -255,7 +255,6 @@ export default class TaskListSearch extends Vue {
       this.operator[idx]
     );
     this.selectedSearchQueries[idx]["name"] = item;
-    this.selectedSearchQueries[idx].operator = this.operator[idx];
     switch (query.type) {
     case FilterSearchTypes.VARIABLES: {
       this.selectedSearchQueries[idx]["name"] = this.searchVariableValue[idx];

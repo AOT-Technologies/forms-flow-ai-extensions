@@ -64,7 +64,7 @@
           size='sm'
         />
       </b-col>
-      <b-col cols="8">
+      <b-col cols="9">
         <div class="cft-rhs-container">
           <span
             v-if="showSearchstate[index] === 'a'"
