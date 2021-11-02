@@ -1,6 +1,9 @@
 # camunda-formio-tasklist-vue
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
+[![Join the chat at https://gitter.im/forms-flow-ai/community](https://badges.gitter.im/forms-flow-ai/community.svg)](https://gitter.im/forms-flow-ai/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) 
+[![Join the chat at https://stackoverflow.com/questions/tagged/formsflow.ai](https://img.shields.io/badge/ask%20-on%20%20stackoverflow-F47F24)](https://stackoverflow.com/questions/tagged/formsflow.ai?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+<img src="https://img.shields.io/badge/LICENSE-Apache%202-green"/>
 
 ![image](https://user-images.githubusercontent.com/70306694/124284590-c3078b80-db6a-11eb-81c7-921cfbe46495.png)
 
@@ -29,11 +32,11 @@ components can be found :point_right: [here](https://github.com/AOT-Technologies
 **TaskList component** -  The customizable component which can be
 used to integrate formsflow.ai solution in your Vue.js based project.
 
-:beginner: [Documentation for TaskList component](./docs/components/TaskList.md)
+:beginner: [Documentation for TaskList component](https://github.com/AOT-Technologies/forms-flow-ai-extensions/blob/master/camunda-formio-tasklist-vue/docs/components/TaskList.md)
 
 **FormViewSubmission component** - The component for viewing the Forms Submission.
 
-:beginner: [Documentation for FormViewSubmission component](./docs/components/FormViewSubmission.md)
+:beginner: [Documentation for FormViewSubmission component](https://github.com/AOT-Technologies/forms-flow-ai-extensions/blob/master/camunda-formio-tasklist-vue/docs/components/FormViewSubmission.md)
 
 You can checkout the available **formio custom events** which can be used in camunda-formio-tasklist-vue [here](./docs/WebCustomEvents.md)
 
