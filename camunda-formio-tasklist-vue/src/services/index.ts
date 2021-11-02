@@ -4,7 +4,7 @@ export * from "./Constants";
 export * from "./FilterListFormatterService";
 export * from "./FormatTime";
 export * from "./FormioToken";
-export * from "./FormsflowaiApi";
+export * from "./FormsFlowApi";
 export * from "./GetFormio";
 export * from "./SearchOptions";
 export * from "./SortOptions";

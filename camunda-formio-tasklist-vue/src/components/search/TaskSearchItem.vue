@@ -54,16 +54,19 @@
       </b-col>
     </b-row>
 
-    <b-row>
-      <b-col cols="4">
-        <b-form-select
-          v-model="operator[index]"
-          @change="updateSearchQueryOperators(operator[index], index)"
-          :options="query.compares"
-          plain
-        />
+    <b-row align-h="end">
+      <b-col cols="2">
+        <b-nav-item-dropdown :text="operator[index]">
+          <b-dropdown-item-button
+            v-for="x in query.compares"
+            :key="x"
+            @click="updateSearchQueryOperators(x, index)"
+          >
+            {{ x }}
+          </b-dropdown-item-button>
+        </b-nav-item-dropdown>
       </b-col>
-      <b-col cols="8">
+      <b-col cols="9">
         <div class="cft-rhs-container">
           <span
             v-if="showSearchstate[index] === 'a'"
@@ -210,7 +213,6 @@ export default class TaskSearchItem extends Vue {
   }
 
   updateSearchQueryOperators (operator: string, index: number) {
-    console.log("Entered");
     this.$root.$emit("call-updateSearchQueryOperators", {
       operator: operator,
       index: index,

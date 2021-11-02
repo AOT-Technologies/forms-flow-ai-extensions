@@ -51,9 +51,6 @@ import {
   searchValueObject,
   taskSearchFilters,
 } from "../../services";
-import {
-  SearchOptionPayload
-} from "../../models";
 import TaskListAddSearchIgnoreCase from "./TaskListAddSearchIgnoreCase.vue";
 import TaskListSearchType from "./TaskListSearchType.vue";
 import TaskSearchItem from "./TaskSearchItem.vue";
@@ -72,7 +69,7 @@ export default class TaskListSearch extends Vue {
 
   private searchListElements: any = taskSearchFilters;
   private queryType: string = "ALL";
-  private selectedSearchQueries: SearchOptionPayload[] = [];
+  private selectedSearchQueries: any = [];
   private searchValueItem: any = [];
   private searchVariableValue: any = [];
   private operator: Array<string> = [];
@@ -86,17 +83,12 @@ export default class TaskListSearch extends Vue {
   private setDate: Array<string> = [];
 
   updateSearchQueryOperators (operator: any, index: number) {
-    console.log(this.operator);
+    this.operator[index] = operator;
     if (this.searchValueItem[index] || this.setDate[index]) {
-      console.log(searchValueObject(
-        this.selectedSearchQueries[index].key,
-        this.selectedSearchQueries[index].operator
-      ));
-      console.log(this.operator[index]);
       delete this.queryList[
         searchValueObject(
           this.selectedSearchQueries[index].key,
-          this.selectedSearchQueries[index].operator
+          this.operator[index]
         )
       ];
       if (this.selectedSearchQueries[index].type === "date") {
@@ -171,10 +163,6 @@ export default class TaskListSearch extends Vue {
         this.queryList
       );
     } else {
-      console.log(searchValueObject(
-        this.selectedSearchQueries[index].key,
-        this.operator[index]
-      ));
       delete this.queryList[
         searchValueObject(
           this.selectedSearchQueries[index].key,
@@ -249,7 +237,6 @@ export default class TaskListSearch extends Vue {
       this.operator[idx]
     );
     this.selectedSearchQueries[idx]["name"] = item;
-    this.selectedSearchQueries[idx].operator = this.operator[idx];
     switch (query.type) {
     case FilterSearchTypes.VARIABLES: {
       this.selectedSearchQueries[idx]["name"] = this.searchVariableValue[idx];
