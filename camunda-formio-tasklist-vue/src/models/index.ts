@@ -5,7 +5,6 @@ export * from "./FormRequestActionPayload";
 export * from "./FormRequestPayload";
 export * from "./GroupListPayload";
 export * from "./Payload";
-export * from "./SearchOptions";
 export * from "./SortOptions";
 export * from "./TaskHistoryListPayload";
 export * from "./TaskPayload";
