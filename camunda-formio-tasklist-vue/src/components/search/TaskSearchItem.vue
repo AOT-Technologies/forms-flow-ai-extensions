@@ -55,7 +55,7 @@
     </b-row>
 
     <b-row>
-      <b-col cols="4">
+      <b-col cols="3">
         <b-form-select
           v-model="operator[index]"
           @change="updateSearchQueryOperators(operator[index], index)"
