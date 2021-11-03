@@ -55,7 +55,7 @@
     </b-row>
 
     <b-row>
-      <b-col cols="3">
+      <b-col cols="4">
         <b-form-select
           v-model="operator[index]"
           @change="updateSearchQueryOperators(operator[index], index)"
@@ -64,7 +64,7 @@
           size='sm'
         />
       </b-col>
-      <b-col cols="9">
+      <b-col cols="8">
         <div class="cft-rhs-container">
           <span
             v-if="showSearchstate[index] === 'a'"

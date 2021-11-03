@@ -149,6 +149,12 @@ export default class TaskListSearch extends Vue {
     Vue.set(this.showVariableValue, index, "s");
   }
 
+  updateSearchFilterData = (index, key, value)=>{
+    let updatedSelectionsArray = [... this.selectedSearchQueries];
+    updatedSelectionsArray[index][key]=value;
+    // setFilterSelections(updatedSelectionsArray);
+  }
+
   addToSelectedSearchQuery (item: any) {
     this.selectedSearchQueries.push(item);
     if (this.selectedSearchQueries === []) {
