@@ -714,10 +714,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
   }
 
-  async reloadLHSTaskListWithCount() {
-    await Promise.all([this.reloadLHSTaskList(),this.fetchTaskListCount(this.selectedfilterId, this.payload)]);
-  }
-
   async onClaim () {
     await CamundaRest.claim(
       this.token,
@@ -768,16 +764,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.fulltasks = taskList.data;
   }
 
-  async fetchTaskListCount (filterId: string, requestData: Payload) {
-    const taskListCount = await CamundaRest.filterTaskListCount(
-      this.token,
-      filterId,
-      requestData,
-      this.bpmApiUrl
-    );
-    this.tasklength = taskListCount.data.count;
-  }
-
   async fetchPaginatedTaskList (
     filterId: string,
     requestData: object,
@@ -793,7 +779,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       max,
       this.bpmApiUrl
     );
-    this.tasks = paginatedTaskResults.data;
+    const responseData = paginatedTaskResults.data;
+    const _embedded = responseData['_embedded']; // data._embedded.task is where the task list is.
+    this.tasks = _embedded['task'];
+    this.tasklength = responseData['count'];
   }
 
   async onUserSearch (search: string, loading: any) {
@@ -950,10 +939,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       );
     });
 
-    this.$root.$on("call-fetchTaskListCount", async (para: any) => {
-      await this.fetchTaskListCount(para.filterId, para.requestData);
-    });
-
     this.$root.$on("call-managerScreen", (para: any) => {
       this.maximize = para.maxi;
     });
@@ -973,7 +958,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
     this.filterList = sortByPriorityList(filterListResult.data);
     this.selectedfilterId = findFilterKeyOfAllTask(this.filterList, ALL_FILTER);
-    await this.reloadLHSTaskListWithCount();
+    await this.reloadLHSTaskList();
 
     if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
@@ -1011,11 +996,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
             // In case of a new task is being created
             else if (eventName === "create") {
-              this.reloadLHSTaskListWithCount();
+              this.reloadLHSTaskList();
               this.$root.$emit("call-pagination");
             }
             else {
-              this.reloadLHSTaskListWithCount();
+              this.reloadLHSTaskList();
             }
           }
         
@@ -1054,7 +1039,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     SocketIOService.disconnect();
     this.$root.$off("call-fetchTaskDetails");
     this.$root.$off("call-fetchPaginatedTaskList");
-    this.$root.$off("call-fetchTaskListCount");
     this.$root.$off("call-managerScreen");
     if (this.$store.hasModule("serviceFlowModule")) {
       this.$store.unregisterModule("serviceFlowModule");

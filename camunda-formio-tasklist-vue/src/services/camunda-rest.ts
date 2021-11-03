@@ -1,5 +1,5 @@
 import {
-  bpmAxios, engine, formExt,
+  bpmAxios, bpmAxiosWithHal, engine, formExt,
 } from "../services";
 
 export const CamundaRest = {
@@ -248,20 +248,8 @@ export const CamundaRest = {
     maxResults: number,
     CamundaUrl: string
   ) {
-    return await bpmAxios(bearerToken, CamundaUrl).post(
+    return await bpmAxiosWithHal(bearerToken, CamundaUrl).post(
       `/${engine}/filter/${filterId}/list?firstResult=${firstResults}&maxResults=${maxResults}`,
-      values
-    );
-  },
-
-  async filterTaskListCount (
-    bearerToken: string,
-    filterId: string,
-    values: any,
-    CamundaUrl: string,
-  ) {
-    return await bpmAxios(bearerToken, CamundaUrl).post(
-      `/${engine}/filter/${filterId}/count`,
       values
     );
   },
