@@ -12,6 +12,18 @@ export function bpmAxios (bearerToken: string, CamundaUrl: string) {
   });
 }
 
+export function bpmAxiosWithHal (bearerToken: string, CamundaUrl: string) {
+  return axios.create({
+    baseURL: CamundaUrl,
+    withCredentials: false,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Accept": "application/hal+json",
+      Authorization: `Bearer ${bearerToken}`,
+    },
+  });
+}
+
 export const httpPOSTRequest = async (
   url: string,
   data: any,
