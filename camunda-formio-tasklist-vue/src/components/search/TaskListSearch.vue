@@ -73,13 +73,13 @@ export default class TaskListSearch extends Vue {
 
   private searchListElements: any = taskSearchFilters;
   private queryType: string = "ALL";
-  private selectedSearchQueries: SearchOptionPayload[] = [];
+  private selectedSearchQueries: any = [];
   private searchValueItem: Array<string> = [];
   private searchVariableValue: Array<string> = [];
   private operator: Array<string> = [];
   private showSearchstate: Array<string> = []; //3 states - a, i, s
   private showVariableValue: Array<string> = [];
-  private queryList: SearchQueryPayload = {
+  private queryList: any = {
     taskVariables: [],
     processVariables: [],
   };

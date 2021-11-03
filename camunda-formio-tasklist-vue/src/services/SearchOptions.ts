@@ -165,7 +165,7 @@ export const FILTER_COMPARE_OPTIONS = {
   [FilterSearchTypes.NORMAL]: [FILTER_OPERATOR_TYPES.EQUAL],
 };
 
-export const searchValueObject = (searchValue: string, operator: string) => {
+export const searchValueObject = (searchValue: any, operator: any) => {
   if (operator === FILTER_OPERATOR_TYPES.EQUAL) {
     return searchValue;
   } else if (operator === FILTER_OPERATOR_TYPES.LIKE) {
