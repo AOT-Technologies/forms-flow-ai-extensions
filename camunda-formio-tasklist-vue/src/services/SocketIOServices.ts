@@ -1,6 +1,6 @@
 import {
   engine, socketUrl 
-} from "../services/constants";
+} from "./Constants";
 import AES from "crypto-js/aes";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
