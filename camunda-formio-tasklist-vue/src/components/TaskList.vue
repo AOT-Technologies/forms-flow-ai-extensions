@@ -17,9 +17,6 @@
         xl="3"
         lg="3"
         md="12"
-        :class="
-          containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'
-        "
         v-if="maximize"
       >
         <LeftSider
@@ -39,9 +36,6 @@
         v-if="getFormsFlowTaskId && task"
         :lg="maximize ? 9 : 12"
         md="12"
-        :class="
-          containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'
-        "
       >
         <div class="cft-service-task-details">
           <b-row>
@@ -312,6 +306,7 @@
                   class="cft-diagram-container"
                   id="diagramContainer"
                   title="Diagram"
+                  @click="getDiagramDetails"
                 >
                   <div class="diagram-full-screen" id="canvas"></div>
                 </b-tab>
@@ -409,7 +404,6 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
-  @Prop() private containerHeight!: string;
   @Prop({
     default: "created",
   })
@@ -662,13 +656,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const viewer = new BpmnViewer({
       container: "#canvas",
     });
+    await viewer.importXML(this.xmlData);
+    viewer.get("canvas").zoom("fit-viewport");
+  }
 
-    try {
-      await viewer.importXML(this.xmlData);
-      viewer.get("canvas").zoom("fit-viewport");
-    } catch (err) {
-      console.error("error rendering process diagram", err); // eslint-disable-line no-console
-    }
+  async getDiagramDetails() {
+    await this.getTaskProcessDiagramDetails(this.task.processDefinitionId!);
   }
 
   oncustomEventCallback = async (customEvent: CustomEventPayload) => {
@@ -712,10 +705,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
       this.perPage
     );
-  }
-
-  async reloadLHSTaskListWithCount() {
-    await Promise.all([this.reloadLHSTaskList(),this.fetchTaskListCount(this.selectedfilterId, this.payload)]);
   }
 
   async onClaim () {
@@ -768,16 +757,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.fulltasks = taskList.data;
   }
 
-  async fetchTaskListCount (filterId: string, requestData: Payload) {
-    const taskListCount = await CamundaRest.filterTaskListCount(
-      this.token,
-      filterId,
-      requestData,
-      this.bpmApiUrl
-    );
-    this.tasklength = taskListCount.data.count;
-  }
-
   async fetchPaginatedTaskList (
     filterId: string,
     requestData: object,
@@ -793,7 +772,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       max,
       this.bpmApiUrl
     );
-    this.tasks = paginatedTaskResults.data;
+    const responseData = paginatedTaskResults.data;
+    const _embedded = responseData['_embedded']; // data._embedded.task is where the task list is.
+    this.tasks = _embedded['task'];
+    this.tasklength = responseData['count'];
   }
 
   async onUserSearch (search: string, loading: any) {
@@ -950,10 +932,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       );
     });
 
-    this.$root.$on("call-fetchTaskListCount", async (para: any) => {
-      await this.fetchTaskListCount(para.filterId, para.requestData);
-    });
-
     this.$root.$on("call-managerScreen", (para: any) => {
       this.maximize = para.maxi;
     });
@@ -973,7 +951,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
     this.filterList = sortByPriorityList(filterListResult.data);
     this.selectedfilterId = findFilterKeyOfAllTask(this.filterList, ALL_FILTER);
-    await this.reloadLHSTaskListWithCount();
+    await this.reloadLHSTaskList();
 
     if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
@@ -1011,11 +989,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
             // In case of a new task is being created
             else if (eventName === "create") {
-              this.reloadLHSTaskListWithCount();
+              this.reloadLHSTaskList();
               this.$root.$emit("call-pagination");
             }
             else {
-              this.reloadLHSTaskListWithCount();
+              this.reloadLHSTaskList();
             }
           }
         
@@ -1054,7 +1032,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     SocketIOService.disconnect();
     this.$root.$off("call-fetchTaskDetails");
     this.$root.$off("call-fetchPaginatedTaskList");
-    this.$root.$off("call-fetchTaskListCount");
     this.$root.$off("call-managerScreen");
     if (this.$store.hasModule("serviceFlowModule")) {
       this.$store.unregisterModule("serviceFlowModule");
