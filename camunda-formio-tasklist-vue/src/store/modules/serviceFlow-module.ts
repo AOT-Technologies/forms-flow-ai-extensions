@@ -20,6 +20,9 @@ export default {
     getFormsFlowactiveIndex (state: any) {
       return state.formsFlowactiveIndex;
     },
+    getFormsFlowTaskSearchType (state: any) {
+      return state.searchQueryType;
+    }
   },
   actions: {
   },
@@ -27,5 +30,6 @@ export default {
     setFormsFlowTaskCurrentPage: (state: FormsFlowStateModelIF, payload: number) => (state.formsFlowTaskCurrentPage = payload),
     setFormsFlowTaskId: (state: FormsFlowStateModelIF, payload: string) => (state.formsFlowTaskId = payload),
     setFormsFlowactiveIndex: (state: FormsFlowStateModelIF, payload: number) => (state.formsFlowactiveIndex = payload),
+    setFormsFlowTaskSearchType: (state: FormsFlowStateModelIF) => ( state.searchQueryType === "ALL" ? (state.searchQueryType = "ANY") : state.searchQueryType = "ALL"),
   }
 };
