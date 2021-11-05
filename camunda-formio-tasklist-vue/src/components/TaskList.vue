@@ -17,9 +17,6 @@
         xl="3"
         lg="3"
         md="12"
-        :class="
-          containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'
-        "
         v-if="maximize"
       >
         <LeftSider
@@ -39,9 +36,6 @@
         v-if="getFormsFlowTaskId && task"
         :lg="maximize ? 9 : 12"
         md="12"
-        :class="
-          containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'
-        "
       >
         <div class="cft-service-task-details">
           <b-row>
@@ -312,6 +306,7 @@
                   class="cft-diagram-container"
                   id="diagramContainer"
                   title="Diagram"
+                  @click="getDiagramDetails"
                 >
                   <div class="diagram-full-screen" id="canvas"></div>
                 </b-tab>
@@ -409,7 +404,6 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
-  @Prop() private containerHeight!: string;
   @Prop({
     default: "created",
   })
@@ -661,13 +655,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const viewer = new BpmnViewer({
       container: "#canvas",
     });
+    await viewer.importXML(this.xmlData);
+    viewer.get("canvas").zoom("fit-viewport");
+  }
 
-    try {
-      await viewer.importXML(this.xmlData);
-      viewer.get("canvas").zoom("fit-viewport");
-    } catch (err) {
-      console.error("error rendering process diagram", err); // eslint-disable-line no-console
-    }
+  async getDiagramDetails() {
+    await this.getTaskProcessDiagramDetails(this.task.processDefinitionId!);
   }
 
   oncustomEventCallback = async (customEvent: CustomEventPayload) => {
