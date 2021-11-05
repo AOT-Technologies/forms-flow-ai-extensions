@@ -46,6 +46,7 @@ import {
 import {
   FilterSearchTypes,
   getDeletedVariableIndex,
+  getFormattedParams,
   getISODateTime,
   getVariableOperator,
   searchValueObject,
@@ -87,13 +88,15 @@ export default class TaskListSearch extends Vue {
   private setDate: Array<string> = [];
 
   updateSearchQueryOperators (operator: any, index: number) {
+    // Delete existing value
     if (this.searchValueItem[index] || this.setDate[index]) {
       delete this.queryList[
         searchValueObject(
           this.selectedSearchQueries[index].key,
-          this.operator[index]
+          this.selectedSearchQueries[index].operator
         )
       ];
+      this.selectedSearchQueries[index].operator = this.operator[index];
       if (this.selectedSearchQueries[index].type === "date") {
         this.setSearchQueryValue(
           this.setDate[index],
@@ -104,16 +107,8 @@ export default class TaskListSearch extends Vue {
       }
 
       else if(this.selectedSearchQueries[index].type === "variables") {
-        console.log("Enter variable");
-        console.log(this.selectedSearchQueries[index]?.key);
-        console.log("Enter");
-        console.log(this.queryList[this.selectedSearchQueries[index]?.key]);
-        const Dkey = this.selectedSearchQueries[index]?.key;
-        for(let i=0;i<this.queryList[Dkey].length;i++) {
-          if (this.queryList[Dkey]["name"] === this.searchVariableValue[index] && this.queryList[Dkey]["value"] === this.searchValueItem[index]) {
-            this.queryList[Dkey][i]["operator"] = this.operator[index];
-          }
-        }
+        this.queryList = getFormattedParams(this.selectedSearchQueries, this.queryType, this.queryList.variableNamesIgnoreCase, this.queryList.variableValuesIgnoreCase);
+        this.onSearchUpdateTasklistResult();
       }
       
       else {
@@ -150,7 +145,7 @@ export default class TaskListSearch extends Vue {
   }
 
   updateSearchFilterData = (index, key, value)=>{
-    let updatedSelectionsArray = [... this.selectedSearchQueries];
+    const updatedSelectionsArray = [... this.selectedSearchQueries];
     updatedSelectionsArray[index][key]=value;
     // setFilterSelections(updatedSelectionsArray);
   }

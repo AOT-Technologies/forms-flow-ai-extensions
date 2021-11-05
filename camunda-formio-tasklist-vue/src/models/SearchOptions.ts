@@ -1,7 +1,7 @@
 export interface SearchOptionPayload {
     label: string;
     compares: Array<string>;
-    key: string;
+    key: any;
     values: Array<string>;
     type: string;
     variable?: string;
