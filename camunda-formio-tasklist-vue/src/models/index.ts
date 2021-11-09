@@ -7,6 +7,7 @@ export * from "./GroupListPayload";
 export * from "./Payload";
 export * from "./SearchOptions";
 export * from "./SortOptions";
+export * from "./StateInterface";
 export * from "./TaskHistoryListPayload";
 export * from "./TaskPayload";
 export * from "./UserPayload";

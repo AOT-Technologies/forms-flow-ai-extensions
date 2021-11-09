@@ -1,6 +1,6 @@
 import {
   FormsFlowStateModelIF 
-} from '../../interfaces';
+} from '../../models';
 import {
   FormsFlowstateModel 
 } from '../state';
@@ -22,7 +22,10 @@ export default {
     },
     getFormsFlowTaskSearchType (state: any) {
       return state.searchQueryType;
-    }
+    },
+    getFormsFlowTaskLength (state: any) {
+      return state.taskLength;
+    },
   },
   actions: {
   },
@@ -31,5 +34,6 @@ export default {
     setFormsFlowTaskId: (state: FormsFlowStateModelIF, payload: string) => (state.formsFlowTaskId = payload),
     setFormsFlowactiveIndex: (state: FormsFlowStateModelIF, payload: number) => (state.formsFlowactiveIndex = payload),
     setFormsFlowTaskSearchType: (state: FormsFlowStateModelIF) => ( state.searchQueryType === "ALL" ? (state.searchQueryType = "ANY") : state.searchQueryType = "ALL"),
+    setFormsFlowTaskLength: (state: FormsFlowStateModelIF, payload: number) => (state.taskLength = payload),
   }
 };

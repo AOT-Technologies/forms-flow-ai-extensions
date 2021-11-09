@@ -26,7 +26,6 @@
           :formIOApiUrl="formIOApiUrl"
           :bpmApiUrl="bpmApiUrl"
           :tasks="tasks"
-          :tasklength="tasklength"
           :perPage="perPage"
           :selectedfilterId="selectedfilterId"
           :payload="payload"
@@ -426,6 +425,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   public setFormsFlowTaskId: any;
   @StoreServiceFlowModule.Mutation("setFormsFlowactiveIndex")
   public setFormsFlowactiveIndex: any;
+  @StoreServiceFlowModule.Mutation("setFormsFlowTaskLength")
+  public setFormsFlowTaskLength: any;
 
   private tasks: TaskPayload[] = [];
   private fulltasks: TaskPayload[] = [];
@@ -438,7 +439,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private userSelected: UserListPayload = {
   };
   public perPage: number = 10;
-  private tasklength: number = 0;
   private filterList: FilterPayload[] = [];
   private editAssignee: boolean = false;
   private groupList: GroupListPayload[] = [];
@@ -774,7 +774,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const responseData = paginatedTaskResults.data;
     const _embedded = responseData['_embedded']; // data._embedded.task is where the task list is.
     this.tasks = _embedded['task'];
-    this.tasklength = responseData['count'];
+    this.setFormsFlowTaskLength(responseData['count']);
   }
 
   async onUserSearch (search: string, loading: any) {

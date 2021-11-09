@@ -1,6 +1,6 @@
 import {
   FormsFlowStateModelIF 
-} from '../../interfaces';
+} from '../../models';
 
 export const FormsFlowstateModel: FormsFlowStateModelIF = {
   formsFlowTaskCurrentPage: 1,
@@ -10,4 +10,5 @@ export const FormsFlowstateModel: FormsFlowStateModelIF = {
   searchQueryType: 'ALL',
   variableNameIgnoreCase:false,
   variableValueIgnoreCase:false,
+  taskLength: 0,
 };
