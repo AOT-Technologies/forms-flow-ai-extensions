@@ -22,7 +22,7 @@
       </b-col>
       <b-col cols="3">
         <span class="cft-search-total" title="Total number of tasks.">
-          {{ tasklength }}
+          {{ getFormsFlowTaskLength }}
         </span>
       </b-col>
     </b-row>
@@ -57,13 +57,20 @@ import "../../styles/camundaFormIOTasklistSearch.scss";
 import {
   Component, Emit, Prop, Vue 
 } from "vue-property-decorator";
+import {
+  namespace 
+} from "vuex-class";
+import serviceFlowModule from "../../store/modules/serviceFlow-module";
 
+const StoreServiceFlowModule = namespace("serviceFlowModule");
 @Component
 export default class TaskListAddSearchIgnoreCase extends Vue {
   @Prop() private isVariableTypeInSelectedSearchQuery!: string;
   @Prop() private queryList!: any;
-  @Prop() private tasklength!: number;
   @Prop() private searchListElements!: any;
+
+  @StoreServiceFlowModule.Getter("getFormsFlowTaskLength")
+  private getFormsFlowTaskLength: any;
 
   private variablesEndType: Array<any> = [];
   private QList: any = this.queryList;

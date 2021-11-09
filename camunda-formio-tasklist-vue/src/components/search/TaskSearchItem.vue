@@ -39,7 +39,7 @@
               ></i
             ></span>
             <b-form-input
-              v-model="searchVariableValue[index]"
+              v-model="selectedSearchQueries[index].variable"
               v-on:keyup.enter="showVariableValueItem(index)"
             />
           </span>
@@ -49,7 +49,7 @@
           v-if="showVariableValue[index] === 's' && query.type === 'variables'"
           @click="updatevariableinput(index)"
         >
-          {{ searchVariableValue[index] }}
+          {{ selectedSearchQueries[index].variable }}
         </span>
       </b-col>
     </b-row>
@@ -75,7 +75,7 @@
           <span v-if="showSearchstate[index] === 'i' && query.type === 'date'">
             <b-form-datepicker
               size="sm"
-              v-model="setDate[index]"
+              v-model="selectedSearchQueries[index].value"
               @input="
                 setSearchQueryValue(
                   setDate[index],
@@ -92,14 +92,14 @@
             v-if="showSearchstate[index] === 's' && query.type === 'date'"
             @click="updatesearchinput(index)"
           >
-            {{ formatDate(setDate[index]) }}
+            {{ formatDate(selectedSearchQueries[index].value) }}
           </span>
           <span v-if="showSearchstate[index] === 'i' && query.type !== 'date'">
             <span class="cft-icon-actions">
               <span
                 @click="
                   setSearchQueryValue(
-                    searchValueItem[index],
+                    selectedSearchQueries[index].name,
                     query,
                     operator[index],
                     index
@@ -115,10 +115,10 @@
               ></i
             ></span>
             <b-form-input
-              v-model="searchValueItem[index]"
+              v-model="selectedSearchQueries[index].value"
               v-on:keyup.enter="
                 setSearchQueryValue(
-                  searchValueItem[index],
+                  selectedSearchQueries[index].name,
                   query,
                   operator[index],
                   index
@@ -131,7 +131,7 @@
             v-if="showSearchstate[index] === 's' && query.type !== 'date'"
             @click="updatesearchinput(index)"
           >
-            {{ searchValueItem[index] }}
+            {{ selectedSearchQueries[index].name }}
           </span>
         </div>
       </b-col>
@@ -160,16 +160,13 @@ export default class TaskSearchItem extends Vue {
   }) private searchListElements!: any;
   @Prop({
     default: [] 
-  }) private searchVariableValue!: any;
-  @Prop({
-    default: [] 
-  }) private searchValueItem!: any;
+  }) private showSearchstate!: any;
   @Prop({
     default: [] 
   }) private setDate!: Array<string>;
   @Prop({
     default: [] 
-  }) private showSearchstate!: Array<string>;
+  }) private selectedSearchQueries!: any;
   @Prop({
     default: [] 
   }) private showVariableValue!: Array<string>;
