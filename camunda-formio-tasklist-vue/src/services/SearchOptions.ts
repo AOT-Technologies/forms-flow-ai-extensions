@@ -1,5 +1,5 @@
 import {
-  SearchOptionPayload, SearchQueryPayload 
+  SearchOptionPayload 
 } from "../models";
 
 export const FilterSearchTypes = {
@@ -23,7 +23,7 @@ export const taskSearchFilters: SearchOptionPayload[] = [
     type: FilterSearchTypes.VARIABLES,
     variable: "",
     value: "",
-    operator: ">",
+    operator: "=",
   },
   {
     label: "Process Variables",
@@ -33,7 +33,7 @@ export const taskSearchFilters: SearchOptionPayload[] = [
     type: FilterSearchTypes.VARIABLES,
     variable: "",
     value: "",
-    operator: ">",
+    operator: "=",
   },
   {
     label: "Process Definition Name",
@@ -154,26 +154,26 @@ export const FILTER_OPERATOR_TYPES = {
   AFTER: "after",
 };
 
-export const FILTER_COMPARE_OPTIONS = {
-  [FilterSearchTypes.VARIABLES]: [
-    ">",
-    ">=",
-    FILTER_OPERATOR_TYPES.EQUAL,
-    "!=",
-    "<",
-    "<=",
-    FILTER_OPERATOR_TYPES.LIKE,
-  ],
-  [FilterSearchTypes.DATE]: [
-    FILTER_OPERATOR_TYPES.BEFORE,
-    FILTER_OPERATOR_TYPES.AFTER,
-  ],
-  [FilterSearchTypes.STRING]: [
-    FILTER_OPERATOR_TYPES.EQUAL,
-    FILTER_OPERATOR_TYPES.LIKE,
-  ],
-  [FilterSearchTypes.NORMAL]: [FILTER_OPERATOR_TYPES.EQUAL],
-};
+// export const FILTER_COMPARE_OPTIONS = {
+//   [FilterSearchTypes.VARIABLES]: [
+//     ">",
+//     ">=",
+//     FILTER_OPERATOR_TYPES.EQUAL,
+//     "!=",
+//     "<",
+//     "<=",
+//     FILTER_OPERATOR_TYPES.LIKE,
+//   ],
+//   [FilterSearchTypes.DATE]: [
+//     FILTER_OPERATOR_TYPES.BEFORE,
+//     FILTER_OPERATOR_TYPES.AFTER,
+//   ],
+//   [FilterSearchTypes.STRING]: [
+//     FILTER_OPERATOR_TYPES.EQUAL,
+//     FILTER_OPERATOR_TYPES.LIKE,
+//   ],
+//   [FilterSearchTypes.NORMAL]: [FILTER_OPERATOR_TYPES.EQUAL],
+// };
 
 const getProcessedParamObject = (searchOption: SearchOptionPayload) => {
   const option: any= {
@@ -196,36 +196,37 @@ export const isVariableTypeAvailable = (filterSelections: SearchOptionPayload[])
   return filterSelections.some(filter=>filter.type===FilterSearchTypes.VARIABLES);
 };
 
-export const searchValueObject = (searchValue: any, operator: any) => {
-  if (operator === FILTER_OPERATOR_TYPES.EQUAL) {
-    return searchValue;
-  } else if (operator === FILTER_OPERATOR_TYPES.LIKE) {
-    return `${searchValue}Like`;
-  } else if (operator === FILTER_OPERATOR_TYPES.BEFORE) {
-    return `${searchValue}Before`;
-  } else if (operator === FILTER_OPERATOR_TYPES.AFTER) {
-    return `${searchValue}After`;
-  }
-};
+// export const searchValueObject = (searchValue: any, operator: any) => {
+//   if (operator === FILTER_OPERATOR_TYPES.EQUAL) {
+//     return searchValue;
+//   } else if (operator === FILTER_OPERATOR_TYPES.LIKE) {
+//     return `${searchValue}Like`;
+//   } else if (operator === FILTER_OPERATOR_TYPES.BEFORE) {
+//     return `${searchValue}Before`;
+//   } else if (operator === FILTER_OPERATOR_TYPES.AFTER) {
+//     return `${searchValue}After`;
+//   }
+// };
 
-export const getDeletedVariableIndex = (
-  deletequery: any,
-  selectetedSearchList: any,
-  key: string,
-  queryList: any
-) => {
-  for (let i = 0; i < queryList[key].length; i++) {
-    if (
-      queryList[key][i]["name"] === deletequery["name"]
-      && queryList[key]["value"] === deletequery["value"]
-    ) {
-      queryList[key].splice(i, 1);
-    }
-  }
-  return queryList;
-};
+// export const getDeletedVariableIndex = (
+//   deletequery: any,
+//   selectetedSearchList: any,
+//   key: string,
+//   queryList: any
+// ) => {
+//   for (let i = 0; i < queryList[key].length; i++) {
+//     if (
+//       queryList[key][i]["name"] === deletequery["name"]
+//       && queryList[key]["value"] === deletequery["value"]
+//     ) {
+//       queryList[key].splice(i, 1);
+//     }
+//   }
+//   return queryList;
+// };
 
-export const getFormattedParams = (searchOptionList: SearchOptionPayload[], searchQueryType: any, variableNameIgnoreCase: string, variableValueIgnoreCase: string)=>{
+export const getFormattedQueryListParams = (searchOptionList: SearchOptionPayload[], searchQueryType: any, variableNameIgnoreCase: string, variableValueIgnoreCase: string)=>{
+  /*Function to transform the array of selected SearchQueries to a query object which can be used to search from TaskList*/
   let resultList={
   };
   let paramList: any={
