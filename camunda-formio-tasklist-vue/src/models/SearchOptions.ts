@@ -5,8 +5,9 @@ export interface SearchOptionPayload {
     values: Array<string>;
     type: string;
     variable?: string;
-    name: string;
+    name?: string;
     operator: string;
+    value?: string;
 }
 
 export interface VariablePayload {

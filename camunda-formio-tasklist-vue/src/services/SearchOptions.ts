@@ -22,7 +22,7 @@ export const taskSearchFilters: SearchOptionPayload[] = [
     values: ["eq", "gt", "gte", "neq", "lt", "lte"],
     type: FilterSearchTypes.VARIABLES,
     variable: "",
-    name: "",
+    value: "",
     operator: ">",
   },
   {
@@ -32,7 +32,7 @@ export const taskSearchFilters: SearchOptionPayload[] = [
     values: ["eq", "gt", "gte", "neq", "lt", "lte"],
     type: FilterSearchTypes.VARIABLES,
     variable: "",
-    name: "",
+    value: "",
     operator: ">",
   },
   {
@@ -42,7 +42,7 @@ export const taskSearchFilters: SearchOptionPayload[] = [
     values: ["processDefinitionNameLike", "processDefinitionName"],
     type: FilterSearchTypes.STRING,
     operator: "like",
-    name: "",
+    value: "",
   },
   {
     label: "Assignee",
@@ -50,7 +50,7 @@ export const taskSearchFilters: SearchOptionPayload[] = [
     key: "assignee",
     values: ["assigneeLike", "assignee"],
     type: FilterSearchTypes.STRING,
-    name: "",
+    value: "",
     operator: "like",
   },
   {
@@ -59,7 +59,7 @@ export const taskSearchFilters: SearchOptionPayload[] = [
     key: "candidateGroup",
     values: ["candidateGroup"],
     type: FilterSearchTypes.NORMAL,
-    name: "",
+    value: "",
     operator: "=",
   },
   {
@@ -68,7 +68,7 @@ export const taskSearchFilters: SearchOptionPayload[] = [
     key: "candidateUser",
     values: ["candidateUser"],
     type: FilterSearchTypes.NORMAL,
-    name: "",
+    value: "",
     operator: "=",
   },
   {
@@ -77,7 +77,7 @@ export const taskSearchFilters: SearchOptionPayload[] = [
     key: "name",
     values: ["nameLike", "name"],
     type: FilterSearchTypes.STRING,
-    name: "",
+    value: "",
     operator: "like",
   },
   {
@@ -86,7 +86,7 @@ export const taskSearchFilters: SearchOptionPayload[] = [
     key: "description",
     values: ["descriptionLike", "description"],
     type: FilterSearchTypes.STRING,
-    name: "",
+    value: "",
     operator: "like",
   },
   {
@@ -95,7 +95,7 @@ export const taskSearchFilters: SearchOptionPayload[] = [
     key: "priority",
     values: ["priority"],
     type: FilterSearchTypes.NORMAL,
-    name: "",
+    value: "",
     operator: "=",
   },
   {
@@ -104,7 +104,7 @@ export const taskSearchFilters: SearchOptionPayload[] = [
     key: "due",
     values: ["dueBefore", "dueAfter"],
     type: FilterSearchTypes.DATE,
-    name: "",
+    value: "",
     operator: "before",
   },
   {
@@ -113,7 +113,7 @@ export const taskSearchFilters: SearchOptionPayload[] = [
     key: "followUp",
     values: ["followUpBefore", "followUpAfter"],
     type: FilterSearchTypes.DATE,
-    name: "",
+    value: "",
     operator: "before",
   },
   {
@@ -122,7 +122,7 @@ export const taskSearchFilters: SearchOptionPayload[] = [
     key: "created",
     values: ["createdBefore", "createdAfter"],
     type: FilterSearchTypes.DATE,
-    name: "",
+    value: "",
     operator: "before",
   },
 ];
@@ -179,14 +179,14 @@ const getProcessedParamObject = (searchOption: SearchOptionPayload) => {
   const option: any= {
   };
   if(searchOption.operator===FILTER_OPERATOR_TYPES.EQUAL) {
-    option[searchOption.key] = searchOption.name;
+    option[searchOption.key] = searchOption.value;
   }
   else if(searchOption.operator===FILTER_OPERATOR_TYPES.LIKE){
-    option[`${searchOption.key}Like`] = `%${searchOption.name}%`;
+    option[`${searchOption.key}Like`] = `%${searchOption.value}%`;
   }else if(searchOption.operator===FILTER_OPERATOR_TYPES.BEFORE){
-    option[`${searchOption.key}Before`] = searchOption.name;
+    option[`${searchOption.key}Before`] = searchOption.value;
   }else if(searchOption.operator===FILTER_OPERATOR_TYPES.AFTER){
-    option[`${searchOption.key}After`] = searchOption.name;
+    option[`${searchOption.key}After`] = searchOption.value;
   }
 
   return option;
@@ -241,17 +241,17 @@ export const getFormattedParams = (searchOptionList: SearchOptionPayload[], sear
   searchOptionList.forEach((searchOption)=>{
     switch(searchOption.type){
     case FilterSearchTypes.VARIABLES:
-      if(searchOption?.name && searchOption?.variable){
+      if(searchOption?.value && searchOption?.variable){
         isParamsHasValue=true;
         paramList[searchOption.key].push({
-          name: searchOption.variable, operator: getVariableOperator(searchOption.operator), value: searchOption.name
+          name: searchOption.variable, operator: getVariableOperator(searchOption.operator), value: searchOption.value
         });
       }
       break;
     case FilterSearchTypes.STRING:
     case FilterSearchTypes.NORMAL:
     case FilterSearchTypes.DATE:
-      if(searchOption?.name){
+      if(searchOption?.value){
         isParamsHasValue=true;
         const param= getProcessedParamObject(searchOption);
         paramList ={

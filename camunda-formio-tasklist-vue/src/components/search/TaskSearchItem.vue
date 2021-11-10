@@ -78,9 +78,7 @@
               v-model="selectedSearchQueries[index].value"
               @input="
                 setSearchQueryValue(
-                  setDate[index],
-                  query,
-                  operator[index],
+                  selectedSearchQueries,
                   index
                 );
                 showsearchValueItem(index);
@@ -98,12 +96,7 @@
             <span class="cft-icon-actions">
               <span
                 @click="
-                  setSearchQueryValue(
-                    selectedSearchQueries[index].name,
-                    query,
-                    operator[index],
-                    index
-                  );
+                  setSearchQueryValue(selectedSearchQueries, index);
                   showsearchValueItem(index);
                 "
               >
@@ -118,10 +111,7 @@
               v-model="selectedSearchQueries[index].value"
               v-on:keyup.enter="
                 setSearchQueryValue(
-                  selectedSearchQueries[index].name,
-                  query,
-                  operator[index],
-                  index
+                  selectedSearchQueries, index
                 );
                 showsearchValueItem(index);
               "
@@ -131,7 +121,7 @@
             v-if="showSearchstate[index] === 's' && query.type !== 'date'"
             @click="updatesearchinput(index)"
           >
-            {{ selectedSearchQueries[index].name }}
+            {{ selectedSearchQueries[index].value }}
           </span>
         </div>
       </b-col>
@@ -145,7 +135,7 @@ import {
   Component, Emit, Prop, Vue 
 } from "vue-property-decorator";
 import {
-  getFormattedDateAndTime, taskSearchFilters
+  getFormattedDateAndTime, taskSearchFilters,
 } from "../../services";
 
 
@@ -161,9 +151,6 @@ export default class TaskSearchItem extends Vue {
   @Prop({
     default: [] 
   }) private showSearchstate!: any;
-  @Prop({
-    default: [] 
-  }) private setDate!: Array<string>;
   @Prop({
     default: [] 
   }) private selectedSearchQueries!: any;
@@ -214,12 +201,10 @@ export default class TaskSearchItem extends Vue {
     });
   }
 
-  setSearchQueryValue (item: any, query: any, operator: string, idx: number) {
+  setSearchQueryValue (item: any, index: number) {
     this.$root.$emit("call-setSearchQueryValue", {
       item: item,
-      query: query,
-      operator: operator,
-      idx: idx,
+      index: index
     });
   }
 
