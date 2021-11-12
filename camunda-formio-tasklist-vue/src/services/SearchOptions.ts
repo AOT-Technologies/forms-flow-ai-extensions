@@ -225,7 +225,7 @@ export const isVariableTypeAvailable = (filterSelections: SearchOptionPayload[])
 //   return queryList;
 // };
 
-export const getFormattedQueryListParams = (searchOptionList: SearchOptionPayload[], searchQueryType: any, variableNameIgnoreCase: string, variableValueIgnoreCase: string)=>{
+export const getFormattedQueryListParams = (searchOptionList: SearchOptionPayload[], searchQueryType: any, variableNameIgnoreCase: boolean, variableValueIgnoreCase: boolean)=>{
   /*Function to transform the array of selected SearchQueries to a query object which can be used to search from TaskList*/
   let resultList={
   };

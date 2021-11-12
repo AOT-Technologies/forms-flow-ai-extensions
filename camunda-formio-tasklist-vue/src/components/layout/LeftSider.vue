@@ -95,7 +95,6 @@ import {
   Payload 
 } from "../../models/Payload";
 import TaskListSearch from "../search/TaskListSearch.vue";
-import TaskListSearchBase from "../search-new/TaskListSearchBase.vue";
 import moment from "moment";
 import {
   namespace 
@@ -106,7 +105,6 @@ const serviceFlowModule = namespace("serviceFlowModule");
 @Component({
   components: {
     TaskListSearch,
-    TaskListSearchBase
   },
 })
 export default class LeftSider extends Mixins(BaseMixin) {

@@ -26,6 +26,12 @@ export default {
     getFormsFlowTaskLength (state: any) {
       return state.taskLength;
     },
+    getVariableNameIgnoreCase (state: any) {
+      return state.variableNameIgnoreCase;
+    },
+    getVariableValueIgnoreCase (state: any) {
+      return state.variableValueIgnoreCase;
+    }
   },
   actions: {
   },
@@ -35,5 +41,11 @@ export default {
     setFormsFlowactiveIndex: (state: FormsFlowStateModelIF, payload: number) => (state.formsFlowactiveIndex = payload),
     setFormsFlowTaskSearchType: (state: FormsFlowStateModelIF) => ( state.searchQueryType === "ALL" ? (state.searchQueryType = "ANY") : state.searchQueryType = "ALL"),
     setFormsFlowTaskLength: (state: FormsFlowStateModelIF, payload: number) => (state.taskLength = payload),
+    setVariableNameIgnoreCase: (state: FormsFlowStateModelIF) => (
+      state.variableNameIgnoreCase === false ? (state.variableNameIgnoreCase = true) : state.variableNameIgnoreCase = false
+    ),
+    setVariableValueIgnoreCase: (state: FormsFlowStateModelIF) => (
+      state.variableValueIgnoreCase === false ? (state.variableValueIgnoreCase = true) : state.variableValueIgnoreCase = false
+    ),
   }
 };

@@ -26,7 +26,7 @@ export default class TaskListSearchType extends Vue {
 
   changeQueryType () {
     this.setFormsFlowTaskSearchType();
-    this.$root.$emit("call-updateSearchQueryType", {
+    this.$root.$emit("call-updateTaskList", {
     });
   }
 }
