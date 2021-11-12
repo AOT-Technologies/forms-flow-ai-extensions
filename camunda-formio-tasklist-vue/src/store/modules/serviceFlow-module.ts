@@ -2,6 +2,9 @@ import {
   FormsFlowStateModelIF 
 } from '../../models';
 import {
+  QUERY_TYPES
+} from '../../services';
+import {
   FormsFlowstateModel 
 } from '../state';
 
@@ -39,7 +42,9 @@ export default {
     setFormsFlowTaskCurrentPage: (state: FormsFlowStateModelIF, payload: number) => (state.formsFlowTaskCurrentPage = payload),
     setFormsFlowTaskId: (state: FormsFlowStateModelIF, payload: string) => (state.formsFlowTaskId = payload),
     setFormsFlowactiveIndex: (state: FormsFlowStateModelIF, payload: number) => (state.formsFlowactiveIndex = payload),
-    setFormsFlowTaskSearchType: (state: FormsFlowStateModelIF) => ( state.searchQueryType === "ALL" ? (state.searchQueryType = "ANY") : state.searchQueryType = "ALL"),
+    setFormsFlowTaskSearchType: (state: FormsFlowStateModelIF) => ( 
+    state.searchQueryType === QUERY_TYPES.ALL ? (state.searchQueryType = QUERY_TYPES.ANY) : state.searchQueryType = QUERY_TYPES.ALL
+    ),
     setFormsFlowTaskLength: (state: FormsFlowStateModelIF, payload: number) => (state.taskLength = payload),
     setVariableNameIgnoreCase: (state: FormsFlowStateModelIF) => (
       state.variableNameIgnoreCase === false ? (state.variableNameIgnoreCase = true) : state.variableNameIgnoreCase = false

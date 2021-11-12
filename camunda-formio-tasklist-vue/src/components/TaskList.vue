@@ -772,9 +772,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     );
     const responseData = paginatedTaskResults.data;
-    const _embedded = responseData['_embedded']; // data._embedded.task is where the task list is.
-    this.tasks = _embedded['task'];
-    this.setFormsFlowTaskLength(responseData['count']);
+    const _embedded = responseData._embedded; // data._embedded.task is where the task list is.
+    this.tasks = _embedded.task;
+    this.setFormsFlowTaskLength(responseData.count);
   }
 
   async onUserSearch (search: string, loading: any) {

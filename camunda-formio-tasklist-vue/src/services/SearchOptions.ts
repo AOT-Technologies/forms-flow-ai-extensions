@@ -1,6 +1,4 @@
-import {
-  SearchOptionPayload 
-} from "../models";
+import { SearchOptionPayload, SearchQueryPayload } from "../models";
 
 export enum SEARCH_BOX_STATE {
   START = "a",
@@ -135,21 +133,21 @@ export const taskSearchFilters: SearchOptionPayload[] = [
 
 export const getVariableOperator = (operator: string) => {
   switch (operator) {
-  case "=":
-    return "eq";
-  case ">":
-    return "gt";
-  case ">=":
-    return "gteq";
-  case "!=":
-    return "neq";
-  case "<":
-    return "lt";
-  case "<=":
-    return "lteq";
-  case "like":
-    return "like";
-  default:
+    case "=":
+      return "eq";
+    case ">":
+      return "gt";
+    case ">=":
+      return "gteq";
+    case "!=":
+      return "neq";
+    case "<":
+      return "lt";
+    case "<=":
+      return "lteq";
+    case "like":
+      return "like";
+    default:
   }
 };
 
@@ -160,134 +158,92 @@ export const FILTER_OPERATOR_TYPES = {
   AFTER: "after",
 };
 
-// export const FILTER_COMPARE_OPTIONS = {
-//   [FilterSearchTypes.VARIABLES]: [
-//     ">",
-//     ">=",
-//     FILTER_OPERATOR_TYPES.EQUAL,
-//     "!=",
-//     "<",
-//     "<=",
-//     FILTER_OPERATOR_TYPES.LIKE,
-//   ],
-//   [FilterSearchTypes.DATE]: [
-//     FILTER_OPERATOR_TYPES.BEFORE,
-//     FILTER_OPERATOR_TYPES.AFTER,
-//   ],
-//   [FilterSearchTypes.STRING]: [
-//     FILTER_OPERATOR_TYPES.EQUAL,
-//     FILTER_OPERATOR_TYPES.LIKE,
-//   ],
-//   [FilterSearchTypes.NORMAL]: [FILTER_OPERATOR_TYPES.EQUAL],
-// };
-
 const getProcessedParamObject = (searchOption: SearchOptionPayload) => {
-  const option: any= {
-  };
-  if(searchOption.operator===FILTER_OPERATOR_TYPES.EQUAL) {
+  const option: any = {};
+  if (searchOption.operator === FILTER_OPERATOR_TYPES.EQUAL) {
     option[searchOption.key] = searchOption.value;
-  }
-  else if(searchOption.operator===FILTER_OPERATOR_TYPES.LIKE){
+  } else if (searchOption.operator === FILTER_OPERATOR_TYPES.LIKE) {
     option[`${searchOption.key}Like`] = `%${searchOption.value}%`;
-  }else if(searchOption.operator===FILTER_OPERATOR_TYPES.BEFORE){
+  } else if (searchOption.operator === FILTER_OPERATOR_TYPES.BEFORE) {
     option[`${searchOption.key}Before`] = searchOption.value;
-  }else if(searchOption.operator===FILTER_OPERATOR_TYPES.AFTER){
+  } else if (searchOption.operator === FILTER_OPERATOR_TYPES.AFTER) {
     option[`${searchOption.key}After`] = searchOption.value;
   }
 
   return option;
 };
 
-export const isVariableTypeAvailable = (filterSelections: SearchOptionPayload[])=>{
-  return filterSelections.some(filter=>filter.type===FilterSearchTypes.VARIABLES);
+export const isVariableTypeAvailable = (
+  filterSelections: SearchOptionPayload[]
+) => {
+  return filterSelections.some(
+    (filter) => filter.type === FilterSearchTypes.VARIABLES
+  );
 };
 
-// export const searchValueObject = (searchValue: any, operator: any) => {
-//   if (operator === FILTER_OPERATOR_TYPES.EQUAL) {
-//     return searchValue;
-//   } else if (operator === FILTER_OPERATOR_TYPES.LIKE) {
-//     return `${searchValue}Like`;
-//   } else if (operator === FILTER_OPERATOR_TYPES.BEFORE) {
-//     return `${searchValue}Before`;
-//   } else if (operator === FILTER_OPERATOR_TYPES.AFTER) {
-//     return `${searchValue}After`;
-//   }
-// };
-
-// export const getDeletedVariableIndex = (
-//   deletequery: any,
-//   selectetedSearchList: any,
-//   key: string,
-//   queryList: any
-// ) => {
-//   for (let i = 0; i < queryList[key].length; i++) {
-//     if (
-//       queryList[key][i]["name"] === deletequery["name"]
-//       && queryList[key]["value"] === deletequery["value"]
-//     ) {
-//       queryList[key].splice(i, 1);
-//     }
-//   }
-//   return queryList;
-// };
-
-export const getFormattedQueryListParams = (searchOptionList: SearchOptionPayload[], searchQueryType: any, variableNameIgnoreCase: boolean, variableValueIgnoreCase: boolean)=>{
+export const getFormattedQueryListParams = (
+  searchOptionList: SearchOptionPayload[],
+  searchQueryType: any,
+  variableNameIgnoreCase: boolean,
+  variableValueIgnoreCase: boolean
+) => {
   /*Function to transform the array of selected SearchQueries to a query object which can be used to search from TaskList*/
-  let resultList={
-  };
-  let paramList: any={
-  };
-  let isParamsHasValue=false;
-  if(searchOptionList.length===0){
+  let resultList = {};
+  let paramList: SearchQueryPayload = {};
+  let isParamsHasValue = false;
+  if (searchOptionList.length === 0) {
     return paramList;
   }
-  paramList={
-    processVariables: [],taskVariables:[]
+  paramList = {
+    processVariables: [],
+    taskVariables: [],
   };
 
-  searchOptionList.forEach((searchOption)=>{
-    switch(searchOption.type){
-    case FilterSearchTypes.VARIABLES:
-      if(searchOption?.value && searchOption?.variable){
-        isParamsHasValue=true;
-        paramList[searchOption.key].push({
-          name: searchOption.variable, operator: getVariableOperator(searchOption.operator), value: searchOption.value
-        });
-      }
-      break;
-    case FilterSearchTypes.STRING:
-    case FilterSearchTypes.NORMAL:
-    case FilterSearchTypes.DATE:
-      if(searchOption?.value){
-        isParamsHasValue=true;
-        const param= getProcessedParamObject(searchOption);
-        paramList ={
-          ...paramList,...param
-        };
-      }
-      break;
-    default:
+  searchOptionList.forEach((searchOption) => {
+    switch (searchOption.type) {
+      case FilterSearchTypes.VARIABLES:
+        if (searchOption?.value && searchOption?.variable) {
+          isParamsHasValue = true;
+          console.log(searchOption.value);
+          const val = searchOption.value;
+          paramList.val.push({
+            name: searchOption.variable,
+            operator: getVariableOperator(searchOption.operator),
+            value: searchOption.value,
+          });
+        }
+        break;
+      case FilterSearchTypes.STRING:
+      case FilterSearchTypes.NORMAL:
+      case FilterSearchTypes.DATE:
+        if (searchOption?.value) {
+          isParamsHasValue = true;
+          const param = getProcessedParamObject(searchOption);
+          paramList = {
+            ...paramList,
+            ...param,
+          };
+        }
+        break;
     }
   });
 
-
   const isVariableType = isVariableTypeAvailable(searchOptionList);
-  if(isVariableType){
-    paramList={
-      ...paramList,...{
+  if (isVariableType) {
+    paramList = {
+      ...paramList,
+      ...{
         variableNamesIgnoreCase: variableNameIgnoreCase,
-        variableValuesIgnoreCase: variableValueIgnoreCase
-      }
+        variableValuesIgnoreCase: variableValueIgnoreCase,
+      },
     };
   }
-  if(searchQueryType===QUERY_TYPES.ALL){
-    resultList=paramList;
-  }else if(searchQueryType===QUERY_TYPES.ANY){
-    resultList={
-      orQueries:[paramList]
+  if (searchQueryType === QUERY_TYPES.ALL) {
+    resultList = paramList;
+  } else if (searchQueryType === QUERY_TYPES.ANY) {
+    resultList = {
+      orQueries: [paramList],
     };
   }
-  return isParamsHasValue?resultList:{
-  };
+  return isParamsHasValue ? resultList : {};
 };
-

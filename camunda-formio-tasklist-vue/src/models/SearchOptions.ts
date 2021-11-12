@@ -24,8 +24,8 @@ export interface TaskVariablesPayload {
 export interface SearchQueryPayload {
     taskVariables?: Array<VariablePayload>;
     processVariables?: Array<VariablePayload>;
-    variableNamesIgnoreCase?: string;
-    variableValuesIgnoreCase?: string;
+    variableNamesIgnoreCase?: boolean;
+    variableValuesIgnoreCase?: boolean;
     dueBefore?: string;
     dueAfter?: string;
     followUpBefore?: string;

@@ -41,16 +41,16 @@ import {
   Component, Emit, Vue 
 } from "vue-property-decorator";
 import {
+  FilterSearchTypes,
+  SEARCH_BOX_STATE,
+  getFormattedQueryListParams,
+  getISODateTime,
+  taskSearchFilters,
+} from "../../services";
+import {
   SearchOptionPayload,
   SearchQueryPayload,
 } from "../../models";
-import {
-  FilterSearchTypes,
-  getFormattedQueryListParams,
-  getISODateTime,
-  SEARCH_BOX_STATE,
-  taskSearchFilters,
-} from "../../services";
 import TaskListAddSearchIgnoreCase from "./TaskListAddSearchIgnoreCase.vue";
 import TaskListSearchType from "./TaskListSearchType.vue";
 import TaskSearchItem from "./TaskSearchItem.vue";
@@ -122,14 +122,14 @@ export default class TaskListSearch extends Vue {
       this.operator[0] = item.operator;
       this.showSearchstate[0] = SEARCH_BOX_STATE.START;
       this.showVariableValue[0] = SEARCH_BOX_STATE.START;
-      if (item.type === "variables") {
+      if (item.type === FilterSearchTypes.VARIABLES) {
         this.isVariableTypeInSelectedSearchQuery = true;
       }
     } else {
       this.operator[this.selectedSearchQueries.length - 1] = item.operator;
       this.showSearchstate[this.selectedSearchQueries.length - 1] = SEARCH_BOX_STATE.START;
       this.showVariableValue[this.selectedSearchQueries.length - 1] = SEARCH_BOX_STATE.START;
-      if (item.type === "variables") {
+      if (item.type === FilterSearchTypes.VARIABLES) {
         this.isVariableTypeInSelectedSearchQuery = true;
       }
     }
@@ -143,7 +143,7 @@ export default class TaskListSearch extends Vue {
     show the variable type dropdown else hide it*/
     this.isVariableTypeInSelectedSearchQuery = false;
     for (const idx in this.selectedSearchQueries) {
-      if (this.selectedSearchQueries[idx]?.type === "variables") {
+      if (this.selectedSearchQueries[idx]?.type === FilterSearchTypes.VARIABLES) {
         this.isVariableTypeInSelectedSearchQuery = true;
       }
     }
