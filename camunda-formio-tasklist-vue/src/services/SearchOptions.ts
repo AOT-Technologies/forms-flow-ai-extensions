@@ -2,6 +2,12 @@ import {
   SearchOptionPayload 
 } from "../models";
 
+export enum SEARCH_BOX_STATE {
+  START = "a",
+  INSERT = "i",
+  SHOW = "s",
+}
+
 export const FilterSearchTypes = {
   VARIABLES: "variables",
   STRING: "string",

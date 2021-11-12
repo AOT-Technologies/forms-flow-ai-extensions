@@ -135,7 +135,7 @@ import {
   Component, Emit, Prop, Vue 
 } from "vue-property-decorator";
 import {
-  getFormattedDateAndTime, taskSearchFilters,
+  getFormattedDateAndTime, taskSearchFilters, SEARCH_BOX_STATE
 } from "../../services";
 
 

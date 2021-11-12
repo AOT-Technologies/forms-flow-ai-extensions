@@ -45,8 +45,10 @@ import {
   SearchQueryPayload,
 } from "../../models";
 import {
+  FilterSearchTypes,
   getFormattedQueryListParams,
   getISODateTime,
+  SEARCH_BOX_STATE,
   taskSearchFilters,
 } from "../../services";
 import TaskListAddSearchIgnoreCase from "./TaskListAddSearchIgnoreCase.vue";
@@ -94,39 +96,39 @@ export default class TaskListSearch extends Vue {
   }
 
   updatesearchinput (index: number) {
-    this.selectedSearchQueries[index].name = "";
-    Vue.set(this.showSearchstate, index, "i");
+    this.selectedSearchQueries[index].value = "";
+    Vue.set(this.showSearchstate, index, SEARCH_BOX_STATE.INSERT);
   }
 
   showsearchValueItem (index: number) {
-    Vue.set(this.showSearchstate, index, "s");
+    Vue.set(this.showSearchstate, index, SEARCH_BOX_STATE.SHOW);
   }
 
   makeInputNull (index: number) {
-    Vue.set(this.showSearchstate, index, "a");
+    Vue.set(this.showSearchstate, index, SEARCH_BOX_STATE.START);
   }
 
   updatevariableinput (index: number) {
-    Vue.set(this.showVariableValue, index, "i");
+    Vue.set(this.showVariableValue, index, SEARCH_BOX_STATE.INSERT);
   }
 
   showVariableValueItem (index: number) {
-    Vue.set(this.showVariableValue, index, "s");
+    Vue.set(this.showVariableValue, index, SEARCH_BOX_STATE.SHOW);
   }
 
   addToSelectedSearchQuery (item: any) {
     this.selectedSearchQueries.push(item);
     if (this.selectedSearchQueries === []) {
       this.operator[0] = item.operator;
-      this.showSearchstate[0] = "a";
-      this.showVariableValue[0] = "a";
+      this.showSearchstate[0] = SEARCH_BOX_STATE.START;
+      this.showVariableValue[0] = SEARCH_BOX_STATE.START;
       if (item.type === "variables") {
         this.isVariableTypeInSelectedSearchQuery = true;
       }
     } else {
       this.operator[this.selectedSearchQueries.length - 1] = item.operator;
-      this.showSearchstate[this.selectedSearchQueries.length - 1] = "a";
-      this.showVariableValue[this.selectedSearchQueries.length - 1] = "a";
+      this.showSearchstate[this.selectedSearchQueries.length - 1] = SEARCH_BOX_STATE.START;
+      this.showVariableValue[this.selectedSearchQueries.length - 1] = SEARCH_BOX_STATE.START;
       if (item.type === "variables") {
         this.isVariableTypeInSelectedSearchQuery = true;
       }
@@ -146,7 +148,8 @@ export default class TaskListSearch extends Vue {
       }
     }
 
-    this.queryList = getFormattedQueryListParams(this.selectedSearchQueries, this.getFormsFlowTaskSearchType, this.getVariableNameIgnoreCase, this.getVariableValueIgnoreCase);
+    this.queryList = getFormattedQueryListParams(this.selectedSearchQueries, this.getFormsFlowTaskSearchType,
+    this.getVariableNameIgnoreCase, this.getVariableValueIgnoreCase);
     this.onSearchUpdateTasklistResult();
   }
 
@@ -154,14 +157,14 @@ export default class TaskListSearch extends Vue {
     this.makeInputNull(index);
     Vue.set(this.selectedSearchQueries, index, searchitem);
     this.operator[index] = this.selectedSearchQueries[index].operator;
-    if (this.showSearchstate[index] !== "a") {
+    if (this.showSearchstate[index] !== SEARCH_BOX_STATE.START) {
       this.setSearchQueryValue(this.selectedSearchQueries, index);
     }
   }
 
   setSearchQueryValue (selectedSearchQueries: SearchOptionPayload[], index: number) {
     /*Dates should be in ISO format for request object*/
-    if(this.selectedSearchQueries[index].type === "date") {
+    if(this.selectedSearchQueries[index].type === FilterSearchTypes.DATE) {
       this.selectedSearchQueries[index].value = getISODateTime(this.selectedSearchQueries[index].value);
     }
     this.queryList = getFormattedQueryListParams(this.selectedSearchQueries, this.getFormsFlowTaskSearchType, this.getVariableNameIgnoreCase, this.getVariableValueIgnoreCase);
@@ -177,11 +180,6 @@ export default class TaskListSearch extends Vue {
     this.$root.$on("call-deleteSearchQueryElement", (para: any) => {
       this.deleteSearchQueryElement(para.query, para.index);
     });
-
-    // this.$root.$on("call-updateSearchQueryType", () => {
-    //   this.queryList = getFormattedQueryListParams(this.selectedSearchQueries, this.getFormsFlowTaskSearchType, this.getVariableNameIgnoreCase, this.getVariableValueIgnoreCase);
-    //   this.onSearchUpdateTasklistResult();
-    // });
 
     this.$root.$on("call-updateTaskList", () => {
       this.queryList = getFormattedQueryListParams(this.selectedSearchQueries, this.getFormsFlowTaskSearchType, this.getVariableNameIgnoreCase, this.getVariableValueIgnoreCase);
@@ -204,7 +202,6 @@ export default class TaskListSearch extends Vue {
   beforeDestroy () {
     this.$root.$off("call-deleteSearchQueryElement");
     this.$root.$off("call-updateSearchQueryElement");
-    // this.$root.$off("call-updateSearchQueryType");
     this.$root.$off("call-updateSearchQueryOperators");
     this.$root.$off("call-updateTaskList");
     this.$root.$off("call-setSearchQueryValue");
