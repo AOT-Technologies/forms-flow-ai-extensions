@@ -149,7 +149,7 @@ export default class TaskListSearch extends Vue {
     }
 
     this.queryList = getFormattedQueryListParams(this.selectedSearchQueries, this.getFormsFlowTaskSearchType,
-    this.getVariableNameIgnoreCase, this.getVariableValueIgnoreCase);
+      this.getVariableNameIgnoreCase, this.getVariableValueIgnoreCase);
     this.onSearchUpdateTasklistResult();
   }
 

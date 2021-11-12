@@ -2,11 +2,11 @@ import {
   FormsFlowStateModelIF 
 } from '../../models';
 import {
-  QUERY_TYPES
-} from '../../services';
-import {
   FormsFlowstateModel 
 } from '../state';
+import {
+  QUERY_TYPES
+} from '../../services';
 
 export default {
   namespaced: true,
@@ -43,7 +43,7 @@ export default {
     setFormsFlowTaskId: (state: FormsFlowStateModelIF, payload: string) => (state.formsFlowTaskId = payload),
     setFormsFlowactiveIndex: (state: FormsFlowStateModelIF, payload: number) => (state.formsFlowactiveIndex = payload),
     setFormsFlowTaskSearchType: (state: FormsFlowStateModelIF) => ( 
-    state.searchQueryType === QUERY_TYPES.ALL ? (state.searchQueryType = QUERY_TYPES.ANY) : state.searchQueryType = QUERY_TYPES.ALL
+      state.searchQueryType === QUERY_TYPES.ALL ? (state.searchQueryType = QUERY_TYPES.ANY) : state.searchQueryType = QUERY_TYPES.ALL
     ),
     setFormsFlowTaskLength: (state: FormsFlowStateModelIF, payload: number) => (state.taskLength = payload),
     setVariableNameIgnoreCase: (state: FormsFlowStateModelIF) => (

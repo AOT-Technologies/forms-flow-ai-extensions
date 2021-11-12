@@ -1,4 +1,6 @@
-import { SearchOptionPayload, SearchQueryPayload } from "../models";
+import { 
+  SearchOptionPayload, SearchQueryPayload
+} from "../models";
 
 export enum SEARCH_BOX_STATE {
   START = "a",
@@ -133,21 +135,21 @@ export const taskSearchFilters: SearchOptionPayload[] = [
 
 export const getVariableOperator = (operator: string) => {
   switch (operator) {
-    case "=":
-      return "eq";
-    case ">":
-      return "gt";
-    case ">=":
-      return "gteq";
-    case "!=":
-      return "neq";
-    case "<":
-      return "lt";
-    case "<=":
-      return "lteq";
-    case "like":
-      return "like";
-    default:
+  case "=":
+    return "eq";
+  case ">":
+    return "gt";
+  case ">=":
+    return "gteq";
+  case "!=":
+    return "neq";
+  case "<":
+    return "lt";
+  case "<=":
+    return "lteq";
+  case "like":
+    return "like";
+  default:
   }
 };
 
@@ -158,15 +160,24 @@ export const FILTER_OPERATOR_TYPES = {
   AFTER: "after",
 };
 
-const getProcessedParamObject = (searchOption: SearchOptionPayload) => {
-  const option: any = {};
-  if (searchOption.operator === FILTER_OPERATOR_TYPES.EQUAL) {
+const getProcessedParamObject = (searchOption: SearchOptionPayload) =>
+{
+  const option: any = {
+  };
+  if (searchOption.operator === FILTER_OPERATOR_TYPES.EQUAL)
+  {
     option[searchOption.key] = searchOption.value;
-  } else if (searchOption.operator === FILTER_OPERATOR_TYPES.LIKE) {
+  }
+  else if (searchOption.operator === FILTER_OPERATOR_TYPES.LIKE)
+  {
     option[`${searchOption.key}Like`] = `%${searchOption.value}%`;
-  } else if (searchOption.operator === FILTER_OPERATOR_TYPES.BEFORE) {
+  }
+  else if (searchOption.operator === FILTER_OPERATOR_TYPES.BEFORE)
+  {
     option[`${searchOption.key}Before`] = searchOption.value;
-  } else if (searchOption.operator === FILTER_OPERATOR_TYPES.AFTER) {
+  }
+  else if (searchOption.operator === FILTER_OPERATOR_TYPES.AFTER)
+  {
     option[`${searchOption.key}After`] = searchOption.value;
   }
 
@@ -188,8 +199,10 @@ export const getFormattedQueryListParams = (
   variableValueIgnoreCase: boolean
 ) => {
   /*Function to transform the array of selected SearchQueries to a query object which can be used to search from TaskList*/
-  let resultList = {};
-  let paramList: SearchQueryPayload = {};
+  let resultList = {
+  };
+  let paramList: SearchQueryPayload = {
+  };
   let isParamsHasValue = false;
   if (searchOptionList.length === 0) {
     return paramList;
@@ -201,30 +214,28 @@ export const getFormattedQueryListParams = (
 
   searchOptionList.forEach((searchOption) => {
     switch (searchOption.type) {
-      case FilterSearchTypes.VARIABLES:
-        if (searchOption?.value && searchOption?.variable) {
-          isParamsHasValue = true;
-          console.log(searchOption.value);
-          const val = searchOption.value;
-          paramList.val.push({
-            name: searchOption.variable,
-            operator: getVariableOperator(searchOption.operator),
-            value: searchOption.value,
-          });
-        }
-        break;
-      case FilterSearchTypes.STRING:
-      case FilterSearchTypes.NORMAL:
-      case FilterSearchTypes.DATE:
-        if (searchOption?.value) {
-          isParamsHasValue = true;
-          const param = getProcessedParamObject(searchOption);
-          paramList = {
-            ...paramList,
-            ...param,
-          };
-        }
-        break;
+    case FilterSearchTypes.VARIABLES:
+      if (searchOption?.value && searchOption?.variable) {
+        isParamsHasValue = true;
+        paramList[searchOption.key].push({
+          name: searchOption.variable,
+          operator: getVariableOperator(searchOption.operator),
+          value: searchOption.value,
+        });
+      }
+      break;
+    case FilterSearchTypes.STRING:
+    case FilterSearchTypes.NORMAL:
+    case FilterSearchTypes.DATE:
+      if (searchOption?.value) {
+        isParamsHasValue = true;
+        const param = getProcessedParamObject(searchOption);
+        paramList = {
+          ...paramList,
+          ...param,
+        };
+      }
+      break;
     }
   });
 
@@ -245,5 +256,6 @@ export const getFormattedQueryListParams = (
       orQueries: [paramList],
     };
   }
-  return isParamsHasValue ? resultList : {};
+  return isParamsHasValue ? resultList : {
+  };
 };
