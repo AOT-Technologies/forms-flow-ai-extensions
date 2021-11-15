@@ -137,23 +137,26 @@ import {
 import {
   getFormattedDateAndTime, taskSearchFilters
 } from "../../services";
+import {
+  SearchOptionPayload,
+} from "../../models";
 
 
 @Component
 export default class TaskSearchItem extends Vue {
   @Prop({
-  }) private query!: any;
+  }) private query!: SearchOptionPayload;
   @Prop({
   }) private index!: number;
   @Prop({
     default: taskSearchFilters 
-  }) private searchListElements!: any;
+  }) private searchListElements!: SearchOptionPayload[];
   @Prop({
     default: [] 
-  }) private showSearchstate!: any;
+  }) private showSearchstate!: Array<string>;
   @Prop({
     default: [] 
-  }) private selectedSearchQueries!: any;
+  }) private selectedSearchQueries!: SearchOptionPayload[];
   @Prop({
     default: [] 
   }) private showVariableValue!: Array<string>;
@@ -201,7 +204,7 @@ export default class TaskSearchItem extends Vue {
     });
   }
 
-  setSearchQueryValue (item: any, index: number) {
+  setSearchQueryValue (item: SearchOptionPayload[], index: number) {
     this.$root.$emit("call-setSearchQueryValue", {
       item: item,
       index: index

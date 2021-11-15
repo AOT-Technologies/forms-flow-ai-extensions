@@ -52,6 +52,9 @@ import {
   Component, Emit, Prop, Vue 
 } from "vue-property-decorator";
 import {
+  SearchOptionPayload,
+} from "../../models";
+import {
   namespace 
 } from "vuex-class";
 
@@ -60,10 +63,10 @@ const serviceFlowModule = namespace("serviceFlowModule");
 @Component
 export default class TaskListAddSearchIgnoreCase extends Vue {
   @Prop() private isVariableTypeInSelectedSearchQuery!: string;
-  @Prop() private searchListElements!: any;
+  @Prop() private searchListElements!: SearchOptionPayload[];
 
   @serviceFlowModule.Getter("getFormsFlowTaskLength")
-  private getFormsFlowTaskLength: any;
+  private getFormsFlowTaskLength: number;
   @serviceFlowModule.Getter("getVariableNameIgnoreCase")
   private getVariableNameIgnoreCase: any;
   @serviceFlowModule.Getter("getVariableValueIgnoreCase")
