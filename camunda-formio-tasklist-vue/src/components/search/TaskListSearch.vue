@@ -154,7 +154,13 @@ export default class TaskListSearch extends Vue {
   }
 
   updateSearchQueryElement (searchitem: any, index: number) {
-    this.makeInputNull(index);
+    if (
+      searchitem.type === FilterSearchTypes.DATE
+      && this.selectedSearchQueries[index].type !== FilterSearchTypes.DATE
+    ) {
+      this.makeInputNull(index);
+    }
+    searchitem.value = this.selectedSearchQueries[index].value;
     Vue.set(this.selectedSearchQueries, index, searchitem);
     this.operator[index] = this.selectedSearchQueries[index].operator;
     if (this.showSearchstate[index] !== SEARCH_BOX_STATE.START) {
