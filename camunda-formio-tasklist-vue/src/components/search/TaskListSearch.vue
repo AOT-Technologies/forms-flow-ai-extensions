@@ -24,7 +24,6 @@
         </b-col>
       </div>
       <TaskListAddSearchIgnoreCase
-        :queryList="queryList"
         :isVariableTypeInSelectedSearchQuery="
           isVariableTypeInSelectedSearchQuery
         "
@@ -71,8 +70,8 @@ const serviceFlowModule = namespace("serviceFlowModule");
 
 export default class TaskListSearch extends Vue {
 
-  private searchListElements: any = taskSearchFilters;
-  private selectedSearchQueries: any = [];
+  private searchListElements: SearchOptionPayload[] = taskSearchFilters;
+  private selectedSearchQueries: SearchOptionPayload[] = [];
   private operator: Array<string> = [];
   private showSearchstate: Array<string> = []; //3 states - a, i, s
   private showVariableValue: Array<string> = [];

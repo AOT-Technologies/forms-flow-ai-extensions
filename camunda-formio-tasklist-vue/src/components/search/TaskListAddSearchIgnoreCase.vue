@@ -60,7 +60,6 @@ const serviceFlowModule = namespace("serviceFlowModule");
 @Component
 export default class TaskListAddSearchIgnoreCase extends Vue {
   @Prop() private isVariableTypeInSelectedSearchQuery!: string;
-  @Prop() private queryList!: any;
   @Prop() private searchListElements!: any;
 
   @serviceFlowModule.Getter("getFormsFlowTaskLength")
@@ -75,8 +74,6 @@ export default class TaskListAddSearchIgnoreCase extends Vue {
   @serviceFlowModule.Mutation("setVariableValueIgnoreCase")
   public setVariableValueIgnoreCase: any;
 
-  private variablesEndType: Array<any> = [];
-  private QList: any = this.queryList;
   private activeSearchItem: number = 0;
   private searchList: any = this.searchListElements;
 
@@ -88,20 +85,6 @@ export default class TaskListAddSearchIgnoreCase extends Vue {
   addToSelectedSearchQuery (item: any) {
     return item;
   }
-
-  // callTaskVariablesEndApi () {
-  //   this.QList["variableNamesIgnoreCase"] = false;
-  //   this.QList["variableValuesIgnoreCase"] = false;
-  //   for (const variablevalue in this.variablesEndType) {
-  //     this.QList[this.variablesEndType[variablevalue]] = true;
-  //     this.$root.$emit("call-updateTaskList", {
-  //       queryList: this.QList 
-  //     });
-  //   }
-  //   this.$root.$emit("call-updateTaskList", {
-  //     queryList: this.QList 
-  //   });
-  // }
 
   updateNameCase() {
     this.setVariableNameIgnoreCase();

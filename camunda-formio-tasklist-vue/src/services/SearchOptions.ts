@@ -8,7 +8,7 @@ export enum SEARCH_BOX_STATE {
   SHOW = "s",
 }
 
-export const FilterSearchTypes = {
+export const  FilterSearchTypes = {
   VARIABLES: "variables",
   STRING: "string",
   DATE: "date",
