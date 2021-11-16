@@ -66,7 +66,7 @@ export default class TaskListAddSearchIgnoreCase extends Vue {
   @Prop() private searchListElements!: SearchOptionPayload[];
 
   @serviceFlowModule.Getter("getFormsFlowTaskLength")
-  private getFormsFlowTaskLength: number;
+  private getFormsFlowTaskLength: any;
   @serviceFlowModule.Getter("getVariableNameIgnoreCase")
   private getVariableNameIgnoreCase: any;
   @serviceFlowModule.Getter("getVariableValueIgnoreCase")
@@ -78,14 +78,14 @@ export default class TaskListAddSearchIgnoreCase extends Vue {
   public setVariableValueIgnoreCase: any;
 
   private activeSearchItem: number = 0;
-  private searchList: any = this.searchListElements;
+  private searchList: SearchOptionPayload[] = this.searchListElements;
 
   setActiveSearchItem (index: number) {
     this.activeSearchItem = index;
   }
 
   @Emit()
-  addToSelectedSearchQuery (item: any) {
+  addToSelectedSearchQuery (item: SearchOptionPayload) {
     return item;
   }
 

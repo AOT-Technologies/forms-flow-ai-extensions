@@ -1,5 +1,5 @@
 import { 
-  SearchOptionPayload, SearchQueryPayload
+  SearchOptionPayload
 } from "../models";
 
 export enum SEARCH_BOX_STATE {
@@ -201,7 +201,7 @@ export const getFormattedQueryListParams = (
   /*Function to transform the array of selected SearchQueries to a query object which can be used to search from TaskList*/
   let resultList = {
   };
-  let paramList: SearchQueryPayload = {
+  let paramList: any = {
   };
   let isParamsHasValue = false;
   if (searchOptionList.length === 0) {

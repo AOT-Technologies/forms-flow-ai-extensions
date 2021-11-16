@@ -73,8 +73,8 @@ export default class TaskListSearch extends Vue {
   private searchListElements: SearchOptionPayload[] = taskSearchFilters;
   private selectedSearchQueries: SearchOptionPayload[] = [];
   private operator: string[] = [];
-  private showSearchstate: Array<string> = []; //3 states - a, i, s
-  private showVariableValue: Array<string> = [];
+  private showSearchstate: string[] = []; //3 states - a, i, s
+  private showVariableValue: string[] = [];
   private queryList: SearchQueryPayload = {
     taskVariables: [],
     processVariables: [],
@@ -115,7 +115,7 @@ export default class TaskListSearch extends Vue {
     Vue.set(this.showVariableValue, index, SEARCH_BOX_STATE.SHOW);
   }
 
-  addToSelectedSearchQuery (item: any) {
+  addToSelectedSearchQuery (item: SearchOptionPayload) {
     this.selectedSearchQueries.push(item);
     if (this.selectedSearchQueries === []) {
       this.operator[0] = item.operator;
@@ -134,7 +134,7 @@ export default class TaskListSearch extends Vue {
     }
   }
 
-  deleteSearchQueryElement (query: any, index: number) {
+  deleteSearchQueryElement (query: SearchOptionPayload, index: number) {
     this.selectedSearchQueries.splice(index, 1);
     this.operator.splice(index, 1);
 
@@ -152,7 +152,7 @@ export default class TaskListSearch extends Vue {
     this.onSearchUpdateTasklistResult();
   }
 
-  updateSearchQueryElement (searchitem: any, index: number) {
+  updateSearchQueryElement (searchitem: SearchOptionPayload, index: number) {
     if (
       searchitem.type === FilterSearchTypes.DATE
       && this.selectedSearchQueries[index].type !== FilterSearchTypes.DATE

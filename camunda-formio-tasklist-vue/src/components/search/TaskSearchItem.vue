@@ -153,24 +153,24 @@ export default class TaskSearchItem extends Vue {
   }) private searchListElements!: SearchOptionPayload[];
   @Prop({
     default: [] 
-  }) private showSearchstate!: Array<string>;
+  }) private showSearchstate!: string[];
   @Prop({
     default: [] 
   }) private selectedSearchQueries!: SearchOptionPayload[];
   @Prop({
     default: [] 
-  }) private showVariableValue!: Array<string>;
+  }) private showVariableValue!: string[];
   @Prop({
     default: [] 
-  }) private operator!: Array<string>;
+  }) private operator!: string[];
 
-  deleteSearchQueryElement (query: any, index: number) {
+  deleteSearchQueryElement (query: SearchOptionPayload, index: number) {
     this.$root.$emit("call-deleteSearchQueryElement", {
       query: query,
       index: index,
     });
   }
-  updateSearchQueryElement (updateSearch: any, index: number) {
+  updateSearchQueryElement (updateSearch: SearchOptionPayload, index: number) {
     this.$root.$emit("call-updateSearchQueryElement", {
       updateSearch: updateSearch,
       index: index,
