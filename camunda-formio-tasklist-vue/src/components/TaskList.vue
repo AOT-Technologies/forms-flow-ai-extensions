@@ -17,6 +17,9 @@
         xl="3"
         lg="3"
         md="12"
+        :class="
+          containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'
+        "
         v-if="maximize"
       >
         <LeftSider
@@ -36,6 +39,9 @@
         v-if="getFormsFlowTaskId && task"
         :lg="maximize ? 9 : 12"
         md="12"
+        :class="
+          containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'
+        "
       >
         <div class="cft-service-task-details">
           <b-row>
@@ -404,6 +410,7 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
+  @Prop() private containerHeight!: string;
   @Prop({
     default: "created",
   })
