@@ -1,8 +1,8 @@
 export interface SearchOptionPayload {
     label: string;
-    compares: Array<string>;
+    compares: string[];
     key: string;
-    values: Array<string>;
+    values: string[];
     type: string;
     variable?: string;
     name?: string;

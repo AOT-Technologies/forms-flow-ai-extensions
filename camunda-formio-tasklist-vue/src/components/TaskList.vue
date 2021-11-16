@@ -442,7 +442,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private filterList: FilterPayload[] = [];
   private editAssignee: boolean = false;
   private groupList: GroupListPayload[] = [];
-  private groupListNames?: Array<string> = [];
+  private groupListNames?: string[] = [];
   private groupListItems: string[] = [];
   private userEmail: string = "external";
   private selectedfilterId: string = "";
