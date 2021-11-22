@@ -213,8 +213,7 @@ export const getFormattedQueryListParams = (
   };
 
   searchOptionList.forEach((searchOption) => {
-    switch (searchOption.type) {
-    case FilterSearchTypes.VARIABLES:
+    if(searchOption.type === FilterSearchTypes.VARIABLES) {
       if (searchOption?.value && searchOption?.variable) {
         isParamsHasValue = true;
         paramList[searchOption.key].push({
@@ -223,10 +222,9 @@ export const getFormattedQueryListParams = (
           value: searchOption.value,
         });
       }
-      break;
-    case FilterSearchTypes.STRING:
-    case FilterSearchTypes.NORMAL:
-    case FilterSearchTypes.DATE:
+    }
+    else {
+    /* In case FilterSearchTypes.STRING, FilterSearchTypes.NORMAL, FilterSearchTypes.DATE*/
       if (searchOption?.value) {
         isParamsHasValue = true;
         const param = getProcessedParamObject(searchOption);
@@ -235,7 +233,6 @@ export const getFormattedQueryListParams = (
           ...param,
         };
       }
-      break;
     }
   });
 

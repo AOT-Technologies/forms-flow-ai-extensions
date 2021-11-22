@@ -17,13 +17,13 @@ export interface VariablePayload {
 }
 
 export interface TaskVariablesPayload {
-    taskVariables?: Array<VariablePayload>;
-    processVariables?: Array<VariablePayload>;
+    taskVariables?: VariablePayload[]
+    processVariables?: VariablePayload[];
 }
 
 export interface SearchQueryPayload {
-    taskVariables?: Array<VariablePayload>;
-    processVariables?: Array<VariablePayload>;
+    taskVariables?: VariablePayload[];
+    processVariables?: VariablePayload[];
     variableNamesIgnoreCase?: boolean;
     variableValuesIgnoreCase?: boolean;
     dueBefore?: string;
