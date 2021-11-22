@@ -17,7 +17,7 @@ export interface VariablePayload {
 }
 
 export interface TaskVariablesPayload {
-    taskVariables?: VariablePayload[]
+    taskVariables?: VariablePayload[];
     processVariables?: VariablePayload[];
 }
 
