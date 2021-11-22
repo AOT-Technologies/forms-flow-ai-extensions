@@ -15,10 +15,10 @@ export interface FilterPayload {
     query: {
         candidateUser?: string;
         includeAssignedTasks?: boolean;
-        taskVariables?: Array<VariablePayload>;
-        processVariables?: Array<VariablePayload>;
-        caseInstanceVariables?: Array<VariablePayload>;
-        orQueries?: Array<SearchQueryPayload>;
+        taskVariables?: VariablePayload[];
+        processVariables?: VariablePayload[];
+        caseInstanceVariables?: VariablePayload[];
+        orQueries?: SearchQueryPayload[];
     };
     resourceType: string;
 }
