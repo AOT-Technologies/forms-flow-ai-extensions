@@ -1,30 +1,45 @@
-export const FilterSearchTypes = {
+import { 
+  SearchOptionPayload
+} from "../models";
+
+export enum SEARCH_BOX_STATE {
+  START = "a",
+  INSERT = "i",
+  SHOW = "s",
+}
+
+export const  FilterSearchTypes = {
   VARIABLES: "variables",
   STRING: "string",
   DATE: "date",
   NORMAL: "normal",
 };
 
-export const taskSearchFilters = [
+export const QUERY_TYPES = {
+  ALL: "ALL",
+  ANY: "ANY",
+};
+
+export const taskSearchFilters: SearchOptionPayload[] = [
   {
     label: "Task Variables",
     key: "taskVariables",
-    compares: [">", ">=", "=", "!=", "<", "<="],
-    values: ["gt", "gte", "eq", "neq", "lt", "lte"],
+    compares: ["=", ">", ">=", "!=", "<", "<="],
+    values: ["eq", "gt", "gte", "neq", "lt", "lte"],
     type: FilterSearchTypes.VARIABLES,
     variable: "",
-    name: "",
-    operator: ">",
+    value: "",
+    operator: "=",
   },
   {
     label: "Process Variables",
     key: "processVariables",
-    compares: [">", ">=", "=", "!=", "<", "<="],
-    values: ["gt", "gte", "eq", "neq", "lt", "lte"],
+    compares: ["=", ">", ">=", "!=", "<", "<="],
+    values: ["eq", "gt", "gte", "neq", "lt", "lte"],
     type: FilterSearchTypes.VARIABLES,
     variable: "",
-    name: "",
-    operator: ">",
+    value: "",
+    operator: "=",
   },
   {
     label: "Process Definition Name",
@@ -33,6 +48,7 @@ export const taskSearchFilters = [
     values: ["processDefinitionNameLike", "processDefinitionName"],
     type: FilterSearchTypes.STRING,
     operator: "like",
+    value: "",
   },
   {
     label: "Assignee",
@@ -40,7 +56,7 @@ export const taskSearchFilters = [
     key: "assignee",
     values: ["assigneeLike", "assignee"],
     type: FilterSearchTypes.STRING,
-    name: "",
+    value: "",
     operator: "like",
   },
   {
@@ -49,7 +65,7 @@ export const taskSearchFilters = [
     key: "candidateGroup",
     values: ["candidateGroup"],
     type: FilterSearchTypes.NORMAL,
-    name: "",
+    value: "",
     operator: "=",
   },
   {
@@ -58,7 +74,7 @@ export const taskSearchFilters = [
     key: "candidateUser",
     values: ["candidateUser"],
     type: FilterSearchTypes.NORMAL,
-    name: "",
+    value: "",
     operator: "=",
   },
   {
@@ -67,7 +83,7 @@ export const taskSearchFilters = [
     key: "name",
     values: ["nameLike", "name"],
     type: FilterSearchTypes.STRING,
-    name: "",
+    value: "",
     operator: "like",
   },
   {
@@ -76,7 +92,7 @@ export const taskSearchFilters = [
     key: "description",
     values: ["descriptionLike", "description"],
     type: FilterSearchTypes.STRING,
-    name: "",
+    value: "",
     operator: "like",
   },
   {
@@ -85,7 +101,7 @@ export const taskSearchFilters = [
     key: "priority",
     values: ["priority"],
     type: FilterSearchTypes.NORMAL,
-    name: "",
+    value: "",
     operator: "=",
   },
   {
@@ -94,7 +110,7 @@ export const taskSearchFilters = [
     key: "due",
     values: ["dueBefore", "dueAfter"],
     type: FilterSearchTypes.DATE,
-    name: "",
+    value: "",
     operator: "before",
   },
   {
@@ -103,7 +119,7 @@ export const taskSearchFilters = [
     key: "followUp",
     values: ["followUpBefore", "followUpAfter"],
     type: FilterSearchTypes.DATE,
-    name: "",
+    value: "",
     operator: "before",
   },
   {
@@ -112,7 +128,7 @@ export const taskSearchFilters = [
     key: "created",
     values: ["createdBefore", "createdAfter"],
     type: FilterSearchTypes.DATE,
-    name: "",
+    value: "",
     operator: "before",
   },
 ];
@@ -144,54 +160,99 @@ export const FILTER_OPERATOR_TYPES = {
   AFTER: "after",
 };
 
-export const FILTER_COMPARE_OPTIONS = {
-  [FilterSearchTypes.VARIABLES]: [
-    ">",
-    ">=",
-    FILTER_OPERATOR_TYPES.EQUAL,
-    "!=",
-    "<",
-    "<=",
-    FILTER_OPERATOR_TYPES.LIKE,
-  ],
-  [FilterSearchTypes.DATE]: [
-    FILTER_OPERATOR_TYPES.BEFORE,
-    FILTER_OPERATOR_TYPES.AFTER,
-  ],
-  [FilterSearchTypes.STRING]: [
-    FILTER_OPERATOR_TYPES.EQUAL,
-    FILTER_OPERATOR_TYPES.LIKE,
-  ],
-  [FilterSearchTypes.NORMAL]: [FILTER_OPERATOR_TYPES.EQUAL],
-};
-
-export const searchValueObject = (searchValue: string, operator: string) => {
-  if (operator === FILTER_OPERATOR_TYPES.EQUAL) {
-    return searchValue;
-  } else if (operator === FILTER_OPERATOR_TYPES.LIKE) {
-    return `${searchValue}Like`;
-  } else if (operator === FILTER_OPERATOR_TYPES.BEFORE) {
-    return `${searchValue}Before`;
-  } else if (operator === FILTER_OPERATOR_TYPES.AFTER) {
-    return `${searchValue}After`;
-  } else {
-    return `cft-none`;
+const getProcessedParamObject = (searchOption: SearchOptionPayload) =>
+{
+  const option: any = {
+  };
+  if (searchOption.operator === FILTER_OPERATOR_TYPES.EQUAL)
+  {
+    option[searchOption.key] = searchOption.value;
   }
+  else if (searchOption.operator === FILTER_OPERATOR_TYPES.LIKE)
+  {
+    option[`${searchOption.key}Like`] = `%${searchOption.value}%`;
+  }
+  else if (searchOption.operator === FILTER_OPERATOR_TYPES.BEFORE)
+  {
+    option[`${searchOption.key}Before`] = searchOption.value;
+  }
+  else if (searchOption.operator === FILTER_OPERATOR_TYPES.AFTER)
+  {
+    option[`${searchOption.key}After`] = searchOption.value;
+  }
+
+  return option;
 };
 
-export const getDeletedVariableIndex = (
-  deletequery: any,
-  selectetedSearchList: any,
-  key: string,
-  queryList: any
+export const isVariableTypeAvailable = (
+  filterSelections: SearchOptionPayload[]
 ) => {
-  for (let i = 0; i < queryList[key].length; i++) {
-    if (
-      queryList[key][i]["name"] === deletequery["name"]
-      && queryList[key]["value"] === deletequery["value"]
-    ) {
-      queryList[key].splice(i, 1);
-    }
+  return filterSelections.some(
+    (filter) => filter.type === FilterSearchTypes.VARIABLES
+  );
+};
+
+export const getFormattedQueryListParams = (
+  searchOptionList: SearchOptionPayload[],
+  searchQueryType: any,
+  variableNameIgnoreCase: boolean,
+  variableValueIgnoreCase: boolean
+) => {
+  /*Function to transform the array of selected SearchQueries to a query object which can be used to search from TaskList*/
+  let resultList = {
+  };
+  let paramList: any = {
+  };
+  let isParamsHasValue = false;
+  if (searchOptionList.length === 0) {
+    return paramList;
   }
-  return queryList;
+  paramList = {
+    processVariables: [],
+    taskVariables: [],
+  };
+
+  searchOptionList.forEach((searchOption) => {
+    if(searchOption.type === FilterSearchTypes.VARIABLES) {
+      if (searchOption?.value && searchOption?.variable) {
+        isParamsHasValue = true;
+        paramList[searchOption.key].push({
+          name: searchOption.variable,
+          operator: getVariableOperator(searchOption.operator),
+          value: searchOption.value,
+        });
+      }
+    }
+    else {
+    /* In case FilterSearchTypes.STRING, FilterSearchTypes.NORMAL, FilterSearchTypes.DATE*/
+      if (searchOption?.value) {
+        isParamsHasValue = true;
+        const param = getProcessedParamObject(searchOption);
+        paramList = {
+          ...paramList,
+          ...param,
+        };
+      }
+    }
+  });
+
+  const isVariableType = isVariableTypeAvailable(searchOptionList);
+  if (isVariableType) {
+    paramList = {
+      ...paramList,
+      ...{
+        variableNamesIgnoreCase: variableNameIgnoreCase,
+        variableValuesIgnoreCase: variableValueIgnoreCase,
+      },
+    };
+  }
+  if (searchQueryType === QUERY_TYPES.ALL) {
+    resultList = paramList;
+  } else if (searchQueryType === QUERY_TYPES.ANY) {
+    resultList = {
+      orQueries: [paramList],
+    };
+  }
+  return isParamsHasValue ? resultList : {
+  };
 };

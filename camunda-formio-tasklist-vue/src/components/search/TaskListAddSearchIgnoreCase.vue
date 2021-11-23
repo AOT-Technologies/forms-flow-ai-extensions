@@ -22,31 +22,25 @@
       </b-col>
       <b-col cols="3">
         <span class="cft-search-total" title="Total number of tasks.">
-          {{ tasklength }}
+          {{ getFormsFlowTaskLength }}
         </span>
       </b-col>
     </b-row>
     <span v-if="isVariableTypeInSelectedSearchQuery">
       <span>
-        <b-form-checkbox-group
-          id="checkbox-group-2"
-          v-model="variablesEndType"
-          name="flavour-2"
-        >
           <span class="cft-name-value-container"
-            >For Variables, ignore case of
+            >For Variables, ignore case of 
             <b-form-checkbox
-              value="variableNamesIgnoreCase"
-              @change="callTaskVariablesEndApi"
+              v-model="getVariableNameIgnoreCase"
+              @change="updateNameCase"
               >name</b-form-checkbox
             >
             <b-form-checkbox
-              value="variableValuesIgnoreCase"
-              @change="callTaskVariablesEndApi"
+              v-model="getVariableValueIgnoreCase"
+              @change="updateValueCase"
               >value.</b-form-checkbox
             >
           </span>
-        </b-form-checkbox-group>
       </span>
     </span>
   </div>
@@ -57,40 +51,52 @@ import "../../styles/camundaFormIOTasklistSearch.scss";
 import {
   Component, Emit, Prop, Vue 
 } from "vue-property-decorator";
+import {
+  SearchOptionPayload,
+} from "../../models";
+import {
+  namespace 
+} from "vuex-class";
+
+const serviceFlowModule = namespace("serviceFlowModule");
 
 @Component
 export default class TaskListAddSearchIgnoreCase extends Vue {
   @Prop() private isVariableTypeInSelectedSearchQuery!: string;
-  @Prop() private queryList!: any;
-  @Prop() private tasklength!: number;
-  @Prop() private searchListElements!: any;
+  @Prop() private searchListElements!: SearchOptionPayload[];
 
-  private variablesEndType: Array<any> = [];
-  private QList: any = this.queryList;
+  @serviceFlowModule.Getter("getFormsFlowTaskLength")
+  private getFormsFlowTaskLength: any;
+  @serviceFlowModule.Getter("getVariableNameIgnoreCase")
+  private getVariableNameIgnoreCase: any;
+  @serviceFlowModule.Getter("getVariableValueIgnoreCase")
+  private getVariableValueIgnoreCase: any;
+
+  @serviceFlowModule.Mutation("setVariableNameIgnoreCase")
+  public setVariableNameIgnoreCase: any;
+  @serviceFlowModule.Mutation("setVariableValueIgnoreCase")
+  public setVariableValueIgnoreCase: any;
+
   private activeSearchItem: number = 0;
-  private searchList: any = this.searchListElements;
+  private searchList: SearchOptionPayload[] = this.searchListElements;
 
   setActiveSearchItem (index: number) {
     this.activeSearchItem = index;
   }
 
   @Emit()
-  addToSelectedSearchQuery (item: any) {
+  addToSelectedSearchQuery (item: SearchOptionPayload) {
     return item;
   }
 
-  callTaskVariablesEndApi () {
-    this.QList["variableNamesIgnoreCase"] = false;
-    this.QList["variableValuesIgnoreCase"] = false;
-    for (const variablevalue in this.variablesEndType) {
-      this.QList[this.variablesEndType[variablevalue]] = true;
-      this.$root.$emit("call-updateTaskList", {
-        queryList: this.QList 
-      });
-    }
-    this.$root.$emit("call-updateTaskList", {
-      queryList: this.QList 
-    });
+  updateNameCase() {
+    this.setVariableNameIgnoreCase();
+    this.$root.$emit("call-updateTaskList");
+  }
+
+  updateValueCase() {
+    this.setVariableValueIgnoreCase();
+    this.$root.$emit("call-updateTaskList");
   }
 }
 </script>

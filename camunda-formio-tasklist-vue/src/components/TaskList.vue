@@ -29,7 +29,6 @@
           :formIOApiUrl="formIOApiUrl"
           :bpmApiUrl="bpmApiUrl"
           :tasks="tasks"
-          :tasklength="tasklength"
           :perPage="perPage"
           :selectedfilterId="selectedfilterId"
           :payload="payload"
@@ -433,6 +432,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   public setFormsFlowTaskId: any;
   @StoreServiceFlowModule.Mutation("setFormsFlowactiveIndex")
   public setFormsFlowactiveIndex: any;
+  @StoreServiceFlowModule.Mutation("setFormsFlowTaskLength")
+  public setFormsFlowTaskLength: any;
 
   private tasks: TaskPayload[] = [];
   private fulltasks: TaskPayload[] = [];
@@ -445,17 +446,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private userSelected: UserListPayload = {
   };
   public perPage: number = 10;
-  private tasklength: number = 0;
   private filterList: FilterPayload[] = [];
   private editAssignee: boolean = false;
   private groupList: GroupListPayload[] = [];
-  private groupListNames?: Array<string> = [];
+  private groupListNames?: string[] = [];
   private groupListItems: string[] = [];
   private userEmail: string = "external";
   private selectedfilterId: string = "";
   private xmlData!: string;
   private payload: Payload = {
-    active: true,
     sorting: [] as TaskListSortType[],
     firstResult: 0,
     maxResults: this.perPage,
@@ -780,9 +779,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     );
     const responseData = paginatedTaskResults.data;
-    const _embedded = responseData['_embedded']; // data._embedded.task is where the task list is.
-    this.tasks = _embedded['task'];
-    this.tasklength = responseData['count'];
+    const _embedded = responseData._embedded; // data._embedded.task is where the task list is.
+    this.tasks = _embedded.task;
+    this.setFormsFlowTaskLength(responseData.count);
   }
 
   async onUserSearch (search: string, loading: any) {

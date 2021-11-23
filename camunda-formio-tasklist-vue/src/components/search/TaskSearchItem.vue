@@ -39,7 +39,7 @@
               ></i
             ></span>
             <b-form-input
-              v-model="searchVariableValue[index]"
+              v-model="selectedSearchQueries[index].variable"
               v-on:keyup.enter="showVariableValueItem(index)"
             />
           </span>
@@ -49,24 +49,22 @@
           v-if="showVariableValue[index] === 's' && query.type === 'variables'"
           @click="updatevariableinput(index)"
         >
-          {{ searchVariableValue[index] }}
+          {{ selectedSearchQueries[index].variable }}
         </span>
       </b-col>
     </b-row>
 
-    <b-row align-h="end">
-      <b-col cols="2">
-        <b-nav-item-dropdown :text="operator[index]">
-          <b-dropdown-item-button
-            v-for="x in query.compares"
-            :key="x"
-            @click="updateSearchQueryOperators(x, index)"
-          >
-            {{ x }}
-          </b-dropdown-item-button>
-        </b-nav-item-dropdown>
+    <b-row>
+      <b-col cols="4">
+        <b-form-select
+          v-model="operator[index]"
+          @change="updateSearchQueryOperators(operator[index], index)"
+          :options="query.compares"
+          plain
+          size='sm'
+        />
       </b-col>
-      <b-col cols="9">
+      <b-col cols="8">
         <div class="cft-rhs-container">
           <span
             v-if="showSearchstate[index] === 'a'"
@@ -77,12 +75,10 @@
           <span v-if="showSearchstate[index] === 'i' && query.type === 'date'">
             <b-form-datepicker
               size="sm"
-              v-model="setDate[index]"
+              v-model="selectedSearchQueries[index].value"
               @input="
                 setSearchQueryValue(
-                  setDate[index],
-                  query,
-                  operator[index],
+                  selectedSearchQueries,
                   index
                 );
                 showsearchValueItem(index);
@@ -94,18 +90,13 @@
             v-if="showSearchstate[index] === 's' && query.type === 'date'"
             @click="updatesearchinput(index)"
           >
-            {{ formatDate(setDate[index]) }}
+            {{ formatDate(selectedSearchQueries[index].value) }}
           </span>
           <span v-if="showSearchstate[index] === 'i' && query.type !== 'date'">
             <span class="cft-icon-actions">
               <span
                 @click="
-                  setSearchQueryValue(
-                    searchValueItem[index],
-                    query,
-                    operator[index],
-                    index
-                  );
+                  setSearchQueryValue(selectedSearchQueries, index);
                   showsearchValueItem(index);
                 "
               >
@@ -117,13 +108,10 @@
               ></i
             ></span>
             <b-form-input
-              v-model="searchValueItem[index]"
+              v-model="selectedSearchQueries[index].value"
               v-on:keyup.enter="
                 setSearchQueryValue(
-                  searchValueItem[index],
-                  query,
-                  operator[index],
-                  index
+                  selectedSearchQueries, index
                 );
                 showsearchValueItem(index);
               "
@@ -133,7 +121,7 @@
             v-if="showSearchstate[index] === 's' && query.type !== 'date'"
             @click="updatesearchinput(index)"
           >
-            {{ searchValueItem[index] }}
+            {{ selectedSearchQueries[index].value }}
           </span>
         </div>
       </b-col>
@@ -149,43 +137,40 @@ import {
 import {
   getFormattedDateAndTime, taskSearchFilters
 } from "../../services";
+import {
+  SearchOptionPayload,
+} from "../../models";
 
 
 @Component
 export default class TaskSearchItem extends Vue {
   @Prop({
-  }) private query!: any;
+  }) private query!: SearchOptionPayload;
   @Prop({
   }) private index!: number;
   @Prop({
     default: taskSearchFilters 
-  }) private searchListElements!: any;
+  }) private searchListElements!: SearchOptionPayload[];
   @Prop({
     default: [] 
-  }) private searchVariableValue!: any;
+  }) private showSearchstate!: string[];
   @Prop({
     default: [] 
-  }) private searchValueItem!: any;
+  }) private selectedSearchQueries!: SearchOptionPayload[];
   @Prop({
     default: [] 
-  }) private setDate!: Array<string>;
+  }) private showVariableValue!: string[];
   @Prop({
     default: [] 
-  }) private showSearchstate!: Array<string>;
-  @Prop({
-    default: [] 
-  }) private showVariableValue!: Array<string>;
-  @Prop({
-    default: [] 
-  }) private operator!: Array<string>;
+  }) private operator!: string[];
 
-  deleteSearchQueryElement (query: any, index: number) {
+  deleteSearchQueryElement (query: SearchOptionPayload, index: number) {
     this.$root.$emit("call-deleteSearchQueryElement", {
       query: query,
       index: index,
     });
   }
-  updateSearchQueryElement (updateSearch: any, index: number) {
+  updateSearchQueryElement (updateSearch: SearchOptionPayload, index: number) {
     this.$root.$emit("call-updateSearchQueryElement", {
       updateSearch: updateSearch,
       index: index,
@@ -219,12 +204,10 @@ export default class TaskSearchItem extends Vue {
     });
   }
 
-  setSearchQueryValue (item: any, query: any, operator: string, idx: number) {
+  setSearchQueryValue (item: SearchOptionPayload[], index: number) {
     this.$root.$emit("call-setSearchQueryValue", {
       item: item,
-      query: query,
-      operator: operator,
-      idx: idx,
+      index: index
     });
   }
 

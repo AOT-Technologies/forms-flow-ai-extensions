@@ -1,3 +1,7 @@
+import {
+  SearchQueryPayload, VariablePayload, 
+} from ".";
+
 export interface FilterPayload {
     id: string;
     name: string;
@@ -11,10 +15,10 @@ export interface FilterPayload {
     query: {
         candidateUser?: string;
         includeAssignedTasks?: boolean;
-        taskVariables?: Array<object>;
-        processVariables?: Array<object>;
-        caseInstanceVariables?: Array<object>;
-        orQueries?: Array<object>;
+        taskVariables?: VariablePayload[];
+        processVariables?: VariablePayload[];
+        caseInstanceVariables?: VariablePayload[];
+        orQueries?: SearchQueryPayload[];
     };
     resourceType: string;
 }

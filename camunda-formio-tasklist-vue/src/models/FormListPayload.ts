@@ -12,12 +12,12 @@ export interface FormListItemsPayload {
 
 export interface FormioSubmissionPayload {
     _id: string;
-    access?: Array<string>;
+    access?: string[];
     created: Date;
     data?:  Record<string, any>;
-    externalIds?: Array<string>;
+    externalIds?: string[];
     form: string;
     metadata?: Record<string, any>;
     owner: string;
-    roles?: Array<string>;
+    roles?: string[];
 }
