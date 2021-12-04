@@ -3,7 +3,6 @@
   <div class="tasklist-container">
     <TaskListSearch
       @update-task-list="onSearchUpdateTasklistResult"
-      :tasklength="tasklength"
     />
     <b-list-group class="cft-list-container" v-if="tasks && tasks.length">
       <b-list-group-item
@@ -69,7 +68,7 @@
 
       <b-pagination
         v-model="currentPage"
-        :total-rows="tasklength"
+        :total-rows="getFormsFlowTaskLength"
         :per-page="perPage"
         class="cft-paginate"
       />
@@ -110,7 +109,6 @@ const serviceFlowModule = namespace("serviceFlowModule");
 })
 export default class LeftSider extends Mixins(BaseMixin) {
   @Prop() private tasks!: Array<object>;
-  @Prop() private tasklength!: number;
   @Prop() private perPage!: number;
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
@@ -121,6 +119,8 @@ export default class LeftSider extends Mixins(BaseMixin) {
   private getFormsFlowTaskId: any;
   @serviceFlowModule.Getter("getFormsFlowactiveIndex")
   private getFormsFlowactiveIndex: any;
+  @serviceFlowModule.Getter("getFormsFlowTaskLength")
+  private getFormsFlowTaskLength: any;
 
   @serviceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
   public setFormsFlowTaskCurrentPage: any;
