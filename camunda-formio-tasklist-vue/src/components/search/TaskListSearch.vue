@@ -116,7 +116,10 @@ export default class TaskListSearch extends Vue {
   }
 
   addToSelectedSearchQuery (item: SearchOptionPayload) {
-    this.selectedSearchQueries.push(item);
+    item["index"] = this.selectedSearchQueries.length+1;
+    this.selectedSearchQueries = [...this.selectedSearchQueries, {
+      ...item
+    }];
     if (this.selectedSearchQueries === []) {
       this.operator[0] = item.operator;
       this.showSearchstate[0] = SEARCH_BOX_STATE.START;
