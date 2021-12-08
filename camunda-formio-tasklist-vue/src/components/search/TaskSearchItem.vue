@@ -23,7 +23,7 @@
           <span>: </span>
           <span
             v-if="showVariableValue[index] === 'a'"
-            @click="updatevariableinput(index)"
+            @click="updateVariableInput(index)"
             title="Property"
           >
             ??
@@ -47,7 +47,7 @@
         <span
           class="cft-search-cursor"
           v-if="showVariableValue[index] === 's' && query.type === 'variables'"
-          @click="updatevariableinput(index)"
+          @click="updateVariableInput(index)"
         >
           {{ selectedSearchQueries[index].variable }}
         </span>
@@ -67,12 +67,12 @@
       <b-col cols="8">
         <div class="cft-rhs-container">
           <span
-            v-if="showSearchstate[index] === 'a'"
-            @click="updatesearchinput(index)"
+            v-if="showSearchState[index] === 'a'"
+            @click="updateSearchInput(index)"
             class="cft-search-cursor"
             >??</span
           >
-          <span v-if="showSearchstate[index] === 'i' && query.type === 'date'">
+          <span v-if="showSearchState[index] === 'i' && query.type === 'date'">
             <b-form-datepicker
               size="sm"
               v-model="selectedSearchQueries[index].value"
@@ -81,30 +81,30 @@
                   selectedSearchQueries,
                   index
                 );
-                showsearchValueItem(index);
+                showSearchValueItem(index);
               "
             >
             </b-form-datepicker>
           </span>
           <span
-            v-if="showSearchstate[index] === 's' && query.type === 'date'"
-            @click="updatesearchinput(index)"
+            v-if="showSearchState[index] === 's' && query.type === 'date'"
+            @click="updateSearchInput(index)"
           >
             {{ formatDate(selectedSearchQueries[index].value) }}
           </span>
-          <span v-if="showSearchstate[index] === 'i' && query.type !== 'date'">
+          <span v-if="showSearchState[index] === 'i' && query.type !== 'date'">
             <span class="cft-icon-actions">
               <span
                 @click="
                   setSearchQueryValue(selectedSearchQueries, index);
-                  showsearchValueItem(index);
+                  showSearchValueItem(index);
                 "
               >
                 <i class="fa fa-check cft-approve-box"></i>
               </span>
               <i
                 class="fa fa-times cft-reject-box"
-                @click="showsearchValueItem(index)"
+                @click="showSearchValueItem(index)"
               ></i
             ></span>
             <b-form-input
@@ -113,13 +113,13 @@
                 setSearchQueryValue(
                   selectedSearchQueries, index
                 );
-                showsearchValueItem(index);
+                showSearchValueItem(index);
               "
             />
           </span>
           <span
-            v-if="showSearchstate[index] === 's' && query.type !== 'date'"
-            @click="updatesearchinput(index)"
+            v-if="showSearchState[index] === 's' && query.type !== 'date'"
+            @click="updateSearchInput(index)"
           >
             {{ selectedSearchQueries[index].value }}
           </span>
@@ -153,7 +153,7 @@ export default class TaskSearchItem extends Vue {
   }) private searchListElements!: SearchOptionPayload[];
   @Prop({
     default: [] 
-  }) private showSearchstate!: string[];
+  }) private showSearchState!: string[];
   @Prop({
     default: [] 
   }) private selectedSearchQueries!: SearchOptionPayload[];
@@ -177,8 +177,8 @@ export default class TaskSearchItem extends Vue {
     });
   }
 
-  @Emit("updatevariableinput")
-  updatevariableinput (index: number) {
+  @Emit("updateVariableInput")
+  updateVariableInput (index: number) {
     return index;
   }
 
@@ -188,12 +188,12 @@ export default class TaskSearchItem extends Vue {
   }
 
   @Emit("update-search-value")
-  updatesearchinput (index: number) {
+  updateSearchInput (index: number) {
     return index;
   }
 
   @Emit("show-search-value")
-  showsearchValueItem (index: number) {
+  showSearchValueItem (index: number) {
     return index;
   }
 
