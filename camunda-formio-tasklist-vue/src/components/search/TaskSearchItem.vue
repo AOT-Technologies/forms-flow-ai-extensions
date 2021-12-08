@@ -22,13 +22,13 @@
         <span v-if="query.type === 'variables'">
           <span>: </span>
           <span
-            v-if="showVariableValue[index] === 'a'"
+            v-if="showVariableValueState[index] === 'a'"
             @click="updateVariableInput(index)"
             title="Property"
           >
             ??
           </span>
-          <span v-if="showVariableValue[index] === 'i'" title="Property">
+          <span v-if="showVariableValueState[index] === 'i'" title="Property">
             <span>
               <span @click="showVariableValueItem(index)">
                 <i class="fa fa-check cft-approve-box"></i>
@@ -46,7 +46,7 @@
         </span>
         <span
           class="cft-search-cursor"
-          v-if="showVariableValue[index] === 's' && query.type === 'variables'"
+          v-if="showVariableValueState[index] === 's' && query.type === 'variables'"
           @click="updateVariableInput(index)"
         >
           {{ selectedSearchQueries[index].variable }}
@@ -159,7 +159,7 @@ export default class TaskSearchItem extends Vue {
   }) private selectedSearchQueries!: SearchOptionPayload[];
   @Prop({
     default: [] 
-  }) private showVariableValue!: string[];
+  }) private showVariableValueState!: string[];
   @Prop({
     default: [] 
   }) private operator!: string[];

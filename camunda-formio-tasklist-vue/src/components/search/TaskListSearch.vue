@@ -13,7 +13,7 @@
             :index="index"
             :searchListElements="searchListElements"
             :showSearchState="showSearchState"
-            :showVariableValue="showVariableValue"
+            :showVariableValueState="showVariableValueState"
             :operator="operator"
             :selectedSearchQueries="selectedSearchQueries"
             @updateVariableInput="updateVariableInput"
@@ -74,7 +74,7 @@ export default class TaskListSearch extends Vue {
   private selectedSearchQueries: SearchOptionPayload[] = [];
   private operator: string[] = [];
   private showSearchState: string[] = []; //States - a(?? state), i(enter input), s(show entered value)
-  private showVariableValue: string[] = [];
+  private showVariableValueState: string[] = [];
   private queryList: SearchQueryPayload = {
     taskVariables: [],
     processVariables: [],
@@ -108,11 +108,11 @@ export default class TaskListSearch extends Vue {
   }
 
   updateVariableInput (index: number) {
-    Vue.set(this.showVariableValue, index, SEARCH_BOX_STATE.INSERT);
+    Vue.set(this.showVariableValueState, index, SEARCH_BOX_STATE.INSERT);
   }
 
   showVariableValueItem (index: number) {
-    Vue.set(this.showVariableValue, index, SEARCH_BOX_STATE.SHOW);
+    Vue.set(this.showVariableValueState, index, SEARCH_BOX_STATE.SHOW);
   }
 
   addToSelectedSearchQuery (item: SearchOptionPayload) {
@@ -123,14 +123,14 @@ export default class TaskListSearch extends Vue {
     if (this.selectedSearchQueries === []) {
       this.operator[0] = item.operator;
       this.showSearchState[0] = SEARCH_BOX_STATE.START;
-      this.showVariableValue[0] = SEARCH_BOX_STATE.START;
+      this.showVariableValueState[0] = SEARCH_BOX_STATE.START;
       if (item.type === FilterSearchTypes.VARIABLES) {
         this.isVariableTypeInSelectedSearchQuery = true;
       }
     } else {
       this.operator[this.selectedSearchQueries.length - 1] = item.operator;
       this.showSearchState[this.selectedSearchQueries.length - 1] = SEARCH_BOX_STATE.START;
-      this.showVariableValue[this.selectedSearchQueries.length - 1] = SEARCH_BOX_STATE.START;
+      this.showVariableValueState[this.selectedSearchQueries.length - 1] = SEARCH_BOX_STATE.START;
       if (item.type === FilterSearchTypes.VARIABLES) {
         this.isVariableTypeInSelectedSearchQuery = true;
       }
@@ -140,6 +140,8 @@ export default class TaskListSearch extends Vue {
   deleteSearchQueryElement (query: SearchOptionPayload, index: number) {
     this.selectedSearchQueries.splice(index, 1);
     this.operator.splice(index, 1);
+    this.showSearchState.splice(index, 1);
+    this.showVariableValueState.splice(index, 1);
 
     /*To check if anymore selectedSearchSearchQueries with Variable type exists. If yes,
     show the variable type dropdown else hide it*/
