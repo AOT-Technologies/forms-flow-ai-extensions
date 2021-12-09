@@ -1,4 +1,5 @@
 export interface SearchOptionPayload {
+    index?: number;
     label: string;
     compares: string[];
     key: string;
