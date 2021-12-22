@@ -664,6 +664,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
     await viewer.importXML(this.xmlData);
     viewer.get("canvas").zoom("fit-viewport");
+    viewer.get("canvas").addMarker({
+    'id': 'reviewer'
+    }, 'highlight')
   }
 
   async getDiagramDetails() {
