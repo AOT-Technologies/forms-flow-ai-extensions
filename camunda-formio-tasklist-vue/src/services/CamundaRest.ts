@@ -282,7 +282,7 @@ export const CamundaRest = {
 
   async getProcesActivity (
     bearerToken: any,
-    processInstanceId: any,
+    processInstanceId: string,
     CamundaUrl: any
   ) {
     return await bpmAxios(bearerToken, CamundaUrl).get(
