@@ -681,6 +681,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     case "actionComplete":
       this.onFormSubmitCallback(customEvent.actionType);
       break;
+    default:
+      // this call is for formio
+      this.$root.$emit(customEvent.type, {
+        customEvent
+      });
+      break;
     }
   };
 
