@@ -602,6 +602,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl),
       CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl),
     ]);
+    
     const processResult = await CamundaRest.getProcessDefinitionById(
       this.token,
       taskResult.data.processDefinitionId,
@@ -653,8 +654,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.token,
       processDefinitionId,
       this.bpmApiUrl
+    );  
+    const processInstanceId = this.task.processInstanceId || '';
+    const getActivity = await CamundaRest.getProcessActivity(
+      this.token,
+      processInstanceId,
+      this.bpmApiUrl
     );
     this.xmlData = getProcessResult.data.bpmn20Xml;
+    const activityList = getActivity.data.childActivityInstances;
     const div = document.getElementById("canvas");
     if (div) {
       div.innerHTML = "";
@@ -664,6 +672,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
     await viewer.importXML(this.xmlData);
     viewer.get("canvas").zoom("fit-viewport");
+    for(let i: number=0; i<activityList.length; i++){
+      viewer.get("canvas").addMarker({
+        'id':activityList[i].activityId
+      },'highlight');
+    }
+     
   }
 
   async getDiagramDetails() {
