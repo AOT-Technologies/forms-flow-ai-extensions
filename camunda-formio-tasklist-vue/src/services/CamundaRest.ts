@@ -279,4 +279,15 @@ export const CamundaRest = {
       `/${engine}/process-definition/${processDefinitionId}/xml`
     );
   },
+
+  async getProcesActivity (
+    bearerToken: any,
+    processInstanceId: any,
+    CamundaUrl: any
+  ) {
+    return await bpmAxios(bearerToken, CamundaUrl).get(
+      `/${engine}/process-instance/${processInstanceId}/activity-instances`
+    );
+  },
+
 };
