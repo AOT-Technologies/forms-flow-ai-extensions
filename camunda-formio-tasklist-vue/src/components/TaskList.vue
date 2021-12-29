@@ -655,10 +655,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       processDefinitionId,
       this.bpmApiUrl
     );  
-   
-    const getActivity = await CamundaRest.getProcesActivity(
+    const processInstanceId = this.task.processInstanceId || '';
+    const getActivity = await CamundaRest.getProcessActivity(
       this.token,
-      this.task.processInstanceId,
+      processInstanceId,
       this.bpmApiUrl
     );
     this.xmlData = getProcessResult.data.bpmn20Xml;

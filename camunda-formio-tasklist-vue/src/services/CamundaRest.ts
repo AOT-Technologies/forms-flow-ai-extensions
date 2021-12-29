@@ -266,24 +266,24 @@ export const CamundaRest = {
     );
   },
 
-  async listForms (bearerToken: any, CamundaUrl: any) {
+  async listForms (bearerToken: string, CamundaUrl: string) {
     return await bpmAxios(bearerToken, CamundaUrl).get(`/${formExt}/form`);
   },
 
   async getProcessDiagramXML (
-    bearerToken: any,
+    bearerToken: string,
     processDefinitionId: string,
-    CamundaUrl: any
+    CamundaUrl: string
   ) {
     return await bpmAxios(bearerToken, CamundaUrl).get(
       `/${engine}/process-definition/${processDefinitionId}/xml`
     );
   },
 
-  async getProcesActivity (
-    bearerToken: any,
+  async getProcessActivity (
+    bearerToken: string,
     processInstanceId: string,
-    CamundaUrl: any
+    CamundaUrl: string
   ) {
     return await bpmAxios(bearerToken, CamundaUrl).get(
       `/${engine}/process-instance/${processInstanceId}/activity-instances`

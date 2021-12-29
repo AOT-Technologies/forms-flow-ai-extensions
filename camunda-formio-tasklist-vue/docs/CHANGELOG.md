@@ -1,5 +1,11 @@
 # Changes for camunda-formio-tasklist-vue
 
+## v1.0.16
+
+#### Modified
+
+- Dynamiclly Highlighting Process Diagram
+ 
 ## v1.0.14, 2021-10-25 
 
 #### Added

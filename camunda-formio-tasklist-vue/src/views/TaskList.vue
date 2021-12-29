@@ -35,16 +35,16 @@ import axios from 'axios';
 export default class TaskList extends Vue {
   @Prop() private getTaskId!: string;
   public  configs = {
-    "BPM_URL": "https://bpm2.aot-technologies.com/camunda",
-    "FORM_IO_API_URL": "https://forms2.aot-technologies.com",
-    "FORM_IO_RESOURCE_ID": "6180c59690060285c3bc7e49",
-    "FORM_IO_REVIEWER_ID": "6180c5969006022af2bc7e47",
-    "FORM_IO_REVIEWER": "formsflow-reviewer",
-    "FORM_FLOW_API_URL":"http://206.116.106.159:5000/",
-    "FORM_FLOW_URL":"http://localhost:3000",
-    "SERVICEFLOW_ENABLED": true,
-    "FORMIO_ROLES" : "formsflow-reviewer",
-    "SOCKET_ENCRYPT_KEY": "giert989jkwrgb@DR55"
+    token: "Bearer Token",
+    BPM_URL: "Set Camunda URL",
+    FORM_IO_API_URL: "Set FormIO Project URL",
+    FORM_IO_RESOURCE_ID: "Set Formio Resource ID",
+    FORM_IO_REVIEWER_ID: "Set Formio Reviewer ID",
+    FORM_IO_REVIEWER: "Set Formio Reviewer Name",
+    FORM_FLOW_API_URL: "Set formsflow.ai API URL",
+    FORM_FLOW_URL: "Set formsflow.ai Project URL",
+    SERVICEFLOW_ENABLED: true,
+    FORMIO_ROLES: "Set FORMIO User ROLES",
   }
   public isServiceFLowEnabled = true
   public jwttoken: any = false
