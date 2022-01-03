@@ -13,24 +13,26 @@
         :class="{ 'cft-selected': task.id == getFormsFlowTaskId }"
         class="cft-select-task"
       >
-          <span class="cft-task-title font-weight-bold">{{ task.name }}</span>
+          <span class="cft-task-title font-weight-bold" v-b-tooltip.hover.right="'Form Name'">{{ task.name }}</span>
           <b-row>
             <b-col cols="7">
               <div
                 class="cft-process-title"
-              >
-                {{
+             >
+                <span   v-b-tooltip.hover.right="'Process Name'">
+                  {{
                   getProcessDataFromList(
                     getProcessDefinitions,
                     task.processDefinitionId,
                     "name"
                   )
                 }}
+                </span>
               </div>
             </b-col>
             <b-col cols="5">
               <div class="cft-task-assignee" >
-               <span  v-b-tooltip.hover.left="'task assignee'" > {{ task.assignee }}</span>
+               <span  v-b-tooltip.hover.left="'Task Assignee'" > {{ task.assignee }}</span>
               </div>
             </b-col>
           </b-row>

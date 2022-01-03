@@ -530,9 +530,9 @@
   }
 
   .tooltip-inner {
-    background-color: white;
-    color: black;
-    box-shadow: 1px 1px 1px 1px;
+    background-color: white !important;
+    color: black !important;
+    box-shadow: 1px 1px 1px 1px #272727;
   }
 
   .tooltip-inner a {
