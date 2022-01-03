@@ -29,8 +29,8 @@
               </div>
             </b-col>
             <b-col cols="5">
-              <div class="cft-task-assignee">
-                {{ task.assignee }}
+              <div class="cft-task-assignee" >
+               <span  v-b-tooltip.hover.left="'task assignee'" > {{ task.assignee }}</span>
               </div>
             </b-col>
           </b-row>
@@ -55,13 +55,15 @@
                   class="cft-due-date"
                   :data-title="getExactDate(task.created)"
                   v-if="task.created"
+                   v-b-tooltip.hover.right="getExactDate(task.created)"
                 >
                   Created {{ timedifference(task.created) }}
                 </span>
               </b-col>
-              <b-col cols="3" class="cft-priority" data-title="priority">
-                {{ task.priority }}
+              <b-col cols="3" class="cft-priority"  >
+                <span v-b-tooltip.hover.bottomleft="'priority'"> {{ task.priority }}</span>
               </b-col>
+      
             </div>
           </b-row>
       </b-list-group-item>
