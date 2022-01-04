@@ -1,36 +1,44 @@
 <template>
-<div class="card">
-  <div class="tasklist-container">
-    <TaskListSearch
-      @update-task-list="onSearchUpdateTasklistResult"
-    />
-    <b-list-group class="cft-list-container" v-if="tasks && tasks.length">
-      <b-list-group-item
-        button
-        v-for="(task, idx) in tasks"
-        v-bind:key="task.id"
-        @click="toggle(idx); showTaskDetails(task.id)"
-        :class="{ 'cft-selected': task.id == getFormsFlowTaskId }"
-        class="cft-select-task"
-      >
-          <span class="cft-task-title font-weight-bold">{{ task.name }}</span>
+  <div class="card">
+    <div class="tasklist-container">
+      <TaskListSearch @update-task-list="onSearchUpdateTasklistResult" />
+      <b-list-group class="cft-list-container" v-if="tasks && tasks.length">
+        <b-list-group-item
+          button
+          v-for="(task, idx) in tasks"
+          v-bind:key="task.id"
+          @click="
+            toggle(idx);
+            showTaskDetails(task.id);
+          "
+          :class="{ 'cft-selected': task.id == getFormsFlowTaskId }"
+          class="cft-select-task"
+        >
+          <span
+            class="cft-task-title font-weight-bold"
+            v-b-tooltip.hover.right="'Task Name'"
+          >
+            {{ task.name }}
+          </span>
           <b-row>
             <b-col cols="7">
-              <div
-                class="cft-process-title"
-              >
-                {{
-                  getProcessDataFromList(
-                    getProcessDefinitions,
-                    task.processDefinitionId,
-                    "name"
-                  )
-                }}
+              <div class="cft-process-title">
+                <span v-b-tooltip.hover.right="'Process Name'">
+                  {{
+                    getProcessDataFromList(
+                      getProcessDefinitions,
+                      task.processDefinitionId,
+                      "name"
+                    )
+                  }}
+                </span>
               </div>
             </b-col>
             <b-col cols="5">
               <div class="cft-task-assignee">
-                {{ task.assignee }}
+                <span v-b-tooltip.hover.left="'Task Assignee'">
+                  {{ task.assignee }}</span
+                >
               </div>
             </b-col>
           </b-row>
@@ -55,32 +63,35 @@
                   class="cft-due-date"
                   :data-title="getExactDate(task.created)"
                   v-if="task.created"
+                  v-b-tooltip.hover.right="getExactDate(task.created)"
                 >
                   Created {{ timedifference(task.created) }}
                 </span>
               </b-col>
-              <b-col cols="3" class="cft-priority" data-title="priority">
-                {{ task.priority }}
+              <b-col cols="3" class="cft-priority">
+                <span v-b-tooltip.hover.bottomleft="'priority'">
+                  {{ task.priority }}</span
+                >
               </b-col>
             </div>
           </b-row>
-      </b-list-group-item>
+        </b-list-group-item>
 
-      <b-pagination
-        v-model="currentPage"
-        :total-rows="getFormsFlowTaskLength"
-        :per-page="perPage"
-        class="cft-paginate"
-      />
-    </b-list-group>
-    <b-list-group cols="3" v-else>
-      <b-row class="cft-not-selected mt-2 ml-1 row">
-        <i class="fa fa-circle-exclamation" scale="1"></i>
-        <p>No tasks found in the list.</p>
-      </b-row>
-    </b-list-group>
+        <b-pagination
+          v-model="currentPage"
+          :total-rows="getFormsFlowTaskLength"
+          :per-page="perPage"
+          class="cft-paginate"
+        />
+      </b-list-group>
+      <b-list-group cols="3" v-else>
+        <b-row class="cft-not-selected mt-2 ml-1 row">
+          <i class="fa fa-circle-exclamation" scale="1"></i>
+          <p>No tasks found in the list.</p>
+        </b-row>
+      </b-list-group>
+    </div>
   </div>
-</div>
 </template>
 
 <script lang="ts">

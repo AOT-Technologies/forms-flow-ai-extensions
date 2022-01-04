@@ -40,7 +40,7 @@
 }
 
 //TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
-
+ 
 [data-tooltip]:before {
   visibility: unset !important;
   position: initial !important;
@@ -58,9 +58,9 @@
 }
 
 .tooltip-inner {
-  background-color: white !important;
-  color: black !important;
-  box-shadow: 1px 1px 1px 1px;
+  background-color: white;
+  color: black;
+  box-shadow: 1px 1px 1px 1px #272727;
 }
 
 .cft-actionable-container .tab-content {
