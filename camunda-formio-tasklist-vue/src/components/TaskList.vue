@@ -53,7 +53,7 @@
             </span>
           </b-row>
           <br />
-          <b-row class="ml-0">
+          <b-row   class="ml-0">
             <span
               class="cft-task-name"
               v-b-tooltip.hover
@@ -70,9 +70,9 @@
               >Application ID # {{ task.applicationId }}</span
             >
           </b-row>
-          <div class="cft-actionable-container">
-            <b-row class="cft-actionable d-flex justify-content-evenly flex-wrap ">
-              <b-col  class="align-self-center min-width-200 mb-2"  >
+          <div class="cft-actionable-container ">
+            <b-row class="cft-actionable  flex-wrap ">
+              <b-col  class="align-self-center  min-width-200 mb-2"  >
                 <span v-if="task.followUp">
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.followUp) }}
@@ -95,7 +95,7 @@
                   />
                 </span>
               </b-col>
-              <b-col   class="align-self-center min-width-200 mb-4">
+              <b-col   class="align-self-center  min-width-200 mb-2">
                 <span v-if="task.due">
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.due) }}

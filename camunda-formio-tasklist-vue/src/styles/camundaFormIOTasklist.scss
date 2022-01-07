@@ -107,6 +107,9 @@
     margin: 10px 0;
     font-size: 16px;
     height: 25%;
+    display: flex;
+    align-items:flex-start;
+    justify-content: space-evenly;
   }
 
   .cft-select-task {
@@ -399,16 +402,14 @@
   .cft-application-id {
     display: block;
     height: auto;
-    width: 20%;
-    cursor: pointer;
+   cursor: pointer;
   }
 
   .cft-task-name {
-    height: 20px;
-    width: 30%;
-    cursor: pointer;
+     cursor: pointer;
     font-size: 20px;
     font-weight: 400;
+    line-height: 2px;
     color: #212529;
   }
 
