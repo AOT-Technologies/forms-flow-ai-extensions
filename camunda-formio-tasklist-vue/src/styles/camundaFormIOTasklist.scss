@@ -502,6 +502,10 @@
     font-size: 1.7em;
   }
 
+  .min-width-200{
+    min-width: 200px;
+  }
+
   //TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
 
   [data-tooltip]:before {

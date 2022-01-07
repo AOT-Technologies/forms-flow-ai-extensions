@@ -42,7 +42,7 @@
           containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'
         "
       >
-        <div class="cft-service-task-details">
+        <div class="cft-service-task-details py-3 p-md-2">
           <b-row>
             <ExpandContract />
             <span
@@ -71,8 +71,8 @@
             >
           </b-row>
           <div class="cft-actionable-container">
-            <b-row class="cft-actionable">
-              <b-col cols="2" class="align-self-center">
+            <b-row class="cft-actionable d-flex justify-content-evenly flex-wrap ">
+              <b-col  class="align-self-center min-width-200 mb-2"  >
                 <span v-if="task.followUp">
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.followUp) }}
@@ -95,7 +95,7 @@
                   />
                 </span>
               </b-col>
-              <b-col cols="2" class="align-self-center">
+              <b-col   class="align-self-center min-width-200 mb-4">
                 <span v-if="task.due">
                   <i class="fa fa-calendar"></i>
                   {{ timedifference(task.due) }}
@@ -118,7 +118,7 @@
                   />
                 </span>
               </b-col>
-              <b-col cols="3" class="align-self-center">
+              <b-col cols="3" class="align-self-center min-width-200 mb-4">
                 <div
                   id="groups"
                   v-b-modal.AddGroupModal
@@ -192,7 +192,7 @@
                   </div>
                 </b-modal>
               </b-col>
-              <b-col class="align-self-center">
+              <b-col class="align-self-center  mb-2">
                 <span v-if="task.assignee">
                   <div v-if="editAssignee" class="cft-user-edit">
                     <div class="cft-assignee-change-box">
