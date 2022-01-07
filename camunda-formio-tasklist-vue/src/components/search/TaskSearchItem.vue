@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <b-row>
+  <div class="shadow-sm mb-3 bg-light">
+    <b-row class="  align-items-center justify-content-between py-3 px-2">
       <b-col cols="1">
         <i
           class="fa fa-times cftf-x"
@@ -18,9 +18,9 @@
           </b-dropdown-item-button>
         </b-nav-item-dropdown>
       </b-col>
-      <b-col cols="5">
-        <span v-if="query.type === 'variables'">
-          <span>: </span>
+      <b-col cols="5" >
+        <span v-if="query.type === 'variables'" class="d-flex align-items-center text-right ">
+          <span class="mr-2">: </span>
           <span
             v-if="showVariableValueState[index] === 'a'"
             @click="updateVariableInput(index)"
@@ -28,19 +28,24 @@
           >
             ??
           </span>
-          <span v-if="showVariableValueState[index] === 'i'" title="Property">
-            <span>
-              <span @click="showVariableValueItem(index)">
-                <i class="fa fa-check cft-approve-box"></i>
+          <!-- input field for typing  -->
+          <span   v-if="showVariableValueState[index] === 'i'" title="Property">
+              <span >
+              <span @click="showVariableValueItem(index)" class=" task-list-button-hover p-1">
+                <i class="fa fa-check  "></i> 
               </span>
-              <i
-                class="fa fa-times cft-reject-box"
+              <span class="p-1 task-list-button-hover  "> <i
+                class="fa fa-times  "
                 @click="showVariableValueItem(index)"
               ></i
             ></span>
-            <b-form-input
+            
+            </span>
+             <b-form-input
+              
               v-model="selectedSearchQueries[index].variable"
               v-on:keyup.enter="showVariableValueItem(index)"
+              class= "mr-2"
             />
           </span>
         </span>
@@ -53,8 +58,8 @@
         </span>
       </b-col>
     </b-row>
-
-    <b-row>
+<!-- next section -->
+    <b-row  class=" align-items-center py-3 px-2 ">
       <b-col cols="4">
         <b-form-select
           v-model="operator[index]"
@@ -65,14 +70,16 @@
         />
       </b-col>
       <b-col cols="8">
-        <div class="cft-rhs-container">
+        <div >
           <span
             v-if="showSearchState[index] === 'a'"
             @click="updateSearchInput(index)"
             class="cft-search-cursor"
-            >??</span
+            >: ??</span
           >
-          <span v-if="showSearchState[index] === 'i' && query.type === 'date'">
+          <!-- next input section -->
+          <div  class="text-right ">
+            <span   v-if="showSearchState[index] === 'i' && query.type === 'date'">
             <b-form-datepicker
               size="sm"
               v-model="selectedSearchQueries[index].value"
@@ -93,20 +100,24 @@
             {{ formatDate(selectedSearchQueries[index].value) }}
           </span>
           <span v-if="showSearchState[index] === 'i' && query.type !== 'date'">
-            <span class="cft-icon-actions">
+            <span >
               <span
                 @click="
                   setSearchQueryValue(selectedSearchQueries, index);
                   showSearchValueItem(index);
                 "
+                class="p-1 task-list-button-hover "
               >
-                <i class="fa fa-check cft-approve-box"></i>
+                <i class="fa fa-check  "></i>
               </span>
-              <i
-                class="fa fa-times cft-reject-box"
+              <span class="p-1 task-list-button-hover ">
+                 <i
+                class="fa fa-times  "
                 @click="showSearchValueItem(index)"
               ></i
-            ></span>
+            >
+              </span>
+             </span>
             <b-form-input
               v-model="selectedSearchQueries[index].value"
               v-on:keyup.enter="
@@ -117,7 +128,9 @@
               "
             />
           </span>
+          </div>
           <span
+         
             v-if="showSearchState[index] === 's' && query.type !== 'date'"
             @click="updateSearchInput(index)"
           >

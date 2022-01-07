@@ -22,7 +22,7 @@
           </h5>
         </b-button>
       </template>
-      <div>
+      <div class="overflow-x-none">
         <b-table
           v-if="formitems.length > 0"
           sort-icon-left

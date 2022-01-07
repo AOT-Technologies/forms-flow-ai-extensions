@@ -187,10 +187,17 @@
     font-size: 16px;
   }
 
+  .task-list-button-hover:hover{
+    background:#0b2d5f ;
+    color: #ffff;
+    transition: 0.5s;
+     
+  }
+
   .cftf-search-item-box {
     margin-top: 5px;
-    background-color: #f2dede;
-    border-color: #f2dede;
+    // background-color: #f2dede;
+    // border-color: #f2dede;
     color: #0b2d5f;
     ;
   }

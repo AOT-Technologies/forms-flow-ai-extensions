@@ -28,19 +28,23 @@
     </b-row>
     <span v-if="isVariableTypeInSelectedSearchQuery">
       <span>
-          <span class="cft-name-value-container"
-            >For Variables, ignore case of 
+          <div class="cft-name-value-container p-4"
+            > <span class="mr-4">
+              For Variables, ignore case of
+            </span>
             <b-form-checkbox
+            class="mr-4"
               v-model="getVariableNameIgnoreCase"
               @change="updateNameCase"
               >name</b-form-checkbox
             >
             <b-form-checkbox
+            class=" "
               v-model="getVariableValueIgnoreCase"
               @change="updateValueCase"
               >value.</b-form-checkbox
             >
-          </span>
+          </div>
       </span>
     </span>
   </div>
