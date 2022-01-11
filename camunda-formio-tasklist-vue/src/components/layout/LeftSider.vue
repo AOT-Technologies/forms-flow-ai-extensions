@@ -167,7 +167,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     return getFormattedDateAndTime(date);
   }
 
-  getTimeAndTime(date: Date){
+  getLocalStringDate(date: Date){
     return new Date(date).toLocaleString();
   }
 
