@@ -65,7 +65,7 @@
                   class="cft-due-date"
                   :data-title="getExactDate(task.created)"
                   v-if="task.created"
-                  v-b-tooltip.hover.right="getExactDate(task.created)"
+                  v-b-tooltip.hover.right="getLocalStringDate(task.created)"
                 >
                   Created {{ timedifference(task.created) }}
                 </span>
