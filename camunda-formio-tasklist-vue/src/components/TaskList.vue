@@ -724,13 +724,24 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
   }
 
-  async reloadLHSTaskList () {
-    await this.fetchPaginatedTaskList(
-      this.selectedfilterId,
-      this.payload,
-      (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
-      this.perPage
-    );
+  async reloadLHSTaskList (taskIdToRemove?: string) {
+    if (taskIdToRemove) {
+      await this.fetchPaginatedTaskList(
+        this.selectedfilterId,
+        this.payload,
+        (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+        this.perPage,
+        taskIdToRemove
+      );
+    }
+    else {
+      await this.fetchPaginatedTaskList(
+        this.selectedfilterId,
+        this.payload,
+        (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+        this.perPage
+      );
+    }
   }
 
   async onClaim () {
@@ -787,7 +798,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     filterId: string,
     requestData: object,
     first: number,
-    max: number
+    max: number,
+    taskIdToRemove?: string
   ) {
     this.selectedfilterId = filterId;
     const paginatedTaskResults = await CamundaRest.filterTaskListPagination(
@@ -802,6 +814,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const _embedded = responseData._embedded; // data._embedded.task is where the task list is.
     this.tasks = _embedded.task;
     this.setFormsFlowTaskLength(responseData.count);
+
+    if(taskIdToRemove){
+      console.log("task----",taskIdToRemove);
+      //if the list has the task with taskIdToRemove remove that task and decrement
+      if(_embedded.find((task)=>task.id===taskIdToRemove)){
+        this.tasks=_embedded.filter((task)=>task.id!==taskIdToRemove);
+        this.setFormsFlowTaskLength(responseData.count--); // Count has to be decreased since one task id is removed.
+      }
+    }
   }
 
   async onUserSearch (search: string, loading: any) {
@@ -1002,7 +1023,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           );
         }
 
-        // missing condition on Complete eventName
+        if (eventName === "complete") {
+
+        }
         else {
           if (this.selectedfilterId) {
           /* in case of update event update TaskLis if the updated taskId is in
