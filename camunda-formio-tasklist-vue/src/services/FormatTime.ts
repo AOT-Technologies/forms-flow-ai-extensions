@@ -6,14 +6,12 @@ export const getISODateTime = (date?: Date | string) => {
   }
 };
 
-export const getFormattedDateAndTime = (date: Date) => {
-  return new Date(date).toLocaleDateString("en-us", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+export const getFormattedDateAndTime = (date: Date)=>{
+  return new Date(date).toLocaleDateString('en-us',  { 
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',hour: '2-digit', minute: '2-digit', hour12: true
   });
 };
+
 
 export const getLocalDateTime = (date: any) => {
   return date ? new Date(date.replace(" ", "T") + "Z").toLocaleString() : "-";

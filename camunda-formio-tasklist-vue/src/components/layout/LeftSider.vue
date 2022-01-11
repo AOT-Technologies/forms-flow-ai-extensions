@@ -48,7 +48,7 @@
                 <span
                   class="cft-due-date"
                   :data-title="getExactDate(task.due)"
-                  v-b-tooltip.hover.right="getLocalStringDate(task.due)"
+                  v-b-tooltip.hover.right="getExactDate(task.due)"
                   v-if="task.due"
                 >
                   Due {{ timedifference(task.due) }},
@@ -56,7 +56,7 @@
                 <span
                   class="cft-due-date"
                   :data-title="getExactDate(task.followUp)"
-                  v-b-tooltip.hover.right="getLocalStringDate(task.followUp)"
+                  v-b-tooltip.hover.right="getExactDate(task.followUp)"
                   v-if="task.followUp"
                 >
                   Follow-up {{ timedifference(task.followUp) }} ,
@@ -65,7 +65,7 @@
                   class="cft-due-date"
                   :data-title="getExactDate(task.created)"
                   v-if="task.created"
-                  v-b-tooltip.hover.right="getLocalStringDate(task.created)"
+                  v-b-tooltip.hover.right="getExactDate(task.created)"
                 >
                   Created {{ timedifference(task.created) }}
                 </span>
@@ -167,10 +167,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     return getFormattedDateAndTime(date);
   }
 
-  getLocalStringDate(date: Date){
-    return new Date(date).toLocaleString();
-  }
-
+ 
   toggle (index: number) {
     this.setFormsFlowactiveIndex(index);
   }
