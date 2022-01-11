@@ -816,10 +816,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.setFormsFlowTaskLength(responseData.count);
 
     if(taskIdToRemove){
-      console.log("task----",taskIdToRemove);
       //if the list has the task with taskIdToRemove remove that task and decrement
-      if(_embedded.find((task)=>task.id===taskIdToRemove)){
-        this.tasks=_embedded.filter((task)=>task.id!==taskIdToRemove);
+      if(_embedded.find((task: TaskPayload)=>task.id===taskIdToRemove)){
+        this.tasks=_embedded.filter((task: TaskPayload)=>task.id!==taskIdToRemove);
         this.setFormsFlowTaskLength(responseData.count--); // Count has to be decreased since one task id is removed.
       }
     }
@@ -1024,7 +1023,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         }
 
         if (eventName === "complete") {
-
+          this.reloadLHSTaskList(refreshedTaskId);
         }
         else {
           if (this.selectedfilterId) {
