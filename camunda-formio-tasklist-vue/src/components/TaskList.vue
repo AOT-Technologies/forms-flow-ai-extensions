@@ -592,9 +592,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       taskId,
       formRequestFormat,
       this.bpmApiUrl
-    ).then(async () => {
-      await this.reloadCurrentTask();
-    });
+    );
   }
 
   async getBPMTaskDetail (taskId: string) {
@@ -724,24 +722,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
   }
 
-  async reloadLHSTaskList (taskIdToRemove?: string) {
-    if (taskIdToRemove) {
-      await this.fetchPaginatedTaskList(
-        this.selectedfilterId,
-        this.payload,
-        (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
-        this.perPage,
-        taskIdToRemove
-      );
-    }
-    else {
-      await this.fetchPaginatedTaskList(
-        this.selectedfilterId,
-        this.payload,
-        (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
-        this.perPage
-      );
-    }
+  async reloadLHSTaskList () {
+    await this.fetchPaginatedTaskList(
+      this.selectedfilterId,
+      this.payload,
+      (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+      this.perPage,
+    );
   }
 
   async onClaim () {
@@ -931,7 +918,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.getTaskFormIODetails(taskId),
     ]);
     /*await is not used for this promise, as if a user doesn't want to wait for
-     the history and proces diagram to load */
+     the history and process diagram to load */
     Promise.all([
       this.getTaskHistoryDetails(),
       this.getTaskProcessDiagramDetails(this.task.processDefinitionId!),
@@ -1023,12 +1010,23 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         }
 
         if (eventName === "complete") {
-          this.reloadLHSTaskList(refreshedTaskId);
+          this.fetchPaginatedTaskList(
+            this.selectedfilterId,
+            this.payload,
+            (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+            this.perPage,
+            refreshedTaskId
+          );
+
+          if (this.getFormsFlowTaskId && refreshedTaskId === this.getFormsFlowTaskId)
+          {
+            this.setFormsFlowTaskId("");
+          }
         }
         else {
           if (this.selectedfilterId) {
-          /* in case of update event update TaskLis if the updated taskId is in
-          the current paginated tasklist for the user only refresh */
+          /* in case of update event update TaskList if the updated taskId is in
+          the current paginated taskList for the user only refresh */
             if(eventName === "update") {
               if(getTaskFromList(this.tasks, refreshedTaskId)) {
                 this.reloadLHSTaskList();
