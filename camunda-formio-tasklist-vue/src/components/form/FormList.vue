@@ -1,6 +1,6 @@
 <template>
   <b-container fluid class="task-outer-container">
-    <div class="overflow-auto">
+    <div>
       <b-table-simple
         hover
         small

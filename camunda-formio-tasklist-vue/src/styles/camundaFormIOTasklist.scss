@@ -532,7 +532,7 @@
   .tooltip-inner {
     background-color: white;
     color: black;
-    box-shadow: 1px 1px 1px 1px;
+    box-shadow: 1px 1px 1px 1px #272727;
   }
 
   .tooltip-inner a {
@@ -692,5 +692,9 @@
   .cft-height-h400 {
     overflow: scroll !important;
     height: calc(100vh - var(--h400));
+  }
+
+  .highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
+    fill: rgb(56,89,138) !important;
   }
 }

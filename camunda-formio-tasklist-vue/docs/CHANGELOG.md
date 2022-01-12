@@ -1,5 +1,21 @@
 # Changes for camunda-formio-tasklist-vue
 
+## v1.0.16
+
+#### Modified
+
+- Task list count being refreshed correctly when a submission is complete.
+- Dynamiclly Highlighting Process Diagram.
+ 
+## v1.0.15, 2021-12-13
+
+#### Modified
+
+- Switching task list APIs to load with application/hal+json 
+- Fix issue of process Diagram First click showing blank diagram
+- Add support of custom events for client
+- Fix TaskList search bugs
+
 ## v1.0.14, 2021-10-25 
 
 #### Added

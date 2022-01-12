@@ -1,6 +1,6 @@
 {
   "name": "camunda-formio-tasklist-vue",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Vue components to integrate formsflow.ai",
   "private": false,
   "main": "./dist/camunda-formio-tasklist-vue.common.js",
@@ -15,7 +15,8 @@
     "Arun G Mani <arungmani@aot-technologies.com> (https://github.com/arungmani-aot)",
     "Krishnan Subramanian <krishnan.s@aot-technologies.com> (https://github.com/krishnan-aot)",
     "Kurian Benoy <kurian.benoy@aot-technologies.com> (https://github.com/kurianbenoy-aot)",
-    "Shabeeb <faiz.shabeeb@aot-technologies.com> (https://github.com/shabeeb-aot)"
+    "Shabeeb <faiz.shabeeb@aot-technologies.com> (https://github.com/shabeeb-aot)",
+    "Shuhaib S <shuhaib.s@aot-technologies.com> (https://github.com/shuhaib-aot)"
   ],
   "scripts": {
     "serve": "vue-cli-service serve",

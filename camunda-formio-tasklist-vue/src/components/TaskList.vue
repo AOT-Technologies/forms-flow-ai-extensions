@@ -592,9 +592,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       taskId,
       formRequestFormat,
       this.bpmApiUrl
-    ).then(async () => {
-      await this.reloadCurrentTask();
-    });
+    );
   }
 
   async getBPMTaskDetail (taskId: string) {
@@ -602,6 +600,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl),
       CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl),
     ]);
+    
     const processResult = await CamundaRest.getProcessDefinitionById(
       this.token,
       taskResult.data.processDefinitionId,
@@ -653,8 +652,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.token,
       processDefinitionId,
       this.bpmApiUrl
+    );  
+    const processInstanceId = this.task.processInstanceId || '';
+    const getActivity = await CamundaRest.getProcessActivity(
+      this.token,
+      processInstanceId,
+      this.bpmApiUrl
     );
     this.xmlData = getProcessResult.data.bpmn20Xml;
+    const activityList = getActivity.data.childActivityInstances;
     const div = document.getElementById("canvas");
     if (div) {
       div.innerHTML = "";
@@ -664,6 +670,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
     await viewer.importXML(this.xmlData);
     viewer.get("canvas").zoom("fit-viewport");
+    for(let i: number=0; i<activityList.length; i++){
+      viewer.get("canvas").addMarker({
+        'id':activityList[i].activityId
+      },'highlight');
+    }
+     
   }
 
   async getDiagramDetails() {
@@ -715,7 +727,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.selectedfilterId,
       this.payload,
       (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
-      this.perPage
+      this.perPage,
     );
   }
 
@@ -773,7 +785,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     filterId: string,
     requestData: object,
     first: number,
-    max: number
+    max: number,
+    taskIdToRemove?: string
   ) {
     this.selectedfilterId = filterId;
     const paginatedTaskResults = await CamundaRest.filterTaskListPagination(
@@ -788,6 +801,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const _embedded = responseData._embedded; // data._embedded.task is where the task list is.
     this.tasks = _embedded.task;
     this.setFormsFlowTaskLength(responseData.count);
+
+    if(taskIdToRemove){
+      //if the list has the task with taskIdToRemove remove that task and decrement
+      if(this.tasks.find((task: TaskPayload)=>task.id===taskIdToRemove)){
+        this.tasks=_embedded.task.filter((task: TaskPayload)=>task.id!==taskIdToRemove);
+        this.setFormsFlowTaskLength(responseData.count--); // Count has to be decreased since one task id is removed.
+      }
+    }
   }
 
   async onUserSearch (search: string, loading: any) {
@@ -897,7 +918,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.getTaskFormIODetails(taskId),
     ]);
     /*await is not used for this promise, as if a user doesn't want to wait for
-     the history and proces diagram to load */
+     the history and process diagram to load */
     Promise.all([
       this.getTaskHistoryDetails(),
       this.getTaskProcessDiagramDetails(this.task.processDefinitionId!),
@@ -988,11 +1009,24 @@ export default class Tasklist extends Mixins(TaskListMixin) {
           );
         }
 
-        // missing condition on Complete eventName
+        if (eventName === "complete") {
+          this.fetchPaginatedTaskList(
+            this.selectedfilterId,
+            this.payload,
+            (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+            this.perPage,
+            refreshedTaskId
+          );
+
+          if (this.getFormsFlowTaskId && refreshedTaskId === this.getFormsFlowTaskId)
+          {
+            this.setFormsFlowTaskId("");
+          }
+        }
         else {
           if (this.selectedfilterId) {
-          /* in case of update event update TaskLis if the updated taskId is in
-          the current paginated tasklist for the user only refresh */
+          /* in case of update event update TaskList if the updated taskId is in
+          the current paginated taskList for the user only refresh */
             if(eventName === "update") {
               if(getTaskFromList(this.tasks, refreshedTaskId)) {
                 this.reloadLHSTaskList();
