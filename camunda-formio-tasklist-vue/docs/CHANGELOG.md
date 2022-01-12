@@ -4,7 +4,8 @@
 
 #### Modified
 
-- Dynamiclly Highlighting Process Diagram
+- Task list count being refreshed correctly when a submission is complete.
+- Dynamiclly Highlighting Process Diagram.
  
 ## v1.0.15, 2021-12-13
 
