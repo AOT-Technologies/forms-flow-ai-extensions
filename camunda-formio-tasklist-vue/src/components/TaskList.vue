@@ -817,8 +817,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     if(taskIdToRemove){
       //if the list has the task with taskIdToRemove remove that task and decrement
-      if(_embedded.find((task: TaskPayload)=>task.id===taskIdToRemove)){
-        this.tasks=_embedded.filter((task: TaskPayload)=>task.id!==taskIdToRemove);
+      if(this.tasks.find((task: TaskPayload)=>task.id===taskIdToRemove)){
+        this.tasks=_embedded.task.filter((task: TaskPayload)=>task.id!==taskIdToRemove);
         this.setFormsFlowTaskLength(responseData.count--); // Count has to be decreased since one task id is removed.
       }
     }
