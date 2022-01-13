@@ -1,28 +1,29 @@
 # Changes for camunda-formio-tasklist-vue
 
-## v1.0.16
+## v1.0.16, 2022-01-12
 
 #### Modified
 
 - Task list count being refreshed correctly when a submission is complete.
-- Dynamiclly Highlighting Process Diagram.
- 
+- Dynamically Highlighting Process Diagram.
+- Tooltip hover corrections
+
 ## v1.0.15, 2021-12-13
 
 #### Modified
 
-- Switching task list APIs to load with application/hal+json 
+- Switching task list APIs to load with application/hal+json
 - Fix issue of process Diagram First click showing blank diagram
 - Add support of custom events for client
 - Fix TaskList search bugs
 
-## v1.0.14, 2021-10-25 
+## v1.0.14, 2021-10-25
 
 #### Added
 
-- Add new props `taskSortBy` and `taskSortOrder` to change default task sorting options 
+- Add new props `taskSortBy` and `taskSortOrder` to change default task sorting options
 - Add new prop `containerHeight` to adjust the height values of Vue component, in case of Vue component is too much for your integrated application
-- Allow authorisation to tasklist based on `formioReviewer` prop
+- Allow authorization to taskList based on `formioReviewer` prop
 
 #### Modified
 
@@ -47,15 +48,15 @@
 - Task being selected when loading initially.
 - Screen flicking issue on reloading web socket calls.
 - Task Email functionality not working.
-- Multiple reloading of Tasklist on user actions.
+- Multiple reloading of TaskList on user actions.
 - Flicking of screen when the task is being claimed/unclaimed
-- Tasklist LHS flicking when multiple forms are being created.
-- On creating new tasks, LHS of tasklist not being updated.
+- TaskList LHS flicking when multiple forms are being created.
+- On creating new tasks, LHS of TaskList not being updated.
 
 ## v1.0.9, 2021-07-15
 
 - Added dynamic store registration of the npm component for easy Integration. So on integration, there is no need to register out the store in their main.ts.
-- Fix Allignment issues in TaskDetail menu
+- Fix allignment issues in TaskDetail menu
 - Fix tooltip issues
 - Make camunda API calls async
 
@@ -79,11 +80,11 @@
 - Full-Screen support for Task Detail menu
 - Task Email support fixes issues on the TheQ side
 - TaskList sort outside click fix
-- Fix Tasklist search bugs
+- Fix TaskList search bugs
 
 ## v1.0.4, 2021-05-13
 
-- Tasklist Claim user list (support for more than 250+ users)
+- TaskList Claim user list (support for more than 250+ users)
 - Claim User menu with Vue-select library
 - Task Email support
 
@@ -104,7 +105,7 @@
 ## v1.0.1, 2021-03-31
 
 - Task Sorting Functionality
-- Create FormList Component 
+- Create FormList Component
 - TaskDetail section
 - Claim userList
 
