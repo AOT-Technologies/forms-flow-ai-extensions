@@ -23,7 +23,7 @@
 
 - Add new props `taskSortBy` and `taskSortOrder` to change default task sorting options
 - Add new prop `containerHeight` to adjust the height values of Vue component, in case of Vue component is too much for your integrated application
-- Allow authorization to taskList based on `formioReviewer` prop
+- Allow authorization to TaskList based on `formioReviewer` prop
 
 #### Modified
 
