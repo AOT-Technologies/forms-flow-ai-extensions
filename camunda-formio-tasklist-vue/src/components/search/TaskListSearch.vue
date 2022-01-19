@@ -18,6 +18,8 @@
             :selectedSearchQueries="selectedSearchQueries"
             @updateVariableInput="updateVariableInput"
             @show-VariableValue-Item="showVariableValueItem"
+            @reject-Search-Value-Item="rejectSearchValueItem"
+            @reject-Variable-Item="rejectVariableItem"
             @update-search-value="updateSearchInput"
             @show-search-value="showSearchValueItem"
           />
@@ -33,6 +35,7 @@
     </b-col>
   </div>
 </template>
+
 
 <script lang="ts">
 import "../../styles/camundaFormIOTasklistSearch.scss";
@@ -103,6 +106,10 @@ export default class TaskListSearch extends Vue {
     Vue.set(this.showSearchState, index, SEARCH_BOX_STATE.SHOW);
   }
 
+  rejectSearchValueItem (index: number) {
+    Vue.set(this.showSearchState, index, SEARCH_BOX_STATE.START);
+  }
+
   makeInputNull (index: number) {
     Vue.set(this.showSearchState, index, SEARCH_BOX_STATE.START);
   }
@@ -113,6 +120,10 @@ export default class TaskListSearch extends Vue {
 
   showVariableValueItem (index: number) {
     Vue.set(this.showVariableValueState, index, SEARCH_BOX_STATE.SHOW);
+  }
+  
+  rejectVariableItem (index: number) {
+    Vue.set(this.showVariableValueState, index, SEARCH_BOX_STATE.START);
   }
 
   addToSelectedSearchQuery (item: SearchOptionPayload) {

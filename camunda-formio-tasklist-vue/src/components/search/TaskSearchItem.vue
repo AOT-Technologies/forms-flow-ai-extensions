@@ -1,13 +1,16 @@
 <template>
   <div>
     <b-row>
+    <!-- this is for close the filter on left top side -->
       <b-col cols="1">
         <i
           class="fa fa-times cftf-x"
           @click="deleteSearchQueryElement(query, index)"
         ></i>
       </b-col>
+         <!-- end filter close -->
       <b-col cols="5">
+        <!-- this is drop down for filter task -->
         <b-nav-item-dropdown :text="query.label">
           <b-dropdown-item-button
             v-for="updateSearch in searchListElements"
@@ -17,6 +20,7 @@
             {{ updateSearch.label }}
           </b-dropdown-item-button>
         </b-nav-item-dropdown>
+        <!-- end filter task option -->
       </b-col>
       <b-col cols="5">
         <span v-if="query.type === 'variables'">
@@ -35,7 +39,7 @@
               </span>
               <i
                 class="fa fa-times cft-reject-box"
-                @click="showVariableValueItem(index)"
+                @click="rejectVariableItem(index)"
               ></i
             ></span>
             <b-form-input
@@ -46,7 +50,9 @@
         </span>
         <span
           class="cft-search-cursor"
-          v-if="showVariableValueState[index] === 's' && query.type === 'variables'"
+          v-if="
+            showVariableValueState[index] === 's' && query.type === 'variables'
+          "
           @click="updateVariableInput(index)"
         >
           {{ selectedSearchQueries[index].variable }}
@@ -61,7 +67,7 @@
           @change="updateSearchQueryOperators(operator[index], index)"
           :options="query.compares"
           plain
-          size='sm'
+          size="sm"
         />
       </b-col>
       <b-col cols="8">
@@ -77,10 +83,7 @@
               size="sm"
               v-model="selectedSearchQueries[index].value"
               @input="
-                setSearchQueryValue(
-                  selectedSearchQueries,
-                  index
-                );
+                setSearchQueryValue(selectedSearchQueries, index);
                 showSearchValueItem(index);
               "
             >
@@ -104,15 +107,13 @@
               </span>
               <i
                 class="fa fa-times cft-reject-box"
-                @click="showSearchValueItem(index)"
+                @click="rejectSearchValueItem(index)"
               ></i
             ></span>
             <b-form-input
               v-model="selectedSearchQueries[index].value"
               v-on:keyup.enter="
-                setSearchQueryValue(
-                  selectedSearchQueries, index
-                );
+                setSearchQueryValue(selectedSearchQueries, index);
                 showSearchValueItem(index);
               "
             />
@@ -187,13 +188,23 @@ export default class TaskSearchItem extends Vue {
     return index;
   }
 
-  @Emit("update-search-value")
-  updateSearchInput (index: number) {
+ @Emit("reject-Variable-Item")
+  rejectVariableItem (index: number) {
     return index;
   }
 
-  @Emit("show-search-value")
+ @Emit("update-search-value")
+ updateSearchInput (index: number) {
+   return index;
+ }
+
+ @Emit("show-search-value")
   showSearchValueItem (index: number) {
+    return index;
+  }
+
+ @Emit("reject-Search-Value-Item")
+  rejectSearchValueItem (index: number) {
     return index;
   }
 
