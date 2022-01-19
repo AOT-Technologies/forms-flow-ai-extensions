@@ -1,5 +1,11 @@
 # Changes for camunda-formio-tasklist-vue
 
+## v1.0.17, 2022-01-19
+
+#### Modified
+
+- Add new prop `formioJWTSecretKey` to pass the secret key used in forms-flow-forms server jwt secret.
+
 ## v1.0.16, 2022-01-12
 
 #### Modified

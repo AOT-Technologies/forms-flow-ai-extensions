@@ -10,6 +10,7 @@
       :formsflowaiUrl="configs.FORM_FLOW_URL"
       :formsflowaiApiUrl="configs.FORM_FLOW_API_URL"
       :formIOUserRoles="configs.FORMIO_ROLES"
+      :formIOJwtSecret="configs.FORMIO_JWT_SECRET"
       :getTaskId="getTaskId"
       v-if="isServiceFLowEnabled"
     />
@@ -43,6 +44,7 @@ export default class TaskList extends Vue {
     FORM_FLOW_URL: "Set formsflow.ai Project URL",
     SERVICEFLOW_ENABLED: true,
     FORMIO_ROLES: "Set FORMIO User ROLES",
+    FORMIO_JWT_SECRET: "Set FORMIO JWT SECRET",
   };
 
   public isServiceFLowEnabled = true;
