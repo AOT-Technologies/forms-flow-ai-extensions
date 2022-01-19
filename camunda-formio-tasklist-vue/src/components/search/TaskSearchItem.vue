@@ -199,31 +199,31 @@ export default class TaskSearchItem extends Vue {
  }
 
  @Emit("show-search-value")
-  showSearchValueItem (index: number) {
-    return index;
-  }
+ showSearchValueItem (index: number) {
+   return index;
+ }
 
  @Emit("reject-Search-Value-Item")
-  rejectSearchValueItem (index: number) {
-    return index;
-  }
+ rejectSearchValueItem (index: number) {
+   return index;
+ }
 
-  updateSearchQueryOperators (operator: string, index: number) {
-    this.$root.$emit("call-updateSearchQueryOperators", {
-      operator: operator,
-      index: index,
-    });
-  }
+ updateSearchQueryOperators (operator: string, index: number) {
+   this.$root.$emit("call-updateSearchQueryOperators", {
+     operator: operator,
+     index: index,
+   });
+ }
 
-  setSearchQueryValue (item: SearchOptionPayload[], index: number) {
-    this.$root.$emit("call-setSearchQueryValue", {
-      item: item,
-      index: index
-    });
-  }
+ setSearchQueryValue (item: SearchOptionPayload[], index: number) {
+   this.$root.$emit("call-setSearchQueryValue", {
+     item: item,
+     index: index
+   });
+ }
 
-  formatDate (date: Date) {
-    return getFormattedDateAndTime(date);
-  }
+ formatDate (date: Date) {
+   return getFormattedDateAndTime(date);
+ }
 }
 </script>
