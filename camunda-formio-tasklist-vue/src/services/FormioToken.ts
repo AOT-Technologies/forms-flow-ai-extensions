@@ -5,7 +5,8 @@ export const authenticateFormio = (
   formIOReviewereId: any,
   formIOReviewer: any,
   userEmail: any,
-  formIOUserRoles: any
+  formIOUserRoles: any,
+  formIOJwtSecret: string
 ) => {
   const STAFF_REVIEWER_ID
     = formIOReviewereId || process.env.VUE_APP_REVIEWER_ROLE_ID;
@@ -41,7 +42,7 @@ export const authenticateFormio = (
         roles: roles,
       },
     },
-    "--- change me now ---"
+    formIOJwtSecret
   );
 
   localStorage.setItem("formioToken", FORMIO_TOKEN);

@@ -976,7 +976,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.formIOReviewerId,
       this.formIOReviewer,
       this.userEmail,
-      this.formIOUserRoles
+      this.formIOUserRoles,
+      this.formIOJwtSecret
     );
     const filterListResult = await CamundaRest.filterList(
       this.token,
