@@ -188,42 +188,43 @@ export default class TaskSearchItem extends Vue {
     return index;
   }
 
- @Emit("reject-Variable-Item")
+  @Emit("reject-Variable-Item")
   rejectVariableItem (index: number) {
     return index;
   }
 
- @Emit("update-search-value")
- updateSearchInput (index: number) {
-   return index;
- }
+  @Emit("reject-Search-Value-Item")
+  rejectSearchValueItem (index: number) {
+    return index;
+  }
 
- @Emit("show-search-value")
- showSearchValueItem (index: number) {
-   return index;
- }
+  @Emit("update-search-value")
+  updateSearchInput (index: number) {
+    return index;
+  }
 
- @Emit("reject-Search-Value-Item")
- rejectSearchValueItem (index: number) {
-   return index;
- }
+  @Emit("show-search-value")
+  showSearchValueItem (index: number) {
+    return index;
+  }
 
- updateSearchQueryOperators (operator: string, index: number) {
-   this.$root.$emit("call-updateSearchQueryOperators", {
-     operator: operator,
-     index: index,
-   });
- }
 
- setSearchQueryValue (item: SearchOptionPayload[], index: number) {
-   this.$root.$emit("call-setSearchQueryValue", {
-     item: item,
-     index: index
-   });
- }
+  updateSearchQueryOperators (operator: string, index: number) {
+    this.$root.$emit("call-updateSearchQueryOperators", {
+      operator: operator,
+      index: index,
+    });
+  }
 
- formatDate (date: Date) {
-   return getFormattedDateAndTime(date);
- }
+  setSearchQueryValue (item: SearchOptionPayload[], index: number) {
+    this.$root.$emit("call-setSearchQueryValue", {
+      item: item,
+      index: index
+    });
+  }
+
+  formatDate (date: Date) {
+    return getFormattedDateAndTime(date);
+  }
 }
 </script>
