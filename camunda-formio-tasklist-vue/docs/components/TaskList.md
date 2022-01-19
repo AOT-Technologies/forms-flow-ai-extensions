@@ -20,6 +20,7 @@ solution in your Vue.js based project.
 | taskSortBy | string | "created" | Prop to decide by default what value should the tasks be sorted when displayed at first. You can use the values like - "created", "dueDate", "follweowUpDate", "priority", "name", "assignee" |
 | taskSortOrder  | string | "desc" | Prop to decide by default what value should the tasks should be ordered when displayed at first. You can use the values like - "desc", "asc" |
 | webSocketEncryptkey | string | "formflowai" | Specifies the secret key used to connect to webSocket endpoint for encrypting keys in the taskList |
+| formIOJwtSecret :triangular_flag_on_post: | string | "--- change me now ---" | Specifies the secret key used in forms-flow-forms server jwt secret |
 
 :triangular_flag_on_post: - mandatory props to be passed
 
