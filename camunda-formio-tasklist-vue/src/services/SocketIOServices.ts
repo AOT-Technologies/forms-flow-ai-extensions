@@ -39,7 +39,7 @@ const clientConnectCallback = () => {
 
 /*main connect function which is being getting called by a component*/
 function connectClient () {
-  if (getBpmUrl()) {
+  if (getBpmUrl() && localStorage.getItem("authToken")) {
     const BPM_BASE_URL_SOCKET_IO = getBpmUrl()?.replace(
       `/${engine}`,
       `/${socketUrl}`
