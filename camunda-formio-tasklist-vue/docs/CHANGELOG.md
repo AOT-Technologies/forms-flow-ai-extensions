@@ -1,5 +1,11 @@
 # Changes for camunda-formio-tasklist-vue
 
+## v1.0.18, 2022-01-21
+
+#### Modified
+
+- authToken not updating after x minutes (patch release to fix issues in v1.0.17)
+
 ## v1.0.17, 2022-01-19
 
 #### Modified
