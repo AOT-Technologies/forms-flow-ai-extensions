@@ -1,6 +1,6 @@
 .DS_Store
 node_modules
-/dist
+camunda-formio-tasklist-vue/dist
 
 
 # local env files

@@ -13,7 +13,6 @@ let interval: any = null;
 let clientErrorCallback: any = null;
 let disconnect: any = null;
 
-const token: string| null = localStorage.getItem("authToken");
 const getBpmUrl = () => {
   return localStorage.getItem("bpmApiUrl");
 };
@@ -40,12 +39,12 @@ const clientConnectCallback = () => {
 
 /*main connect function which is being getting called by a component*/
 function connectClient () {
-  if (getBpmUrl()) {
+  if (getBpmUrl() && localStorage.getItem("authToken")) {
     const BPM_BASE_URL_SOCKET_IO = getBpmUrl()?.replace(
       `/${engine}`,
       `/${socketUrl}`
     );
-    const accessToken = AES.encrypt(token!, encryptKey).toString();
+    const accessToken = AES.encrypt(localStorage.getItem("authToken")!, encryptKey).toString();
     const websocketUrl = `${BPM_BASE_URL_SOCKET_IO}?accesstoken=${accessToken}`;
 
     socket = new SockJS(websocketUrl);
