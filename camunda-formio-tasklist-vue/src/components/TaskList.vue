@@ -944,6 +944,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async mounted () {
+    console.log(this.token);
+    console.log(localStorage.getItem("authToken"));
     this.isUserAllowed = isAllowedUser(this.formIOReviewer, this.formIOUserRoles);
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
@@ -993,7 +995,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     SocketIOService.connect(
       this.webSocketEncryptkey,
-      (refreshedTaskId: string, eventName: string, isUpdateEvent: any, error: string) => {
+      (refreshedTaskId: string, eventName: string, error: string) => {
         // this.taskIdWebsocket = refreshedTaskId;
         if (error) {
           this.$bvToast.toast(
