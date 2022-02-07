@@ -1,14 +1,14 @@
 <template>
   <div>
     <b-row>
-    <!-- this is for close the filter on left top side -->
+      <!-- this is for close the filter on left top side -->
       <b-col cols="1">
         <i
           class="fa fa-times cftf-x"
           @click="deleteSearchQueryElement(query, index)"
         ></i>
       </b-col>
-         <!-- end filter close -->
+      <!-- end filter close -->
       <b-col cols="5">
         <!-- this is drop down for filter task -->
         <b-nav-item-dropdown :text="query.label">
@@ -136,12 +136,11 @@ import {
   Component, Emit, Prop, Vue 
 } from "vue-property-decorator";
 import {
-  getFormattedDateAndTime, taskSearchFilters
+  getFormattedDateAndTime, taskSearchFilters 
 } from "../../services";
 import {
-  SearchOptionPayload,
+  SearchOptionPayload 
 } from "../../models";
-
 
 @Component
 export default class TaskSearchItem extends Vue {
@@ -149,29 +148,33 @@ export default class TaskSearchItem extends Vue {
   }) private query!: SearchOptionPayload;
   @Prop({
   }) private index!: number;
-  @Prop({
-    default: taskSearchFilters 
-  }) private searchListElements!: SearchOptionPayload[];
-  @Prop({
-    default: [] 
-  }) private showSearchState!: string[];
-  @Prop({
-    default: [] 
-  }) private selectedSearchQueries!: SearchOptionPayload[];
-  @Prop({
-    default: [] 
-  }) private showVariableValueState!: string[];
-  @Prop({
-    default: [] 
-  }) private operator!: string[];
 
-  deleteSearchQueryElement (query: SearchOptionPayload, index: number) {
+  @Prop({
+    default: [],
+  })
+  private showSearchState!: string[];
+  @Prop({
+    default: [],
+  })
+  private selectedSearchQueries!: SearchOptionPayload[];
+  @Prop({
+    default: [],
+  })
+  private showVariableValueState!: string[];
+  @Prop({
+    default: [],
+  })
+  private operator!: string[];
+
+  private searchListElements: SearchOptionPayload[] = taskSearchFilters;
+
+  deleteSearchQueryElement(query: SearchOptionPayload, index: number) {
     this.$root.$emit("call-deleteSearchQueryElement", {
       query: query,
       index: index,
     });
   }
-  updateSearchQueryElement (updateSearch: SearchOptionPayload, index: number) {
+  updateSearchQueryElement(updateSearch: SearchOptionPayload, index: number) {
     this.$root.$emit("call-updateSearchQueryElement", {
       updateSearch: updateSearch,
       index: index,
@@ -179,50 +182,50 @@ export default class TaskSearchItem extends Vue {
   }
 
   @Emit("updateVariableInput")
-  updateVariableInput (index: number) {
+  updateVariableInput(index: number) {
     return index;
   }
 
   @Emit("show-VariableValue-Item")
-  showVariableValueItem (index: number) {
+  showVariableValueItem(index: number) {
     return index;
   }
 
   @Emit("reject-Variable-Item")
-  rejectVariableItem (index: number) {
+  rejectVariableItem(index: number) {
     return index;
   }
 
   @Emit("reject-Search-Value-Item")
-  rejectSearchValueItem (index: number) {
+  rejectSearchValueItem(index: number) {
     return index;
   }
 
   @Emit("update-search-value")
-  updateSearchInput (index: number) {
+  updateSearchInput(index: number) {
     return index;
   }
 
   @Emit("show-search-value")
-  showSearchValueItem (index: number) {
+  showSearchValueItem(index: number) {
     return index;
   }
 
-  updateSearchQueryOperators (operator: string, index: number) {
+  updateSearchQueryOperators(operator: string, index: number) {
     this.$root.$emit("call-updateSearchQueryOperators", {
       operator: operator,
       index: index,
     });
   }
 
-  setSearchQueryValue (item: SearchOptionPayload[], index: number) {
+  setSearchQueryValue(item: SearchOptionPayload[], index: number) {
     this.$root.$emit("call-setSearchQueryValue", {
       item: item,
-      index: index
+      index: index,
     });
   }
 
-  formatDate (date: Date) {
+  formatDate(date: Date) {
     return getFormattedDateAndTime(date);
   }
 }
