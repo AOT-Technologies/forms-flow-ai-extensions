@@ -57,13 +57,17 @@ import {
 import {
   namespace 
 } from "vuex-class";
+import {
+  taskSearchFilters
+} from "../../services";
+
 
 const serviceFlowModule = namespace("serviceFlowModule");
 
 @Component
 export default class TaskListAddSearchIgnoreCase extends Vue {
   @Prop() private isVariableTypeInSelectedSearchQuery!: string;
-  @Prop() private searchListElements!: SearchOptionPayload[];
+ 
 
   @serviceFlowModule.Getter("getFormsFlowTaskLength")
   private getFormsFlowTaskLength: any;
@@ -78,7 +82,7 @@ export default class TaskListAddSearchIgnoreCase extends Vue {
   public setVariableValueIgnoreCase: any;
 
   private activeSearchItem: number = 0;
-  private searchList: SearchOptionPayload[] = this.searchListElements;
+  private searchList: SearchOptionPayload[] = taskSearchFilters;
 
   setActiveSearchItem (index: number) {
     this.activeSearchItem = index;
