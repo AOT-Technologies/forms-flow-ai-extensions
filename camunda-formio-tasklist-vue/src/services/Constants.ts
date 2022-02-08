@@ -22,3 +22,8 @@ export const FORMLIST_FIELDS = [
     key: "operations" 
   }
 ];
+
+ const porjectUrl = process.env.VUE_APP_FORM_IO_PROJECT_URL|| 'http://127.0.0.1:3000'
+ const apiUrl = process.env.VUE_APP_FORM_IO_API_URL|| 'http://127.0.0.1:3000'
+
+export const AppConfig ={porjectUrl,apiUrl}
