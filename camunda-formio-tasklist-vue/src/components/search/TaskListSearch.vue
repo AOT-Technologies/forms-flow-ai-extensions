@@ -11,7 +11,6 @@
           <TaskSearchItem
             :query="query"
             :index="index"
-            :searchListElements="searchListElements"
             :showSearchState="showSearchState"
             :showVariableValueState="showVariableValueState"
             :operator="operator"
@@ -29,7 +28,6 @@
         :isVariableTypeInSelectedSearchQuery="
           isVariableTypeInSelectedSearchQuery
         "
-        :searchListElements="searchListElements"
         @add-to-selected-search-query="addToSelectedSearchQuery"
       />
     </b-col>
@@ -47,7 +45,6 @@ import {
   SEARCH_BOX_STATE,
   getFormattedQueryListParams,
   getISODateTime,
-  taskSearchFilters,
 } from "../../services";
 import {
   SearchOptionPayload,
@@ -73,7 +70,6 @@ const serviceFlowModule = namespace("serviceFlowModule");
 
 export default class TaskListSearch extends Vue {
 
-  private searchListElements: SearchOptionPayload[] = taskSearchFilters;
   private selectedSearchQueries: SearchOptionPayload[] = [];
   private operator: string[] = [];
   private showSearchState: string[] = []; //States - a(?? state), i(enter input), s(show entered value)

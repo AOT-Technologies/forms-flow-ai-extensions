@@ -382,6 +382,9 @@ import BpmnViewer from "bpmn-js";
 import ExpandContract from "./addons/ExpandContract.vue";
 import FormEdit from "./form/Edit.vue";
 import FormView from "./form/View.vue";
+import {
+  Formio
+} from 'vue-formio';
 import Header from "./layout/Header.vue";
 import LeftSider from "./layout/LeftSider.vue";
 import TaskHistory from "../components/addons/TaskHistory.vue";
@@ -390,6 +393,7 @@ import moment from "moment";
 import {
   namespace 
 } from "vuex-class";
+
 import serviceFlowModule from "../store/modules/serviceFlow-module";
 import vSelect from "vue-select";
 
@@ -944,8 +948,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async mounted () {
-    console.log(this.token);
-    console.log(localStorage.getItem("authToken"));
+    Formio.setBaseUrl(this.formIOApiUrl);
+    Formio.setProjectUrl(this.formIOApiUrl);
     this.isUserAllowed = isAllowedUser(this.formIOReviewer, this.formIOUserRoles);
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
