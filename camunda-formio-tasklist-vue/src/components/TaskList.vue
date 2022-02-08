@@ -390,6 +390,9 @@ import moment from "moment";
 import {
   namespace 
 } from "vuex-class";
+import {
+  Formio
+} from 'vue-formio'
 import serviceFlowModule from "../store/modules/serviceFlow-module";
 import vSelect from "vue-select";
 
@@ -944,6 +947,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async mounted () {
+    Formio.setBaseUrl(this.formIOApiUrl)
+    Formio.setProjectUrl(this.formIOApiUrl)
     this.isUserAllowed = isAllowedUser(this.formIOReviewer, this.formIOUserRoles);
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
