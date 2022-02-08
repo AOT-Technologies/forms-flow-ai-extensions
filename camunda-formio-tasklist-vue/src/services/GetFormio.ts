@@ -8,7 +8,7 @@ export const getFormDetails = (formioUrl: string, formIOProjectUrl: string) => {
     b.protocol + "//" + b.host+b.pathname
   );
 
-    // Regex Extracts formId from */form/formId/submission/*
+  // Regex Extracts formId from */form/formId/submission/*
   const formId = formioUrl.match(/(?<=\/form\/)(.*)(?=\/submission)/)?.[0]||"";
   // Regex Extracts submissionId from */submission/submissionId
   const submissionId = formioUrl.match(/(?<=\/submission\/)(.*)(?=)/)?.[0]||"";
