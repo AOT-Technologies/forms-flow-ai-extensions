@@ -502,9 +502,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       reviewerList.data.forEach((user: UserPayload) => {
         this.reviewerUsersList.push(UserListObject(user));
       });
-      
       const usersList = JSON.parse(JSON.stringify(this.reviewerUsersList));
-      console.log(usersList);
       this.userSelected= usersList.find(((i: any)=>i.code?.includes(this.task.assignee)));
     }
   }
