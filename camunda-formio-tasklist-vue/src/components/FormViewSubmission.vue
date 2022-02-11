@@ -34,8 +34,9 @@ export default class FormViewSubmission extends Vue {
   private sId: string = "";
 
   checkLocalStorageValue () {
-    const formioApiUrl = localStorage.getItem("formioApiUrl");
-
+    const formioApiUrl = localStorage.getItem("formioApiUrl")||"";
+    Formio.setBaseUrl(formioApiUrl);
+    Formio.setProjectUrl(formioApiUrl);
     if (typeof formioApiUrl !== "undefined" && formioApiUrl !== null) {
       this.formIOProjectUrl = formioApiUrl;
     }
@@ -44,7 +45,6 @@ export default class FormViewSubmission extends Vue {
   mounted () {
     this.formUrl = window.location.href;
     this.checkLocalStorageValue();
-
     const {
       formioUrl, formId, submissionId 
     } = getFormDetails(
