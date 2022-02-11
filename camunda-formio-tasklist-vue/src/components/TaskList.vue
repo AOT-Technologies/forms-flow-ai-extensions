@@ -502,6 +502,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       reviewerList.data.forEach((user: UserPayload) => {
         this.reviewerUsersList.push(UserListObject(user));
       });
+      const userList = JSON.parse(JSON.stringify(this.reviewerUsersList));
+      this.userSelected= userList.find(((user: any)=>user.code?.includes(this.task.assignee)));
     }
   }
 
@@ -1032,7 +1034,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         }
         else {
           if (this.selectedfilterId) {
-          /* in case of update event update TaskList if the updated taskId is in
+            /* in case of update event update TaskList if the updated taskId is in
           the current paginated taskList for the user only refresh */
             if(eventName === "update") {
               if(getTaskFromList(this.tasks, refreshedTaskId)) {
