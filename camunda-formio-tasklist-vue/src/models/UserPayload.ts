@@ -23,7 +23,7 @@ export const UserListObject = (user: UserPayload) => {
   return {
     code: user.id,
     email: user.email!,
-    firstName: `${user.firstName} ${user.lastName}`,
-    lastName: `${user.firstName} ${user.lastName}`,
+    firstName: `${user.firstName}  ${user.lastName}`,
+    lastName: `${user.firstName} ${user.lastName===null?"":user.lastName}`,
   };
 };
