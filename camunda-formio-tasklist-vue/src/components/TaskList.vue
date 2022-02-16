@@ -23,6 +23,7 @@
         v-if="maximize"
       >
         <LeftSider
+          :taskLoading="taskLoading"
           v-if="token && bpmApiUrl"
           :token="token"
           :formsflowaiApiUrl="formsflowaiApiUrl"
@@ -34,8 +35,16 @@
           :payload="payload"
         />
       </b-col>
+  
+       <b-col  v-if="singleTaskLoading" class="d-flex justify-content-center align-items-center" >
+         <div class="d-flex justify-content-center">
+          <div class="spinner-grow text-primary" role="status">
+             <span class="sr-only">Loading...</span>
+          </div>
+      </div>
+       </b-col>
       <b-col
-        v-if="getFormsFlowTaskId && task"
+        v-else-if="getFormsFlowTaskId && task"
         :lg="maximize ? 9 : 12"
         md="12"
         :class="
@@ -313,6 +322,12 @@
                   title="Diagram"
                   @click="getDiagramDetails"
                 >
+                  <div v-if="diagramLoading" class="d-flex justify-content-center">
+                     <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                     </div>
+                  </div>
+
                   <div class="diagram-full-screen" id="canvas"></div>
                 </b-tab>
               </b-tabs>
@@ -429,7 +444,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private getFormsFlowTaskId: any;
   @StoreServiceFlowModule.Getter("getFormsFlowactiveIndex")
   private getFormsFlowactiveIndex: any;
-
   @StoreServiceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
   public setFormsFlowTaskCurrentPage: any;
   @StoreServiceFlowModule.Mutation("setFormsFlowTaskId")
@@ -442,6 +456,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private tasks: TaskPayload[] = [];
   private fulltasks: TaskPayload[] = [];
   private formId: string = "";
+  private taskLoading!: boolean;
+  private singleTaskLoading: boolean=false;
+  private diagramLoading: boolean= false;
   private submissionId: string = "";
   private formioUrl: string = "";
   private task: TaskPayload = {
@@ -602,11 +619,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async getBPMTaskDetail (taskId: string) {
+    
     const [taskResult, applicationIdResult] = await Promise.all([
       CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl),
       CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl),
     ]);
-    
     const processResult = await CamundaRest.getProcessDefinitionById(
       this.token,
       taskResult.data.processDefinitionId,
@@ -624,6 +641,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       taskId,
       this.bpmApiUrl
     );
+
 
     if (formResult.data.formUrl?.value) {
       const formUrlPattern = formResult.data.formUrl?.value;
@@ -654,6 +672,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async getTaskProcessDiagramDetails(processDefinitionId: string) {
+    this.diagramLoading = true;
     const getProcessResult = await CamundaRest.getProcessDiagramXML(
       this.token,
       processDefinitionId,
@@ -674,6 +693,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const viewer = new BpmnViewer({
       container: "#canvas",
     });
+    
+    this.diagramLoading = false;
     await viewer.importXML(this.xmlData);
     viewer.get("canvas").zoom("fit-viewport");
     for(let i: number=0; i<activityList.length; i++){
@@ -681,11 +702,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         'id':activityList[i].activityId
       },'highlight');
     }
+
      
   }
 
   async getDiagramDetails() {
+
     await this.getTaskProcessDiagramDetails(this.task.processDefinitionId!);
+
   }
 
   oncustomEventCallback = async (customEvent: CustomEventPayload) => {
@@ -806,6 +830,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const responseData = paginatedTaskResults.data;
     const _embedded = responseData._embedded; // data._embedded.task is where the task list is.
     this.tasks = _embedded.task;
+    this.taskLoading=false;
     this.setFormsFlowTaskLength(responseData.count);
 
     if(taskIdToRemove){
@@ -956,10 +981,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
     this.setFormsFlowactiveIndex(NaN);
+    this.taskLoading= true;
     this.$root.$on("call-fetchTaskDetails", async (para: any) => {
       this.editAssignee = false;
+      this.singleTaskLoading=true;
       this.setFormsFlowTaskId(para.selectedTaskId);
       await this.fetchTaskDetails(this.getFormsFlowTaskId);
+      this.singleTaskLoading=false;
     });
 
     this.$root.$on("call-fetchPaginatedTaskList", async (para: any) => {
@@ -994,7 +1022,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.filterList = sortByPriorityList(filterListResult.data);
     this.selectedfilterId = findFilterKeyOfAllTask(this.filterList, ALL_FILTER);
     await this.reloadLHSTaskList();
-
     if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
     }
@@ -1081,8 +1108,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       await this.fetchTaskDetails(this.taskId2);
       this.taskId2 = "";
     }
-  }
 
+  }
+  
   beforeDestroy () {
     SocketIOService.disconnect();
     this.$root.$off("call-fetchTaskDetails");

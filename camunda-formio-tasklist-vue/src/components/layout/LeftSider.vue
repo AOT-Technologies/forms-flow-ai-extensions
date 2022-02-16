@@ -2,7 +2,12 @@
   <div class="card">
     <div class="tasklist-container">
       <TaskListSearch @update-task-list="onSearchUpdateTasklistResult" />
-      <b-list-group class="cft-list-container" v-if="tasks && tasks.length">
+      <div v-if="taskLoading" class="d-flex justify-content-center text-primary">
+          <div class="spinner-border" role="status">
+         <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+      <b-list-group class="cft-list-container" v-else-if="tasks && tasks.length">
         <b-list-group-item
           button
           v-for="(task, idx) in tasks"
@@ -125,6 +130,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   @Prop() private perPage!: number;
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
+  @Prop() private taskLoading!: boolean;
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
