@@ -536,8 +536,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async addGroup () {
-    await CamundaRest.createTaskGroupByID(
+  addGroup () {
+    CamundaRest.createTaskGroupByID(
       this.token,
       this.task.id!,
       this.bpmApiUrl,
@@ -549,8 +549,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     ).then(async () => {
       await this.getGroupDetails();
       await this.reloadCurrentTask();
-      this.setGroup = null;
     });
+    this.setGroup = null;
   }
 
   async getGroupDetails () {
