@@ -207,7 +207,7 @@ export const CamundaRest = {
     group: string
   ) {
     return await bpmAxios(bearerToken, CamundaUrl).get(
-      `/${engine}/user?lastNameLike=%${lastName}%&memberOfGroup=${group}`
+      `/${engine}/user?lastNameLike=%25${lastName}%25&memberOfGroup=${group}`
     );
   },
 
