@@ -536,8 +536,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-    addGroup () {
-      CamundaRest.createTaskGroupByID(
+  addGroup () {
+    CamundaRest.createTaskGroupByID(
       this.token,
       this.task.id!,
       this.bpmApiUrl,
