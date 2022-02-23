@@ -546,9 +546,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         groupId: this.setGroup,
         type: "candidate",
       }
-    ).then(async () => {
-      await this.getGroupDetails();
-      await this.reloadCurrentTask();
+    ).then( () => {
+      this.getGroupDetails();
+      this.reloadCurrentTask();
     });
     this.setGroup = null;
   }
