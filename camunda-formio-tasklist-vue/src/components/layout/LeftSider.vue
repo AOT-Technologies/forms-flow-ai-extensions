@@ -1,5 +1,5 @@
 <template>
-  <div class="card task-list-container">
+  <div class="task-list-container">
     <TaskListSearch @update-task-list="onSearchUpdateTasklistResult" />
     <template v-if="tasks && tasks.length">
       <div class="list-group">
@@ -69,7 +69,10 @@
         @go-to-page="onPageChange"
       />
     </template>
-    <div class="d-flex justify-content-center align-items-center p-4" v-else>
+    <div
+      class="d-flex justify-content-center align-items-center p-4"
+      v-else
+    >
       <i class="far fa-exclamation-circle"></i>
       <h4 class="mt-0 mx-2">No tasks found in the list.</h4>
     </div>
@@ -233,8 +236,10 @@ export default class LeftSider extends Mixins(BaseMixin) {
 
 <style lang="scss" scoped>
 .task-list-container {
+  background: #fff;
+  padding: .5rem 0;
   .list-group {
-    height: calc(calc(100vh - 168px) - 96px); // TODO: replace
+    height: calc(calc(100vh - 168px) - 108px); // TODO: replace
     overflow-y: auto;
     .list-group-item {
       padding: 0.75rem 1rem;

@@ -1,5 +1,8 @@
 <template>
   <div class="table-footer-pagination">
+    <div>
+      <small>Count:</small> <div class="badge rounded-pill bg-primary">{{ totalRecords }}</div>
+    </div>
     <ul class="pagination pagination-sm">
       <li
         class="page-item"
@@ -55,7 +58,7 @@ export default class Pagination extends Vue {
 
   @Prop(Number)
   perPage!: number;
-  
+
   currentPageNumber = 1;
 
   get totalPageNumbers() {
@@ -73,8 +76,9 @@ export default class Pagination extends Vue {
 <style lang="scss" scoped>
 .table-footer-pagination {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: .5rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
   .page-size {
     display: flex;
     align-items: center;

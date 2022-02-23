@@ -29,9 +29,9 @@
           </li>
         </ul>
       </div>
-      <div>
+      <!-- <div>
         <div class="badge rounded-pill bg-primary">{{ getFormsFlowTaskLength }}</div>
-      </div>
+      </div> -->
     </div>
     <div v-if="isVariableTypeInSelectedSearchQuery">
       <div class="cft-name-value-container">For Variables, ignore case of
