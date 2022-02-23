@@ -12,7 +12,10 @@ export const findFilterKeyOfAllTask = (array: FilterPayload[], value: string) =>
       return array[i]["id"];
     }
   }
-  return array[0]["id"];
+  if(array?.length) {
+    return array[0]["id"];
+  }
+  return '';
 };
 
 export const getUserName = () => {

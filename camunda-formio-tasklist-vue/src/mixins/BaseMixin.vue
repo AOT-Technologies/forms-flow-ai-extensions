@@ -6,7 +6,8 @@ import {
   engine 
 } from "../services";
 
-@Component
+@Component({
+})
 export default class BaseMixin extends Vue {
   @Prop() protected readonly bpmApiUrl!: string;
   @Prop() protected readonly token!: string;

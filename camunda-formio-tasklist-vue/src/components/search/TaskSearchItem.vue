@@ -142,7 +142,8 @@ import {
   SearchOptionPayload 
 } from "../../models";
 
-@Component
+@Component({
+})
 export default class TaskSearchItem extends Vue {
   @Prop({
   }) private query!: SearchOptionPayload;

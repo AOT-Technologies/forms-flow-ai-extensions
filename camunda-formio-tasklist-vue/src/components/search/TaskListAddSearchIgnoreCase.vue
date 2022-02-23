@@ -64,7 +64,8 @@ import {
 
 const serviceFlowModule = namespace("serviceFlowModule");
 
-@Component
+@Component({
+})
 export default class TaskListAddSearchIgnoreCase extends Vue {
   @Prop() private isVariableTypeInSelectedSearchQuery!: string;
  

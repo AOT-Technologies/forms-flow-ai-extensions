@@ -4,7 +4,8 @@
       <div class="cft-filter-dropdown mx-2"> 
         <b-dropdown variant="primary">
             <template #button-content >
-              <span><i class="fa fa-wpforms"> Filters</i></span>
+              <span><i class="fa fa-wpforms"></i></span>
+              Filters
             </template>
             <b-dropdown-item
               v-for="(filter, idx) in filterList"

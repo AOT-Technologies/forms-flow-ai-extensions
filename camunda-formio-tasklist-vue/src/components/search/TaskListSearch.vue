@@ -38,7 +38,7 @@
 <script lang="ts">
 import "../../styles/camundaFormIOTasklistSearch.scss";
 import {
-  Component, Emit, Vue 
+  Component, Emit, Mixins, Vue 
 } from "vue-property-decorator";
 import {
   FilterSearchTypes,
@@ -50,6 +50,7 @@ import {
   SearchOptionPayload,
   SearchQueryPayload,
 } from "../../models";
+import BaseMixin from "../../mixins/BaseMixin.vue";
 import TaskListAddSearchIgnoreCase from "./TaskListAddSearchIgnoreCase.vue";
 import TaskListSearchType from "./TaskListSearchType.vue";
 import TaskSearchItem from "./TaskSearchItem.vue";
@@ -66,9 +67,7 @@ const serviceFlowModule = namespace("serviceFlowModule");
     TaskSearchItem,
   },
 })
-
-
-export default class TaskListSearch extends Vue {
+export default class TaskListSearch extends Mixins(BaseMixin) {
 
   private selectedSearchQueries: SearchOptionPayload[] = [];
   private operator: string[] = [];

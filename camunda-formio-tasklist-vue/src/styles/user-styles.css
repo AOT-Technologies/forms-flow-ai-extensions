@@ -4,6 +4,10 @@
   border-color: #99befa;
 } */
 
+button {
+  font-family: inherit !important;
+}
+
 .btn-primary {
   background-color: #014283;
   border-color: #00152a;
