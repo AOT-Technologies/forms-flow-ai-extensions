@@ -1,6 +1,6 @@
 <template>
   <div class="table-footer-pagination">
-    <ul class="pagination">
+    <ul class="pagination pagination-sm">
       <li
         class="page-item"
         @click="goToPage(1)"
@@ -73,8 +73,8 @@ export default class Pagination extends Vue {
 <style lang="scss" scoped>
 .table-footer-pagination {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
+  justify-content: flex-end;
+  margin-bottom: .5rem;
   .page-size {
     display: flex;
     align-items: center;
@@ -95,25 +95,10 @@ export default class Pagination extends Vue {
     input[type="number"] {
       -moz-appearance: textfield;
     }
-
-    .total-records,
-    label {
-      color: var(--bc-form-elements-grey);
-    }
   }
   .pagination {
     justify-content: flex-end;
     margin-bottom: 0;
-    .active {
-      .page-link {
-        background-color: var(--bc-background-blue);
-        border-color: var(--bc-background-blue);
-        color: white;
-      }
-    }
-    .page-link {
-      color: var(--bc-background-blue);
-    }
   }
 }
 </style>

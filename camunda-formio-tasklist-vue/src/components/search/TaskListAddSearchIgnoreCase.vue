@@ -1,61 +1,63 @@
 <template>
   <div>
-    <b-row>
-      <b-col cols="9">
-        <b-nav-item-dropdown
-          split
-          text="Filter Tasks"
-          class="cft-search-item-nav"
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="dropdown">
+        <button
+          class="btn btn-sm dropdown-toggle"
+          type="button"
+          id="filterTasks"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
         >
-          <b-dropdown-item-button
+          Filter Tasks
+        </button>
+        <ul
+          class="dropdown-menu"
+          aria-labelledby="filterTasks"
+        >
+          <li
+            class="dropdown-item"
             v-for="(s, idx) in searchList"
             :key="s.label"
             @click="
               addToSelectedSearchQuery(s);
               setActiveSearchItem(idx);
             "
-            :class="{ 'cft-search-item-selected': idx == activeSearchItem }"
+            :class="{ 'active': idx == activeSearchItem }"
           >
             {{ s.label }}
-          </b-dropdown-item-button>
-        </b-nav-item-dropdown>
-      </b-col>
-      <b-col cols="3">
-        <span class="cft-search-total" title="Total number of tasks.">
-          {{ getFormsFlowTaskLength }}
-        </span>
-      </b-col>
-    </b-row>
-    <span v-if="isVariableTypeInSelectedSearchQuery">
-      <span>
-          <span class="cft-name-value-container"
-            >For Variables, ignore case of 
-            <b-form-checkbox
-              v-model="getVariableNameIgnoreCase"
-              @change="updateNameCase"
-              >name</b-form-checkbox
-            >
-            <b-form-checkbox
-              v-model="getVariableValueIgnoreCase"
-              @change="updateValueCase"
-              >value.</b-form-checkbox
-            >
-          </span>
-      </span>
-    </span>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div class="badge rounded-pill bg-primary">{{ getFormsFlowTaskLength }}</div>
+      </div>
+    </div>
+    <div v-if="isVariableTypeInSelectedSearchQuery">
+      <div class="cft-name-value-container">For Variables, ignore case of
+        <b-form-checkbox
+          v-model="getVariableNameIgnoreCase"
+          @change="updateNameCase"
+        >name</b-form-checkbox>
+        <b-form-checkbox
+          v-model="getVariableValueIgnoreCase"
+          @change="updateValueCase"
+        >value.</b-form-checkbox>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import "../../styles/camundaFormIOTasklistSearch.scss";
 import {
-  Component, Emit, Prop, Vue 
+  Component, Emit, Prop, Vue
 } from "vue-property-decorator";
 import {
   SearchOptionPayload,
 } from "../../models";
 import {
-  namespace 
+  namespace
 } from "vuex-class";
 import {
   taskSearchFilters
@@ -68,7 +70,7 @@ const serviceFlowModule = namespace("serviceFlowModule");
 })
 export default class TaskListAddSearchIgnoreCase extends Vue {
   @Prop() private isVariableTypeInSelectedSearchQuery!: string;
- 
+
 
   @serviceFlowModule.Getter("getFormsFlowTaskLength")
   private getFormsFlowTaskLength: any;
@@ -85,12 +87,12 @@ export default class TaskListAddSearchIgnoreCase extends Vue {
   private activeSearchItem: number = 0;
   private searchList: SearchOptionPayload[] = taskSearchFilters;
 
-  setActiveSearchItem (index: number) {
+  setActiveSearchItem(index: number) {
     this.activeSearchItem = index;
   }
 
   @Emit()
-  addToSelectedSearchQuery (item: SearchOptionPayload) {
+  addToSelectedSearchQuery(item: SearchOptionPayload) {
     return item;
   }
 
@@ -105,3 +107,15 @@ export default class TaskListAddSearchIgnoreCase extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.dropdown {
+  .btn {
+    line-height: 1;
+    min-height: 36px;
+  }
+  .dropdown-item {
+    padding: 0.5rem 0.75rem;
+  }
+}
+</style>

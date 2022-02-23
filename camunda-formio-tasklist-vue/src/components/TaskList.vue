@@ -12,7 +12,7 @@
         :defaultTaskSortBy="taskSortBy"
         :defaultTaskSortOrder="taskSortOrder"
       /> -->
-      <div class="row w-100">
+      <div class="row">
         <div
           class="col-3"
           :class="
@@ -47,7 +47,7 @@
                 class="ml-0 cft-task-header task-header-title"
                 v-b-tooltip.hover.top
                 title="Task Name"
-              >{{ task.name }} 22
+              >{{ task.name }}
               </span>
             </b-row>
             <br />

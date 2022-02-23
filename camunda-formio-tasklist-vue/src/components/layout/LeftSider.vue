@@ -63,6 +63,7 @@
         </div>
       </div>
       <Pagination
+        class="mt-2 px-3"
         :perPage="perPage"
         :totalRecords="getFormsFlowTaskLength"
         @go-to-page="onPageChange"
@@ -233,7 +234,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
 <style lang="scss" scoped>
 .task-list-container {
   .list-group {
-    height: calc(calc(100vh - 168px) - 66px); // TODO: replace
+    height: calc(calc(100vh - 168px) - 96px); // TODO: replace
     overflow-y: auto;
     .list-group-item {
       padding: 0.75rem 1rem;
