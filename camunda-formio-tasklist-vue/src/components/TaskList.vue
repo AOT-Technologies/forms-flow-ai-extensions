@@ -488,7 +488,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private selectSearchType: string = "lastName";
   private taskIdValue: string = "";
   private taskId2: string = "";
-  // private taskIdWebsocket: string = "";
   private activeUserSearchindex = 1;
   private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
   private isUserAllowed: boolean = false
