@@ -364,7 +364,7 @@ import {
   SEARCH_USERS_BY,
   SocketIOService,
   authenticateFormio, 
-  findFilterKeyOfAllTask,
+  findFilterIdForDefaultFilterName,
   getFormDetails,
   getISODateTime,
   getTaskFromList,
@@ -437,6 +437,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     default: "desc",
   })
   public taskSortOrder!: string;
+  @Prop({
+    default: ALL_FILTER,
+  }) protected taskDefaultFilterName !: string;
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -1020,7 +1023,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     );
     this.filterList = sortByPriorityList(filterListResult.data);
-    this.selectedfilterId = findFilterKeyOfAllTask(this.filterList, ALL_FILTER);
+    this.selectedfilterId = findFilterIdForDefaultFilterName(this.filterList, this.taskDefaultFilterName);
     await this.reloadLHSTaskList();
     if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
