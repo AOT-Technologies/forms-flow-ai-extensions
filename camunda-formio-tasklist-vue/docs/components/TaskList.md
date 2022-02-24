@@ -42,6 +42,6 @@ import CamundaTasklist from "camunda-formio-tasklist-vue/src/components/TaskList
   formIOUserRoles="["forms-flow"]"
   taskSortBy="priority"
   taskSortOrder="asc"
-  taskDefaultFilterList=['Clerk Tasks', 'XYZ
+  taskDefaultFilterListNames=['Clerk Tasks', 'XYZ]
 />
 ```
