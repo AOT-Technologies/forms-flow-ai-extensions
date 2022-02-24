@@ -41,11 +41,18 @@ export default class ExpandContract extends Mixins(TaskListMixin) {
   position: absolute;
   margin-top: 12px;
   z-index: 9;
-  margin-left: -32px;
+  margin-left: -20px;
   border-radius: 50rem;
   min-height: 32px;
+  i {
+    margin-right: 1px;
+  }
   &.expanded {
-    margin-left: 0px;
+    margin-left: -18px;
+    i {
+      margin-left: 2px;
+      margin-right: 0;
+    }
   }
 }
 </style>

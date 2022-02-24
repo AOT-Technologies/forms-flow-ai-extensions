@@ -26,6 +26,7 @@
         <a
           v-if="(index <= (currentPageNumber + 2)) && index >= (currentPageNumber - 2)"
           class="page-link"
+          :class="{'bg-primary': currentPageNumber === index}"
           href="#"
         >{{ (index === (currentPageNumber + 2)) || (index === (currentPageNumber - 2)) ? '...' : index }}</a>
       </li>

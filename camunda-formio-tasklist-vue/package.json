@@ -39,6 +39,7 @@
     "semantic-ui-css": "^2.4.1",
     "sockjs-client": "^1.5.1",
     "stompjs": "^2.3.3",
+    "v-calendar": "^2.4.1",
     "vue": "2.6.14",
     "vue-formio": "^4.0.7",
     "vue-property-decorator": "^9.1.2",

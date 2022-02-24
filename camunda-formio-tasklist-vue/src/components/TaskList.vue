@@ -12,7 +12,7 @@
         :defaultTaskSortBy="taskSortBy"
         :defaultTaskSortOrder="taskSortOrder"
       /> -->
-      <div class="row">
+      <div class="d-flex">
         <div
           class="col-3"
           :class="
@@ -37,188 +37,59 @@
           v-if="getFormsFlowTaskId && task"
           :class="{
             'cft-height': !containerHeight,
-            'col-12 m-0': !maximize,
+            'col-12 mx-0': !maximize,
           }"
         >
           <ExpandContract />
-          <b-row>
-            <span
-              class="ml-0 cft-task-header task-header-title"
-              v-b-tooltip.hover.top
+          <div class="bg-primary task-title">
+            <h3
+              class="m-0"
+              data-bs-toggle="tooltip"
               title="Task Name"
-            >{{ task.name }}
-            </span>
-          </b-row>
-          <br />
-          <b-row class="ml-0">
-            <span
-              class="cft-task-name"
-              v-b-tooltip.hover
+            >{{ task.name }}</h3>
+          </div>
+          <div class="d-flex flex-column w-100 px-4 py-2">
+            <h4
+              class="my-2"
+              data-bs-toggle="tooltip"
               title="Process Name"
-            >{{ task.taskProcess }}</span>
-          </b-row>
-          <br />
-          <b-row class="ml-0">
-            <span
-              class="cft-application-id"
-              v-b-tooltip.hover
-              title="Application Id"
-            >Application ID # {{ task.applicationId }}</span>
-          </b-row>
-          <div class="cft-actionable-container">
-            <b-row class="cft-actionable">
-              <b-col
-                cols="2"
-                class="align-self-center"
-              >
-                <span v-if="task.followUp">
-                  <i class="fa fa-calendar"></i>
-                  {{ timedifference(task.followUp) }}
-                  <i
-                    class="fa fa-times-circle"
-                    @click="removeFollowupDate"
-                    id="removeFollow"
-                  ></i>
-                  <b-tooltip
-                    target="removeFollow"
-                    triggers="hover"
-                  >
-                    Click to remove <b>FollowUp Date</b>
-                  </b-tooltip>
-                </span>
-                <span v-else>
-                  <b-form-datepicker
-                    size="sm"
-                    v-model="task.followUp"
-                    @input="updateFollowUpDate"
-                    placeholder="Set Followup Date"
-                    locale="en"
-                  />
-                </span>
-              </b-col>
-              <b-col
-                cols="2"
-                class="align-self-center"
-              >
-                <span v-if="task.due">
-                  <i class="fa fa-calendar"></i>
-                  {{ timedifference(task.due) }}
-                  <i
-                    class="fa fa-times-circle"
-                    @click="removeDueDate"
-                    id="removeDueDate"
-                  ></i>
-                  <b-tooltip
-                    target="removeDueDate"
-                    triggers="hover"
-                  >
-                    Click to remove <b> Due Date</b>
-                  </b-tooltip>
-                </span>
-                <span v-else>
-                  <b-form-datepicker
-                    size="sm"
-                    v-model="task.due"
-                    @input="updateDueDate"
-                    placeholder="Set Due Date"
-                    locale="en"
-                  />
-                </span>
-              </b-col>
-              <b-col
-                cols="3"
-                class="align-self-center"
-              >
-                <div
-                  id="groups"
-                  v-b-modal.AddGroupModal
-                  class="group-align word-break"
+            >{{ task.taskProcess }}</h4>
+            <div class="d-flex justify-content-between">
+              <p
+                data-bs-toggle="tooltip"
+                :title="timedifference(task.created)"
+              ><label class="fw-bold">Created date:</label> {{ getExactDate(task.created) }}</p>
+              <p
+                v-if="task.applicationId"
+                data-bs-toggle="tooltip"
+                title="Application Id"
+              >Application ID <strong>#{{ task.applicationId }}</strong></p>
+              <p></p>
+            </div>
+            <div class="d-flex justify-content-between">
+              <section class="task-assignee">
+                <label class="fw-bold">Task assignee</label>
+                <button
+                  v-if="task.assignee"
+                  class="btn task-icon-btn"
+                  @click="toggleassignee"
+                  data-bs-toggle="tooltip"
+                  title="Click to change assignee"
                 >
-                  <i class="fa fa-th mr-1"></i>
-                  <span
-                    class="cft-group-align cft-word-break"
-                    v-if="groupListNames"
-                  >
-                    {{ String(groupListNames) }}
-                  </span>
-                  <span v-else>Add Groups</span>
-                  <b-tooltip
-                    target="groups"
-                    triggers="hover"
-                  >
-                    <b>Groups</b>
-                  </b-tooltip>
-                </div>
-                <b-modal
-                  id="AddGroupModal"
-                  ref="modal"
-                  :hide-footer="true"
-                >
-                  <template #modal-header="{ close }">
-                    <h5>MANAGE GROUPS</h5>
-                    <b-button
-                      size="sm"
-                      variant="outline-danger"
-                      @click="close()"
+                  <i
+                    class="fa fa-pencil"
+                    :class="{
+                      'fa-times-circle-o':editAssignee,
+                      'fa-pencil': !editAssignee
+                    }"
+                  />
+                </button>
+                <div class="d-flex align-items-baseline">
+                  <template v-if="task.assignee">
+                    <div
+                      v-if="editAssignee"
+                      class="d-flex w-100"
                     >
-                      <h5>
-                        Close
-                        <i class="fa fa-times"></i>
-                      </h5>
-                    </b-button>
-                  </template>
-                  <div class="modal-text">
-                    <i class="fa fa-exclamation-circle"></i>
-                    You can add a group by typing a group ID into the input
-                    field and afterwards clicking the button with the plus sign.
-                    <b-row class="mt-3 mb-3">
-                      <b-col>
-                        <b-button
-                          variant="primary"
-                          @click="addGroup"
-                          :disabled="!setGroup"
-                        >
-                          <span>Add a group</span>
-                          <span>
-                            <i class="ml-2 fa fa-plus"></i>
-                          </span>
-                        </b-button>
-                      </b-col>
-                      <b-col>
-                        <b-form-input
-                          type="text"
-                          placeholder="Group ID"
-                          v-model="setGroup"
-                          v-on:keyup.enter="addGroup"
-                        ></b-form-input>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col v-if="groupList.length">
-                        <ul
-                          v-for="g in groupList"
-                          :key="g.groupId"
-                        >
-                          <div class="mt-1">
-                            <i
-                              class="fa fa-times mr-2 click-element"
-                              @click="deleteGroup(g.groupId)"
-                            ></i>
-                            <span>{{ g.groupId }}</span>
-                          </div>
-                        </ul>
-                      </b-col>
-                    </b-row>
-                  </div>
-                </b-modal>
-              </b-col>
-              <b-col class="align-self-center">
-                <span v-if="task.assignee">
-                  <div
-                    v-if="editAssignee"
-                    class="cft-user-edit"
-                  >
-                    <div class="cft-assignee-change-box">
                       <v-select
                         :label="selectSearchType"
                         :options="reviewerUsersList"
@@ -226,82 +97,230 @@
                         v-model="userSelected"
                         :placeholder="`Search by ${selectSearchType}`"
                         @search="onUserSearch"
-                        class="assignee-align float-left"
+                        class="select-assignee"
                       />
-                      <i
+                      <button
+                        class="btn task-icon-btn btn-light mx-1"
                         @click="onSetassignee"
-                        class="
-                          fa fa-check
-                          cft-assignee-tickmark-icon cft-icon-border
-                        "
-                      ></i>
-                      <i
-                        @click="toggleassignee"
-                        class="
-                          fa fa-times
-                          cft-assignee-cancel-icon cft-icon-border
-                        "
-                      ></i>
-                      <b-dropdown
-                        id="dropdown-right"
-                        class="ml-3 cft-select-generic-search"
-                        variant="primary"
+                        data-bs-toggle="tooltip"
+                        title="Set assignee"
                       >
-                        <template #button-content>
-                          <span><i class="fa fa-filter cft-assignee-filter-icon" /></span>
-                        </template>
-                        <b-dd-item
-                          v-for="(row, index) in UserSearchListLabel"
-                          :key="row.id"
-                          @click="
-                            setSelectedUserSearchBy(row.searchType, index)
-                          "
-                          :active="index === activeUserSearchindex"
+                        <i class="fa fa-check-circle-o fa-lg" />
+                      </button>
+                      <div class="dropdown assignee-search-filter">
+                        <button
+                          class="btn btn-secondary dropdown-toggle"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
                         >
-                          <span>{{ row.label }}</span>
-                        </b-dd-item>
-                      </b-dropdown>
+                          <i class="fa fa-filter" />
+                        </button>
+                        <ul
+                          class="dropdown-menu"
+                          aria-labelledby="dropdownMenuButton1"
+                        >
+                          <li
+                            v-for="(row, index) in UserSearchListLabel"
+                            :key="row.id"
+                            @click="setSelectedUserSearchBy(row.searchType, index)"
+                            class="dropdown-item"
+                            :class="{'active': index === activeUserSearchindex}"
+                          >
+                            {{ row.label }}
+                          </li>
+                        </ul>
+                      </div>
                     </div>
-                  </div>
-                  <div v-else>
-                    <span
-                      id="setAssignee"
-                      v-b-tooltip.hover
-                      title="Click to change Assignee"
-                    >
-                      <i class="fa fa-user cft-person-fill" />
-                      <span
-                        class="cft-user-span"
-                        @click="toggleassignee"
-                      >
-                        {{ task.assignee }}
-                      </span>
-                    </span>
-                    <span
-                      id="resetAssignee"
-                      v-b-tooltip.hover
-                      title="Reset Assignee"
-                    >
-                      <i
-                        class="fa fa-times ml-1"
+                    <template v-else>
+                      <div class="assignee-name">{{ task.assignee }}</div>
+                      <button
+                        class="btn task-icon-btn"
                         @click="onUnClaim"
-                      />
-                    </span>
-                  </div>
-                </span>
-                <span v-else>
-                  <div
+                        data-bs-toggle="tooltip"
+                        title="Reset assignee"
+                      >
+                        <i class="fa fa-times-circle-o" />
+                      </button>
+                    </template>
+                  </template>
+                  <button
+                    v-else
+                    class="btn btn-light"
                     @click="onClaim"
-                    v-b-tooltip.hover.left
+                    data-bs-toggle="tooltip"
                     title="Claim task"
                   >
-                    <span id="claimAssignee">
-                      <i class="fa fa-user" /> Claim
-                    </span>
+                    <i class="fa fa-plus" />
+                    <span class="mx-1">Claim</span>
+                  </button>
+                </div>
+              </section>
+              <section
+                class="task-groups"
+                data-bs-toggle="tooltip"
+                title="Click to modify groups"
+              >
+                <label class="fw-bold">Groups</label>
+                <button
+                  v-if="groupListNames && groupListNames.length"
+                  class="btn task-icon-btn"
+                  data-bs-toggle="modal"
+                  data-bs-target="#groupsModal"
+                >
+                  <i class="fa fa-pencil" />
+                </button>
+                <div class="d-flex align-items-baseline group-name">
+                  <template v-if="groupListNames && groupListNames.length">
+                    {{ String(groupListNames) }}
+                  </template>
+                  <button
+                    v-else
+                    class="btn btn-light"
+                    data-bs-toggle="modal"
+                    data-bs-target="#groupsModal"
+                  >
+                    <i class="fa fa-plus" />
+                    <span class="mx-1">Add Groups</span>
+                  </button>
+                </div>
+                <div
+                  class="modal fade task-groups-modal"
+                  id="groupsModal"
+                  tabindex="-1"
+                  aria-labelledby="groupsModal"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">MANAGE GROUPS</h5>
+                        <button
+                          type="button"
+                          class="btn-close mx-2"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body px-4 pb-5">
+                        <i class="fa fa-exclamation-circle"></i>
+                        You can add a group by typing a group ID into the input
+                        field and afterwards clicking the button with the plus sign.
+                        <div class="d-flex my-3">
+                          <input
+                            class="form-control group-name-input"
+                            type="text"
+                            v-model="setGroup"
+                            @keyup.enter="addGroup"
+                            placeholder="Group ID"
+                          />
+                          <button
+                            class="btn btn-primary add-group-btn"
+                            @click="addGroup"
+                            :disabled="!setGroup"
+                          >
+                            <i class="fa fa-plus" />
+                            <span class="mx-1">Add group</span>
+                          </button>
+                        </div>
+                        <div
+                          v-if="groupList.length"
+                          class="d-flex flex-wrap"
+                        >
+                          <div
+                            class="d-flex align-items-baseline added-group-chip"
+                            v-for="g in groupList"
+                            :key="g.groupId"
+                            @click="deleteGroup(g.groupId)"
+                            data-bs-toggle="tooltip"
+                            title="Click to remove this group"
+                          >
+                            <div class="mx-1">{{ g.groupId }}</div>
+                            <i class="fa fa-times-circle-o" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </span>
-              </b-col>
-            </b-row>
+                </div>
+              </section>
+              <section class="task-date-picker">
+                <label class="fw-bold mb-1">Follow up</label>
+                <div
+                  class="d-flex align-items-baseline"
+                  v-if="task.followUp"
+                >
+                  <p
+                    data-bs-toggle="tooltip"
+                    :title="getExactDate(task.followUp)"
+                  >{{ timedifference(task.followUp) }}</p>
+                  <button
+                    class="btn task-icon-btn"
+                    @click="removeFollowupDate"
+                    data-bs-toggle="tooltip"
+                    title="Click to remove FollowUp Date"
+                  >
+                    <i class="fa fa-times-circle-o" />
+                  </button>
+                </div>
+                <v-date-picker
+                  v-model="task.followUp"
+                  v-else
+                >
+                  <template v-slot="{ inputValue, inputEvents }">
+                    <div class="input-group">
+                      <input
+                        class="form-control"
+                        :value="inputValue"
+                        v-on="inputEvents"
+                        @input="updateFollowUpDate"
+                        placeholder="dd/mm/yyyy"
+                      />
+                      <i class="fa fa-calendar-alt"></i>
+                    </div>
+                  </template>
+                </v-date-picker>
+              </section>
+              <section class="task-date-picker">
+                <label class="fw-bold mb-1">Due date</label>
+                <div
+                  class="d-flex align-items-baseline"
+                  v-if="task.due"
+                >
+                  <p
+                    data-bs-toggle="tooltip"
+                    :title="getExactDate(task.due)"
+                  >{{ timedifference(task.due) }}</p>
+                  <button
+                    class="btn task-icon-btn"
+                    @click="removeDueDate"
+                    data-bs-toggle="tooltip"
+                    title="Click to remove Due date"
+                  >
+                    <i class="fa fa-times-circle-o" />
+                  </button>
+                </div>
+                <v-date-picker
+                  v-model="task.due"
+                  v-else
+                >
+                  <template v-slot="{ inputValue, inputEvents }">
+                    <div class="input-group">
+                      <input
+                        class="form-control"
+                        :value="inputValue"
+                        v-on="inputEvents"
+                        @input="updateDueDate"
+                        placeholder="dd/mm/yyyy"
+                      />
+                      <i class="fa fa-calendar-alt"></i>
+                    </div>
+                  </template>
+                </v-date-picker>
+              </section>
+            </div>
+          </div>
+          <div class="cft-actionable-container">
             <div class="height-100">
               <b-tabs
                 pills
@@ -390,13 +409,14 @@ import {
   authenticateFormio,
   findFilterKeyOfAllTask,
   getFormDetails,
+  getFormattedDateAndTime,
   getISODateTime,
   getTaskFromList,
   getUserName,
   getformHistoryApi,
   isAllowedUser,
   reviewerGroup,
-  sortByPriorityList
+  sortByPriorityList,
 } from "../services";
 import {
   Component, Mixins, Prop
@@ -418,6 +438,7 @@ import {
   UserSearchListLabelPayload,
 } from "../models";
 import BpmnViewer from "bpmn-js";
+import DatePicker from "v-calendar/lib/components/date-picker.umd";
 import ExpandContract from "./addons/ExpandContract.vue";
 import FormEdit from "./form/Edit.vue";
 import FormView from "./form/View.vue";
@@ -450,6 +471,7 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
     BpmnViewer,
     FormEdit,
     FormView,
+    VDatePicker: DatePicker,
   },
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
@@ -1127,6 +1149,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
+  getExactDate(date: Date) {
+    return getFormattedDateAndTime(date);
+  }
+
   beforeDestroy() {
     SocketIOService.disconnect();
     this.$root.$off("call-fetchTaskDetails");
@@ -1151,6 +1177,73 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 <style lang="scss" scoped>
 .task-details {
   background: #fff;
-  margin: 0 -0.5rem;
+  margin-left: 4px;
+  .task-title {
+    padding: 1.25rem 1.5rem;
+    h3 {
+      color: #fff;
+    }
+  }
+  .task-date-picker {
+    .input-group {
+      width: calc(100% - 24px);
+      .form-control {
+        border-radius: 0.5rem;
+      }
+      i {
+        margin-left: -24px !important;
+        margin-top: 12px;
+        z-index: 3;
+      }
+    }
+  }
+  .task-icon-btn {
+    min-height: unset !important;
+    padding-top: 0;
+    padding-bottom: 0px;
+  }
+  .task-assignee {
+    flex: 0.5;
+    .select-assignee {
+      width: 100%;
+    }
+    .assignee-search-filter {
+      .dropdown-menu {
+        .dropdown-item {
+          padding: 0.5rem 1rem;
+        }
+      }
+    }
+    .assignee-name {
+      white-space: pre;
+    }
+    .btn {
+      min-height: 40px;
+    }
+  }
+  .task-groups {
+    .group-name {
+      white-space: normal;
+      width: 150px;
+    }
+  }
+  .task-groups-modal {
+    .group-name-input {
+      margin-right: 1rem;
+    }
+    .add-group-btn {
+      min-width: 120px;
+    }
+    .added-group-chip {
+      background: #e7e7e7;
+      border-radius: 50rem;
+      padding: 0.25rem 0.75rem;
+      margin: 0.5rem 0.25rem;
+      cursor: pointer;
+      &:hover {
+        background: #ceeaf1;
+      }
+    }
+  }
 }
 </style>
