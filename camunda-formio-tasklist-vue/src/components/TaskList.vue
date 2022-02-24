@@ -1033,6 +1033,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.selectedfilterId = this.taskDefaultFilterName.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER);
     }
 
+    else {
+      this.tasks = [];
+      this.taskLoading=false;
+    }
+
     await this.reloadLHSTaskList();
     if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
