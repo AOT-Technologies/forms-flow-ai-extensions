@@ -1029,10 +1029,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       });
     }
 
-    else {
-      if(this.filterList.length>0){
-        this.selectedfilterId = this.taskDefaultFilterName.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER);
-      }
+    if(this.filterList.length>0){
+      this.selectedfilterId = this.taskDefaultFilterName.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER);
     }
 
     await this.reloadLHSTaskList();
