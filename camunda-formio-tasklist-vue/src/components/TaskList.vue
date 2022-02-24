@@ -439,7 +439,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   public taskSortOrder!: string;
   @Prop({
     default: () => [],
-  }) protected taskDefaultFilterName !: string[];
+  }) protected taskDefaultFilterListNames !: string[];
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -1022,15 +1022,17 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     );
     this.filterList = sortByPriorityList(filterListResult.data);
+    console.log(this.filterList);
 
-    if(this.taskDefaultFilterName.length > 0){
+    if(this.taskDefaultFilterListNames.length > 0){
       this.filterList = this.filterList.filter(FilterList => { 
-        return this.taskDefaultFilterName.some(filter=>FilterList.name.includes(filter));
+        return this.taskDefaultFilterListNames.some(filter=>FilterList.name.includes(filter));
       });
     }
 
+    console.log(this.filterList);
     if(this.filterList.length>0){
-      this.selectedfilterId = this.taskDefaultFilterName.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER);
+      this.selectedfilterId = this.taskDefaultFilterListNames.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER);
     }
 
     else {
