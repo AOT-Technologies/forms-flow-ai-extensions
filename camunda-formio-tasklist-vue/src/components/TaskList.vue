@@ -437,9 +437,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     default: "desc",
   })
   public taskSortOrder!: string;
-  @Prop({
-    default: ALL_FILTER,
-  }) protected taskDefaultFilterName !: string;
+  @Prop({}) protected taskDefaultFilterName !: string[];
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -1021,8 +1019,15 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.token,
       this.bpmApiUrl
     );
+    const propFilterArray = ['NRS', 'Clerk'];
     this.filterList = sortByPriorityList(filterListResult.data);
-    this.selectedfilterId = findFilterIdForDefaultFilterName(this.filterList, this.taskDefaultFilterName);
+    if(propFilterArray.length >0){
+    this.filterList.filter(list => { 
+      return propFilterArray.some(filter=>list.name.includes(filter));
+    })
+    }
+    console.log(this.filterList);
+    this.selectedfilterId = propFilterArray.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER);
     await this.reloadLHSTaskList();
     if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
