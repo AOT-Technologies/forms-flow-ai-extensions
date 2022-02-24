@@ -111,3 +111,7 @@ aside li.active>a {
   padding: 7px;
   line-height: 36px;
 }
+
+.field-required:after {
+  z-index: 1 !important;
+}

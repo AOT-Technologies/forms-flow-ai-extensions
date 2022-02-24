@@ -33,7 +33,7 @@
           />
         </div>
         <div
-          class="col-9 task-details"
+          class="col-9 task-details-container"
           v-if="getFormsFlowTaskId && task"
           :class="{
             'cft-height': !containerHeight,
@@ -48,7 +48,7 @@
               title="Task Name"
             >{{ task.name }}</h3>
           </div>
-          <div class="d-flex flex-column w-100 px-4 py-2">
+          <div class="d-flex flex-column w-100 px-4 py-2 task-details">
             <h4
               class="my-2"
               data-bs-toggle="tooltip"
@@ -319,72 +319,112 @@
                 </v-date-picker>
               </section>
             </div>
-          </div>
-          <div class="cft-actionable-container">
-            <div class="height-100">
-              <b-tabs
-                pills
-                class="height-100"
-                content-class="mt-3"
+            <ul
+              class="nav nav-tabs mt-3"
+              role="tablist"
+            >
+              <li
+                class="nav-item"
+                role="presentation"
               >
-                <b-tab
-                  title="Form"
-                  active
-                >
-                  <div class="ml-4 mr-4 form-tab-conatiner">
-                    <b-overlay
-                      :show="task.assignee !== userName"
-                      variant="light"
-                      opacity="0.75"
-                      spinner-type="none"
-                      aria-busy="true"
-                    >
-                      <div v-if="task.assignee === userName">
-                        <transition name="fade">
-                          <FormEdit
-                            :formioUrl="formioUrl"
-                            @onformsubmit="onFormSubmitCallback"
-                            @oncustomevent="oncustomEventCallback"
-                          />
-                        </transition>
-                      </div>
-                      <div v-else>
-                        <FormView :formioUrl="formioUrl" />
-                      </div>
-                    </b-overlay>
-                  </div>
-                </b-tab>
-                <b-tab title="History">
-                  <TaskHistory
-                    :taskHistoryList="taskHistoryList"
-                    :applicationId="task.applicationId"
-                  />
-                </b-tab>
-                <b-tab
-                  class="cft-diagram-container"
-                  id="diagramContainer"
-                  title="Diagram"
+                <button
+                  class="nav-link active"
+                  id="task-form-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#taskForm"
+                  type="button"
+                  role="tab"
+                  aria-controls="form"
+                  aria-selected="true"
+                >Form</button>
+              </li>
+              <li
+                class="nav-item"
+                role="presentation"
+              >
+                <button
+                  class="nav-link"
+                  id="task-history-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#taskHistory"
+                  type="button"
+                  role="tab"
+                  aria-controls="history"
+                  aria-selected="false"
+                >History</button>
+              </li>
+              <li
+                class="nav-item"
+                role="presentation"
+              >
+                <button
+                  class="nav-link"
+                  id="task-diagram-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#diagramContainer"
+                  type="button"
+                  role="tab"
+                  aria-controls="diagram"
+                  aria-selected="false"
                   @click="getDiagramDetails"
-                >
-                  <div
-                    class="diagram-full-screen"
-                    id="canvas"
-                  ></div>
-                </b-tab>
-              </b-tabs>
+                >Diagram</button>
+              </li>
+            </ul>
+            <div class="tab-content py-3">
+              <!-- Form tab content -->
+              <div
+                class="tab-pane fade show active form-tab-content"
+                id="taskForm"
+                role="tabpanel"
+                aria-labelledby="form-tab"
+                :class="{'disabled': task.assignee !== userName}"
+              >
+                <div v-if="task.assignee === userName">
+                  <transition name="fade">
+                    <FormEdit
+                      :formioUrl="formioUrl"
+                      @onformsubmit="onFormSubmitCallback"
+                      @oncustomevent="oncustomEventCallback"
+                    />
+                  </transition>
+                </div>
+                <div v-else>
+                  <FormView :formioUrl="formioUrl" />
+                </div>
+              </div>
+              <!-- Form tab content end -->
+              <div
+                class="tab-pane fade"
+                id="taskHistory"
+                role="tabpanel"
+                aria-labelledby="history-tab"
+              >
+                <TaskHistory
+                  :taskHistoryList="taskHistoryList"
+                  :applicationId="task.applicationId"
+                />
+              </div>
+              <div
+                class="tab-pane fade"
+                id="diagramContainer"
+                role="tabpanel"
+                aria-labelledby="diagram-tab"
+              >
+                <div
+                  class="diagram-full-screen"
+                  id="canvas"
+                ></div>
+              </div>
             </div>
           </div>
         </div>
-        <b-col v-else>
-          <b-row class="cft-not-selected mt-2 ml-1 row">
-            <i
-              class="fa fa-exclamation-circle-fill"
-              variant="secondary"
-              scale="1"
-            ></i>
-            <p>Select a task in the list.</p>
-          </b-row>
-        </b-col>
+        <div
+          class="d-flex w-100 align-items-center justify-content-center task-details-empty"
+          v-else
+        >
+          <i class="far fa-exclamation-circle"></i>
+          <h4 class="mt-0 mx-2">No task selected.</h4>
+        </div>
       </div>
     </template>
     <div v-else>
@@ -1175,7 +1215,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 </script>
 
 <style lang="scss" scoped>
-.task-details {
+.task-details-empty {
+  background: #fff;
+  margin-left: 4px;
+}
+.task-details-container {
   background: #fff;
   margin-left: 4px;
   .task-title {
@@ -1183,6 +1227,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     h3 {
       color: #fff;
     }
+  }
+  .task-details {
+    height: calc(calc(100vh - 124px) - 108px);
+    overflow-y: auto;
   }
   .task-date-picker {
     .input-group {
@@ -1243,6 +1291,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       &:hover {
         background: #ceeaf1;
       }
+    }
+  }
+  .form-tab-content {
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.33;
     }
   }
 }

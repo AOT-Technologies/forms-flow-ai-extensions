@@ -70,7 +70,7 @@
       />
     </template>
     <div
-      class="d-flex justify-content-center align-items-center p-4"
+      class="d-flex justify-content-center align-items-center p-4 empty-task-list"
       v-else
     >
       <i class="far fa-exclamation-circle"></i>
@@ -235,6 +235,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
 </script>
 
 <style lang="scss" scoped>
+.empty-task-list{
+  height: calc(calc(100vh - 124px) - 108px);
+}
 .task-list-container {
   background: #fff;
   padding: .5rem 0;
