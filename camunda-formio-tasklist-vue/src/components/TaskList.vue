@@ -51,7 +51,10 @@
           </div>
           <template v-else-if="getFormsFlowTaskId && task">
             <ExpandContract />
-            <div class="bg-primary task-title" ref="taskTitleRef">
+            <div
+              class="bg-primary task-title"
+              ref="taskTitleRef"
+            >
               <h3
                 class="m-0"
                 data-bs-toggle="tooltip"
@@ -112,15 +115,7 @@
                           @search="onUserSearch"
                           class="select-assignee"
                         />
-                        <button
-                          class="btn task-icon-btn btn-light mx-1"
-                          @click="onSetassignee"
-                          data-bs-toggle="tooltip"
-                          title="Set assignee"
-                        >
-                          <i class="fa fa-check-circle-o fa-lg" />
-                        </button>
-                        <div class="dropdown assignee-search-filter">
+                        <div class="dropdown assignee-search-filter mx-2">
                           <button
                             class="btn btn-secondary dropdown-toggle"
                             type="button"
@@ -144,6 +139,14 @@
                             </li>
                           </ul>
                         </div>
+                        <button
+                          class="btn task-icon-btn btn-light"
+                          @click="onSetassignee"
+                          data-bs-toggle="tooltip"
+                          title="Set assignee"
+                        >
+                          <i class="fa fa-check-circle-o fa-lg" />
+                        </button>
                       </div>
                       <template v-else>
                         <div class="assignee-name">{{ task.assignee }}</div>
@@ -1114,7 +1117,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   updated() {
     const titleHeight = (this.$refs.taskTitleRef as any)?.offsetHeight || 0;
-    this.taskScrollableHeight = `${this.containerHeight - titleHeight}px`;
+    this.taskScrollableHeight = `${this.containerHeight - (titleHeight + 1)}px`;
   }
 
   async mounted() {
@@ -1323,6 +1326,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     .select-assignee {
       width: 100%;
       min-width: 200px;
+      height: 40px;
     }
     .assignee-search-filter {
       .dropdown-menu {

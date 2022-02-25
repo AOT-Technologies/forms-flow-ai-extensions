@@ -5,23 +5,23 @@
       @update-task-list="onSearchUpdateTasklistResult"
     />
     <div
-      v-if="taskLoading"
-      class="d-flex justify-content-center text-primary"
-    >
-      <div
-        class="spinner-border"
-        role="status"
-      >
-        <span class="sr-only">Loading...</span>
-      </div>
-    </div>
-    <template v-else-if="tasks && tasks.length">
-      <div
-        class="list-group"
-        :style="{
+      class="list-group"
+      :style="{
           height: listHeight
         }"
+    >
+      <div
+        v-if="taskLoading"
+        class="d-flex justify-content-center text-primary"
       >
+        <div
+          class="spinner-border"
+          role="status"
+        >
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      <template v-else-if="tasks && tasks.length">
         <div
           v-for="(task, idx) in tasks"
           :key="task.id"
@@ -80,26 +80,25 @@
             >Follow up in {{ timedifference(task.followUp) }}</div>
           </div>
         </div>
+      </template>
+      <div
+        v-else
+        class="d-flex justify-content-center align-items-center py-5 mt-5"
+      >
+        <i class="far fa-exclamation-circle"></i>
+        <h4 class="mt-0 mx-2">No tasks found in the list.</h4>
       </div>
-      <Pagination
-        ref="taskListPaginationRef"
-        class="py-2 px-3 task-list-pagination"
-        :perPage="perPage"
-        :totalRecords="getFormsFlowTaskLength"
-        @go-to-page="onPageChange"
-      />
-    </template>
-    <div
-      v-else
-      class="d-flex justify-content-center align-items-center px-4"
-      :style="{
-        height: listHeight
-      }"
-    >
-      <i class="far fa-exclamation-circle"></i>
-      <h4 class="mt-0 mx-2">No tasks found in the list.</h4>
     </div>
+    <Pagination
+      v-if="tasks && tasks.length"
+      ref="taskListPaginationRef"
+      class="py-2 px-3 task-list-pagination"
+      :perPage="perPage"
+      :totalRecords="getFormsFlowTaskLength"
+      @go-to-page="onPageChange"
+    />
   </div>
+
 </template>
 
 <script lang="ts">
@@ -229,6 +228,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     const searchHeight = (this.$refs.taskListSearchRef as any)?.$el?.offsetHeight || 0;
     const paginationHeight = (this.$refs.taskListPaginationRef as any)?.$el?.offsetHeight || 0;
     this.listHeight = `${this.containerHeight - (searchHeight + paginationHeight)}px`;
+    console.log(this.listHeight, searchHeight, paginationHeight);
   }
 
   mounted() {
