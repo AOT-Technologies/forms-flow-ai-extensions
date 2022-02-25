@@ -6,7 +6,7 @@
 
 - View submission history issues fixed 
 - Add loaders for fetching TaskList and TaskDetail page
-- Change Task assignee with filter bug fixed
+- Fix Claim Task assignee search filter bug
 - Updated with Formio Url (BaseUrl, ProjectUrl) 
 
 ## v1.0.18, 2022-01-21
