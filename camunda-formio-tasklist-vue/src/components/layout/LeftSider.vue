@@ -1,7 +1,18 @@
 <template>
   <div class="task-list-container">
     <TaskListSearch @update-task-list="onSearchUpdateTasklistResult" />
-    <template v-if="tasks && tasks.length">
+    <div
+      v-if="taskLoading"
+      class="d-flex justify-content-center text-primary"
+    >
+      <div
+        class="spinner-border"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <template v-else-if="tasks && tasks.length">
       <div class="list-group">
         <div
           v-for="(task, idx) in tasks"
@@ -69,14 +80,14 @@
         @go-to-page="onPageChange"
       />
     </template>
-    <div
-      class="d-flex justify-content-center align-items-center p-4 empty-task-list"
-      v-else
-    >
-      <i class="far fa-exclamation-circle"></i>
-      <h4 class="mt-0 mx-2">No tasks found in the list.</h4>
-    </div>
-  </div>
+<div
+  class="d-flex justify-content-center align-items-center p-4 empty-task-list"
+  v-else
+>
+  <i class="far fa-exclamation-circle"></i>
+  <h4 class="mt-0 mx-2">No tasks found in the list.</h4>
+</div>
+</div>
 </template>
 
 <script lang="ts">
@@ -110,6 +121,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   @Prop() private perPage!: number;
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
+  @Prop() private taskLoading!: boolean;
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -235,12 +247,12 @@ export default class LeftSider extends Mixins(BaseMixin) {
 </script>
 
 <style lang="scss" scoped>
-.empty-task-list{
+.empty-task-list {
   height: calc(calc(100vh - 166px) - 68px);
 }
 .task-list-container {
   background: #fff;
-  padding: .5rem 0;
+  padding: 0.5rem 0;
   .list-group {
     height: calc(calc(100vh - 166px) - 118px); // TODO: replace
     overflow-y: auto;
