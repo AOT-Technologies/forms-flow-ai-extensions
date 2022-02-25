@@ -1022,7 +1022,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     );
     this.filterList = sortByPriorityList(filterListResult.data);
-    console.log(this.filterList);
 
     if(this.taskDefaultFilterListNames.length > 0){
       this.filterList = this.filterList.filter(FilterList => { 
@@ -1030,7 +1029,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       });
     }
 
-    console.log(this.filterList);
     if(this.filterList.length>0){
       this.selectedfilterId = this.taskDefaultFilterListNames.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER);
     }
