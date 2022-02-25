@@ -5,7 +5,7 @@
 #### Modified
 
 - View submission history issues fixed 
-- Updated with Loading on fetching the data
+- Add loaders for fetching TaskList and TaskDetail page
 - Change Task assignee with filter bug fixed
 - Updated with Formio Url (BaseUrl, ProjectUrl) 
 
