@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column px-4 py-2">
+  <div class="d-flex flex-column px-4">
     <template v-if="isUserAllowed">
       <!-- <Header
         v-if="token && bpmApiUrl && maximize"
@@ -50,11 +50,11 @@
           </div>
           <div class="d-flex flex-column w-100 px-4 py-2 task-details">
             <h4
-              class="my-2"
+              class="mt-2 mb-3"
               data-bs-toggle="tooltip"
               title="Process Name"
             >{{ task.taskProcess }}</h4>
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between mb-1">
               <p
                 data-bs-toggle="tooltip"
                 :title="timedifference(task.created)"
@@ -66,7 +66,7 @@
               >Application ID <strong>#{{ task.applicationId }}</strong></p>
               <p></p>
             </div>
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between mb-2">
               <section class="task-assignee">
                 <label class="fw-bold">Task assignee</label>
                 <button
@@ -88,7 +88,7 @@
                   <template v-if="task.assignee">
                     <div
                       v-if="editAssignee"
-                      class="d-flex w-100"
+                      class="d-flex w-100 mt-1"
                     >
                       <v-select
                         :label="selectSearchType"
@@ -320,7 +320,7 @@
               </section>
             </div>
             <ul
-              class="nav nav-tabs mt-3"
+              class="nav nav-tabs mt-3 task-tabs"
               role="tablist"
             >
               <li
@@ -370,7 +370,7 @@
                 >Diagram</button>
               </li>
             </ul>
-            <div class="tab-content py-3">
+            <div class="tab-content py-3 task-tab-content">
               <!-- Form tab content -->
               <div
                 class="tab-pane fade show active form-tab-content"
@@ -1229,7 +1229,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
   .task-details {
-    height: calc(calc(100vh - 124px) - 108px);
+    height: calc(calc(100vh - 166px) - 68px);
     overflow-y: auto;
   }
   .task-date-picker {
@@ -1254,6 +1254,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     flex: 0.5;
     .select-assignee {
       width: 100%;
+      min-width: 200px;
     }
     .assignee-search-filter {
       .dropdown-menu {
@@ -1293,10 +1294,24 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     }
   }
-  .form-tab-content {
-    &.disabled {
-      pointer-events: none;
-      opacity: 0.33;
+  .task-tabs {
+    .nav-link {
+      height: 40px;
+    }
+    .active {
+      background: var(--bs-primary);
+      color: #fff;
+      font-weight: 600;
+    }
+  }
+  .task-tab-content {
+    background: #eee;
+    padding: 1rem;
+    .form-tab-content {
+      &.disabled {
+        pointer-events: none;
+        opacity: 0.33;
+      }
     }
   }
 }

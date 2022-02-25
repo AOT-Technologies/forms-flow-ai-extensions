@@ -236,13 +236,13 @@ export default class LeftSider extends Mixins(BaseMixin) {
 
 <style lang="scss" scoped>
 .empty-task-list{
-  height: calc(calc(100vh - 124px) - 108px);
+  height: calc(calc(100vh - 166px) - 68px);
 }
 .task-list-container {
   background: #fff;
   padding: .5rem 0;
   .list-group {
-    height: calc(calc(100vh - 168px) - 108px); // TODO: replace
+    height: calc(calc(100vh - 166px) - 118px); // TODO: replace
     overflow-y: auto;
     .list-group-item {
       padding: 0.75rem 1rem;

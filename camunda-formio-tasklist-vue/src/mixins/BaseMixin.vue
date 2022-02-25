@@ -1,9 +1,9 @@
 <script lang="ts">
 import {
-  Component, Prop, Vue, Watch 
+  Component, Prop, Vue, Watch
 } from "vue-property-decorator";
 import {
-  engine 
+  engine
 } from "../services";
 
 @Component({
@@ -20,15 +20,15 @@ export default class BaseMixin extends Vue {
   @Prop() protected readonly formIOUserRoles!: string;
   @Prop() protected readonly formIOJwtSecret!: string;
   @Prop({
-    default: "formflowai" 
+    default: "formflowai"
   }) public webSocketEncryptkey!: string;
 
   @Watch("token")
-  ontokenChange (newVal: string) {
+  ontokenChange(newVal: string) {
     localStorage.setItem("authToken", newVal);
   }
 
-  checkProps () {
+  checkProps() {
     if (!this.bpmApiUrl || this.bpmApiUrl === "") {
       console.warn("bpmApiUrl prop not Passed");
     }
@@ -54,7 +54,7 @@ export default class BaseMixin extends Vue {
       console.warn("WEBSOCKET_ENCRYPT_KEY prop not passed");
     }
 
-    const decodeToken = JSON.parse(atob(this.token.split(".")[1]));
+    const decodeToken = JSON.parse(Buffer.from(this.token.split(".")[1], 'base64').toString('utf8'));
     localStorage.setItem("bpmApiUrl", `${this.bpmApiUrl}/${engine}`);
     localStorage.setItem("authToken", this.token);
     const currentUrl = `${window.location.protocol}//${window.location.host}`;
