@@ -79,7 +79,6 @@ export default class Pagination extends Vue {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
   .page-size {
     display: flex;
     align-items: center;

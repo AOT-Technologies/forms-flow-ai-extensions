@@ -51,7 +51,7 @@
           </div>
           <template v-else-if="getFormsFlowTaskId && task">
             <ExpandContract />
-            <div class="bg-primary task-title">
+            <div class="bg-primary task-title" ref="taskTitleRef">
               <h3
                 class="m-0"
                 data-bs-toggle="tooltip"
@@ -61,27 +61,25 @@
             <div
               class="d-flex flex-column w-100 px-4 py-2 task-details"
               :style="{
-                height: `calc(${containerHeight}px - 68px)`
+                height: taskScrollableHeight
               }"
             >
-              <h4
-                class="mt-2 mb-3"
-                data-bs-toggle="tooltip"
-                title="Process Name"
-              >{{ task.taskProcess }}</h4>
-              <div class="d-flex justify-content-between mb-1">
-                <p
+              <div class="d-flex mb-1">
+                <h4
+                  class="mt-2 mb-3"
                   data-bs-toggle="tooltip"
-                  :title="timedifference(task.created)"
-                ><label class="fw-bold">Created date:</label> {{ getExactDate(task.created) }}</p>
+                  title="Process Name"
+                >{{ task.taskProcess }}
+                </h4>
                 <p
+                  class="mt-2 mb-3"
                   v-if="task.applicationId"
                   data-bs-toggle="tooltip"
                   title="Application Id"
-                >Application ID <strong>#{{ task.applicationId }}</strong></p>
-                <p></p>
+                > <span class="mx-4">|</span>Application ID <strong>#{{ task.applicationId }}</strong>
+                </p>
               </div>
-              <div class="d-flex justify-content-between mb-2">
+              <div class="d-flex justify-content-between mb-4">
                 <section class="task-assignee">
                   <label class="fw-bold">Task assignee</label>
                   <button
@@ -172,7 +170,7 @@
                   </div>
                 </section>
                 <section
-                  class="task-groups"
+                  class="task-groups mx-4"
                   data-bs-toggle="tooltip"
                   title="Click to modify groups"
                 >
@@ -259,6 +257,9 @@
                     </div>
                   </div>
                 </section>
+                <section></section>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
                 <section class="task-date-picker">
                   <label class="fw-bold mb-1">Follow up</label>
                   <div
@@ -333,6 +334,14 @@
                     </template>
                   </v-date-picker>
                 </section>
+                <section>
+                  <label class="fw-bold mb-1">Created</label>
+                  <p
+                    data-bs-toggle="tooltip"
+                    :title="getExactDate(task.created)"
+                  >{{ timedifference(task.created) }}</p>
+                </section>
+                <section></section>
               </div>
               <ul
                 class="nav nav-tabs mt-3 task-tabs"
@@ -448,7 +457,7 @@
             v-else
             class="d-flex align-items-center justify-content-center task-details-empty"
             :style="{
-              height: `calc(${containerHeight}px - 68px)`
+              height: taskScrollableHeight
             }"
           >
             <i class="far fa-exclamation-circle"></i>
@@ -611,6 +620,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
   private isUserAllowed: boolean = false
   private containerHeight: number = 0;
+  private taskScrollableHeight: string = '100px';
 
   created() {
     Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"]'))
@@ -1102,6 +1112,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
+  updated() {
+    const titleHeight = (this.$refs.taskTitleRef as any)?.offsetHeight || 0;
+    this.taskScrollableHeight = `${this.containerHeight - titleHeight}px`;
+  }
+
   async mounted() {
     this.containerHeight = (this.$refs.taskListContainerRef as any).clientHeight;
     Formio.setBaseUrl(this.formIOApiUrl);
@@ -1272,8 +1287,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 .task-details-container {
   background: #fff;
   margin-left: 4px;
+  border-radius: 0.5rem;
   .task-title {
-    padding: 1.25rem 1.5rem;
+    padding: 1rem 1.5rem;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
     h3 {
       color: #fff;
     }
@@ -1323,7 +1341,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   .task-groups {
     .group-name {
       white-space: normal;
-      width: 150px;
     }
   }
   .task-groups-modal {

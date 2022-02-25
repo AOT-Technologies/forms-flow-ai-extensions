@@ -7,13 +7,13 @@
     <i
       v-if="maximize"
       class="fa fa-chevron-left"
-      v-b-tooltip.hover
+      data-bs-toggle="tooltip"
       title="Click to expand the form"
     ></i>
     <i
       v-else
       class="fa fa-chevron-right"
-      v-b-tooltip.hover
+      data-bs-toggle="tooltip"
       title="Click to see the task list"
     ></i>
   </button>
@@ -25,7 +25,8 @@ import {
 } from "vue-property-decorator";
 import TaskListMixin from "../../mixins/TaskListMixin.vue";
 
-@Component
+@Component({
+})
 export default class ExpandContract extends Mixins(TaskListMixin) {
   clickMaxi() {
     this.maximize = !this.maximize;

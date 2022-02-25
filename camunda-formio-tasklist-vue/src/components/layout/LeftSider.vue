@@ -1,6 +1,9 @@
 <template>
   <div class="task-list-container">
-    <TaskListSearch @update-task-list="onSearchUpdateTasklistResult" />
+    <TaskListSearch
+      ref="taskListSearchRef"
+      @update-task-list="onSearchUpdateTasklistResult"
+    />
     <div
       v-if="taskLoading"
       class="d-flex justify-content-center text-primary"
@@ -16,7 +19,7 @@
       <div
         class="list-group"
         :style="{
-          height: `calc(${containerHeight}px - 118px)`
+          height: listHeight
         }"
       >
         <div
@@ -79,7 +82,8 @@
         </div>
       </div>
       <Pagination
-        class="mt-2 px-3"
+        ref="taskListPaginationRef"
+        class="py-2 px-3 task-list-pagination"
         :perPage="perPage"
         :totalRecords="getFormsFlowTaskLength"
         @go-to-page="onPageChange"
@@ -87,9 +91,9 @@
     </template>
     <div
       v-else
-      class="d-flex justify-content-center align-items-center p-4"
+      class="d-flex justify-content-center align-items-center px-4"
       :style="{
-        height: `calc(${containerHeight}px - 68px)`
+        height: listHeight
       }"
     >
       <i class="far fa-exclamation-circle"></i>
@@ -153,6 +157,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   private getProcessDefinitions: Array<any> = [];
   private processDefinitionId = "";
   private currentPage = 1;
+  private listHeight: string = '100px';
 
   // @Watch("currentPage")
   onPageChange(newVal: number) {
@@ -220,6 +225,12 @@ export default class LeftSider extends Mixins(BaseMixin) {
     }
   }
 
+  updated() {
+    const searchHeight = (this.$refs.taskListSearchRef as any)?.$el?.offsetHeight || 0;
+    const paginationHeight = (this.$refs.taskListPaginationRef as any)?.$el?.offsetHeight || 0;
+    this.listHeight = `${this.containerHeight - (searchHeight + paginationHeight)}px`;
+  }
+
   mounted() {
     this.$root.$on("call-pagination", () => {
       this.resetPaginationStore();
@@ -260,10 +271,11 @@ export default class LeftSider extends Mixins(BaseMixin) {
 <style lang="scss" scoped>
 .task-list-container {
   background: #fff;
-  padding: 0.5rem 0;
+  border-radius: 0.5rem;
   .list-group {
     height: 100px;
     overflow-y: auto;
+    border-radius: 0;
     .list-group-item {
       padding: 0.75rem 1rem;
       &.task-selected {
@@ -271,7 +283,14 @@ export default class LeftSider extends Mixins(BaseMixin) {
         border-left: 4px solid #2185d0;
         padding-left: 0.75rem;
       }
+      &:first-child,
+      &:last-child {
+        border-radius: 0;
+      }
     }
+  }
+  .task-list-pagination {
+    border-top: 1px solid #eee;
   }
   .description {
     opacity: 0.6;

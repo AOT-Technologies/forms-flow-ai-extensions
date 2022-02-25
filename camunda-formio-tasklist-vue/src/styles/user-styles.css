@@ -115,3 +115,12 @@ aside li.active>a {
 .field-required:after {
   z-index: 1 !important;
 }
+
+.pagination-sm .page-item:first-child .page-link {
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+.pagination-sm .page-item:last-child .page-link {
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
