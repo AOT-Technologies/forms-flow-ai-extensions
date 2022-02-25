@@ -13,7 +13,12 @@
       </div>
     </div>
     <template v-else-if="tasks && tasks.length">
-      <div class="list-group">
+      <div
+        class="list-group"
+        :style="{
+          height: `calc(${containerHeight}px - 118px)`
+        }"
+      >
         <div
           v-for="(task, idx) in tasks"
           :key="task.id"
@@ -80,14 +85,17 @@
         @go-to-page="onPageChange"
       />
     </template>
-<div
-  class="d-flex justify-content-center align-items-center p-4 empty-task-list"
-  v-else
->
-  <i class="far fa-exclamation-circle"></i>
-  <h4 class="mt-0 mx-2">No tasks found in the list.</h4>
-</div>
-</div>
+    <div
+      v-else
+      class="d-flex justify-content-center align-items-center p-4"
+      :style="{
+        height: `calc(${containerHeight}px - 68px)`
+      }"
+    >
+      <i class="far fa-exclamation-circle"></i>
+      <h4 class="mt-0 mx-2">No tasks found in the list.</h4>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -122,6 +130,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
   @Prop() private taskLoading!: boolean;
+  @Prop({
+    default: 0
+  }) private containerHeight!: number;
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -247,14 +258,11 @@ export default class LeftSider extends Mixins(BaseMixin) {
 </script>
 
 <style lang="scss" scoped>
-.empty-task-list {
-  height: calc(calc(100vh - 166px) - 68px);
-}
 .task-list-container {
   background: #fff;
   padding: 0.5rem 0;
   .list-group {
-    height: calc(calc(100vh - 166px) - 118px); // TODO: replace
+    height: 100px;
     overflow-y: auto;
     .list-group-item {
       padding: 0.75rem 1rem;

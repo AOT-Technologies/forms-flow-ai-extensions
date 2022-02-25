@@ -1,8 +1,11 @@
 <template>
-  <div class="d-flex flex-column px-4">
+  <div
+    class="d-flex flex-column px-4"
+    ref="taskListContainerRef"
+  >
     <template v-if="isUserAllowed">
       <Header
-        v-if="token && bpmApiUrl && maximize"
+        v-if="token && bpmApiUrl && maximize && showPresetSortFilters"
         :token="token"
         :bpmApiUrl="bpmApiUrl"
         :filterList="filterList"
@@ -15,9 +18,6 @@
       <div class="d-flex">
         <div
           class="col-3"
-          :class="
-          containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'
-        "
           v-if="maximize"
         >
           <LeftSider
@@ -31,14 +31,12 @@
             :perPage="perPage"
             :selectedfilterId="selectedfilterId"
             :payload="payload"
+            :containerHeight=containerHeight
           />
         </div>
         <div
           class="col-9 task-details-container"
-          :class="{
-            'cft-height': !containerHeight,
-            'col-12 mx-0': !maximize,
-            }"
+          :class="{ 'col-12 mx-0': !maximize }"
         >
           <div
             v-if="singleTaskLoading"
@@ -51,9 +49,7 @@
               <span class="sr-only">Loading...</span>
             </div>
           </div>
-          <template
-            v-else-if="getFormsFlowTaskId && task"
-          >
+          <template v-else-if="getFormsFlowTaskId && task">
             <ExpandContract />
             <div class="bg-primary task-title">
               <h3
@@ -62,7 +58,12 @@
                 title="Task Name"
               >{{ task.name }}</h3>
             </div>
-            <div class="d-flex flex-column w-100 px-4 py-2 task-details">
+            <div
+              class="d-flex flex-column w-100 px-4 py-2 task-details"
+              :style="{
+                height: `calc(${containerHeight}px - 68px)`
+              }"
+            >
               <h4
                 class="mt-2 mb-3"
                 data-bs-toggle="tooltip"
@@ -434,22 +435,24 @@
                     >
                       <span class="sr-only">Loading...</span>
                     </div>
-                    <div
-                      class="diagram-full-screen"
-                      id="canvas"
-                    ></div>
                   </div>
-
+                  <div
+                    class="diagram-full-screen"
+                    id="canvas"
+                  ></div>
                 </div>
               </div>
             </div>
           </template>
           <div
-            class="d-flex w-100 align-items-center justify-content-center task-details-empty"
             v-else
+            class="d-flex align-items-center justify-content-center task-details-empty"
+            :style="{
+              height: `calc(${containerHeight}px - 68px)`
+            }"
           >
             <i class="far fa-exclamation-circle"></i>
-            <h4 class="mt-0 mx-2">No task selected.</h4>
+            <h4 class="mt-0 mx-2">Please select a task from the list</h4>
           </div>
         </div>
       </div>
@@ -543,15 +546,18 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
-  @Prop() private containerHeight!: string;
   @Prop({
     default: "created",
   })
+  public taskSortBy!: string;
   @Prop({
     default: "desc",
   })
-  public taskSortBy!: string;
   public taskSortOrder!: string;
+  @Prop({
+    default: true
+  })
+  private showPresetSortFilters!: boolean;
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -604,6 +610,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private activeUserSearchindex = 1;
   private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
   private isUserAllowed: boolean = false
+  private containerHeight: number = 0;
 
   created() {
     Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"]'))
@@ -850,7 +857,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.$root.$emit(customEvent.type, {
           customEvent
         });
-        break;
     }
   };
 
@@ -1097,6 +1103,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async mounted() {
+    this.containerHeight = (this.$refs.taskListContainerRef as any).clientHeight;
     Formio.setBaseUrl(this.formIOApiUrl);
     Formio.setProjectUrl(this.formIOApiUrl);
     this.isUserAllowed = isAllowedUser(this.formIOReviewer, this.formIOUserRoles);
@@ -1272,7 +1279,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
   .task-details {
-    height: calc(calc(100vh - 166px) - 68px);
+    height: 100px;
     overflow-y: auto;
   }
   .task-date-picker {
@@ -1348,7 +1355,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
   .task-tab-content {
-    background: #eee;
+    background: #fafafa;
     padding: 1rem;
     .form-tab-content {
       &.disabled {
