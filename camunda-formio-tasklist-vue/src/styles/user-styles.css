@@ -124,3 +124,15 @@ aside li.active>a {
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
 }
+
+.v-select .vs__dropdown-toggle {
+  height: 40px;
+}
+
+.v-select .vs__dropdown-toggle .vs__selected-options {
+  white-space: nowrap;
+}
+
+.v-select .vs__dropdown-toggle .vs__selected-options .vs__selected {
+  margin-top: 6px;
+}

@@ -225,10 +225,14 @@ export default class LeftSider extends Mixins(BaseMixin) {
   }
 
   updated() {
+    this.calculateViewHeights();
+  }
+
+  /*** to calculate the height and handling scroll views accordingly */
+  calculateViewHeights() {
     const searchHeight = (this.$refs.taskListSearchRef as any)?.$el?.offsetHeight || 0;
     const paginationHeight = (this.$refs.taskListPaginationRef as any)?.$el?.offsetHeight || 0;
     this.listHeight = `${this.containerHeight - (searchHeight + paginationHeight)}px`;
-    console.log(this.listHeight, searchHeight, paginationHeight);
   }
 
   mounted() {
@@ -278,6 +282,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     border-radius: 0;
     .list-group-item {
       padding: 0.75rem 1rem;
+      cursor: pointer;
       &.task-selected {
         background: #eff8ff;
         border-left: 4px solid #2185d0;

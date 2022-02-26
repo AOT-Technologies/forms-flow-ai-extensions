@@ -1,10 +1,11 @@
 <template>
   <div
-    class="d-flex flex-column px-4"
+    class="d-flex flex-column"
     ref="taskListContainerRef"
   >
     <template v-if="isUserAllowed">
       <Header
+        ref="presetSortFiltersRef"
         v-if="token && bpmApiUrl && maximize && showPresetSortFilters"
         :token="token"
         :bpmApiUrl="bpmApiUrl"
@@ -283,8 +284,9 @@
                     </button>
                   </div>
                   <v-date-picker
-                    v-model="task.followUp"
                     v-else
+                    v-model="task.followUp"
+                    :popover="{ visibility: 'click' }"
                   >
                     <template v-slot="{ inputValue, inputEvents }">
                       <div class="input-group">
@@ -320,8 +322,9 @@
                     </button>
                   </div>
                   <v-date-picker
-                    v-model="task.due"
                     v-else
+                    v-model="task.due"
+                    :popover="{ visibility: 'click' }"
                   >
                     <template v-slot="{ inputValue, inputEvents }">
                       <div class="input-group">
@@ -624,6 +627,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private isUserAllowed: boolean = false
   private containerHeight: number = 0;
   private taskScrollableHeight: string = '100px';
+  private isHeightViewUpdated: boolean = false;
 
   created() {
     Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"]'))
@@ -1116,7 +1120,17 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   updated() {
+    this.calculateViewHeights();
+  }
+
+  /*** to calculate the height and handling scroll views accordingly */
+  calculateViewHeights() {
+    const headerHeight = (this.$refs.presetSortFiltersRef as any)?.$el?.offsetHeight || 0;
     const titleHeight = (this.$refs.taskTitleRef as any)?.offsetHeight || 0;
+    if (!this.isHeightViewUpdated && headerHeight) {
+      this.containerHeight = this.containerHeight - headerHeight;
+      this.isHeightViewUpdated = true;
+    }
     this.taskScrollableHeight = `${this.containerHeight - (titleHeight + 1)}px`;
   }
 
@@ -1325,7 +1339,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     flex: 0.5;
     .select-assignee {
       width: 100%;
-      min-width: 200px;
+      min-width: 180px;
       height: 40px;
     }
     .assignee-search-filter {
