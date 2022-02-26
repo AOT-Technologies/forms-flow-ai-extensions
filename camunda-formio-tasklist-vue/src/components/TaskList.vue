@@ -5,6 +5,7 @@
   >
     <template v-if="isUserAllowed">
       <Header
+        class="mb-2"
         ref="presetSortFiltersRef"
         v-if="token && bpmApiUrl && maximize && showPresetSortFilters"
         :token="token"
@@ -1125,7 +1126,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   /*** to calculate the height and handling scroll views accordingly */
   calculateViewHeights() {
-    const headerHeight = (this.$refs.presetSortFiltersRef as any)?.$el?.offsetHeight || 0;
+    // add 8px to the headerHeight since the margin mb-2 applied to it
+    const headerHeight = ((this.$refs.presetSortFiltersRef as any)?.$el?.offsetHeight || 0) + 8;
     const titleHeight = (this.$refs.taskTitleRef as any)?.offsetHeight || 0;
     if (!this.isHeightViewUpdated && headerHeight) {
       this.containerHeight = this.containerHeight - headerHeight;
@@ -1341,13 +1343,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       width: 100%;
       min-width: 180px;
       height: 40px;
-    }
-    .assignee-search-filter {
-      .dropdown-menu {
-        .dropdown-item {
-          padding: 0.5rem 1rem;
-        }
-      }
     }
     .assignee-name {
       white-space: pre;

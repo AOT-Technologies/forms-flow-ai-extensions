@@ -1,14 +1,15 @@
 <template>
   <div class="cftf-form-conatiner cft-text-font">
-    <b-button
+    <button
+      class="btn btn-primary"
       variant="primary"
       v-b-modal.modal-multi-1
       @click="formListItems"
     >
 
-      <i class="fa fa-wpforms"></i>
+      <i class="fa fa-wpforms mx-1"></i>
       Forms
-    </b-button>
+    </button>
     <b-modal
       ref="modal-1"
       id="modal-multi-1"

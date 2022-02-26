@@ -9,8 +9,8 @@ button, h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary {
-  background-color: #014283;
-  border-color: #00152a;
+  background-color: var(--bs-primary);
+  min-width: 144px;
 }
 
 .btn-primary.hover,
@@ -135,4 +135,11 @@ aside li.active>a {
 
 .v-select .vs__dropdown-toggle .vs__selected-options .vs__selected {
   margin-top: 6px;
+}
+
+.dropdown .dropdown-menu .dropdown-item {
+  padding: 0.75rem 1rem !important;
+}
+.dropdown .nav-link {
+  color: var(--bs-body-color);
 }
