@@ -1,5 +1,14 @@
 # Changes for camunda-formio-tasklist-vue
 
+## v1.0.19, 2022-02-25
+
+#### Modified
+
+- View submission history issues fixed 
+- Add loaders for fetching TaskList and TaskDetail page
+- Fix Claim Task assignee search filter bug
+- Updated with Formio Url (BaseUrl, ProjectUrl) 
+
 ## v1.0.18, 2022-01-21
 
 #### Modified
