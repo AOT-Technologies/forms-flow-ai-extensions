@@ -29,20 +29,40 @@
           </li>
         </ul>
       </div>
-      <!-- <div>
-        <div class="badge rounded-pill bg-primary">{{ getFormsFlowTaskLength }}</div>
-      </div> -->
     </div>
     <div v-if="isVariableTypeInSelectedSearchQuery">
-      <div class="cft-name-value-container">For Variables, ignore case of
-        <b-form-checkbox
-          v-model="getVariableNameIgnoreCase"
-          @change="updateNameCase"
-        >name</b-form-checkbox>
-        <b-form-checkbox
-          v-model="getVariableValueIgnoreCase"
-          @change="updateValueCase"
-        >value.</b-form-checkbox>
+      <div class="search-query-extent mx-2">
+        For Variables, ignore case of
+        <div class="form-check mx-2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            v-model="getVariableNameIgnoreCase"
+            @change="updateNameCase"
+            id="filterNameCheckbox"
+          >
+          <label
+            class="form-check-label"
+            for="filterNameCheckbox"
+          >
+            name
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            v-model="getVariableValueIgnoreCase"
+            @change="updateValueCase"
+            id="filterValueCheckbox"
+          >
+          <label
+            class="form-check-label"
+            for="filterValueCheckbox"
+          >
+            value.
+          </label>
+        </div>
       </div>
     </div>
   </div>
@@ -117,5 +137,11 @@ export default class TaskListAddSearchIgnoreCase extends Vue {
   .dropdown-item {
     padding: 0.5rem 0.75rem;
   }
+}
+.search-query-extent {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
 }
 </style>

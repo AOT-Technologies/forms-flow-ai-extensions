@@ -4,7 +4,7 @@
       <div v-if="selectedSearchQueries.length">
         <TaskListSearchType />
         <b-col
-          class="cftf-search-item-box mr-2"
+          class="cftf-search-item-box mt-2"
           v-for="(query, index) in selectedSearchQueries"
           :key="query.label + index"
         >

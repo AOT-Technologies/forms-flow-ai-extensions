@@ -1,18 +1,21 @@
 <template>
   <div class="cft-search-criteria">
-    <b-button squared variant="primary" @click="changeQueryType">
+    <button
+      class="btn btn-outline-primary"
+      @click="changeQueryType"
+    >
       {{ getFormsFlowTaskSearchType }}
-    </b-button>
+    </button>
     <span class="cft-search-item-criteria"> of the criteria are met.</span>
   </div>
 </template>
 
 <script lang="ts">
 import {
-  Component, Vue 
+  Component, Vue
 } from "vue-property-decorator";
 import {
-  namespace 
+  namespace
 } from "vuex-class";
 
 const serviceFlowModule = namespace("serviceFlowModule");
@@ -24,7 +27,7 @@ export default class TaskListSearchType extends Vue {
   @serviceFlowModule.Mutation("setFormsFlowTaskSearchType")
   public setFormsFlowTaskSearchType: any;
 
-  changeQueryType () {
+  changeQueryType() {
     this.setFormsFlowTaskSearchType();
     this.$root.$emit("call-updateTaskList", {
     });

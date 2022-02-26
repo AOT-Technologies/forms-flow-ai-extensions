@@ -156,7 +156,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   private getProcessDefinitions: Array<any> = [];
   private processDefinitionId = "";
   private currentPage = 1;
-  private listHeight: string = '100px';
+  private listHeight: string = '360px';
 
   // @Watch("currentPage")
   onPageChange(newVal: number) {
@@ -232,7 +232,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
   calculateViewHeights() {
     const searchHeight = (this.$refs.taskListSearchRef as any)?.$el?.offsetHeight || 0;
     const paginationHeight = (this.$refs.taskListPaginationRef as any)?.$el?.offsetHeight || 0;
-    this.listHeight = `${this.containerHeight - (searchHeight + paginationHeight)}px`;
+    if(this.containerHeight > 250) {
+      this.listHeight = `${this.containerHeight - (searchHeight + paginationHeight)}px`;
+    }
   }
 
   mounted() {
