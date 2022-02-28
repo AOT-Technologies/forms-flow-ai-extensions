@@ -467,7 +467,7 @@
               height: taskScrollableHeight
             }"
           >
-            <i class="far fa-exclamation-circle"></i>
+            <i class="fa fa-exclamation-circle"></i>
             <h4 class="mt-0 mx-2">Please select a task from the list</h4>
           </div>
         </div>
@@ -479,6 +479,27 @@
         role="alert"
       >
         You don't have access. Contact your administrator.
+      </div>
+    </div>
+    <div class="toast-container position-absolute bottom-0 end-0 py-5 px-4">
+      <div
+        class="toast align-items-center text-white bg-dark border-0"
+        role="alert"
+        ref="toastMsgRef"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="d-flex">
+          <div class="toast-body">
+            {{ toastMsgTxt }}
+          </div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
       </div>
     </div>
   </div>
@@ -523,6 +544,10 @@ import {
   UserPayload,
   UserSearchListLabelPayload,
 } from "../models";
+import bootstrap, {
+  Toast,
+  Tooltip
+} from 'bootstrap';
 import BpmnViewer from "bpmn-js";
 import DatePicker from "v-calendar/lib/components/date-picker.umd";
 import ExpandContract from "./addons/ExpandContract.vue";
@@ -535,9 +560,6 @@ import Header from "./layout/Header.vue";
 import LeftSider from "./layout/LeftSider.vue";
 import TaskHistory from "../components/addons/TaskHistory.vue";
 import TaskListMixin from "../mixins/TaskListMixin.vue";
-import {
-  Tooltip
-} from 'bootstrap';
 import moment from "moment";
 import {
   namespace
@@ -629,11 +651,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private containerHeight: number = 0;
   private taskScrollableHeight: string = '100px';
   private isHeightViewUpdated: boolean = false;
+  private toastMsg;
+  private toastMsgTxt: string = '';
 
   created() {
     Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"]'))
       .forEach(tooltipNode => new Tooltip(tooltipNode));
-
+    const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    toastElList.map(function (toastEl) {
+      return new bootstrap.Toast(toastEl);
+    });
   }
 
   checkforTaskID() {
@@ -1138,6 +1165,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   async mounted() {
     this.containerHeight = (this.$refs.taskListContainerRef as any).clientHeight;
+    this.toastMsg = new Toast(this.$refs?.toastMsgRef as any);
     Formio.setBaseUrl(this.formIOApiUrl);
     Formio.setProjectUrl(this.formIOApiUrl);
     this.isUserAllowed = isAllowedUser(this.formIOReviewer, this.formIOUserRoles);
@@ -1189,24 +1217,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
     }
-
     SocketIOService.connect(
       this.webSocketEncryptkey,
       (refreshedTaskId: string, eventName: string, error: string) => {
         // this.taskIdWebsocket = refreshedTaskId;
         if (error) {
-          this.$bvToast.toast(
-            `WebSocket is not connected which will cause
+          this.toastMsgTxt = `WebSocket is not connected which will cause
             some inconsistency. System is trying to reconnect,
             if you see this message for more than 10sec,
-            please refresh the page and try`,
-            {
-              title: "Websocket Alert",
-              autoHideDelay: 10000,
-              variant: "warning",
-              solid: true,
-            }
-          );
+            please refresh the page and try`;
+          this.toastMsg.show();
         }
 
         if (eventName === "complete") {
