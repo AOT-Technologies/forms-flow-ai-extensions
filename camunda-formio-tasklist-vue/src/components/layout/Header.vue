@@ -31,6 +31,7 @@
       </ul>
     </div>
     <FormListModal
+      v-if="showFormsButton"
       class="mx-1"
       :token="token"
       :bpmApiUrl="bpmApiUrl"
@@ -74,6 +75,7 @@ export default class Header extends Mixins(BaseMixin) {
   @Prop() private payload!: Payload;
   @Prop() private defaultTaskSortBy!: string
   @Prop() private defaultTaskSortOrder!: string
+  @Prop() private showFormsButton!: boolean
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;

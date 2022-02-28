@@ -16,6 +16,7 @@
         :payload="payload"
         :defaultTaskSortBy="taskSortBy"
         :defaultTaskSortOrder="taskSortOrder"
+        :showFormsButton="showFormsButton"
       />
       <div class="d-flex">
         <div
@@ -596,6 +597,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     default: true
   })
   private showPresetSortFilters!: boolean;
+  @Prop({
+    default: true
+  })
+  private showFormsButton!: boolean;
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;

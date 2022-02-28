@@ -8,11 +8,6 @@ button, h1, h2, h3, h4, h5, h6 {
   font-family: inherit !important;
 }
 
-.btn {
-  min-height: 40px;
-  border-radius: 6px;
-}
-
 .btn-primary {
   background-color: var(--bs-primary);
   min-width: 144px;
