@@ -297,7 +297,7 @@
                           :value="inputValue"
                           v-on="inputEvents"
                           @input="updateFollowUpDate"
-                          placeholder="dd/mm/yyyy"
+                          placeholder="mm/dd/yyyy"
                         />
                         <i class="fa fa-calendar-alt"></i>
                       </div>
@@ -335,7 +335,7 @@
                           :value="inputValue"
                           v-on="inputEvents"
                           @input="updateDueDate"
-                          placeholder="dd/mm/yyyy"
+                          placeholder="mm/dd/yyyy"
                         />
                         <i class="fa fa-calendar-alt"></i>
                       </div>
@@ -1215,13 +1215,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.token,
       this.bpmApiUrl
     );
-    console.log(filterListResult.data);
     this.filterList = sortByPriorityList(filterListResult.data);
     this.selectedfilterId = findFilterKeyOfAllTask(this.filterList, ALL_FILTER);
     await this.reloadLHSTaskList();
     if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
     }
+    console.log(this.webSocketEncryptkey);
     SocketIOService.connect(
       this.webSocketEncryptkey,
       (refreshedTaskId: string, eventName: string, error: string) => {
@@ -1386,7 +1386,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       margin-right: 1rem;
     }
     .add-group-btn {
-      min-width: 120px;
+      min-width: 144px;
     }
     .added-group-chip {
       background: #e7e7e7;

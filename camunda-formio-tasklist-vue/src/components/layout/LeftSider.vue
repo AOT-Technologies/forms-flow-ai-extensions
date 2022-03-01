@@ -64,6 +64,11 @@
             >
               Created {{ timedifference(task.created) }}
             </div>
+            <div
+              class="days-ago"
+              data-bs-toggle="tooltip"
+              :title="'Priority'"
+            >{{ task.priority }}</div>
           </div>
           <div class="d-flex w-100 task-details">
             <div
@@ -232,7 +237,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   calculateViewHeights() {
     const searchHeight = (this.$refs.taskListSearchRef as any)?.$el?.offsetHeight || 0;
     const paginationHeight = (this.$refs.taskListPaginationRef as any)?.$el?.offsetHeight || 0;
-    if(this.containerHeight > 250) {
+    if (this.containerHeight > 250) {
       this.listHeight = `${this.containerHeight - (searchHeight + paginationHeight)}px`;
     }
   }
