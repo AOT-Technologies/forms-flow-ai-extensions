@@ -13,6 +13,7 @@
       :formIOJwtSecret="configs.FORMIO_JWT_SECRET"
       :getTaskId="getTaskId"
       v-if="isServiceFLowEnabled"
+      :disableComponents ="{filterList:true , filterTask:true ,form:true ,sort:true}"
     />
     <div class="no-content" v-else>You shouldnot be here !!!</div>
   </div>

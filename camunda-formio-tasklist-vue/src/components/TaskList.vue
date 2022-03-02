@@ -11,6 +11,7 @@
       :payload="payload"
       :defaultTaskSortBy="taskSortBy"
       :defaultTaskSortOrder="taskSortOrder"
+      :disableComponents="disableComponents"
     />
     <b-row class="cft-service-task-list mt-1">
       <b-col
@@ -33,6 +34,7 @@
           :perPage="perPage"
           :selectedfilterId="selectedfilterId"
           :payload="payload"
+          :disableComponents="disableComponents"
         />
       </b-col>
   
@@ -391,7 +393,7 @@ import {
   UserListObject,
   UserListPayload, 
   UserPayload,
-  UserSearchListLabelPayload,
+  UserSearchListLabelPayload,SortPayload
 } from "../models";
 import BpmnViewer from "bpmn-js";
 import ExpandContract from "./addons/ExpandContract.vue";
@@ -441,6 +443,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     default: () => [],
   }) protected taskDefaultFilterName !: string[];
 
+ @Prop () disableComponents !: SortPayload ;
+
+ 
+
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
   @StoreServiceFlowModule.Getter("getFormsFlowTaskId")
@@ -470,6 +476,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private userSelected: UserListPayload = {
   };
   public perPage: number = 10;
+  // public disabled: boolean =true ;
   private filterList: FilterPayload[] = [];
   private editAssignee: boolean = false;
   private groupList: GroupListPayload[] = [];
@@ -1022,6 +1029,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     );
     this.filterList = sortByPriorityList(filterListResult.data);
+    console.log(this.selectedfilterId)
 
     if(this.taskDefaultFilterName.length > 0){
       this.filterList = this.filterList.filter(FilterList => { 
@@ -1148,3 +1156,4 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 }
 </script>
+ 
