@@ -2,7 +2,7 @@
   <b-container fluid class="task-outer-container">
     <div class="main-filters my-2 mb-1">
       <div class="cft-filter-dropdown mx-2"> 
-        <b-dropdown variant="primary">
+        <b-dropdown variant="primary" v-if="filterList.length>1">
             <template #button-content >
               <span><i class="fa fa-wpforms"> Filters</i></span>
             </template>
@@ -16,8 +16,7 @@
             >
             <span class="font-weight-normal cft-filter-text">{{ filter.name }}</span>
             </b-dropdown-item>
-          <b-dropdown-item v-if="!filterList.length">No Filters found</b-dropdown-item>
-          </b-dropdown>
+        </b-dropdown>
       </div>
       <FormListModal :token="token" :bpmApiUrl="bpmApiUrl" />
       <div>
