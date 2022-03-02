@@ -91,9 +91,9 @@
           </span>
           <span
             v-if="showSearchState[index] === 's' && query.type === 'date'"
-            @click="updateSearchInput(index)"
           >
             {{ formatDate(selectedSearchQueries[index].value) }}
+           <i  @click="updateSearchInput(index)" class="fa fa-times ml-2 "></i>
           </span>
           <span v-if="showSearchState[index] === 'i' && query.type !== 'date'">
             <span class="cft-icon-actions">
