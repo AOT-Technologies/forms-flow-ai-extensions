@@ -11,6 +11,7 @@
         :payload="payload"
         :defaultTaskSortBy="taskSortBy"
         :defaultTaskSortOrder="taskSortOrder"
+        :disableComponents="disableComponents"
       />
       <b-row class="cft-service-task-list mt-1">
         <b-col
@@ -33,6 +34,7 @@
             :perPage="perPage"
             :selectedfilterId="selectedfilterId"
             :payload="payload"
+            :disableComponents="disableComponents"
           />
         </b-col>
 
@@ -412,6 +414,9 @@ import {
 
 import serviceFlowModule from "../store/modules/serviceFlow-module";
 import vSelect from "vue-select";
+import {
+  SortPayload
+} from '.././models/FilterPayload';
 
 const StoreServiceFlowModule = namespace("serviceFlowModule");
 
@@ -441,6 +446,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop({
     default: () => [],
   }) protected taskDefaultFilterListNames !: string[];
+   @Prop () disableComponents !: SortPayload ;
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;

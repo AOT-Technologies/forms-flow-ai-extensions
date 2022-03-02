@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="tasklist-container">
-      <TaskListSearch @update-task-list="onSearchUpdateTasklistResult" />
+      <TaskListSearch @update-task-list="onSearchUpdateTasklistResult"  v-if="disableComponents.filterTask" />
       <div v-if="taskLoading" class="d-flex justify-content-center text-primary">
           <div class="spinner-border" role="status">
          <span class="sr-only">Loading...</span>
@@ -117,6 +117,9 @@ import moment from "moment";
 import {
   namespace 
 } from "vuex-class";
+import {
+  SortPayload 
+} from '../../models/FilterPayload';
 
 const serviceFlowModule = namespace("serviceFlowModule");
 
@@ -131,6 +134,12 @@ export default class LeftSider extends Mixins(BaseMixin) {
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
   @Prop() private taskLoading!: boolean;
+  @Prop ({
+    type: Object ,
+    default :{
+      filterList :true ,filterTask:true ,form:true,sort:true
+    }
+  }) private disableComponents!: SortPayload ;
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
