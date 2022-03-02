@@ -16,8 +16,7 @@
             >
             <span class="font-weight-normal cft-filter-text">{{ filter.name }}</span>
             </b-dropdown-item>
-          <b-dropdown-item v-if="!filterList.length">No Filters found</b-dropdown-item>
-          </b-dropdown>
+        </b-dropdown>
       </div>
       <FormListModal :token="token" :bpmApiUrl="bpmApiUrl" v-if="disableComponents.form" />
       <div>
