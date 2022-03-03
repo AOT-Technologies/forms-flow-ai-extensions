@@ -29,6 +29,37 @@
           <a class="dropdown-item">No Filters found</a>
         </li>
       </ul>
+
+  <b-container fluid class="task-outer-container">
+    <div class="main-filters my-2 mb-1">
+      <div class="cft-filter-dropdown mx-2"> 
+        <b-dropdown variant="primary" v-if="filterList.length>1">
+            <template #button-content >
+              <span><i class="fa fa-wpforms"> Filters</i></span>
+            </template>
+            <b-dropdown-item
+              v-for="(filter, idx) in filterList"
+              :key="filter.id"
+              href="#"
+              @click="togglefilter(filter, idx)"
+              :active="idx === activefilter"
+              :class="{ 'cft-filter-selected': idx === activefilter }"
+            >
+            <span class="font-weight-normal cft-filter-text">{{ filter.name }}</span>
+            </b-dropdown-item>
+        </b-dropdown>
+      </div>
+      <FormListModal :token="token" :bpmApiUrl="bpmApiUrl" />
+      <div>
+        <TaskListSort
+        :selectedfilterId="selectedfilterId"
+        :perPage="perPage"
+        :payload="payload"
+        :defaultTaskSortBy="defaultTaskSortBy"
+        :defaultTaskSortOrder="defaultTaskSortOrder"
+        />
+      </div>
+
     </div>
     <FormListModal
       v-if="showFormsButton"

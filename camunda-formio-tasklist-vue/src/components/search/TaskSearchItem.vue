@@ -109,6 +109,37 @@
                 showSearchValueItem(index);
               "
               placeholder="dd/mm/yyyy"
+            >
+            </b-form-datepicker>
+          </span>
+          <span
+            v-if="showSearchState[index] === 's' && query.type === 'date'"
+          >
+            {{ formatDate(selectedSearchQueries[index].value) }}
+           <i  @click="updateSearchInput(index)" class="fa fa-times ml-2 "></i>
+          </span>
+          <span v-if="showSearchState[index] === 'i' && query.type !== 'date'">
+            <span class="cft-icon-actions">
+              <span
+                @click="
+                  setSearchQueryValue(selectedSearchQueries, index);
+                  showSearchValueItem(index);
+                "
+              >
+                <i class="fa fa-check cft-approve-box"></i>
+              </span>
+              <i
+                class="fa fa-times cft-reject-box"
+                @click="rejectSearchValueItem(index)"
+              ></i
+            ></span>
+            <b-form-input
+              v-model="selectedSearchQueries[index].value"
+              v-on:keyup.enter="
+                setSearchQueryValue(selectedSearchQueries, index);
+                showSearchValueItem(index);
+              "
+
             />
           </div>
         </template>

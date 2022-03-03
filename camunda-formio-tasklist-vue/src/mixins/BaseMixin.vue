@@ -16,7 +16,6 @@ export default class BaseMixin extends Vue {
   @Prop() protected readonly formIOReviewer!: string;
   @Prop() protected readonly formIOApiUrl!: string;
   @Prop() protected readonly formsflowaiApiUrl!: string;
-  @Prop() protected readonly formsflowaiUrl!: string;
   @Prop() protected readonly formIOUserRoles!: string;
   @Prop() protected readonly formIOJwtSecret!: string;
   @Prop({
@@ -46,9 +45,6 @@ export default class BaseMixin extends Vue {
     }
     if (!this.formsflowaiApiUrl || this.formsflowaiApiUrl === "") {
       console.warn("formsflow.ai API url prop not passed");
-    }
-    if (!this.formsflowaiUrl || this.formsflowaiUrl === "") {
-      console.warn("formsflow.ai URL prop not passed");
     }
     if (!this.webSocketEncryptkey || this.webSocketEncryptkey === "") {
       console.warn("WEBSOCKET_ENCRYPT_KEY prop not passed");
