@@ -34,7 +34,7 @@
             :perPage="perPage"
             :selectedfilterId="selectedfilterId"
             :payload="payload"
-            :containerHeight=containerHeight
+            :containerHeight="containerHeight"
           />
         </div>
         <div
@@ -514,8 +514,8 @@ import {
   CamundaRest,
   SEARCH_USERS_BY,
   SocketIOService,
-  authenticateFormio,
-  findFilterKeyOfAllTask,
+  authenticateFormio, 
+  findFilterIdForDefaultFilterName,
   getFormDetails,
   getFormattedDateAndTime,
   getISODateTime,
@@ -594,13 +594,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   })
   public taskSortOrder!: string;
   @Prop({
-    default: true
-  })
-  private showPresetSortFilters!: boolean;
-  @Prop({
-    default: true
-  })
-  private showFormsButton!: boolean;
+    default: () => [],
+  }) protected taskDefaultFilterListNames !: string[];
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -649,7 +644,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private selectSearchType: string = "lastName";
   private taskIdValue: string = "";
   private taskId2: string = "";
-  // private taskIdWebsocket: string = "";
   private activeUserSearchindex = 1;
   private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
   private isUserAllowed: boolean = false
@@ -1216,7 +1210,22 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     );
     this.filterList = sortByPriorityList(filterListResult.data);
-    this.selectedfilterId = findFilterKeyOfAllTask(this.filterList, ALL_FILTER);
+
+    if(this.taskDefaultFilterListNames.length > 0){
+      this.filterList = this.filterList.filter(FilterList => { 
+        return this.taskDefaultFilterListNames.some(filter=>FilterList.name.includes(filter));
+      });
+    }
+
+    if(this.filterList.length>0){
+      this.selectedfilterId = this.taskDefaultFilterListNames.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER);
+    }
+
+    else {
+      this.tasks = [];
+      this.taskLoading=false;
+    }
+
     await this.reloadLHSTaskList();
     if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
