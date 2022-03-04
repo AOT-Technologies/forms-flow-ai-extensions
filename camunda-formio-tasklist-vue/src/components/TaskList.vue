@@ -16,7 +16,7 @@
         :payload="payload"
         :defaultTaskSortBy="taskSortBy"
         :defaultTaskSortOrder="taskSortOrder"
-        :showFormsButton="showFormsButton"
+        :disableComponents="disableComponents"
       />
       <div class="d-flex">
         <div
@@ -35,6 +35,7 @@
             :selectedfilterId="selectedfilterId"
             :payload="payload"
             :containerHeight="containerHeight"
+            :disableComponents="disableComponents"
           />
         </div>
         <div
@@ -567,6 +568,9 @@ import {
 } from "vuex-class";
 import serviceFlowModule from "../store/modules/serviceFlow-module";
 import vSelect from "vue-select";
+import {
+  SortPayload
+} from '.././models/FilterPayload';
 
 const StoreServiceFlowModule = namespace("serviceFlowModule");
 
@@ -596,6 +600,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop({
     default: () => [],
   }) protected taskDefaultFilterListNames !: string[];
+   @Prop () disableComponents !: SortPayload ;
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;

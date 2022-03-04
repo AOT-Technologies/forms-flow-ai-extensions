@@ -3,6 +3,7 @@
     <TaskListSearch
       ref="taskListSearchRef"
       @update-task-list="onSearchUpdateTasklistResult"
+       v-if="disableComponents.filterTask" 
     />
     <div
       class="list-group"
@@ -123,6 +124,9 @@ import moment from "moment";
 import {
   namespace
 } from "vuex-class";
+import {
+  SortPayload 
+} from '../../models/FilterPayload';
 
 const serviceFlowModule = namespace("serviceFlowModule");
 
@@ -141,6 +145,12 @@ export default class LeftSider extends Mixins(BaseMixin) {
   @Prop({
     default: 0
   }) private containerHeight!: number;
+  @Prop ({
+    type: Object ,
+    default :{
+      filterList :true ,filterTask:true ,form:true,sort:true
+    }
+  }) private disableComponents!: SortPayload ;
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;

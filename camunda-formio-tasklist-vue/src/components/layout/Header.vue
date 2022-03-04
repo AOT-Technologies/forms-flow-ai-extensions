@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div class="header-container">
     <div class="dropdown mx-1">
       <button
@@ -29,6 +30,37 @@
           <a class="dropdown-item">No Filters found</a>
         </li>
       </ul>
+=======
+  <b-container fluid class="task-outer-container">
+    <div class="main-filters my-2 mb-1">
+      <div class="cft-filter-dropdown mx-2"> 
+        <b-dropdown variant="primary" v-if="filterList.length>1 && disableComponents.filterList">
+            <template #button-content >
+              <span><i class="fa fa-wpforms"> Filters</i></span>
+            </template>
+            <b-dropdown-item
+              v-for="(filter, idx) in filterList"
+              :key="filter.id"
+              href="#"
+              @click="togglefilter(filter, idx)"
+              :active="idx === activefilter"
+              :class="{ 'cft-filter-selected': idx === activefilter }"
+            >
+            <span class="font-weight-normal cft-filter-text">{{ filter.name }}</span>
+            </b-dropdown-item>
+        </b-dropdown>
+      </div>
+      <FormListModal :token="token" :bpmApiUrl="bpmApiUrl" v-if="disableComponents.form" />
+      <div>
+        <TaskListSort  v-if="disableComponents.sort"
+        :selectedfilterId="selectedfilterId"
+        :perPage="perPage"
+        :payload="payload"
+        :defaultTaskSortBy="defaultTaskSortBy"
+        :defaultTaskSortOrder="defaultTaskSortOrder"
+        />
+      </div>
+>>>>>>> origin/disableprop
     </div>
     <FormListModal
       v-if="showFormsButton"
@@ -51,7 +83,7 @@ import {
   Component, Mixins, Prop
 } from "vue-property-decorator";
 import {
-  FilterPayload, Payload
+  FilterPayload, Payload,SortPayload
 } from "../../models";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import FormListModal from "../form/FormListModal.vue";
@@ -74,8 +106,13 @@ export default class Header extends Mixins(BaseMixin) {
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
   @Prop() private defaultTaskSortBy!: string
-  @Prop() private defaultTaskSortOrder!: string
-  @Prop() private showFormsButton!: boolean
+  @Prop() private defaultTaskSortOrder!: string ;
+  @Prop ({
+    type:Object,
+    default:{
+      filterList: true ,filterTask: true,form: true,sort: true
+    }
+  })private disableComponents!: SortPayload;
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
