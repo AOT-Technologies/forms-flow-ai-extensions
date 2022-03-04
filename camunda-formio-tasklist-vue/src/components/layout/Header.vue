@@ -1,8 +1,8 @@
 <template>
-<<<<<<< HEAD
   <div class="header-container">
     <div class="dropdown mx-1">
       <button
+         v-if="disableComponents.filterList"
         type="button"
         class="btn btn-primary dropdown-toggle"
         id="presetFiltersDropdownBtn"
@@ -30,45 +30,15 @@
           <a class="dropdown-item">No Filters found</a>
         </li>
       </ul>
-=======
-  <b-container fluid class="task-outer-container">
-    <div class="main-filters my-2 mb-1">
-      <div class="cft-filter-dropdown mx-2"> 
-        <b-dropdown variant="primary" v-if="filterList.length>1 && disableComponents.filterList">
-            <template #button-content >
-              <span><i class="fa fa-wpforms"> Filters</i></span>
-            </template>
-            <b-dropdown-item
-              v-for="(filter, idx) in filterList"
-              :key="filter.id"
-              href="#"
-              @click="togglefilter(filter, idx)"
-              :active="idx === activefilter"
-              :class="{ 'cft-filter-selected': idx === activefilter }"
-            >
-            <span class="font-weight-normal cft-filter-text">{{ filter.name }}</span>
-            </b-dropdown-item>
-        </b-dropdown>
-      </div>
-      <FormListModal :token="token" :bpmApiUrl="bpmApiUrl" v-if="disableComponents.form" />
-      <div>
-        <TaskListSort  v-if="disableComponents.sort"
-        :selectedfilterId="selectedfilterId"
-        :perPage="perPage"
-        :payload="payload"
-        :defaultTaskSortBy="defaultTaskSortBy"
-        :defaultTaskSortOrder="defaultTaskSortOrder"
-        />
-      </div>
->>>>>>> origin/disableprop
     </div>
     <FormListModal
-      v-if="showFormsButton"
+      v-if="disableComponents.form"
       class="mx-1"
       :token="token"
       :bpmApiUrl="bpmApiUrl"
     />
     <TaskListSort
+      v-if="disableComponents.sort"
       :selectedfilterId="selectedfilterId"
       :perPage="perPage"
       :payload="payload"

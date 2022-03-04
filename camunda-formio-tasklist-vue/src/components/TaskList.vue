@@ -7,7 +7,7 @@
       <Header
         class="mb-2"
         ref="presetSortFiltersRef"
-        v-if="token && bpmApiUrl && maximize && showPresetSortFilters"
+        v-if="token && bpmApiUrl && maximize "
         :token="token"
         :bpmApiUrl="bpmApiUrl"
         :filterList="filterList"
@@ -600,6 +600,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop({
     default: () => [],
   }) protected taskDefaultFilterListNames !: string[];
+
    @Prop () disableComponents !: SortPayload ;
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
