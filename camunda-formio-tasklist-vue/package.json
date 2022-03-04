@@ -1,6 +1,6 @@
 {
   "name": "camunda-formio-tasklist-vue",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Vue components to integrate formsflow.ai",
   "private": false,
   "main": "./dist/camunda-formio-tasklist-vue.common.js",
