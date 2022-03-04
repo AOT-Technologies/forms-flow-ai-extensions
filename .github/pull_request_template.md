@@ -1,3 +1,14 @@
+<!--
+Thank you for submitting a PR to forms-flow-ai-extensions!
+
+To ease the process of reviewing your PR, do make sure to complete the following boxes.
+
+- [ ] Ensure you are following [Style Guidelines and Pull Request Guidelines](https://github.com/AOT-Technologies/forms-flow-ai-extensions/blob/guidelines/camunda-formio-tasklist-vue/docs/StyleGuide.md)
+- [ ] Add yourself to CONTRIBUTORS if you are a new contributor in package.json.
+- [ ] Add a [ChangeLog entry](https://github.com/AOT-Technologies/forms-flow-ai-extensions/blob/guidelines/camunda-formio-tasklist-vue/docs/CHANGELOG.md) describing what your PR does.
+-->
+
+
 # Issue Tracking
 
 JIRA: 
