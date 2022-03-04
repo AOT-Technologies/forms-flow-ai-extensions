@@ -532,6 +532,7 @@ import {
 } from "vue-property-decorator";
 import {
   CustomEventPayload,
+  DisableComponentPropPayload,
   FilterPayload,
   FormRequestActionPayload,
   FormRequestPayload,
@@ -568,9 +569,6 @@ import {
 } from "vuex-class";
 import serviceFlowModule from "../store/modules/serviceFlow-module";
 import vSelect from "vue-select";
-import {
-  SortPayload
-} from '.././models/FilterPayload';
 
 const StoreServiceFlowModule = namespace("serviceFlowModule");
 
@@ -600,8 +598,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop({
     default: () => [],
   }) protected taskDefaultFilterListNames !: string[];
-
-   @Prop () disableComponents !: SortPayload ;
+  @Prop ({
+    default: {
+      filterList:false,  filterTask:true, sort:false, form:true
+    }
+  }) disableComponents !: DisableComponentPropPayload ;
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
