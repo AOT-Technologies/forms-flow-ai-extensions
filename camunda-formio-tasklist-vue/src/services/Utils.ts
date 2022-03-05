@@ -12,7 +12,10 @@ export const findFilterIdForDefaultFilterName = (array: FilterPayload[], value: 
       return array[i]["id"];
     }
   }
-  return array[0]["id"];
+  if(array?.length) {
+    return array[0]["id"];
+  }
+  return '';
 };
 
 export const getUserName = () => {

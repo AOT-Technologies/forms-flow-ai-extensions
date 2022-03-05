@@ -22,3 +22,10 @@ export interface FilterPayload {
     };
     resourceType: string;
 }
+
+export interface DisableComponentPropPayload {
+    sort?: boolean ;
+    form?: boolean ;
+    filterList?: boolean ;
+    filterTask?: boolean ;
+}
