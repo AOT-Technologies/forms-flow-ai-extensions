@@ -602,7 +602,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop ({
     default:()=>{
       return {
-        filterList:false,  filterTask:true, sort:false, form:true
+        filterList:true,  filterTask:true, sort:true, form:true
       };
     }
   }) 
