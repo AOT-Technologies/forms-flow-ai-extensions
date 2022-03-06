@@ -77,7 +77,7 @@ export default class Header extends Mixins(BaseMixin) {
   @Prop() private payload!: Payload;
   @Prop() private defaultTaskSortBy!: string
   @Prop() private defaultTaskSortOrder!: string ;
-  @Prop () private disableComponents!: DisableComponentPropPayload;
+  @Prop() private disableComponents!: DisableComponentPropPayload;
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
