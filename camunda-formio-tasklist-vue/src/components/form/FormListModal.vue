@@ -205,9 +205,9 @@ export default class FormListModal extends Mixins(BaseMixin) {
 
   oncustomEventCallback = (customEvent: CustomEventPayload) => {
     switch (customEvent.type) {
-      case "customSubmitDone":
-        this.$bvModal.hide("modal-multi-2");
-        break;
+    case "customSubmitDone":
+      this.$bvModal.hide("modal-multi-2");
+      break;
     }
   };
 
