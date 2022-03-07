@@ -7,7 +7,7 @@
       <Header
         class="mb-2"
         ref="presetSortFiltersRef"
-        v-if="token && bpmApiUrl && maximize"
+        v-if="token && bpmApiUrl && maximize "
         :token="token"
         :bpmApiUrl="bpmApiUrl"
         :filterList="filterList"
@@ -28,18 +28,17 @@
             v-if="token && bpmApiUrl"
             :token="token"
             :formsflowaiApiUrl="formsflowaiApiUrl"
-            :formIOApiUrl="formIOApiUrl"
+            :formIO="formIO"
             :bpmApiUrl="bpmApiUrl"
             :tasks="tasks"
             :perPage="perPage"
             :selectedfilterId="selectedfilterId"
             :payload="payload"
             :containerHeight="containerHeight"
-            :disableComponents="disableComponents"
           />
         </div>
         <div
-          class="col-9 ctf-task-details-container"
+          class="col-9 task-details-container"
           :class="{ 'col-12 mx-0': !maximize }"
         >
           <div
@@ -532,7 +531,7 @@ import {
 } from "vue-property-decorator";
 import {
   CustomEventPayload,
-  DisableComponentPropPayload,
+
   FilterPayload,
   FormRequestActionPayload,
   FormRequestPayload,
@@ -597,16 +596,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   public taskSortOrder!: string;
   @Prop({
     default: () => [],
-  }) 
-  protected taskDefaultFilterListNames !: string[];
-  @Prop ({
-    default:()=>{
-      return {
-        filterList:true,  filterTask:true, sort:true, form:true
-      };
-    }
-  }) 
-  disableComponents !: DisableComponentPropPayload ;
+  }) protected taskDefaultFilterListNames !: string[];
+ 
+
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -777,7 +769,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         applicationId: {
           value: this.task.applicationId!,
         },
-      }
+      },
     };
     if (actionType !== "") {
       const newformRequestFormat: FormRequestActionPayload = Object.assign(
@@ -833,7 +825,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         formioUrl, formId, submissionId
       } = getFormDetails(
         formUrlPattern,
-        this.formIOApiUrl
+        this.formIO.apiUrl
       );
 
       this.formioUrl = formioUrl;
@@ -908,7 +900,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.onFormSubmitCallback(customEvent.actionType);
       break;
     default:
-      // this call is for formio
+    // this call is for formio
       this.$root.$emit(customEvent.type, {
         customEvent
       });
@@ -1176,9 +1168,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async mounted() {
     this.containerHeight = (this.$refs.taskListContainerRef as any).clientHeight;
     this.toastMsg = new Toast(this.$refs?.toastMsgRef as any);
-    Formio.setBaseUrl(this.formIOApiUrl);
-    Formio.setProjectUrl(this.formIOApiUrl);
-    this.isUserAllowed = isAllowedUser(this.formIOReviewer, this.formIOUserRoles);
+    Formio.setBaseUrl(this.formIO.apiUrl);
+    Formio.setProjectUrl(this.formIO.apiUrl);
+    this.isUserAllowed = isAllowedUser(this.formIO.reviewer, this.formIO.userRoles);
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
     this.setFormsFlowactiveIndex(NaN);
@@ -1209,11 +1201,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.checkProps();
     this.checkforTaskID();
     authenticateFormio(
-      this.formIOResourceId,
-      this.formIOReviewerId,
-      this.formIOReviewer,
+      this.formIO.resourceId,
+      this.formIO.reviewerId,
+      this.formIO.reviewer,
       this.userEmail,
-      this.formIOUserRoles,
+      this.formIO.userRoles,
       this.formIOJwtSecret
     );
     const filterListResult = await CamundaRest.filterList(
@@ -1348,7 +1340,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   background: #fff;
   margin-left: 4px;
 }
-.ctf-task-details-container {
+.task-details-container {
   background: #fff;
   margin-left: 4px;
   border-radius: 0.5rem;

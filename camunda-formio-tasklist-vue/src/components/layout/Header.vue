@@ -2,7 +2,7 @@
   <div class="header-container">
     <div class="dropdown mx-1">
       <button
-         v-if="disableComponents.filterList"
+         v-if="!disableComponents.filterList"
         type="button"
         class="btn btn-primary dropdown-toggle"
         id="presetFiltersDropdownBtn"
@@ -32,13 +32,13 @@
       </ul>
     </div>
     <FormListModal
-      v-if="disableComponents.form"
+      v-if="!disableComponents.form"
       class="mx-1"
       :token="token"
       :bpmApiUrl="bpmApiUrl"
     />
     <TaskListSort
-      v-if="disableComponents.sort"
+      v-if="!disableComponents.sort"
       :selectedfilterId="selectedfilterId"
       :perPage="perPage"
       :payload="payload"
@@ -53,7 +53,7 @@ import {
   Component, Mixins, Prop
 } from "vue-property-decorator";
 import {
-  DisableComponentPropPayload, FilterPayload, Payload,
+  FilterPayload, Payload
 } from "../../models";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import FormListModal from "../form/FormListModal.vue";
@@ -77,7 +77,7 @@ export default class Header extends Mixins(BaseMixin) {
   @Prop() private payload!: Payload;
   @Prop() private defaultTaskSortBy!: string
   @Prop() private defaultTaskSortOrder!: string ;
-  @Prop() private disableComponents!: DisableComponentPropPayload;
+  
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;

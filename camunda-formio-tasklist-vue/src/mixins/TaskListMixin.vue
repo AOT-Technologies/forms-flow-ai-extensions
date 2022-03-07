@@ -12,4 +12,5 @@ export default class TaskListMixin extends Mixins(BaseMixin) {
   public maximize: boolean = true;
   public userName?: string = undefined;
 }
+
 </script>
