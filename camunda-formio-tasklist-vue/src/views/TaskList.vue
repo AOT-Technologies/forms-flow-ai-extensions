@@ -1,8 +1,7 @@
 <template>
   <div v-if="token" class="task-demo">
-    <h5 class="px-3 pt-2">Task List Demo</h5>
-    <CamundaTasklist
-      class="task-list px-3"
+      <CamundaTasklist
+      class="ctf-task-list px-3"
       :bpmApiUrl="configs.BPM_URL"
       :token="configs.token"
       :formIOApiUrl="configs.FORM_IO_API_URL"
@@ -66,7 +65,7 @@ export default class TaskList extends Vue {
   background: #ddd;
   height: 100vh;
 }
-.task-list {
+.ctf-task-list {
   height: calc(100vh - 48px);
   overflow: auto;
 }

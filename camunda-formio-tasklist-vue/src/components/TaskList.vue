@@ -7,7 +7,7 @@
       <Header
         class="mb-2"
         ref="presetSortFiltersRef"
-        v-if="token && bpmApiUrl && maximize "
+        v-if="token && bpmApiUrl && maximize"
         :token="token"
         :bpmApiUrl="bpmApiUrl"
         :filterList="filterList"
@@ -39,7 +39,7 @@
           />
         </div>
         <div
-          class="col-9 task-details-container"
+          class="col-9 ctf-task-details-container"
           :class="{ 'col-12 mx-0': !maximize }"
         >
           <div
@@ -597,12 +597,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   public taskSortOrder!: string;
   @Prop({
     default: () => [],
-  }) protected taskDefaultFilterListNames !: string[];
+  }) 
+  protected taskDefaultFilterListNames !: string[];
   @Prop ({
-    default: {
-      filterList:false,  filterTask:true, sort:false, form:true
+    default:()=>{
+      return {
+        filterList:true,  filterTask:true, sort:true, form:true
+      };
     }
-  }) disableComponents !: DisableComponentPropPayload ;
+  }) 
+  disableComponents !: DisableComponentPropPayload ;
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -773,7 +777,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         applicationId: {
           value: this.task.applicationId!,
         },
-      },
+      }
     };
     if (actionType !== "") {
       const newformRequestFormat: FormRequestActionPayload = Object.assign(
@@ -894,20 +898,20 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   oncustomEventCallback = async (customEvent: CustomEventPayload) => {
     switch (customEvent.type) {
-      case "reloadTasks":
-        await this.reloadTasks();
-        break;
-      case "reloadCurrentTask":
-        await this.reloadCurrentTask();
-        break;
-      case "actionComplete":
-        this.onFormSubmitCallback(customEvent.actionType);
-        break;
-      default:
-        // this call is for formio
-        this.$root.$emit(customEvent.type, {
-          customEvent
-        });
+    case "reloadTasks":
+      await this.reloadTasks();
+      break;
+    case "reloadCurrentTask":
+      await this.reloadCurrentTask();
+      break;
+    case "actionComplete":
+      this.onFormSubmitCallback(customEvent.actionType);
+      break;
+    default:
+      // this call is for formio
+      this.$root.$emit(customEvent.type, {
+        customEvent
+      });
     }
   };
 
@@ -1344,7 +1348,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   background: #fff;
   margin-left: 4px;
 }
-.task-details-container {
+.ctf-task-details-container {
   background: #fff;
   margin-left: 4px;
   border-radius: 0.5rem;

@@ -53,7 +53,7 @@ import {
   Component, Mixins, Prop
 } from "vue-property-decorator";
 import {
-  FilterPayload, Payload,DisableComponentPropPayload
+  DisableComponentPropPayload, FilterPayload, Payload,
 } from "../../models";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import FormListModal from "../form/FormListModal.vue";
@@ -77,12 +77,7 @@ export default class Header extends Mixins(BaseMixin) {
   @Prop() private payload!: Payload;
   @Prop() private defaultTaskSortBy!: string
   @Prop() private defaultTaskSortOrder!: string ;
-  @Prop ({
-    type:Object,
-    default:{
-      filterList: true ,filterTask: true,form: true,sort: true
-    }
-  })private disableComponents!: DisableComponentPropPayload;
+  @Prop() private disableComponents!: DisableComponentPropPayload;
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
