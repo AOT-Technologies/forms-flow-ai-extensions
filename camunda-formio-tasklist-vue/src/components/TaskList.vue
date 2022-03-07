@@ -28,7 +28,7 @@
             v-if="token && bpmApiUrl"
             :token="token"
             :formsflowaiApiUrl="formsflowaiApiUrl"
-            :formIOApiUrl="formIOApiUrl"
+            :formIO="formIO"
             :bpmApiUrl="bpmApiUrl"
             :tasks="tasks"
             :perPage="perPage"
@@ -833,7 +833,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         formioUrl, formId, submissionId
       } = getFormDetails(
         formUrlPattern,
-        this.formIOApiUrl
+        this.formIO.apiUrl
       );
 
       this.formioUrl = formioUrl;
@@ -1176,9 +1176,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async mounted() {
     this.containerHeight = (this.$refs.taskListContainerRef as any).clientHeight;
     this.toastMsg = new Toast(this.$refs?.toastMsgRef as any);
-    Formio.setBaseUrl(this.formIOApiUrl);
-    Formio.setProjectUrl(this.formIOApiUrl);
-    this.isUserAllowed = isAllowedUser(this.formIOReviewer, this.formIOUserRoles);
+    Formio.setBaseUrl(this.formIO.apiUrl);
+    Formio.setProjectUrl(this.formIO.apiUrl);
+    this.isUserAllowed = isAllowedUser(this.formIO.reviewer, this.formIO.userRoles);
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
     this.setFormsFlowactiveIndex(NaN);
@@ -1209,11 +1209,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.checkProps();
     this.checkforTaskID();
     authenticateFormio(
-      this.formIOResourceId,
-      this.formIOReviewerId,
-      this.formIOReviewer,
+      this.formIO.resourceId,
+      this.formIO.reviewerId,
+      this.formIO.reviewer,
       this.userEmail,
-      this.formIOUserRoles,
+      this.formIO.userRoles,
       this.formIOJwtSecret
     );
     const filterListResult = await CamundaRest.filterList(
