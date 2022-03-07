@@ -28,7 +28,6 @@
             v-if="token && bpmApiUrl"
             :token="token"
             :formsflowaiApiUrl="formsflowaiApiUrl"
-            :formIO="formIO"
             :bpmApiUrl="bpmApiUrl"
             :tasks="tasks"
             :perPage="perPage"
