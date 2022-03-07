@@ -34,11 +34,11 @@ export default class TaskList extends Vue {
     token: "Bearer Token",
     BPM_URL: "Set Camunda URL",
     FORMIO_CONFIG:{ 
-      apiUrl:'set formIO url', 
-      resourceId:'set formIO resource id',
-      reviewerId:'reviewer id', 
-      reviewe:'set reviewer',
-      userRoles:'set user role id' 
+      apiUrl:"Set FormIO Project URL", 
+      resourceId:"Set Formio Resource ID",
+      reviewerId:"Set Formio Reviewer ID", 
+      reviewe:"Set Formio Reviewer Name",
+      userRoles:"Set FORMIO User ROLES"
     },
     FORM_FLOW_API_URL: "Set formsflow.ai API URL",
     FORM_FLOW_URL: "Set formsflow.ai Project URL",
