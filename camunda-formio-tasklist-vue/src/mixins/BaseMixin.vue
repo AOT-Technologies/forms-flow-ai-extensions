@@ -3,9 +3,13 @@ import {
   Component, Prop, Vue, Watch
 } from "vue-property-decorator";
 import {
+  DisableComponentPropPayload
+} from "../models";
+import {
   engine
 } from "../services";
 
+  
 @Component({
 })
 export default class BaseMixin extends Vue {
@@ -19,11 +23,26 @@ export default class BaseMixin extends Vue {
    @Prop({
      type:Object
    }) public formIO!: any;
+  @Prop ({
+    default:()=>{
+      return {
+        filterList:false,  filterTask:false, sort:false, form:false
+      };
+    }
+  }) 
+  
+  public disableComponents !: DisableComponentPropPayload ;
+  protected disableOptions: DisableComponentPropPayload={
+    filterList : this.disableComponents.filterList?true:false,
+    filterTask: this.disableComponents.filterTask?true:false,
+    form: this.disableComponents.form?true:false,
+    sort: this.disableComponents.sort?true:false,
+  }
 
   @Watch("token")
-   ontokenChange(newVal: string) {
-     localStorage.setItem("authToken", newVal);
-   }
+  ontokenChange(newVal: string) {
+    localStorage.setItem("authToken", newVal);
+  }
 
   checkProps() {
     if (!this.bpmApiUrl || this.bpmApiUrl === "") {

@@ -7,7 +7,7 @@
       <Header
         class="mb-2"
         ref="presetSortFiltersRef"
-        v-if="token && bpmApiUrl && maximize"
+        v-if="token && bpmApiUrl && maximize&&(!disableOptions.sort||!disableOptions.form||!disableOptions.filterList)"
         :token="token"
         :bpmApiUrl="bpmApiUrl"
         :filterList="filterList"
@@ -16,7 +16,7 @@
         :payload="payload"
         :defaultTaskSortBy="taskSortBy"
         :defaultTaskSortOrder="taskSortOrder"
-        :disableComponents="disableComponents"
+        :disableOption="disableOptions"
       />
       <div class="d-flex">
         <div
@@ -34,7 +34,7 @@
             :selectedfilterId="selectedfilterId"
             :payload="payload"
             :containerHeight="containerHeight"
-            :disableComponents="disableComponents"
+            :disableOption="disableOptions"
           />
         </div>
         <div
@@ -531,7 +531,6 @@ import {
 } from "vue-property-decorator";
 import {
   CustomEventPayload,
-  DisableComponentPropPayload,
   FilterPayload,
   FormRequestActionPayload,
   FormRequestPayload,
@@ -598,14 +597,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     default: () => [],
   }) 
   protected taskDefaultFilterListNames !: string[];
-  @Prop ({
-    default:()=>{
-      return {
-        filterList:true,  filterTask:true, sort:true, form:true
-      };
-    }
-  }) 
-  disableComponents !: DisableComponentPropPayload ;
+ 
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;

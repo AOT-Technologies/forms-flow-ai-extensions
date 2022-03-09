@@ -3,7 +3,7 @@
     <TaskListSearch
       ref="taskListSearchRef"
       @update-task-list="onSearchUpdateTasklistResult"
-       v-if="disableComponents.filterTask" 
+       v-if="!disableOption.filterTask" 
     />
     <div
       class="list-group"
@@ -119,6 +119,7 @@ import {
 } from "../../models";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import Pagination from "./Pagination.vue";
+
 import TaskListSearch from "../search/TaskListSearch.vue";
 import moment from "moment";
 import {
@@ -142,8 +143,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   @Prop({
     default: 0
   }) private containerHeight!: number;
-  @Prop() private disableComponents!: DisableComponentPropPayload ;
-
+  @Prop() private disableOption!: DisableComponentPropPayload;
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Getter("getFormsFlowTaskId")

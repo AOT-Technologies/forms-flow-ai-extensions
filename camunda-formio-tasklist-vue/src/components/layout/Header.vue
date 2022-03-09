@@ -1,8 +1,8 @@
 <template>
-  <div class="header-container">
+  <div class="ctf-header-container">
     <div class="dropdown mx-1">
       <button
-         v-if="disableComponents.filterList"
+         v-if="!disableOption.filterList"
         type="button"
         class="btn btn-primary dropdown-toggle"
         id="presetFiltersDropdownBtn"
@@ -32,13 +32,13 @@
       </ul>
     </div>
     <FormListModal
-      v-if="disableComponents.form"
+      v-if="!disableOption.form"
       class="mx-1"
       :token="token"
       :bpmApiUrl="bpmApiUrl"
     />
     <TaskListSort
-      v-if="disableComponents.sort"
+      v-if="!disableOption.sort"
       :selectedfilterId="selectedfilterId"
       :perPage="perPage"
       :payload="payload"
@@ -77,7 +77,7 @@ export default class Header extends Mixins(BaseMixin) {
   @Prop() private payload!: Payload;
   @Prop() private defaultTaskSortBy!: string
   @Prop() private defaultTaskSortOrder!: string ;
-  @Prop() private disableComponents!: DisableComponentPropPayload;
+  @Prop() private disableOption!: DisableComponentPropPayload;
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -107,7 +107,7 @@ export default class Header extends Mixins(BaseMixin) {
 </script>
 
 <style scoped>
-.header-container {
+.ctf-header-container {
   display: flex;
   align-items: center;
   flex-wrap: wrap;

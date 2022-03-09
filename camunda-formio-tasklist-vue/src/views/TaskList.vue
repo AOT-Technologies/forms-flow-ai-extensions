@@ -38,7 +38,7 @@ export default class TaskList extends Vue {
       resourceId:"Set Formio Resource ID",
       reviewerId:"Set Formio Reviewer ID", 
       reviewer:"Set Formio Reviewer Name",
-      userRoles:"Set FORMIO User ROLES"
+      userRoles:'set User Role ID' 
     },
     FORM_FLOW_API_URL: "Set formsflow.ai API URL",
     FORM_FLOW_URL: "Set formsflow.ai Project URL",
