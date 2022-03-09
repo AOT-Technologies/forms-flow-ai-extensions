@@ -3,7 +3,7 @@
     <TaskListSearch
       ref="taskListSearchRef"
       @update-task-list="onSearchUpdateTasklistResult"
-       v-if="disableComponents.filterTask" 
+       v-if="!disableOption.filterTask" 
     />
     <div
       class="list-group"
@@ -28,11 +28,12 @@
           :key="task.id"
           class="list-group-item"
           aria-current="true"
+         
           @click="
             toggle(idx);
             showTaskDetails(task.id);
           "
-          :class="{ 'task-selected': task.id == getFormsFlowTaskId }"
+          :class="{ 'task-selected': task.id == getFormsFlowTaskId , 'card-list-group-item':listItemCardStyle}"
         >
           <h6
             class="mb-1"
@@ -119,6 +120,7 @@ import {
 } from "../../models";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import Pagination from "./Pagination.vue";
+
 import TaskListSearch from "../search/TaskListSearch.vue";
 import moment from "moment";
 import {
@@ -142,7 +144,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   @Prop({
     default: 0
   }) private containerHeight!: number;
-  @Prop() private disableComponents!: DisableComponentPropPayload ;
+  @Prop() private disableOption!: DisableComponentPropPayload;
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -289,6 +291,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
     height: 100px;
     overflow-y: auto;
     border-radius: 0;
+     .card-list-group-item{
+       margin: 0.50rem 1rem;
+     }
     .list-group-item {
       padding: 0.75rem 1rem;
       cursor: pointer;

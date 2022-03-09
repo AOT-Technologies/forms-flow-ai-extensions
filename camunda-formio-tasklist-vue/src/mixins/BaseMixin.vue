@@ -3,9 +3,13 @@ import {
   Component, Prop, Vue, Watch
 } from "vue-property-decorator";
 import {
+  DisableComponentPropPayload
+} from "../models";
+import {
   engine
 } from "../services";
 
+  
 @Component({
 })
 export default class BaseMixin extends Vue {
@@ -19,6 +23,27 @@ export default class BaseMixin extends Vue {
    @Prop({
      type:Object
    }) public formIO!: any;
+  @Prop ({
+    default:()=>{
+      return {
+        filterList:false,  filterTask:false, sort:false, form:false
+      };
+    }
+  }) 
+  
+  public disableComponents !: DisableComponentPropPayload ;
+
+   @Prop ({
+     default:()=>{
+       return {
+         assignee:false, group:false, followUpDate:false, dueDate:false, createdDate:false
+       };
+     }
+   }) public hideTaskDetails: any;
+
+   @Prop({
+     default:false
+   }) private listItemCardStyle!: boolean;
 
   @Watch("token")
    ontokenChange(newVal: string) {
