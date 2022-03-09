@@ -145,9 +145,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     default: 0
   }) private containerHeight!: number;
   @Prop() private disableOption!: DisableComponentPropPayload;
-  @Prop({
-    default:false
-  }) private listItemCardStyle!: boolean;
+
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Getter("getFormsFlowTaskId")

@@ -35,6 +35,7 @@
             :payload="payload"
             :containerHeight="containerHeight"
             :disableOption="disableComponents"
+            :listItemCardStyle="listItemCardStyle"
           />
         </div>
         <div

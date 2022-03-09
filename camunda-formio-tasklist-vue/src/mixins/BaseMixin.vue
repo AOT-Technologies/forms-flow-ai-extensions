@@ -41,6 +41,10 @@ export default class BaseMixin extends Vue {
      }
    }) public hideTaskDetails: any;
 
+   @Prop({
+     default:false
+   }) private listItemCardStyle!: boolean;
+
   @Watch("token")
    ontokenChange(newVal: string) {
      localStorage.setItem("authToken", newVal);
