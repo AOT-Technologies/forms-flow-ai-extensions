@@ -18,6 +18,8 @@ solution in your Vue.js based project.
 | webSocketEncryptkey | string | "formflowai" | Specifies the secret key used to connect to webSocket endpoint for encrypting keys in the taskList |
 | formIOJwtSecret :triangular_flag_on_post: | string | "--- change me now ---" | Specifies the secret key used in forms-flow-forms server jwt secret |
 | disableComponents  | Object | `{filterList:false,  filterTask:false, sort:false, form:false}` | Prop to decide to disable the option from components. "filterList", "sort", "form": these are Header component. if you need to disable these option the value should be =true."filterTask" is on Left side. |
+| hideTaskDetails  | Object | ` {assignee:false, group:false, followUpDate:false, dueDate:false, createdDate:false}` | Prop to decide to hide the option from Task Details|
+| listItemCardStyle  | boolean |false |Prop to decide to make the list item in a card style |
 
 
 :triangular_flag_on_post: - mandatory props to be passed
@@ -42,5 +44,7 @@ import CamundaTasklist from "camunda-formio-tasklist-vue/src/components/TaskList
   taskSortBy="priority"
   taskSortOrder="asc",
   :disableComponents="{filterList:false,  filterTask:false, sort:false, form:false}"
+  :hideTaskDetails="{ assignee:true,group:true}"
+  ::listItemCardStyle="true" 
 />
 ```
