@@ -28,11 +28,12 @@
           :key="task.id"
           class="list-group-item"
           aria-current="true"
+         
           @click="
             toggle(idx);
             showTaskDetails(task.id);
           "
-          :class="{ 'task-selected': task.id == getFormsFlowTaskId }"
+          :class="{ 'task-selected': task.id == getFormsFlowTaskId , 'card-list-group-item':listItemCardStyle}"
         >
           <h6
             class="mb-1"
@@ -144,6 +145,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
     default: 0
   }) private containerHeight!: number;
   @Prop() private disableOption!: DisableComponentPropPayload;
+  @Prop({
+    default:false
+  }) private listItemCardStyle!: boolean;
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Getter("getFormsFlowTaskId")
@@ -289,6 +293,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
     height: 100px;
     overflow-y: auto;
     border-radius: 0;
+     .card-list-group-item{
+       margin: 0.50rem 1rem;
+     }
     .list-group-item {
       padding: 0.75rem 1rem;
       cursor: pointer;

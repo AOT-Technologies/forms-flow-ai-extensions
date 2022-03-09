@@ -7,7 +7,7 @@
       <Header
         class="mb-2"
         ref="presetSortFiltersRef"
-        v-if="token && bpmApiUrl && maximize&&(!disableOptions.sort||!disableOptions.form||!disableOptions.filterList)"
+        v-if="token && bpmApiUrl && maximize&&(!disableComponents.sort||!disableComponents.form||!disableComponents.filterList)"
         :token="token"
         :bpmApiUrl="bpmApiUrl"
         :filterList="filterList"
