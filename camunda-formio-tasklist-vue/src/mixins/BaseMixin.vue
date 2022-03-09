@@ -11,21 +11,19 @@ import {
 export default class BaseMixin extends Vue {
   @Prop() protected readonly bpmApiUrl!: string;
   @Prop() protected readonly token!: string;
-  @Prop() protected readonly formIOResourceId!: string;
-  @Prop() protected readonly formIOReviewerId!: string;
-  @Prop() protected readonly formIOReviewer!: string;
-  @Prop() protected readonly formIOApiUrl!: string;
   @Prop() protected readonly formsflowaiApiUrl!: string;
-  @Prop() protected readonly formIOUserRoles!: string;
   @Prop() protected readonly formIOJwtSecret!: string;
   @Prop({
     default: "formflowai"
   }) public webSocketEncryptkey!: string;
+   @Prop({
+     type:Object
+   }) public formIO!: any;
 
   @Watch("token")
-  ontokenChange(newVal: string) {
-    localStorage.setItem("authToken", newVal);
-  }
+   ontokenChange(newVal: string) {
+     localStorage.setItem("authToken", newVal);
+   }
 
   checkProps() {
     if (!this.bpmApiUrl || this.bpmApiUrl === "") {
@@ -34,13 +32,13 @@ export default class BaseMixin extends Vue {
     if (!this.token || this.token === "") {
       console.warn("token prop not Passed");
     }
-    if (!this.formIOResourceId || this.formIOResourceId === "") {
+    if (!this.formIO.resourceId || this.formIO.resourceId === "") {
       console.warn("formIOResourceId prop not passed");
     }
-    if (!this.formIOReviewerId || this.formIOReviewerId === "") {
+    if (!this.formIO.reviewerId || this.formIO.reviewerId === "") {
       console.warn("formIOReviewerId prop not passed");
     }
-    if (!this.formIOApiUrl || this.formIOApiUrl === "") {
+    if (!this.formIO.apiUrl || this.formIO.apiUrl === "") {
       console.warn("formIOApiUrl prop not passed");
     }
     if (!this.formsflowaiApiUrl || this.formsflowaiApiUrl === "") {
@@ -56,7 +54,7 @@ export default class BaseMixin extends Vue {
     const currentUrl = `${window.location.protocol}//${window.location.host}`;
     localStorage.setItem("formsflow.ai.url", currentUrl);
     localStorage.setItem("formsflow.ai.api.url", this.formsflowaiApiUrl);
-    localStorage.setItem("formioApiUrl", this.formIOApiUrl);
+    localStorage.setItem("formioApiUrl", this.formIO.apiUrl);
     localStorage.setItem("UserDetails", JSON.stringify(decodeToken));
   }
 }

@@ -4,13 +4,9 @@
       class="ctf-task-list px-3"
       :bpmApiUrl="configs.BPM_URL"
       :token="configs.token"
-      :formIOApiUrl="configs.FORM_IO_API_URL"
-      :formIOResourceId="configs.FORM_IO_RESOURCE_ID"
-      :formIOReviewerId="configs.FORM_IO_REVIEWER_ID"
-      :formIOReviewer="configs.FORM_IO_REVIEWER"
+      :formIO="configs.FORMIO_CONFIG"
       :formsflowaiUrl="configs.FORM_FLOW_URL"
       :formsflowaiApiUrl="configs.FORM_FLOW_API_URL"
-      :formIOUserRoles="configs.FORMIO_ROLES"
       :formIOJwtSecret="configs.FORMIO_JWT_SECRET"
       :getTaskId="getTaskId"
       v-if="isServiceFLowEnabled"
@@ -37,14 +33,16 @@ export default class TaskList extends Vue {
   public configs = {
     token: "Bearer Token",
     BPM_URL: "Set Camunda URL",
-    FORM_IO_API_URL: "Set FormIO Project URL",
-    FORM_IO_RESOURCE_ID: "Set Formio Resource ID",
-    FORM_IO_REVIEWER_ID: "Set Formio Reviewer ID",
-    FORM_IO_REVIEWER: "Set Formio Reviewer Name",
+    FORMIO_CONFIG:{ 
+      apiUrl:"Set FormIO Project URL", 
+      resourceId:"Set Formio Resource ID",
+      reviewerId:"Set Formio Reviewer ID", 
+      reviewer:"Set Formio Reviewer Name",
+      userRoles:"Set FORMIO User ROLES"
+    },
     FORM_FLOW_API_URL: "Set formsflow.ai API URL",
     FORM_FLOW_URL: "Set formsflow.ai Project URL",
     SERVICEFLOW_ENABLED: true,
-    FORMIO_ROLES: "Set FORMIO User ROLES",
     FORMIO_JWT_SECRET: "Set FORMIO JWT SECRET",
   };
 
