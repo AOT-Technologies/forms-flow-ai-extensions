@@ -16,7 +16,7 @@
         :payload="payload"
         :defaultTaskSortBy="taskSortBy"
         :defaultTaskSortOrder="taskSortOrder"
-        :disableOption="disableOptions"
+        :disableOption="disableComponents"
       />
       <div class="d-flex">
         <div
@@ -34,7 +34,7 @@
             :selectedfilterId="selectedfilterId"
             :payload="payload"
             :containerHeight="containerHeight"
-            :disableOption="disableOptions"
+            :disableOption="disableComponents"
           />
         </div>
         <div
@@ -86,7 +86,7 @@
                 </p>
               </div>
               <div class="d-flex justify-content-between mb-4">
-                <section class="task-assignee">
+                <section v-if="!hideTaskDetails.assignee" class="task-assignee">
                   <label class="fw-bold">Task assignee</label>
                   <button
                     v-if="task.assignee"
@@ -176,6 +176,7 @@
                   </div>
                 </section>
                 <section
+                v-if="!hideTaskDetails.group" 
                   class="task-groups mx-4"
                   data-bs-toggle="tooltip"
                   title="Click to modify groups"
@@ -263,10 +264,9 @@
                     </div>
                   </div>
                 </section>
-                <section></section>
               </div>
               <div class="d-flex justify-content-between mb-2">
-                <section class="task-date-picker">
+                <section class="task-date-picker" v-if="!hideTaskDetails.followUpDate" >
                   <label class="fw-bold mb-1">Follow up</label>
                   <div
                     class="d-flex align-items-baseline"
@@ -304,7 +304,7 @@
                     </template>
                   </v-date-picker>
                 </section>
-                <section class="task-date-picker">
+                <section class="task-date-picker" v-if="!hideTaskDetails.dueDate" >
                   <label class="fw-bold mb-1">Due date</label>
                   <div
                     class="d-flex align-items-baseline"
@@ -342,7 +342,7 @@
                     </template>
                   </v-date-picker>
                 </section>
-                <section>
+                <section v-if="!hideTaskDetails.createdDate" >
                   <label class="fw-bold mb-1">Created</label>
                   <p
                     data-bs-toggle="tooltip"

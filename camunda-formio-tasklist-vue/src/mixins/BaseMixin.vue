@@ -32,17 +32,19 @@ export default class BaseMixin extends Vue {
   }) 
   
   public disableComponents !: DisableComponentPropPayload ;
-  protected disableOptions: DisableComponentPropPayload={
-    filterList : this.disableComponents.filterList?true:false,
-    filterTask: this.disableComponents.filterTask?true:false,
-    form: this.disableComponents.form?true:false,
-    sort: this.disableComponents.sort?true:false,
-  }
+
+   @Prop ({
+     default:()=>{
+       return {
+         assignee:false, group:false, followUpDate:false, dueDate:false, createdDate:false
+       };
+     }
+   }) public hideTaskDetails: any;
 
   @Watch("token")
-  ontokenChange(newVal: string) {
-    localStorage.setItem("authToken", newVal);
-  }
+   ontokenChange(newVal: string) {
+     localStorage.setItem("authToken", newVal);
+   }
 
   checkProps() {
     if (!this.bpmApiUrl || this.bpmApiUrl === "") {
