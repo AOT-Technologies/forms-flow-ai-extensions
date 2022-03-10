@@ -45,6 +45,6 @@ import CamundaTasklist from "camunda-formio-tasklist-vue/src/components/TaskList
   taskSortOrder="asc",
   :disableComponents="{filterList:false,  filterTask:false, sort:false, form:false}"
   :hideTaskDetails="{ assignee:true,group:true}"
-  ::listItemCardStyle="true" 
+  :listItemCardStyle="true" 
 />
 ```
