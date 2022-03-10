@@ -11,6 +11,7 @@ export interface FilterPayload {
         priority: number;
         refresh: boolean;
         showUndefinedVariable: boolean;
+        variables?: any;
     };
     query: {
         candidateUser?: string;

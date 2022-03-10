@@ -36,6 +36,7 @@
             :containerHeight="containerHeight"
             :disableOption="disableComponents"
             :listItemCardStyle="listItemCardStyle"
+            :selectedFilterTaskVariable="selectedFilterTaskVariable"
           />
         </div>
         <div
@@ -528,7 +529,7 @@ import {
   sortByPriorityList,
 } from "../services";
 import {
-  Component, Mixins, Prop
+  Component, Mixins, Prop,
 } from "vue-property-decorator";
 import {
   CustomEventPayload,
@@ -630,6 +631,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   };
   public perPage: number = 10;
   private filterList: FilterPayload[] = [];
+  private selectedFilterTaskVariable={
+
+  };
   private editAssignee: boolean = false;
   private groupList: GroupListPayload[] = [];
   private groupListNames?: string[] = [];
@@ -1165,6 +1169,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.taskScrollableHeight = `${this.containerHeight - (titleHeight + 1)}px`;
   }
 
+  
   async mounted() {
     this.containerHeight = (this.$refs.taskListContainerRef as any).clientHeight;
     this.toastMsg = new Toast(this.$refs?.toastMsgRef as any);
@@ -1222,6 +1227,20 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     if(this.filterList.length>0){
       this.selectedfilterId = this.taskDefaultFilterListNames.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER);
+      this.filterList.forEach(filterListItem=>{
+        if(filterListItem.id===this.selectedfilterId){
+          const newFilterVaribale= {
+
+          };
+          filterListItem.properties?.variables?.forEach(item => {
+            newFilterVaribale[item.name]=item.label;
+          });
+          this.selectedFilterTaskVariable= newFilterVaribale;
+
+        }
+      });
+      
+     
     }
 
     else {
