@@ -121,6 +121,7 @@ import {
 } from "../../models";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import Pagination from "./Pagination.vue";
+
 import TaskListSearch from "../search/TaskListSearch.vue";
 import TaskVariable from "../taskVariable/TaskVariable.vue";
 import moment from "moment";
