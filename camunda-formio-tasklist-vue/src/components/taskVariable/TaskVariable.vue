@@ -46,7 +46,7 @@ export default class TaskVariable extends Vue {
     private showMore: boolean = false;
 
     toggleShowMore(){
-        this.showMore= !this.showMore;
+      this.showMore= !this.showMore;
     }
 
 
