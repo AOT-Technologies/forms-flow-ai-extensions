@@ -86,6 +86,7 @@
               v-if="task.followUp"
             >Follow up in {{ timedifference(task.followUp) }}</div>
           </div>
+          <task-variable :variables="task._embedded.variable" :filterTaskVariable="selectedFilterTaskVariable"/>
         </div>
       </template>
       <div
@@ -122,17 +123,18 @@ import BaseMixin from "../../mixins/BaseMixin.vue";
 import Pagination from "./Pagination.vue";
 
 import TaskListSearch from "../search/TaskListSearch.vue";
+import TaskVariable from "../taskVariable/TaskVariable.vue";
 import moment from "moment";
 import {
   namespace
 } from "vuex-class";
-
 const serviceFlowModule = namespace("serviceFlowModule");
 
 @Component({
   components: {
     TaskListSearch,
     Pagination,
+    TaskVariable,
   },
 })
 export default class LeftSider extends Mixins(BaseMixin) {
@@ -145,6 +147,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     default: 0
   }) private containerHeight!: number;
   @Prop() private disableOption!: DisableComponentPropPayload;
+  @Prop() private selectedFilterTaskVariable!: object;
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
