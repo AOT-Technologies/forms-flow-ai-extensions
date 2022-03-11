@@ -1,112 +1,104 @@
 <template>
-  <div class="cft-task-list-container">
-    <TaskListSearch
-      ref="taskListSearchRef"
-      @update-task-list="onSearchUpdateTasklistResult"
-       v-if="!disableOption.filterTask" 
-    />
-    <div
-      class="cft-list-group"
-      :style="{
-          height: listHeight
-        }"
-    >
-      <div
-        v-if="taskLoading"
-        class="d-flex justify-content-center text-primary"
-      >
-        <div
-          class="spinner-border"
-          role="status"
-        >
-          <span class="sr-only">Loading...</span>
+  <div class="card">
+    <div class="tasklist-container">
+      <TaskListSearch @update-task-list="onSearchUpdateTasklistResult" />
+      <div v-if="taskLoading" class="d-flex justify-content-center text-primary">
+          <div class="spinner-border" role="status">
+         <span class="sr-only">Loading...</span>
         </div>
-      </div>
-      <template v-else-if="tasks && tasks.length">
-        <div
+    </div>
+      <b-list-group class="cft-list-container" v-else-if="tasks && tasks.length">
+        <b-list-group-item
+          button
           v-for="(task, idx) in tasks"
-          :key="task.id"
-          class="cft-list-group-item"
-          aria-current="true"
-         
+          v-bind:key="task.id"
           @click="
             toggle(idx);
             showTaskDetails(task.id);
           "
-          :class="{ 'task-selected': task.id == getFormsFlowTaskId , 'cft-card-list-group-item':listItemCardStyle}"
+          :class="{ 'cft-selected': task.id == getFormsFlowTaskId }"
+          class="cft-select-task"
         >
-          <h6
-            class="mb-1"
-            data-bs-toggle="tooltip"
-            title="Task Name"
-          >{{ task.name }}</h6>
-          <p
-            class="cft-description mb-0"
-            data-bs-toggle="tooltip"
-            title="Process Name"
+          <span
+            class="cft-task-title font-weight-bold"
+            v-b-tooltip.hover.right="'Task Name'"
           >
-            {{
-              getProcessDataFromList(
-                getProcessDefinitions,
-                task.processDefinitionId,
-                "name"
-              )
-            }}
-          </p>
-          <div
-            class="cft-task-details assignee mb-1"
-            data-bs-toggle="tooltip"
-            title="Task Assignee"
-          >{{ task.assignee }}</div>
-          <div class="d-flex w-100 cft-task-details mb-1">
-            <div
-              class="days-ago created-date"
-              data-bs-toggle="tooltip"
-              :title="getExactDate(task.created)"
-            >
-              Created {{ timedifference(task.created) }}
+            {{ task.name }}
+          </span>
+          <b-row>
+            <b-col cols="7">
+              <div class="cft-process-title">
+                <span v-b-tooltip.hover.right="'Process Name'">
+                  {{
+                    getProcessDataFromList(
+                      getProcessDefinitions,
+                      task.processDefinitionId,
+                      "name"
+                    )
+                  }}
+                </span>
+              </div>
+            </b-col>
+            <b-col cols="5">
+              <div class="cft-task-assignee">
+                <span v-b-tooltip.hover.left="'Task Assignee'">
+                  {{ task.assignee }}</span
+                >
+              </div>
+            </b-col>
+          </b-row>
+          <b-row>
+            <div class="created-details font-11 cft-task-details-assign">
+              <b-col cols="9">
+                <span
+                  class="cft-due-date"
+                  :data-title="getExactDate(task.due)"
+                  v-b-tooltip.hover.right="getExactDate(task.due)"
+                  v-if="task.due"
+                >
+                  Due {{ timedifference(task.due) }},
+                </span>
+                <span
+                  class="cft-due-date"
+                  :data-title="getExactDate(task.followUp)"
+                  v-b-tooltip.hover.right="getExactDate(task.followUp)"
+                  v-if="task.followUp"
+                >
+                  Follow-up {{ timedifference(task.followUp) }} ,
+                </span>
+                <span
+                  class="cft-due-date"
+                  :data-title="getExactDate(task.created)"
+                  v-if="task.created"
+                  v-b-tooltip.hover.right="getExactDate(task.created)"
+                >
+                  Created {{ timedifference(task.created) }}
+                </span>
+              </b-col>
+              <b-col cols="3" class="cft-priority">
+                <span v-b-tooltip.hover.bottomleft="'priority'">
+                  {{ task.priority }}</span
+                >
+              </b-col>
             </div>
-            <div
-              class="days-ago"
-              data-bs-toggle="tooltip"
-              :title="'Priority'"
-            >{{ task.priority }}</div>
-          </div>
-          <div class="d-flex w-100 task-details">
-            <div
-              class="days-ago due-date"
-              data-bs-toggle="tooltip"
-              :title="getExactDate(task.due)"
-              v-if="task.due"
-            >Due in {{ timedifference(task.due) }}</div>
-            <div
-              class="days-ago"
-              data-bs-toggle="tooltip"
-              :title="getExactDate(task.followUp)"
-              v-if="task.followUp"
-            >Follow up in {{ timedifference(task.followUp) }}</div>
-          </div>
-          <task-variable :variables="task._embedded.variable" :filterTaskVariable="selectedFilterTaskVariable"/>
-        </div>
-      </template>
-      <div
-        v-else
-        class="d-flex justify-content-center align-items-center py-5 mt-5"
-      >
-        <i class="fa fa-exclamation-circle"></i>
-        <h4 class="mt-0 mx-2">No tasks found in the list.</h4>
-      </div>
-    </div>
-    <Pagination
-      v-if="tasks && tasks.length"
-      ref="taskListPaginationRef"
-      class="py-2 px-3 cft-task-list-pagination"
-      :perPage="perPage"
-      :totalRecords="getFormsFlowTaskLength"
-      @go-to-page="onPageChange"
-    />
-  </div>
+          </b-row>
+        </b-list-group-item>
 
+        <b-pagination
+          v-model="currentPage"
+          :total-rows="getFormsFlowTaskLength"
+          :per-page="perPage"
+          class="cft-paginate"
+        />
+      </b-list-group>
+      <b-list-group cols="3" v-else>
+        <b-row class="cft-not-selected mt-2 ml-1 row">
+          <i class="fa fa-circle-exclamation" scale="1"></i>
+          <p>No tasks found in the list.</p>
+        </b-row>
+      </b-list-group>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -114,40 +106,31 @@ import {
   CamundaRest, cloneDeep, getFormattedDateAndTime, isEqual
 } from "../../services";
 import {
-  Component, Mixins, Prop
+  Component, Mixins, Prop, Watch 
 } from "vue-property-decorator";
-import {
-  DisableComponentPropPayload,Payload,
-} from "../../models";
 import BaseMixin from "../../mixins/BaseMixin.vue";
-import Pagination from "./Pagination.vue";
-
+import {
+  Payload 
+} from "../../models/Payload";
 import TaskListSearch from "../search/TaskListSearch.vue";
-import TaskVariable from "../taskVariable/TaskVariable.vue";
 import moment from "moment";
 import {
-  namespace
+  namespace 
 } from "vuex-class";
+
 const serviceFlowModule = namespace("serviceFlowModule");
 
 @Component({
   components: {
     TaskListSearch,
-    Pagination,
-    TaskVariable,
   },
 })
 export default class LeftSider extends Mixins(BaseMixin) {
-  @Prop() private tasks!: Array<any>;
+  @Prop() private tasks!: Array<object>;
   @Prop() private perPage!: number;
   @Prop() private selectedfilterId!: string;
   @Prop() private payload!: Payload;
   @Prop() private taskLoading!: boolean;
-  @Prop({
-    default: 0
-  }) private containerHeight!: number;
-  @Prop() private disableOption!: DisableComponentPropPayload;
-  @Prop() private selectedFilterTaskVariable!: object;
 
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -165,14 +148,12 @@ export default class LeftSider extends Mixins(BaseMixin) {
   @serviceFlowModule.Mutation("setFormsFlowactiveIndex")
   public setFormsFlowactiveIndex: any;
 
-  private getProcessDefinitions: Array<any> = [];
+  private getProcessDefinitions: Array<object> = [];
   private processDefinitionId = "";
   private currentPage = 1;
-  private listHeight: string = '360px';
 
-  // @Watch("currentPage")
-  onPageChange(newVal: number) {
-    this.currentPage = newVal;
+  @Watch("currentPage")
+  onPageChange (newVal: number) {
     this.payload["firstResult"] = (newVal - 1) * this.perPage;
     this.payload["maxResults"] = this.perPage;
     this.setFormsFlowTaskCurrentPage(this.currentPage);
@@ -184,20 +165,20 @@ export default class LeftSider extends Mixins(BaseMixin) {
     });
   }
 
-  timedifference(date: Date) {
+  timedifference (date: Date) {
     return moment(date).fromNow();
   }
 
-  getExactDate(date: Date) {
+  getExactDate (date: Date) {
     return getFormattedDateAndTime(date);
   }
 
-
-  toggle(index: number) {
+ 
+  toggle (index: number) {
     this.setFormsFlowactiveIndex(index);
   }
 
-  getProcessDataFromList(
+  getProcessDataFromList (
     processList: any[],
     processId: string,
     dataKey: string
@@ -206,17 +187,17 @@ export default class LeftSider extends Mixins(BaseMixin) {
     return process && process[dataKey];
   }
 
-  showTaskDetails(taskId: string) {
+  showTaskDetails (taskId: string) {
     this.setFormsFlowTaskId(taskId);
     this.$root.$emit("call-fetchTaskDetails", {
-      selectedTaskId: taskId
+      selectedTaskId: taskId 
     });
   }
 
-  onSearchUpdateTasklistResult(queryList: any) {
+  onSearchUpdateTasklistResult (queryList: object) {
     const requiredParams = {
       ...{
-        sorting: this.payload?.sorting
+        sorting: this.payload?.sorting 
       },
       ...queryList,
     };
@@ -226,7 +207,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
         filterId: this.selectedfilterId,
         requestData: cloneDeep(requiredParams),
       });
-
+    
       this.$root.$emit("call-fetchPaginatedTaskList", {
         filterId: this.selectedfilterId,
         requestData: cloneDeep(requiredParams),
@@ -236,27 +217,14 @@ export default class LeftSider extends Mixins(BaseMixin) {
     }
   }
 
-  updated() {
-    this.calculateViewHeights();
-  }
-
-  /*** to calculate the height and handling scroll views accordingly */
-  calculateViewHeights() {
-    const searchHeight = (this.$refs.taskListSearchRef as any)?.$el?.offsetHeight || 0;
-    const paginationHeight = (this.$refs.taskListPaginationRef as any)?.$el?.offsetHeight || 0;
-    if (this.containerHeight > 250) {
-      this.listHeight = `${this.containerHeight - (searchHeight + paginationHeight)}px`;
-    }
-  }
-
-  mounted() {
+  mounted () {
     this.$root.$on("call-pagination", () => {
       this.resetPaginationStore();
     });
     this.$root.$on("update-pagination-currentpage", (para: any) => {
       this.currentPage = para.page;
     });
-
+    
     this.currentPage = this.getFormsFlowTaskCurrentPage;
 
     CamundaRest.getProcessDefinitions(this.token, this.bpmApiUrl).then(
@@ -266,7 +234,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     );
   }
 
-  resetPaginationStore() {
+  resetPaginationStore () {
     if (this.getFormsFlowactiveIndex < 9) {
       this.setFormsFlowactiveIndex(this.getFormsFlowactiveIndex + 1);
       // this.activeIndex = this.getFormsFlowactiveIndex;
@@ -278,61 +246,10 @@ export default class LeftSider extends Mixins(BaseMixin) {
     }
   }
 
-  beforeDestroy() {
+  beforeDestroy () {
     this.$root.$off("call-pagination");
     this.$root.$off("update-pagination-currentpage");
   }
 
 }
 </script>
-
-<style lang="scss" scoped>
-.cft-task-list-container {
-  background: #fff;
-  border-radius: 0.5rem;
-  .cft-list-group {
-    height: 100px;
-    overflow-y: auto;
-    border-radius: 0;
-     .cft-card-list-group-item{
-       margin: 0.50rem 1rem;
-     }
-    .cft-list-group-item {
-      padding: 0.75rem 1rem;
-      border-top: 1px solid #eee;
-      cursor: pointer;
-      &.task-selected {
-        background: #eff8ff;
-        border-left: 4px solid #2185d0;
-        padding-left: 0.75rem;
-      }
-      &:first-child,
-      &:last-child {
-        border-radius: 0;
-      }
-    }
-  }
-  .cft-task-list-pagination {
-    border-top: 1px solid #eee;
-  }
-  .cft-description {
-    opacity: 0.6;
-    font-size: 0.9rem;
-  }
-  .cft-task-details {
-    justify-content: space-between;
-    align-items: center;
-    .days-ago {
-      font-size: 0.75rem;
-      line-height: normal;
-    }
-    .due-date {
-      color: red;
-    }
-    &.assignee {
-      font-weight: 600;
-      font-size: 0.85rem;
-    }
-  }
-}
-</style>

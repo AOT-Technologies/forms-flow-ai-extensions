@@ -25,6 +25,6 @@ import {
   },
 })
 export default class FormView extends Vue {
-    @Prop() private formioUrl!: string;
+    @Prop() private formioUrl!: string;;
 }
 </script>

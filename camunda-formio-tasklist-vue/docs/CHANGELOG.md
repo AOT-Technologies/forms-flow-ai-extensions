@@ -1,16 +1,5 @@
 # Changes for camunda-formio-tasklist-vue
 
-## v1.0.20, 2022-03-11
-
-#### Modified
-
-- Add Task Variable on task list 
-- Add hide task details prop feature 
-- Add disable component feature
-- Updated FORMIO details from multiple line Props to combined Props as a single Object
-- Updated UI
-- Add `taskDefaultFilterListNames` to default filter the Task List
-
 ## v1.0.19, 2022-02-25
 
 #### Modified

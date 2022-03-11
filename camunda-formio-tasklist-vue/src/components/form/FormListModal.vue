@@ -1,15 +1,10 @@
 <template>
   <div class="cftf-form-conatiner cft-text-font">
-    <button
-      class="btn btn-primary"
-      variant="primary"
-      v-b-modal.modal-multi-1
-      @click="formListItems"
-    >
-
-      <i class="fa fa-wpforms mx-1"></i>
-      Forms
-    </button>
+    <b-button variant="primary" v-b-modal.modal-multi-1 @click="formListItems">
+      <span ref="btn-show">
+        <i class="fa fa-wpforms"> Forms</i>
+      </span>
+    </b-button>
     <b-modal
       ref="modal-1"
       id="modal-multi-1"
@@ -20,11 +15,7 @@
     >
       <template #modal-header="{ close }">
         <h5>FORM LIST</h5>
-        <b-button
-          size="sm"
-          variant="outline-danger"
-          @click="close()"
-        >
+        <b-button size="sm" variant="outline-danger" @click="close()">
           <h5>
             Close
             <i class="fa fa-times"></i>
@@ -79,20 +70,13 @@
       :hide-footer="true"
     >
       <template #modal-header="{ close }">
-        <b-button
-          variant="link"
-          @click="backClickToFormList"
-        >
+        <b-button variant="link" @click="backClickToFormList">
           <h5>
             <i class="fa fa-chevron-left"></i> Back
           </h5>
         </b-button>
         <h5>SUBMIT FORM</h5>
-        <b-button
-          size="sm"
-          variant="outline-danger"
-          @click="close()"
-        >
+        <b-button size="sm" variant="outline-danger" @click="close()">
           <h5>
             Close
             <i class="fa fa-times"></i>
@@ -116,20 +100,20 @@
 import "semantic-ui-css/semantic.min.css";
 import "../../styles/camundaFormIOFormList.scss";
 import {
-  CamundaRest, FORMLIST_FIELDS, formApplicationSubmit
+  CamundaRest, FORMLIST_FIELDS, formApplicationSubmit 
 } from "../../services";
 import {
-  Component, Mixins
+  Component, Mixins 
 } from "vue-property-decorator";
 import {
   CustomEventPayload,
   FormListFieldsPayload,
   FormListItemsPayload,
-  FormioSubmissionPayload
+  FormioSubmissionPayload 
 } from "../../models";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import {
-  Form
+  Form 
 } from "vue-formio";
 
 @Component({
@@ -148,11 +132,11 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private formTitle: string = "";
   private submissionId?: string = "";
 
-  get totalrows() {
+  get totalrows () {
     return this.formitems.length;
   }
 
-  formListItems() {
+  formListItems () {
     this.formitems = [];
     CamundaRest.listForms(this.token, this.bpmApiUrl).then(response => {
       response.data.forEach((form: FormListItemsPayload) => {
@@ -161,7 +145,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
     });
   }
 
-  storeFormValue(val: string, title: string) {
+  storeFormValue (val: string, title: string) {
     this.$bvModal.hide("modal-multi-1");
     const forms = localStorage.getItem("formioApiUrl") + "/form/";
     this.formId = val;
@@ -169,12 +153,12 @@ export default class FormListModal extends Mixins(BaseMixin) {
     this.formTitle = title;
   }
 
-  backClickToFormList() {
+  backClickToFormList () {
     this.$bvModal.hide("modal-multi-2");
     this.$bvModal.show("modal-multi-1");
   }
 
-  onSubmit(submission: FormioSubmissionPayload) {
+  onSubmit (submission: FormioSubmissionPayload) {
     this.formId = submission.form;
     this.submissionId = submission._id;
 

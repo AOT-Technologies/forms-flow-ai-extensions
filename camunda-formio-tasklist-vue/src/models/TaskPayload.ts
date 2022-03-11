@@ -26,7 +26,7 @@ export interface TaskPayload {
 
 export interface CustomEventPayload {
   actionType: string;
-  component: any;
+  component: object;
   type: string;
 }
 

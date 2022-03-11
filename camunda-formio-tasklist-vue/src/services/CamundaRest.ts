@@ -264,7 +264,7 @@ export const CamundaRest = {
   async formTaskSubmit (
     bearerToken: string,
     taskId: string,
-    values: any,
+    values: object,
     CamundaUrl: string
   ) {
     return await bpmAxios(bearerToken, CamundaUrl).post(

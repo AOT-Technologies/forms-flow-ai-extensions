@@ -27,30 +27,3 @@ export const UserListObject = (user: UserPayload) => {
     lastName: `${user.firstName} ${user.lastName===null?"":user.lastName}`,
   };
 };
-
-export interface KeyCloakPayload {
-  exp?: string;
-  iat?: number;
-  jti?: string;
-  iss?: string;
-  aud?: string[];
-  sub?: string;
-  typ?: string;
-  azp?: string;
-  "session_state": string;
-  acr: string;
-  "allowed-origins": string[];
-  "realm_access"?: Record<string, any>;
-  "resource_access"?: Record<string, any>;
-  scope?: string;
-  "email_verified"?: boolean;
-  role?: string[];
-  name?: string;
-  groups?: string[];
-  "preferred_username": string;
-  locale?: string;
-  "given_name"?: string;
-  dashboards?: Record<string, any>;
-  "family_name": string;
-  email: string;
-}

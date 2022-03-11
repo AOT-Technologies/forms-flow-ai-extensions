@@ -1,178 +1,148 @@
 <template>
-  <div class="task-search-filter-item">
-    <div class="d-flex mb-2 justify-content-between">
-      <div class="d-flex">
-        <button
-          class="btn btn-outline-danger btn-sm"
+  <div>
+    <b-row>
+      <!-- this is for close the filter on left top side -->
+      <b-col cols="1">
+        <i
+          class="fa fa-times cftf-x"
           @click="deleteSearchQueryElement(query, index)"
-          title="Remove this filter"
-        >
-          <i
-            class="fa fa-trash-o"
-            aria-hidden="true"
-          ></i>
-        </button>
-        <div class="dropdown mx-2">
-          <button
-            class="btn btn-light dropdown-toggle"
-            type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
+        ></i>
+      </b-col>
+      <!-- end filter close -->
+      <b-col cols="5">
+        <!-- this is drop down for filter task -->
+        <b-nav-item-dropdown :text="query.label">
+          <b-dropdown-item-button
+            v-for="updateSearch in searchListElements"
+            :key="updateSearch.label"
+            @click="updateSearchQueryElement(updateSearch, index)"
           >
-            {{ query.label }}
-          </button>
-          <ul
-            class="dropdown-menu"
-            aria-labelledby="dropdownMenuButton1"
+            {{ updateSearch.label }}
+          </b-dropdown-item-button>
+        </b-nav-item-dropdown>
+        <!-- end filter task option -->
+      </b-col>
+      <b-col cols="5">
+        <span v-if="query.type === 'variables'">
+          <span>: </span>
+          <span
+            v-if="showVariableValueState[index] === 'a'"
+            @click="updateVariableInput(index)"
+            title="Property"
           >
-            <li
-              v-for="updateSearch in searchListElements"
-              :key="updateSearch.label"
-              @click="updateSearchQueryElement(updateSearch, index)"
-            >
-              <a class="dropdown-item">{{ updateSearch.label }}</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <button
-        v-if="(query.type === 'variables') && (showVariableValueState[index] === 'a')"
-        class="btn btn-outline-primary btn-sm"
-        @click="updateVariableInput(index)"
-        title="Property"
-      >
-        ??
-      </button>
-    </div>
-    <div
-      class="d-flex"
-      v-if="query.type === 'variables'"
-    >
-      <div
-        class="d-flex mb-2"
-        v-if="showVariableValueState[index] === 'i'"
-      >
-        <input
-          class="form-control"
-          type="text"
-          v-model="selectedSearchQueries[index].variable"
-          v-on:keyup.enter="showVariableValueItem(index)"
+            ??
+          </span>
+          <span v-if="showVariableValueState[index] === 'i'" title="Property">
+            <span>
+              <span @click="showVariableValueItem(index)">
+                <i class="fa fa-check cft-approve-box"></i>
+              </span>
+              <i
+                class="fa fa-times cft-reject-box"
+                @click="rejectVariableItem(index)"
+              ></i
+            ></span>
+            <b-form-input
+              v-model="selectedSearchQueries[index].variable"
+              v-on:keyup.enter="showVariableValueItem(index)"
+            />
+          </span>
+        </span>
+        <span
+          class="cft-search-cursor"
+          v-if="
+            showVariableValueState[index] === 's' && query.type === 'variables'
+          "
+          @click="updateVariableInput(index)"
         >
-        <button
-          class="btn btn-outline-success btn-sm mx-2"
-          @click="showVariableValueItem(index)"
-        ><i class="fa fa-check"></i>
-        </button>
-        <button
-          class="btn btn-outline-danger btn-sm"
-          @click="rejectVariableItem(index)"
-        ><i class="fa fa-times"></i>
-        </button>
-      </div>
-      <p
-        class="cft-search-cursor"
-        v-if="showVariableValueState[index] === 's'"
-        @click="updateVariableInput(index)"
-      >
-        {{ selectedSearchQueries[index].variable }}
-      </p>
-    </div>
-    <div class="d-flex mb-2">
-      <v-select
-        :filterable="false"
-        :clearable="false"
-        v-model="operator[index]"
-        @change="updateSearchQueryOperators(operator[index], index)"
-        :options="query.compares"
-        class="select-search-query"
-      />
-      <button
-        v-if="showSearchState[index] === 'a'"
-        @click="updateSearchInput(index)"
-        class="btn btn-outline-primary btn-sm"
-      >
-        ??
-      </button>
-      <v-date-picker
-        v-if="showSearchState[index] === 'i' && query.type === 'date'"
-        v-model="selectedSearchQueries[index].value"
-        :popover="{ visibility: 'click' }"
-      >
-        <template v-slot="{ inputValue, inputEvents }">
-          <div class="input-group">
-            <input
-              class="form-control"
-              :value="inputValue"
-              v-on="inputEvents"
+          {{ selectedSearchQueries[index].variable }}
+        </span>
+      </b-col>
+    </b-row>
+
+    <b-row>
+      <b-col cols="4">
+        <b-form-select
+          v-model="operator[index]"
+          @change="updateSearchQueryOperators(operator[index], index)"
+          :options="query.compares"
+          plain
+          size="sm"
+        />
+      </b-col>
+      <b-col cols="8">
+        <div class="cft-rhs-container">
+          <span
+            v-if="showSearchState[index] === 'a'"
+            @click="updateSearchInput(index)"
+            class="cft-search-cursor"
+            >??</span
+          >
+          <span v-if="showSearchState[index] === 'i' && query.type === 'date'">
+            <b-form-datepicker
+              size="sm"
+              v-model="selectedSearchQueries[index].value"
               @input="
                 setSearchQueryValue(selectedSearchQueries, index);
                 showSearchValueItem(index);
               "
-              placeholder="dd/mm/yyyy"
-            />
-          </div>
-        </template>
-      </v-date-picker>
-      <div
-        v-if="showSearchState[index] === 's' && query.type === 'date'"
-        @click="updateSearchInput(index)"
-      >
-        {{ formatDate(selectedSearchQueries[index].value) }}
-      </div>
-      <template v-if="showSearchState[index] === 'i' && query.type !== 'date'">
-        <input
-          class="form-control"
-          type="text"
-          v-model="selectedSearchQueries[index].value"
-          v-on:keyup.enter="
-                setSearchQueryValue(selectedSearchQueries, index);
-                showSearchValueItem(index);"
-        >
-        <button
-          class="btn btn-outline-success btn-sm mx-2"
-          @click="
+            >
+            </b-form-datepicker>
+          </span>
+          <span
+            v-if="showSearchState[index] === 's' && query.type === 'date'"
+            @click="updateSearchInput(index)"
+          >
+            {{ formatDate(selectedSearchQueries[index].value) }}
+          </span>
+          <span v-if="showSearchState[index] === 'i' && query.type !== 'date'">
+            <span class="cft-icon-actions">
+              <span
+                @click="
                   setSearchQueryValue(selectedSearchQueries, index);
-                  showSearchValueItem(index);"
-        ><i class="fa fa-check"></i>
-        </button>
-        <button
-          class="btn btn-outline-danger btn-sm"
-          @click="rejectSearchValueItem(index)"
-        ><i class="fa fa-times"></i>
-        </button>
-      </template>
-      <div
-        v-if="showSearchState[index] === 's' && query.type !== 'date'"
-        @click="updateSearchInput(index)"
-      >
-        {{ selectedSearchQueries[index].value }}
-      </div>
-    </div>
-
+                  showSearchValueItem(index);
+                "
+              >
+                <i class="fa fa-check cft-approve-box"></i>
+              </span>
+              <i
+                class="fa fa-times cft-reject-box"
+                @click="rejectSearchValueItem(index)"
+              ></i
+            ></span>
+            <b-form-input
+              v-model="selectedSearchQueries[index].value"
+              v-on:keyup.enter="
+                setSearchQueryValue(selectedSearchQueries, index);
+                showSearchValueItem(index);
+              "
+            />
+          </span>
+          <span
+            v-if="showSearchState[index] === 's' && query.type !== 'date'"
+            @click="updateSearchInput(index)"
+          >
+            {{ selectedSearchQueries[index].value }}
+          </span>
+        </div>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script lang="ts">
 import "../../styles/camundaFormIOTasklistSearch.scss";
 import {
-  Component, Emit, Prop, Vue
+  Component, Emit, Prop, Vue 
 } from "vue-property-decorator";
 import {
-  getFormattedDateAndTime, taskSearchFilters
+  getFormattedDateAndTime, taskSearchFilters 
 } from "../../services";
-import DatePicker from "v-calendar/lib/components/date-picker.umd";
 import {
-  SearchOptionPayload
+  SearchOptionPayload 
 } from "../../models";
-import vSelect from "vue-select";
 
-@Component({
-  components: {
-    vSelect,
-    DatePicker,
-    VDatePicker: DatePicker,
-  }
-})
+@Component
 export default class TaskSearchItem extends Vue {
   @Prop({
   }) private query!: SearchOptionPayload;
@@ -260,20 +230,3 @@ export default class TaskSearchItem extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.task-search-filter-item {
-  padding: 0.35rem 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-  .form-control,
-  .btn {
-    height: 40px;
-    min-height: 40px;
-    border-radius: 0.4rem;
-  }
-  .select-search-query {
-    margin-right: 0.5rem;
-  }
-}
-</style>

@@ -1,80 +1,61 @@
 <template>
-  <div class="d-flex align-items-center flex-wrap">
-    <div
-      class="d-flex align-items-center sort-by-tab m-2"
+  <b-col id="cftf-sort-container" class="d-flex flex-row pl-2">
+    <b-row
+      class="cftf-sort-box mx-1 border"
       v-for="(sort, idx) in sortList"
       :key="sort.sortBy"
     >
-      <button
+      <span
         v-if="sortList.length > 1"
-        class="btn btn-outline-danger btn-sm"
+        class="cftf-exit-button ml-1"
         @click="deleteSort(sort, idx)"
-        title="Remove Sorting Field"
+        v-b-tooltip.hover title="Remove Sorting Field"
       >
-        <i
-          class="fa fa-times"
-          aria-hidden="true"
-        ></i>
-      </button>
-      <div class="nav-item dropdown">
-        <a
-          class="nav-link dropdown-toggle px-2"
-          role="button"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-          title="Click To Change Field for Sorting"
+        <i class="fa fa-times"></i>
+      </span>
+      <b-nav-item-dropdown
+        :text="sort.label"
+        v-b-tooltip.hover
+         class="pl-1"
+        title="Click To Change Field for Sorting"
+        :no-caret="true"
+      >
+        <span v-if="sortOptions.length">
+          <b-dropdown-item-button
+            v-for="sort in sortOptions"
+            :key="sort.sortBy"
+            @click="updateSort(sort, idx)"
+            >{{ sort.label }}
+          </b-dropdown-item-button>
+        </span>
+        <b-dropdown-item-button v-else
+          >Sorry, no more fields to sortBy.</b-dropdown-item-button
         >
-          {{ sort.label }}
-        </a>
-        <ul class="dropdown-menu">
-          <li v-if="sortOptions.length">
-            <a
-              class="dropdown-item"
-              v-for="sortOption in sortOptions"
-              :key="sortOption.sortBy"
-              @click="updateSort(sortOption, idx)"
-            >{{ sortOption.label }}</a>
-          </li>
-          <li v-else>
-            <a class="dropdown-item">Sorry, no more fields to sort</a>
-          </li>
-        </ul>
-      </div>
-      <button
-        class="btn btn-outline-primary btn-sm"
+      </b-nav-item-dropdown>
+      <a
         v-if="sort.sortOrder === 'asc'"
         @click="toggleSort(idx)"
+        href="#"
         title="Ascending"
       >
-        <i
-          class="fa fa-arrow-up"
-          aria-hidden="true"
-        ></i>
-      </button>
-      <button
-        class="btn btn-outline-primary btn-sm"
-        v-else
-        @click="toggleSort(idx)"
-        title="Descending"
-      >
-        <i
-          class="fa fa-arrow-down"
-          aria-hidden="true"
-        ></i>
-      </button>
-    </div>
+        <i class="fa fa-chevron-up cftf-arrow ml-2" aria-hidden="true"></i>
+      </a>
+      <a v-else @click="toggleSort(idx)" href="#" title="Descending">
+        <i class="fa fa-chevron-down cft-arrow ml-2" aria-hidden="true"></i>
+      </a>
+    </b-row>
     <TaskSortOptions
       v-if="sortList.length !== fullTaskSortLength"
       :sortOptions="sortOptions"
       @add-sort="addSort"
     >
     </TaskSortOptions>
-  </div>
+  </b-col>
 </template>
 
 <script lang="ts">
 import {
-  Component, Prop, Vue
+  Component, Prop, Vue 
 } from "vue-property-decorator";
 import {
   Payload,
@@ -92,7 +73,7 @@ import {
 } from "../../services";
 import TaskSortOptions from "../sort/TaskListSortoptions.vue";
 import {
-  namespace
+  namespace 
 } from "vuex-class";
 
 
@@ -117,7 +98,7 @@ export default class TaskListSort extends Vue {
   private sortOptions: TaskListSortType[] = [];
   private updateSortOptions: TaskListSortType[] = [];
 
-  getOptions(options: TaskListSortType[]) {
+  getOptions (options: TaskListSortType[]) {
     const optionsArray: TaskListSortType[] = [];
     TASK_SORTING_FULL_LIST.forEach((sortOption) => {
       if (
@@ -126,14 +107,14 @@ export default class TaskListSort extends Vue {
         )
       ) {
         optionsArray.push({
-          ...sortOption
+          ...sortOption 
         });
       }
     });
     return optionsArray;
   }
 
-  get fullTaskSortLength() {
+  get fullTaskSortLength () {
     return TASK_SORTING_FULL_LIST.length;
   }
 
@@ -151,7 +132,7 @@ export default class TaskListSort extends Vue {
   }
 
 
-  addSort(sort: TaskListSortType) {
+  addSort (sort: TaskListSortType) {
     this.sortList.push(sort);
     if (this.sortList.length === TASK_SORTING_FULL_LIST.length) {
       this.updateSortOptions = this.sortOptions;
@@ -159,11 +140,11 @@ export default class TaskListSort extends Vue {
     } else {
       this.sortOptions = this.getOptions(this.sortList);
     }
-
+    
     this.updateOnSortAction();
   }
 
-  updateSort(sort: TaskListSortType, index: number) {
+  updateSort (sort: TaskListSortType, index: number) {
     if (this.sortList[index].sortOrder === SORT_ORDER.ASCENDING) {
       this.sortList[index] = sort;
       this.sortList[index].sortOrder = SORT_ORDER.ASCENDING;
@@ -173,31 +154,31 @@ export default class TaskListSort extends Vue {
     }
     this.sortOptions = this.getOptions(this.sortList);
     this.payload.sorting = this.sortList;
-
+    
     this.updateOnSortAction();
   }
 
-  deleteSort(sort: TaskListSortType, index: number) {
+  deleteSort (sort: TaskListSortType, index: number) {
     this.sortList.splice(index, 1);
     this.updateSortOptions = [];
     this.sortOptions = this.getOptions(this.sortList);
     this.payload.sorting = this.sortList;
-
+    
     this.updateOnSortAction();
   }
 
-  toggleSort(index: number) {
+  toggleSort (index: number) {
     if (this.sortList[index].sortOrder === SORT_ORDER.ASCENDING)
       this.sortList[index].sortOrder = SORT_ORDER.DESCENDING;
     else {
       this.sortList[index].sortOrder = SORT_ORDER.ASCENDING;
     }
     this.payload.sorting = this.sortList;
-
+    
     this.updateOnSortAction();
   }
 
-  getDefaultTaskSortOption() {
+  getDefaultTaskSortOption () {
     /**
    * "created" is the default TaskSortBy and "desc" is the deafult TaskSortOrder
    */
@@ -225,27 +206,15 @@ export default class TaskListSort extends Vue {
       this.sortList = [TASK_FILTER_LIST_DEFAULT_PARAM_CREATED];
     }
 
-    if (this.defaultTaskSortOrder === SORT_ORDER.ASCENDING) {
+    if (this.defaultTaskSortOrder === SORT_ORDER.ASCENDING){
       this.sortList[0].sortOrder = SORT_ORDER.ASCENDING;
     }
     this.payload.sorting = this.sortList;
   }
 
-  mounted() {
+  mounted () {
     this.getDefaultTaskSortOption();
     this.sortOptions = this.getOptions(this.sortList);
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.sort-by-tab {
-  background: #ebebeb;
-  border-radius: 8px;
-  padding: 0.25rem 0.75rem;
-  .btn {
-    min-height: unset;
-    border-radius: 6px;
-  }
-}
-</style>

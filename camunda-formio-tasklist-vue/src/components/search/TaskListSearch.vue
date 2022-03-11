@@ -1,10 +1,10 @@
 <template>
-  <div class="row mx-0 task-list-search">
-    <div class="col my-2">
+  <div class="cft-input-search-filter px-2">
+    <b-col class="cft-filter-container" xl="12" lg="12" md="12" sm="12">
       <div v-if="selectedSearchQueries.length">
         <TaskListSearchType />
         <b-col
-          class="cftf-search-item-box mt-2"
+          class="cftf-search-item-box mr-2"
           v-for="(query, index) in selectedSearchQueries"
           :key="query.label + index"
         >
@@ -30,7 +30,7 @@
         "
         @add-to-selected-search-query="addToSelectedSearchQuery"
       />
-    </div>
+    </b-col>
   </div>
 </template>
 
@@ -38,7 +38,7 @@
 <script lang="ts">
 import "../../styles/camundaFormIOTasklistSearch.scss";
 import {
-  Component, Emit, Mixins, Vue
+  Component, Emit, Vue 
 } from "vue-property-decorator";
 import {
   FilterSearchTypes,
@@ -50,12 +50,11 @@ import {
   SearchOptionPayload,
   SearchQueryPayload,
 } from "../../models";
-import BaseMixin from "../../mixins/BaseMixin.vue";
 import TaskListAddSearchIgnoreCase from "./TaskListAddSearchIgnoreCase.vue";
 import TaskListSearchType from "./TaskListSearchType.vue";
 import TaskSearchItem from "./TaskSearchItem.vue";
 import {
-  namespace
+  namespace 
 } from "vuex-class";
 
 const serviceFlowModule = namespace("serviceFlowModule");
@@ -67,7 +66,9 @@ const serviceFlowModule = namespace("serviceFlowModule");
     TaskSearchItem,
   },
 })
-export default class TaskListSearch extends Mixins(BaseMixin) {
+
+
+export default class TaskListSearch extends Vue {
 
   private selectedSearchQueries: SearchOptionPayload[] = [];
   private operator: string[] = [];
@@ -86,43 +87,43 @@ export default class TaskListSearch extends Mixins(BaseMixin) {
   @serviceFlowModule.Getter("getVariableValueIgnoreCase")
   private getVariableValueIgnoreCase: any;
 
-  updateSearchQueryOperators(operator: any, index: number) {
+  updateSearchQueryOperators (operator: any, index: number) {
     this.selectedSearchQueries[index].operator = this.operator[index];
     this.queryList = getFormattedQueryListParams(this.selectedSearchQueries, this.getFormsFlowTaskSearchType, this.getVariableNameIgnoreCase, this.getVariableValueIgnoreCase);
     this.onSearchUpdateTaskListResult();
   }
 
-  updateSearchInput(index: number) {
+  updateSearchInput (index: number) {
     this.selectedSearchQueries[index].value = "";
     Vue.set(this.showSearchState, index, SEARCH_BOX_STATE.INSERT);
   }
 
-  showSearchValueItem(index: number) {
+  showSearchValueItem (index: number) {
     Vue.set(this.showSearchState, index, SEARCH_BOX_STATE.SHOW);
   }
 
-  rejectSearchValueItem(index: number) {
+  rejectSearchValueItem (index: number) {
     Vue.set(this.showSearchState, index, SEARCH_BOX_STATE.START);
   }
 
-  makeInputNull(index: number) {
+  makeInputNull (index: number) {
     Vue.set(this.showSearchState, index, SEARCH_BOX_STATE.START);
   }
 
-  updateVariableInput(index: number) {
+  updateVariableInput (index: number) {
     Vue.set(this.showVariableValueState, index, SEARCH_BOX_STATE.INSERT);
   }
 
-  showVariableValueItem(index: number) {
+  showVariableValueItem (index: number) {
     Vue.set(this.showVariableValueState, index, SEARCH_BOX_STATE.SHOW);
   }
-
-  rejectVariableItem(index: number) {
+  
+  rejectVariableItem (index: number) {
     Vue.set(this.showVariableValueState, index, SEARCH_BOX_STATE.START);
   }
 
-  addToSelectedSearchQuery(item: SearchOptionPayload) {
-    item.index = this.selectedSearchQueries.length + 1;
+  addToSelectedSearchQuery (item: SearchOptionPayload) {
+    item.index = this.selectedSearchQueries.length+1;
     this.selectedSearchQueries = [...this.selectedSearchQueries, {
       ...item
     }];
@@ -143,7 +144,7 @@ export default class TaskListSearch extends Mixins(BaseMixin) {
     }
   }
 
-  deleteSearchQueryElement(query: SearchOptionPayload, index: number) {
+  deleteSearchQueryElement (query: SearchOptionPayload, index: number) {
     this.selectedSearchQueries.splice(index, 1);
     this.operator.splice(index, 1);
     this.showSearchState.splice(index, 1);
@@ -163,7 +164,7 @@ export default class TaskListSearch extends Mixins(BaseMixin) {
     this.onSearchUpdateTaskListResult();
   }
 
-  updateSearchQueryElement(searchitem: SearchOptionPayload, index: number) {
+  updateSearchQueryElement (searchitem: SearchOptionPayload, index: number) {
     if (
       searchitem.type === FilterSearchTypes.DATE
       && this.selectedSearchQueries[index].type !== FilterSearchTypes.DATE
@@ -178,9 +179,9 @@ export default class TaskListSearch extends Mixins(BaseMixin) {
     }
   }
 
-  setSearchQueryValue(selectedSearchQueries: SearchOptionPayload[], index: number) {
+  setSearchQueryValue (selectedSearchQueries: SearchOptionPayload[], index: number) {
     /*Dates should be in ISO format for request object*/
-    if (this.selectedSearchQueries[index].type === FilterSearchTypes.DATE) {
+    if(this.selectedSearchQueries[index].type === FilterSearchTypes.DATE) {
       this.selectedSearchQueries[index].value = getISODateTime(this.selectedSearchQueries[index].value);
     }
     this.queryList = getFormattedQueryListParams(this.selectedSearchQueries, this.getFormsFlowTaskSearchType, this.getVariableNameIgnoreCase, this.getVariableValueIgnoreCase);
@@ -188,11 +189,11 @@ export default class TaskListSearch extends Mixins(BaseMixin) {
   }
 
   @Emit("update-task-list")
-  onSearchUpdateTaskListResult() {
+  onSearchUpdateTaskListResult () {
     return this.queryList;
   }
 
-  mounted() {
+  mounted () {
     this.$root.$on("call-deleteSearchQueryElement", (para: any) => {
       this.deleteSearchQueryElement(para.query, para.index);
     });
@@ -215,7 +216,7 @@ export default class TaskListSearch extends Mixins(BaseMixin) {
     });
   }
 
-  beforeDestroy() {
+  beforeDestroy () {
     this.$root.$off("call-deleteSearchQueryElement");
     this.$root.$off("call-updateSearchQueryElement");
     this.$root.$off("call-updateSearchQueryOperators");
@@ -224,9 +225,3 @@ export default class TaskListSearch extends Mixins(BaseMixin) {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.task-list-search {
-  border-bottom: 1px solid #eee;
-}
-</style>

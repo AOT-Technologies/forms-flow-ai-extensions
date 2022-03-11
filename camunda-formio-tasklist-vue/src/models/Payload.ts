@@ -4,7 +4,7 @@ import {
 export interface Payload {
   active?: boolean;
   sorting: TaskListSortType[];
-  orQueries?: Array<any>;
+  orQueries?: Array<object>;
   maxResults?: number;
   firstResult?: number;
 }

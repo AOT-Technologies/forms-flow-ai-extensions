@@ -1,65 +1,59 @@
 <template>
   <div>
-    <h3 class="mb-4"><i class="fa fa-list-alt"></i> Application History</h3>
-    <table
-      class="table task-history-table"
-      v-if="applicationId && taskHistoryList.length"
-    >
-      <thead class="table-dark">
-        <tr>
-          <th scope="col">Status</th>
-          <th scope="col">Created</th>
-          <th scope="col">Submissions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="h in taskHistoryList"
-          :key="h.created"
-        >
-          <td class="fw-bold">{{ h.applicationStatus }}</td>
-          <td>{{ getExactDate(h.created) }}</td>
-          <td>
-            <a
-              class="btn btn-primary"
-              :href="formatURL(h.formUrl)"
-              target="_blank"
-            >
-              <i class="fa fa-eye"></i>
-              View Submission
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div v-else>
-      No application history found
-    </div>
+    <h3><i class="fa fa-list"></i> Application History</h3>
+    <b-col v-if="applicationId && taskHistoryList.length">
+      <b-table-simple
+        caption-top
+        responsive
+        head-variant="light"
+        :bordered="true"
+        :outlined="true"
+      >
+        <b-thead head-variant="light">
+          <b-tr>
+            <b-th>Status</b-th>
+            <b-th>Created</b-th>
+            <b-th>Submissions</b-th>
+          </b-tr>
+        </b-thead>
+        <b-tbody>
+          <b-tr v-for="h in taskHistoryList" :key="h.created">
+            <b-th>{{ h.applicationStatus }}</b-th>
+            <b-th>{{ getExactDate(h.created) }}</b-th>
+            <b-th>
+              <b-button
+                variant="primary"
+                :href="formatURL(h.formUrl)"
+                target="_blank"
+              >
+                <i class="fa fa-eye" style="color:black;"></i>
+                View Submission
+              </b-button>
+            </b-th>
+          </b-tr>
+        </b-tbody>
+      </b-table-simple>
+    </b-col>
+    <b-col v-else>
+      <span> No application history found</span>
+    </b-col>
 
-    <!-- <b-modal
-      id="view-modal"
-      size="xl"
-      title="VIEW SUBMISSION"
-      ok-only
-    >
-      <FormViewSubmission
-        :formid="fId"
-        :submissionid="sId"
-      />
-    </b-modal> -->
+    <b-modal id="view-modal" size="xl" title="VIEW SUBMISSION" ok-only>
+      <FormViewSubmission :formid="fId" :submissionid="sId" />
+    </b-modal>
   </div>
 </template>
 
 <script lang="ts">
 import {
-  Component, Prop, Vue
+  Component, Prop, Vue 
 } from "vue-property-decorator";
 import FormViewSubmission from "../FormViewSubmission.vue";
 import {
-  TaskHistoryListPayload
+  TaskHistoryListPayload 
 } from "../../models";
 import {
-  getLocalDateTime
+  getLocalDateTime 
 } from "../../services";
 
 @Component({
@@ -69,14 +63,14 @@ import {
 })
 export default class TaskHistory extends Vue {
   @Prop({
-    default: []
+    default: [] 
   }) private taskHistoryList!: TaskHistoryListPayload[];
   @Prop() private applicationId!: string;
 
   private fId: string = "";
   private sId: string = "";
 
-  getExactDate(date: Date) {
+  getExactDate (date: Date) {
     return getLocalDateTime(date);
   }
 
@@ -86,7 +80,7 @@ export default class TaskHistory extends Vue {
   //   this.sId = submissionId;
   // }
 
-  formatURL(url: string) {
+  formatURL (url: string) {
     const currentUrl = window.location.protocol + "//" + window.location.host;
     const a = document.createElement("a");
     a.href = url;
@@ -95,21 +89,3 @@ export default class TaskHistory extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.task-history-table {
-  thead {
-    th {
-      height: 48px;
-      vertical-align: middle;
-      padding: 0.5rem 0.75rem;
-    }
-  }
-  tbody {
-    td {
-      vertical-align: middle;
-      padding: 0.5rem 0.75rem;
-    }
-  }
-}
-</style>

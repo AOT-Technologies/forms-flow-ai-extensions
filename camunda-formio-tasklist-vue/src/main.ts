@@ -1,6 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
-import 'bootstrap';
 import App from "./App.vue";
 import {
   BootstrapVue
@@ -16,5 +15,5 @@ Vue.use(BootstrapVue);
 new Vue({
   router,
   store,
-  render: (h: any) => h(App),
+  render: (h) => h(App),
 }).$mount("#app");
