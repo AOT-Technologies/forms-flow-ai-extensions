@@ -50,9 +50,10 @@ import {
   CamundaRest 
 } from "../../services";
 
-@Component
+@Component({
+})
 export default class FormList extends Vue {
-  private formList: Array<object> = [];
+  private formList: Array<any> = [];
   private formperPage: number = 10;
   private formNumPages: number = 1;
   private formcurrentPage: number = 1;

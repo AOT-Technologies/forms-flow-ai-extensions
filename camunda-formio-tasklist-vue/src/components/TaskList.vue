@@ -1,358 +1,511 @@
 <template>
-  <b-container fluid>
-    <div class="task-outer-container" v-if="isUserAllowed">
-    <Header
-      v-if="token && bpmApiUrl && maximize"
-      :token="token"
-      :bpmApiUrl="bpmApiUrl"
-      :filterList="filterList"
-      :perPage="perPage"
-      :selectedfilterId="selectedfilterId"
-      :payload="payload"
-      :defaultTaskSortBy="taskSortBy"
-      :defaultTaskSortOrder="taskSortOrder"
-    />
-    <b-row class="cft-service-task-list mt-1">
-      <b-col
-        xl="3"
-        lg="3"
-        md="12"
-        :class="
-          containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'
-        "
-        v-if="maximize"
-      >
-        <LeftSider
-          :taskLoading="taskLoading"
-          v-if="token && bpmApiUrl"
-          :token="token"
-          :formsflowaiApiUrl="formsflowaiApiUrl"
-          :formIOApiUrl="formIOApiUrl"
-          :bpmApiUrl="bpmApiUrl"
-          :tasks="tasks"
-          :perPage="perPage"
-          :selectedfilterId="selectedfilterId"
-          :payload="payload"
-        />
-      </b-col>
-  
-       <b-col  v-if="singleTaskLoading" class="d-flex justify-content-center align-items-center" >
-         <div class="d-flex justify-content-center">
-          <div class="spinner-grow text-primary" role="status">
-             <span class="sr-only">Loading...</span>
+  <div
+    class="d-flex flex-column"
+    ref="taskListContainerRef"
+  >
+    <template v-if="isUserAllowed">
+      <Header
+        class="mb-2"
+        ref="presetSortFiltersRef"
+        v-if="token && bpmApiUrl && maximize&&(!disableComponents.sort||!disableComponents.form||!disableComponents.filterList)"
+        :token="token"
+        :bpmApiUrl="bpmApiUrl"
+        :filterList="filterList"
+        :perPage="perPage"
+        :selectedfilterId="selectedfilterId"
+        :payload="payload"
+        :defaultTaskSortBy="taskSortBy"
+        :defaultTaskSortOrder="taskSortOrder"
+        :disableOption="disableComponents"
+      />
+      <div class="d-flex">
+        <div
+          class="col-3"
+          v-if="maximize"
+        >
+          <LeftSider
+            :taskLoading="taskLoading"
+            v-if="token && bpmApiUrl"
+            :token="token"
+            :formsflowaiApiUrl="formsflowaiApiUrl"
+            :bpmApiUrl="bpmApiUrl"
+            :tasks="tasks"
+            :perPage="perPage"
+            :selectedfilterId="selectedfilterId"
+            :payload="payload"
+            :containerHeight="containerHeight"
+            :disableOption="disableComponents"
+            :listItemCardStyle="listItemCardStyle"
+            :selectedFilterTaskVariable="selectedFilterTaskVariable"
+          />
+        </div>
+        <div
+          class="col-9 ctf-task-details-container"
+          :class="{ 'col-12 mx-0': !maximize }"
+        >
+          <div
+            v-if="singleTaskLoading"
+            class="d-flex justify-content-center align-items-center"
+          >
+            <div
+              class="spinner-grow text-primary"
+              role="status"
+            >
+              <span class="sr-only">Loading...</span>
+            </div>
           </div>
-      </div>
-       </b-col>
-      <b-col
-        v-else-if="getFormsFlowTaskId && task"
-        :lg="maximize ? 9 : 12"
-        md="12"
-        :class="
-          containerHeight ? `cft-height-h${containerHeight}` : 'cft-height'
-        "
-      >
-        <div class="cft-service-task-details">
-          <b-row>
+          <template v-else-if="getFormsFlowTaskId && task">
             <ExpandContract />
-            <span
-              class="ml-0 cft-task-header task-header-title"
-              v-b-tooltip.hover.top
-              title="Task Name"
-              >{{ task.name }}
-            </span>
-          </b-row>
-          <br />
-          <b-row class="ml-0">
-            <span
-              class="cft-task-name"
-              v-b-tooltip.hover
-              title="Process Name"
-              >{{ task.taskProcess }}</span
+            <div
+              class="bg-primary task-title"
+              ref="taskTitleRef"
             >
-          </b-row>
-          <br />
-          <b-row class="ml-0">
-            <span
-              class="cft-application-id"
-              v-b-tooltip.hover
-              title="Application Id"
-              >Application ID # {{ task.applicationId }}</span
+              <h3
+                class="m-0"
+                data-bs-toggle="tooltip"
+                title="Task Name"
+              >{{ task.name }}</h3>
+            </div>
+            <div
+              class="d-flex flex-column w-100 px-4 py-2 task-details"
+              :style="{
+                height: taskScrollableHeight
+              }"
             >
-          </b-row>
-          <div class="cft-actionable-container">
-            <b-row class="cft-actionable">
-              <b-col cols="2" class="align-self-center">
-                <span v-if="task.followUp">
-                  <i class="fa fa-calendar"></i>
-                  {{ timedifference(task.followUp) }}
-                  <i
-                    class="fa fa-times-circle"
-                    @click="removeFollowupDate"
-                    id="removeFollow"
-                  ></i>
-                  <b-tooltip target="removeFollow" triggers="hover">
-                    Click to remove <b>FollowUp Date</b>
-                  </b-tooltip>
-                </span>
-                <span v-else>
-                  <b-form-datepicker
-                  size="sm"
-                  v-model="task.followUp"
-                  @input="updateFollowUpDate"
-                  placeholder="Set Followup Date"
-                  locale="en"
-                  />
-                </span>
-              </b-col>
-              <b-col cols="2" class="align-self-center">
-                <span v-if="task.due">
-                  <i class="fa fa-calendar"></i>
-                  {{ timedifference(task.due) }}
-                  <i
-                    class="fa fa-times-circle"
-                    @click="removeDueDate"
-                    id="removeDueDate"
-                  ></i>
-                  <b-tooltip target="removeDueDate" triggers="hover">
-                    Click to remove <b> Due Date</b>
-                  </b-tooltip>
-                </span>
-                <span v-else>
-                  <b-form-datepicker
-                  size="sm"
-                  v-model="task.due"
-                  @input="updateDueDate"
-                  placeholder="Set Due Date"
-                  locale="en"
-                  />
-                </span>
-              </b-col>
-              <b-col cols="3" class="align-self-center">
-                <div
-                  id="groups"
-                  v-b-modal.AddGroupModal
-                  class="group-align word-break"
-                >
-                  <i class="fa fa-th mr-1"></i>
-                  <span
-                    class="cft-group-align cft-word-break"
-                    v-if="groupListNames"
+              <div class="d-flex mb-1">
+                <h4
+                  class="mt-2 mb-3"
+                  data-bs-toggle="tooltip"
+                  title="Process Name"
+                >{{ task.taskProcess }}
+                </h4>
+                <p
+                  class="mt-2 mb-3"
+                  v-if="task.applicationId"
+                  data-bs-toggle="tooltip"
+                  title="Application Id"
+                > <span class="mx-4">|</span>Application ID <strong>#{{ task.applicationId }}</strong>
+                </p>
+              </div>
+              <div class="d-flex justify-content-between mb-4">
+                <section v-if="!hideTaskDetails.assignee" class="task-assignee">
+                  <label class="fw-bold">Task assignee</label>
+                  <button
+                    v-if="task.assignee"
+                    class="btn task-icon-btn"
+                    @click="toggleassignee"
+                    data-bs-toggle="tooltip"
+                    title="Click to change assignee"
                   >
-                    {{ String(groupListNames) }}
-                  </span>
-                  <span v-else>Add Groups</span>
-                  <b-tooltip target="groups" triggers="hover">
-                    <b>Groups</b>
-                  </b-tooltip>
-                </div>
-                <b-modal id="AddGroupModal" ref="modal" :hide-footer="true">
-                  <template #modal-header="{ close }">
-                    <h5>MANAGE GROUPS</h5>
-                    <b-button
-                      size="sm"
-                      variant="outline-danger"
-                      @click="close()"
-                    >
-                      <h5>
-                        Close
-                        <i class="fa fa-times"></i>
-                      </h5>
-                    </b-button>
-                  </template>
-                  <div class="modal-text">
-                    <i class="fa fa-exclamation-circle"></i>
-                    You can add a group by typing a group ID into the input
-                    field and afterwards clicking the button with the plus sign.
-                    <b-row class="mt-3 mb-3">
-                      <b-col>
-                        <b-button
-                          variant="primary"
-                          @click="addGroup"
-                          :disabled="!setGroup"
-                        >
-                          <span>Add a group</span>
-                          <span>
-                            <i class="ml-2 fa fa-plus"></i>
-                          </span>
-                        </b-button>
-                      </b-col>
-                      <b-col>
-                        <b-form-input
-                          type="text"
-                          placeholder="Group ID"
-                          v-model="setGroup"
-                          v-on:keyup.enter="addGroup"
-                        ></b-form-input>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col v-if="groupList.length">
-                        <ul v-for="g in groupList" :key="g.groupId">
-                          <div class="mt-1">
-                            <i
-                              class="fa fa-times mr-2 click-element"
-                              @click="deleteGroup(g.groupId)"
-                            ></i>
-                            <span>{{ g.groupId }}</span>
-                          </div>
-                        </ul>
-                      </b-col>
-                    </b-row>
-                  </div>
-                </b-modal>
-              </b-col>
-              <b-col class="align-self-center">
-                <span v-if="task.assignee">
-                  <div v-if="editAssignee" class="cft-user-edit">
-                    <div class="cft-assignee-change-box">
-                      <v-select
-                        :label="selectSearchType"
-                        :options="reviewerUsersList"
-                        :filterable="false"
-                        v-model="userSelected"
-                        :placeholder="`Search by ${selectSearchType}`"
-                        @search="onUserSearch"
-                        class="assignee-align float-left"
-                      />
-                      <i
-                        @click="onSetassignee"
-                        class="
-                          fa fa-check
-                          cft-assignee-tickmark-icon cft-icon-border
-                        "
-                      ></i>
-                      <i
-                        @click="toggleassignee"
-                        class="
-                          fa fa-times
-                          cft-assignee-cancel-icon cft-icon-border
-                        "
-                      ></i>
-                      <b-dropdown
-                        id="dropdown-right"
-                        class="ml-3 cft-select-generic-search"
-                        variant="primary"
+                    <i
+                      class="fa fa-pencil"
+                      :class="{
+                      'fa-times-circle-o':editAssignee,
+                      'fa-pencil': !editAssignee
+                    }"
+                    />
+                  </button>
+                  <div class="d-flex align-items-baseline">
+                    <template v-if="task.assignee">
+                      <div
+                        v-if="editAssignee"
+                        class="d-flex w-100 mt-1"
                       >
-                        <template #button-content>
-                          <span
-                            ><i class="fa fa-filter cft-assignee-filter-icon"
-                          /></span>
-                        </template>
-                        <b-dd-item
-                          v-for="(row, index) in UserSearchListLabel"
-                          :key="row.id"
-                          @click="
-                            setSelectedUserSearchBy(row.searchType, index)
-                          "
-                          :active="index === activeUserSearchindex"
+                        <v-select
+                          :label="selectSearchType"
+                          :options="reviewerUsersList"
+                          :filterable="false"
+                          v-model="userSelected"
+                          :placeholder="`Search by ${selectSearchType}`"
+                          @search="onUserSearch"
+                          class="select-assignee"
+                        />
+                        <div class="dropdown assignee-search-filter mx-2">
+                          <button
+                            class="btn btn-secondary dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                          >
+                            <i class="fa fa-filter" />
+                          </button>
+                          <ul
+                            class="dropdown-menu"
+                            aria-labelledby="dropdownMenuButton1"
+                          >
+                            <li
+                              v-for="(row, index) in UserSearchListLabel"
+                              :key="row.id"
+                              @click="setSelectedUserSearchBy(row.searchType, index)"
+                              class="dropdown-item"
+                              :class="{'active': index === activeUserSearchindex}"
+                            >
+                              {{ row.label }}
+                            </li>
+                          </ul>
+                        </div>
+                        <button
+                          class="btn task-icon-btn btn-light"
+                          @click="onSetassignee"
+                          data-bs-toggle="tooltip"
+                          title="Set assignee"
                         >
-                          <span>{{ row.label }}</span>
-                        </b-dd-item>
-                      </b-dropdown>
+                          <i class="fa fa-check-circle-o fa-lg" />
+                        </button>
+                      </div>
+                      <template v-else>
+                        <div class="assignee-name">{{ task.assignee }}</div>
+                        <button
+                          class="btn task-icon-btn"
+                          @click="onUnClaim"
+                          data-bs-toggle="tooltip"
+                          title="Reset assignee"
+                        >
+                          <i class="fa fa-times-circle-o" />
+                        </button>
+                      </template>
+                    </template>
+                    <button
+                      v-else
+                      class="btn btn-light"
+                      @click="onClaim"
+                      data-bs-toggle="tooltip"
+                      title="Claim task"
+                    >
+                      <i class="fa fa-plus" />
+                      <span class="mx-1">Claim</span>
+                    </button>
+                  </div>
+                </section>
+                <section
+                v-if="!hideTaskDetails.group" 
+                  class="task-groups mx-4"
+                  data-bs-toggle="tooltip"
+                  title="Click to modify groups"
+                >
+                  <label class="fw-bold">Groups</label>
+                  <button
+                    v-if="groupListNames && groupListNames.length"
+                    class="btn task-icon-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#groupsModal"
+                  >
+                    <i class="fa fa-pencil" />
+                  </button>
+                  <div class="d-flex align-items-baseline group-name">
+                    <template v-if="groupListNames && groupListNames.length">
+                      {{ String(groupListNames) }}
+                    </template>
+                    <button
+                      v-else
+                      class="btn btn-light"
+                      data-bs-toggle="modal"
+                      data-bs-target="#groupsModal"
+                    >
+                      <i class="fa fa-plus" />
+                      <span class="mx-1">Add Groups</span>
+                    </button>
+                  </div>
+                  <div
+                    class="modal fade task-groups-modal"
+                    id="groupsModal"
+                    tabindex="-1"
+                    aria-labelledby="groupsModal"
+                    aria-hidden="true"
+                  >
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">MANAGE GROUPS</h5>
+                          <button
+                            type="button"
+                            class="btn-close mx-2"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                          ></button>
+                        </div>
+                        <div class="modal-body px-4 pb-5">
+                          <i class="fa fa-exclamation-circle"></i>
+                          You can add a group by typing a group ID into the input
+                          field and afterwards clicking the button with the plus sign.
+                          <div class="d-flex my-3">
+                            <input
+                              class="form-control group-name-input"
+                              type="text"
+                              v-model="setGroup"
+                              @keyup.enter="addGroup"
+                              placeholder="Group ID"
+                            />
+                            <button
+                              class="btn btn-primary add-group-btn"
+                              @click="addGroup"
+                              :disabled="!setGroup"
+                            >
+                              <i class="fa fa-plus" />
+                              <span class="mx-1">Add group</span>
+                            </button>
+                          </div>
+                          <div
+                            v-if="groupList.length"
+                            class="d-flex flex-wrap"
+                          >
+                            <div
+                              class="d-flex align-items-baseline added-group-chip"
+                              v-for="g in groupList"
+                              :key="g.groupId"
+                              @click="deleteGroup(g.groupId)"
+                              data-bs-toggle="tooltip"
+                              title="Click to remove this group"
+                            >
+                              <div class="mx-1">{{ g.groupId }}</div>
+                              <i class="fa fa-times-circle-o" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div v-else>
-                    <span
-                      id="setAssignee"
-                      v-b-tooltip.hover
-                      title="Click to change Assignee"
-                    >
-                      <i class="fa fa-user cft-person-fill" />
-                      <span class="cft-user-span" @click="toggleassignee">
-                        {{ task.assignee }}
-                      </span>
-                    </span>
-                    <span
-                      id="resetAssignee"
-                      v-b-tooltip.hover
-                      title="Reset Assignee"
-                    >
-                      <i class="fa fa-times ml-1" @click="onUnClaim" />
-                    </span>
-                  </div>
-                </span>
-                <span v-else>
+                </section>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <section class="task-date-picker" v-if="!hideTaskDetails.followUpDate" >
+                  <label class="fw-bold mb-1">Follow up</label>
                   <div
-                    @click="onClaim"
-                    v-b-tooltip.hover.left
-                    title="Claim task"
+                    class="d-flex align-items-baseline"
+                    v-if="task.followUp"
                   >
-                    <span id="claimAssignee">
-                      <i class="fa fa-user" /> Claim
-                    </span>
-                  </div>
-                </span>
-              </b-col>
-            </b-row>
-            <div class="height-100">
-              <b-tabs pills class="height-100" content-class="mt-3">
-                <b-tab title="Form" active>
-                  <div class="ml-4 mr-4 form-tab-conatiner">
-                    <b-overlay
-                      :show="task.assignee !== userName"
-                      variant="light"
-                      opacity="0.75"
-                      spinner-type="none"
-                      aria-busy="true"
+                    <p
+                      data-bs-toggle="tooltip"
+                      :title="getExactDate(task.followUp)"
+                    >{{ timedifference(task.followUp) }}</p>
+                    <button
+                      class="btn task-icon-btn"
+                      @click="removeFollowupDate"
+                      data-bs-toggle="tooltip"
+                      title="Click to remove FollowUp Date"
                     >
-                      <div v-if="task.assignee === userName">
-                        <transition name="fade">
-                          <FormEdit
-                            :formioUrl="formioUrl"
-                            @onformsubmit="onFormSubmitCallback"
-                            @oncustomevent="oncustomEventCallback"
-                          />
-                        </transition>
-                      </div>
-                      <div v-else>
-                        <FormView :formioUrl="formioUrl" />
-                      </div>
-                    </b-overlay>
+                      <i class="fa fa-times-circle-o" />
+                    </button>
                   </div>
-                </b-tab>
-                <b-tab title="History">
+                  <v-date-picker
+                    v-else
+                    v-model="task.followUp"
+                    :popover="{ visibility: 'click' }"
+                  >
+                    <template v-slot="{ inputValue, inputEvents }">
+                      <div class="input-group">
+                        <input
+                          class="form-control"
+                          :value="inputValue"
+                          v-on="inputEvents"
+                          @input="updateFollowUpDate"
+                          placeholder="mm/dd/yyyy"
+                        />
+                        <i class="fa fa-calendar-alt"></i>
+                      </div>
+                    </template>
+                  </v-date-picker>
+                </section>
+                <section class="task-date-picker" v-if="!hideTaskDetails.dueDate" >
+                  <label class="fw-bold mb-1">Due date</label>
+                  <div
+                    class="d-flex align-items-baseline"
+                    v-if="task.due"
+                  >
+                    <p
+                      data-bs-toggle="tooltip"
+                      :title="getExactDate(task.due)"
+                    >{{ timedifference(task.due) }}</p>
+                    <button
+                      class="btn task-icon-btn"
+                      @click="removeDueDate"
+                      data-bs-toggle="tooltip"
+                      title="Click to remove Due date"
+                    >
+                      <i class="fa fa-times-circle-o" />
+                    </button>
+                  </div>
+                  <v-date-picker
+                    v-else
+                    v-model="task.due"
+                    :popover="{ visibility: 'click' }"
+                  >
+                    <template v-slot="{ inputValue, inputEvents }">
+                      <div class="input-group">
+                        <input
+                          class="form-control"
+                          :value="inputValue"
+                          v-on="inputEvents"
+                          @input="updateDueDate"
+                          placeholder="mm/dd/yyyy"
+                        />
+                        <i class="fa fa-calendar-alt"></i>
+                      </div>
+                    </template>
+                  </v-date-picker>
+                </section>
+                <section v-if="!hideTaskDetails.createdDate" >
+                  <label class="fw-bold mb-1">Created</label>
+                  <p
+                    data-bs-toggle="tooltip"
+                    :title="getExactDate(task.created)"
+                  >{{ timedifference(task.created) }}</p>
+                </section>
+                <section></section>
+              </div>
+              <ul
+                class="nav nav-tabs mt-3 task-tabs"
+                role="tablist"
+              >
+                <li
+                  class="nav-item"
+                  role="presentation"
+                >
+                  <button
+                    class="nav-link active"
+                    id="task-form-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#taskForm"
+                    type="button"
+                    role="tab"
+                    aria-controls="form"
+                    aria-selected="true"
+                  >Form</button>
+                </li>
+                <li
+                  class="nav-item"
+                  role="presentation"
+                >
+                  <button
+                    class="nav-link"
+                    id="task-history-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#taskHistory"
+                    type="button"
+                    role="tab"
+                    aria-controls="history"
+                    aria-selected="false"
+                  >History</button>
+                </li>
+                <li
+                  class="nav-item"
+                  role="presentation"
+                >
+                  <button
+                    class="nav-link"
+                    id="task-diagram-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#diagramContainer"
+                    type="button"
+                    role="tab"
+                    aria-controls="diagram"
+                    aria-selected="false"
+                    @click="getDiagramDetails"
+                  >Diagram</button>
+                </li>
+              </ul>
+              <div class="tab-content py-3 task-tab-content">
+                <!-- Form tab content -->
+                <div
+                  class="tab-pane fade show active form-tab-content"
+                  id="taskForm"
+                  role="tabpanel"
+                  aria-labelledby="form-tab"
+                  :class="{'disabled': task.assignee !== userName}"
+                >
+                  <div v-if="task.assignee === userName">
+                    <transition name="fade">
+                      <FormEdit
+                        :formioUrl="formioUrl"
+                        @onformsubmit="onFormSubmitCallback"
+                        @oncustomevent="oncustomEventCallback"
+                      />
+                    </transition>
+                  </div>
+                  <div v-else>
+                    <FormView :formioUrl="formioUrl" />
+                  </div>
+                </div>
+                <!-- Form tab content end -->
+                <div
+                  class="tab-pane fade"
+                  id="taskHistory"
+                  role="tabpanel"
+                  aria-labelledby="history-tab"
+                >
                   <TaskHistory
                     :taskHistoryList="taskHistoryList"
                     :applicationId="task.applicationId"
                   />
-                </b-tab>
-                <b-tab
-                  class="cft-diagram-container"
+                </div>
+                <div
+                  class="tab-pane fade"
                   id="diagramContainer"
-                  title="Diagram"
-                  @click="getDiagramDetails"
+                  role="tabpanel"
+                  aria-labelledby="diagram-tab"
                 >
-                  <div v-if="diagramLoading" class="d-flex justify-content-center">
-                     <div class="spinner-border" role="status">
-                        <span class="sr-only">Loading...</span>
-                     </div>
+                  <div
+                    v-if="diagramLoading"
+                    class="d-flex justify-content-center"
+                  >
+                    <div
+                      class="spinner-border"
+                      role="status"
+                    >
+                      <span class="sr-only">Loading...</span>
+                    </div>
                   </div>
-
-                  <div class="diagram-full-screen" id="canvas"></div>
-                </b-tab>
-              </b-tabs>
+                  <div
+                    class="diagram-full-screen"
+                    id="canvas"
+                  ></div>
+                </div>
+              </div>
             </div>
+          </template>
+          <div
+            v-else
+            class="d-flex align-items-center justify-content-center task-details-empty"
+            :style="{
+              height: taskScrollableHeight
+            }"
+          >
+            <i class="fa fa-exclamation-circle"></i>
+            <h4 class="mt-0 mx-2">Please select a task from the list</h4>
           </div>
         </div>
-      </b-col>
-      <b-col v-else>
-        <b-row class="cft-not-selected mt-2 ml-1 row">
-          <i
-            class="fa fa-exclamation-circle-fill"
-            variant="secondary"
-            scale="1"
-          ></i>
-          <p>Select a task in the list.</p>
-        </b-row>
-      </b-col>
-    </b-row>
-  </div>
+      </div>
+    </template>
     <div v-else>
-        <div class="alert alert-danger mt-4" role="alert">
-          You don't have access. Contact your administrator.
-        </div>
+      <div
+        class="alert alert-danger mt-4"
+        role="alert"
+      >
+        You don't have access. Contact your administrator.
+      </div>
     </div>
-  </b-container>
+    <div class="toast-container position-absolute bottom-0 end-0 py-5 px-4">
+      <div
+        class="toast align-items-center text-white bg-dark border-0"
+        role="alert"
+        ref="toastMsgRef"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="d-flex">
+          <div class="toast-body">
+            {{ toastMsgTxt }}
+          </div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script lang="ts">
 import "font-awesome/scss/font-awesome.scss";
@@ -364,36 +517,42 @@ import {
   SEARCH_USERS_BY,
   SocketIOService,
   authenticateFormio, 
-  findFilterKeyOfAllTask,
+  findFilterIdForDefaultFilterName,
   getFormDetails,
+  getFormattedDateAndTime,
   getISODateTime,
   getTaskFromList,
   getUserName,
   getformHistoryApi,
   isAllowedUser,
   reviewerGroup,
-  sortByPriorityList
+  sortByPriorityList,
 } from "../services";
 import {
-  Component, Mixins, Prop 
+  Component, Mixins, Prop,
 } from "vue-property-decorator";
 import {
-  CustomEventPayload, 
-  FilterPayload, 
-  FormRequestActionPayload, 
-  FormRequestPayload, 
-  GroupListPayload, 
-  Payload, 
+  CustomEventPayload,
+  FilterPayload,
+  FormRequestActionPayload,
+  FormRequestPayload,
+  GroupListPayload,
+  Payload,
   SEARCH_OPTION_TYPE,
-  TaskHistoryListPayload, 
+  TaskHistoryListPayload,
   TaskListSortType,
-  TaskPayload, 
+  TaskPayload,
   UserListObject,
-  UserListPayload, 
+  UserListPayload,
   UserPayload,
   UserSearchListLabelPayload,
 } from "../models";
+import bootstrap, {
+  Toast,
+  Tooltip
+} from 'bootstrap';
 import BpmnViewer from "bpmn-js";
+import DatePicker from "v-calendar/lib/components/date-picker.umd";
 import ExpandContract from "./addons/ExpandContract.vue";
 import FormEdit from "./form/Edit.vue";
 import FormView from "./form/View.vue";
@@ -406,9 +565,8 @@ import TaskHistory from "../components/addons/TaskHistory.vue";
 import TaskListMixin from "../mixins/TaskListMixin.vue";
 import moment from "moment";
 import {
-  namespace 
+  namespace
 } from "vuex-class";
-
 import serviceFlowModule from "../store/modules/serviceFlow-module";
 import vSelect from "vue-select";
 
@@ -424,11 +582,11 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
     BpmnViewer,
     FormEdit,
     FormView,
+    VDatePicker: DatePicker,
   },
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
-  @Prop() private containerHeight!: string;
   @Prop({
     default: "created",
   })
@@ -437,6 +595,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     default: "desc",
   })
   public taskSortOrder!: string;
+  @Prop({
+    default: () => [],
+  }) 
+  protected taskDefaultFilterListNames !: string[];
+ 
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
@@ -457,8 +620,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private fulltasks: TaskPayload[] = [];
   private formId: string = "";
   private taskLoading!: boolean;
-  private singleTaskLoading: boolean=false;
-  private diagramLoading: boolean= false;
+  private singleTaskLoading: boolean = false;
+  private diagramLoading: boolean = false;
   private submissionId: string = "";
   private formioUrl: string = "";
   private task: TaskPayload = {
@@ -468,6 +631,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   };
   public perPage: number = 10;
   private filterList: FilterPayload[] = [];
+  private selectedFilterTaskVariable={
+
+  };
   private editAssignee: boolean = false;
   private groupList: GroupListPayload[] = [];
   private groupListNames?: string[] = [];
@@ -485,12 +651,25 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private selectSearchType: string = "lastName";
   private taskIdValue: string = "";
   private taskId2: string = "";
-  // private taskIdWebsocket: string = "";
   private activeUserSearchindex = 1;
   private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
   private isUserAllowed: boolean = false
-  
-  checkforTaskID () {
+  private containerHeight: number = 0;
+  private taskScrollableHeight: string = '100px';
+  private isHeightViewUpdated: boolean = false;
+  private toastMsg;
+  private toastMsgTxt: string = '';
+
+  created() {
+    Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"]'))
+      .forEach(tooltipNode => new Tooltip(tooltipNode));
+    const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    toastElList.map(function (toastEl) {
+      return new bootstrap.Toast(toastEl);
+    });
+  }
+
+  checkforTaskID() {
     if (this.getTaskId) {
       this.taskIdValue = this.getTaskId;
     }
@@ -507,7 +686,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     return moment(date).fromNow();
   }
 
-  async toggleassignee () {
+  async toggleassignee() {
     this.editAssignee = !this.editAssignee;
     const reviewerList = await CamundaRest.getUsersByMemberGroups(
       this.token,
@@ -520,23 +699,23 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         this.reviewerUsersList.push(UserListObject(user));
       });
       const userList = JSON.parse(JSON.stringify(this.reviewerUsersList));
-      this.userSelected= userList.find(((user: any)=>user.code?.includes(this.task.assignee)));
+      this.userSelected = userList.find(((user: any) => user.code?.includes(this.task.assignee)));
     }
   }
 
-  setSelectedUserSearchBy (searchby: string, index: number) {
+  setSelectedUserSearchBy(searchby: string, index: number) {
     this.selectSearchType = searchby;
     this.activeUserSearchindex = index;
   }
 
-  async onFormSubmitCallback (actionType = "") {
+  async onFormSubmitCallback(actionType = "") {
     if (this.task.id !== null) {
       await this.onBPMTaskFormSubmit(this.task.id!, actionType);
       await this.reloadTasks();
     }
   }
 
-  addGroup () {
+  addGroup() {
     CamundaRest.createTaskGroupByID(
       this.token,
       this.task.id!,
@@ -546,14 +725,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         groupId: this.setGroup,
         type: "candidate",
       }
-    ).then( () => {
+    ).then(() => {
       this.getGroupDetails();
       this.reloadCurrentTask();
     });
     this.setGroup = null;
   }
 
-  async getGroupDetails () {
+  async getGroupDetails() {
     const grouplist = await CamundaRest.getTaskGroupByID(
       this.token,
       this.task.id!,
@@ -570,7 +749,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async deleteGroup (groupid: string) {
+  async deleteGroup(groupid: string) {
     await CamundaRest.deleteTaskGroupByID(
       this.token,
       this.task.id!,
@@ -585,7 +764,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  async onBPMTaskFormSubmit (taskId: string, actionType: string) {
+  async onBPMTaskFormSubmit(taskId: string, actionType: string) {
     let formRequestFormat: FormRequestPayload = {
       variables: {
         formUrl: {
@@ -594,7 +773,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         applicationId: {
           value: this.task.applicationId!,
         },
-      },
+      }
     };
     if (actionType !== "") {
       const newformRequestFormat: FormRequestActionPayload = Object.assign(
@@ -618,12 +797,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
   }
 
-  async getBPMTaskDetail (taskId: string) {
-    
+  async getBPMTaskDetail(taskId: string) {
+
     const [taskResult, applicationIdResult] = await Promise.all([
       CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl),
       CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl),
     ]);
+
     const processResult = await CamundaRest.getProcessDefinitionById(
       this.token,
       taskResult.data.processDefinitionId,
@@ -635,7 +815,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     await this.getGroupDetails();
   }
 
-  async getTaskFormIODetails (taskId: string) {
+  async getTaskFormIODetails(taskId: string) {
     const formResult = await CamundaRest.getVariablesByTaskId(
       this.token,
       taskId,
@@ -646,10 +826,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if (formResult.data.formUrl?.value) {
       const formUrlPattern = formResult.data.formUrl?.value;
       const {
-        formioUrl, formId, submissionId 
+        formioUrl, formId, submissionId
       } = getFormDetails(
         formUrlPattern,
-        this.formIOApiUrl
+        this.formIO.apiUrl
       );
 
       this.formioUrl = formioUrl;
@@ -658,7 +838,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async getTaskHistoryDetails () {
+  async getTaskHistoryDetails() {
     this.taskHistoryList = [];
 
     if (this.task?.applicationId) {
@@ -677,7 +857,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.token,
       processDefinitionId,
       this.bpmApiUrl
-    );  
+    );
     const processInstanceId = this.task.processInstanceId || '';
     const getActivity = await CamundaRest.getProcessActivity(
       this.token,
@@ -693,17 +873,17 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const viewer = new BpmnViewer({
       container: "#canvas",
     });
-    
+
     this.diagramLoading = false;
     await viewer.importXML(this.xmlData);
     viewer.get("canvas").zoom("fit-viewport");
-    for(let i: number=0; i<activityList.length; i++){
+    for (let i: number = 0; i < activityList.length; i++) {
       viewer.get("canvas").addMarker({
-        'id':activityList[i].activityId
-      },'highlight');
+        'id': activityList[i].activityId
+      }, 'highlight');
     }
 
-     
+
   }
 
   async getDiagramDetails() {
@@ -728,11 +908,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.$root.$emit(customEvent.type, {
         customEvent
       });
-      break;
     }
   };
 
-  async reloadTasks () {
+  async reloadTasks() {
     this.setFormsFlowTaskId("");
     await this.fetchPaginatedTaskList(
       this.selectedfilterId,
@@ -742,7 +921,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
   }
 
-  async reloadCurrentTask () {
+  async reloadCurrentTask() {
     await this.getBPMTaskDetail(this.task.id!);
     await this.fetchPaginatedTaskList(
       this.selectedfilterId,
@@ -752,7 +931,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
   }
 
-  async reloadLHSTaskList () {
+  async reloadLHSTaskList() {
     await this.fetchPaginatedTaskList(
       this.selectedfilterId,
       this.payload,
@@ -761,7 +940,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
   }
 
-  async onClaim () {
+  async onClaim() {
     await CamundaRest.claim(
       this.token,
       this.task.id!,
@@ -776,7 +955,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async onUnClaim () {
+  async onUnClaim() {
     await CamundaRest.unclaim(this.token, this.task.id!, this.bpmApiUrl);
 
     if (!SocketIOService.isConnected()) {
@@ -785,7 +964,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async onSetassignee () {
+  async onSetassignee() {
     await CamundaRest.setassignee(
       this.token,
       this.task.id!,
@@ -794,14 +973,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       },
       this.bpmApiUrl
     );
-    await this.toggleassignee(); 
+    await this.toggleassignee();
     if (!SocketIOService.isConnected()) {
       await this.getBPMTaskDetail(this.getFormsFlowTaskId);
       await this.reloadLHSTaskList();
     }
   }
 
-  async fetchFullTaskList (filterId: string, requestData: Payload) {
+  async fetchFullTaskList(filterId: string, requestData: Payload) {
     const taskList = await CamundaRest.filterTaskList(
       this.token,
       filterId,
@@ -811,9 +990,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.fulltasks = taskList.data;
   }
 
-  async fetchPaginatedTaskList (
+  async fetchPaginatedTaskList(
     filterId: string,
-    requestData: object,
+    requestData: any,
     first: number,
     max: number,
     taskIdToRemove?: string
@@ -830,19 +1009,19 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const responseData = paginatedTaskResults.data;
     const _embedded = responseData._embedded; // data._embedded.task is where the task list is.
     this.tasks = _embedded.task;
-    this.taskLoading=false;
+    this.taskLoading = false;
     this.setFormsFlowTaskLength(responseData.count);
 
-    if(taskIdToRemove){
+    if (taskIdToRemove) {
       //if the list has the task with taskIdToRemove remove that task and decrement
-      if(this.tasks.find((task: TaskPayload)=>task.id===taskIdToRemove)){
-        this.tasks=_embedded.task.filter((task: TaskPayload)=>task.id!==taskIdToRemove);
+      if (this.tasks.find((task: TaskPayload) => task.id === taskIdToRemove)) {
+        this.tasks = _embedded.task.filter((task: TaskPayload) => task.id !== taskIdToRemove);
         this.setFormsFlowTaskLength(responseData.count--); // Count has to be decreased since one task id is removed.
       }
     }
   }
 
-  async onUserSearch (search: string, loading: any) {
+  async onUserSearch(search: string, loading: any) {
     if (search.length) {
       loading(true);
       this.reviewerUsersList = [];
@@ -892,14 +1071,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     loading(false);
   }
 
-  async updateTaskDatedetails (taskId: string, task: TaskPayload) {
+  async updateTaskDatedetails(taskId: string, task: TaskPayload) {
     await CamundaRest.updateTasksByID(this.token, taskId, this.bpmApiUrl, task);
     if (!SocketIOService.isConnected()) {
       await this.reloadCurrentTask();
     }
   }
 
-  async updateFollowUpDate () {
+  async updateFollowUpDate() {
     const referenceobject = this.task;
     try {
       if (this.task?.followUp !== null) {
@@ -911,7 +1090,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async updateDueDate () {
+  async updateDueDate() {
     const referenceobject = this.task;
     try {
       if (this.task?.due !== null) {
@@ -923,7 +1102,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async removeDueDate () {
+  async removeDueDate() {
     const referenceobject = this.task;
     try {
       referenceobject["due"] = null;
@@ -933,7 +1112,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async removeFollowupDate () {
+  async removeFollowupDate() {
     const referenceobject = this.task;
     try {
       referenceobject["followUp"] = null;
@@ -943,7 +1122,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async fetchTaskDetails (taskId: string) {
+  async fetchTaskDetails(taskId: string) {
     await Promise.all([
       this.getBPMTaskDetail(taskId),
       this.getTaskFormIODetails(taskId),
@@ -956,7 +1135,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     ]);
   }
 
-  async findTaskIdDetailsFromURLrouter (
+  async findTaskIdDetailsFromURLrouter(
     taskId: string,
     fulltasks: TaskPayload[]
   ) {
@@ -974,20 +1153,39 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     });
   }
 
-  async mounted () {
-    Formio.setBaseUrl(this.formIOApiUrl);
-    Formio.setProjectUrl(this.formIOApiUrl);
-    this.isUserAllowed = isAllowedUser(this.formIOReviewer, this.formIOUserRoles);
+  updated() {
+    this.calculateViewHeights();
+  }
+
+  /*** to calculate the height and handling scroll views accordingly */
+  calculateViewHeights() {
+    // add 8px to the headerHeight since the margin mb-2 applied to it
+    const headerHeight = ((this.$refs.presetSortFiltersRef as any)?.$el?.offsetHeight || 0) + 8;
+    const titleHeight = (this.$refs.taskTitleRef as any)?.offsetHeight || 0;
+    if (!this.isHeightViewUpdated && headerHeight) {
+      this.containerHeight = this.containerHeight - headerHeight;
+      this.isHeightViewUpdated = true;
+    }
+    this.taskScrollableHeight = `${this.containerHeight - (titleHeight + 1)}px`;
+  }
+
+  
+  async mounted() {
+    this.containerHeight = (this.$refs.taskListContainerRef as any).clientHeight;
+    this.toastMsg = new Toast(this.$refs?.toastMsgRef as any);
+    Formio.setBaseUrl(this.formIO.apiUrl);
+    Formio.setProjectUrl(this.formIO.apiUrl);
+    this.isUserAllowed = isAllowedUser(this.formIO.reviewer, this.formIO.userRoles);
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
     this.setFormsFlowactiveIndex(NaN);
-    this.taskLoading= true;
+    this.taskLoading = true;
     this.$root.$on("call-fetchTaskDetails", async (para: any) => {
       this.editAssignee = false;
-      this.singleTaskLoading=true;
+      this.singleTaskLoading = true;
       this.setFormsFlowTaskId(para.selectedTaskId);
       await this.fetchTaskDetails(this.getFormsFlowTaskId);
-      this.singleTaskLoading=false;
+      this.singleTaskLoading = false;
     });
 
     this.$root.$on("call-fetchPaginatedTaskList", async (para: any) => {
@@ -1008,11 +1206,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.checkProps();
     this.checkforTaskID();
     authenticateFormio(
-      this.formIOResourceId,
-      this.formIOReviewerId,
-      this.formIOReviewer,
+      this.formIO.resourceId,
+      this.formIO.reviewerId,
+      this.formIO.reviewer,
       this.userEmail,
-      this.formIOUserRoles,
+      this.formIO.userRoles,
       this.formIOJwtSecret
     );
     const filterListResult = await CamundaRest.filterList(
@@ -1020,29 +1218,51 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.bpmApiUrl
     );
     this.filterList = sortByPriorityList(filterListResult.data);
-    this.selectedfilterId = findFilterKeyOfAllTask(this.filterList, ALL_FILTER);
+
+    if(this.taskDefaultFilterListNames.length > 0){
+      this.filterList = this.filterList.filter(FilterList => { 
+        return this.taskDefaultFilterListNames.some(filter=>FilterList.name.includes(filter));
+      });
+    }
+
+    if(this.filterList.length>0){
+      this.selectedfilterId = this.taskDefaultFilterListNames.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER);
+      this.filterList.forEach(filterListItem=>{
+        if(filterListItem.id===this.selectedfilterId){
+          const newFilterVaribale= {
+
+          };
+          filterListItem.properties?.variables?.forEach(item => {
+            newFilterVaribale[item.name]=item.label;
+          });
+          this.selectedFilterTaskVariable= newFilterVaribale;
+
+        }
+      });
+      
+     
+    }
+
+    else {
+      this.tasks = [];
+      this.taskLoading=false;
+    }
+
     await this.reloadLHSTaskList();
     if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
     }
-
+    console.log(this.webSocketEncryptkey);
     SocketIOService.connect(
       this.webSocketEncryptkey,
       (refreshedTaskId: string, eventName: string, error: string) => {
         // this.taskIdWebsocket = refreshedTaskId;
         if (error) {
-          this.$bvToast.toast(
-            `WebSocket is not connected which will cause
+          this.toastMsgTxt = `WebSocket is not connected which will cause
             some inconsistency. System is trying to reconnect,
             if you see this message for more than 10sec,
-            please refresh the page and try`,
-            {
-              title: "Websocket Alert",
-              autoHideDelay: 10000,
-              variant: "warning",
-              solid: true,
-            }
-          );
+            please refresh the page and try`;
+          this.toastMsg.show();
         }
 
         if (eventName === "complete") {
@@ -1054,17 +1274,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
             refreshedTaskId
           );
 
-          if (this.getFormsFlowTaskId && refreshedTaskId === this.getFormsFlowTaskId)
-          {
+          if (this.getFormsFlowTaskId && refreshedTaskId === this.getFormsFlowTaskId) {
             this.setFormsFlowTaskId("");
           }
         }
         else {
           if (this.selectedfilterId) {
             /* in case of update event update TaskList if the updated taskId is in
-          the current paginated taskList for the user only refresh */
-            if(eventName === "update") {
-              if(getTaskFromList(this.tasks, refreshedTaskId)) {
+            the current paginated taskList for the user only refresh */
+            if (eventName === "update") {
+              if (getTaskFromList(this.tasks, refreshedTaskId)) {
                 this.reloadLHSTaskList();
               }
             }
@@ -1078,13 +1297,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
               this.reloadLHSTaskList();
             }
           }
-        
-          if (this.getFormsFlowTaskId && refreshedTaskId === this.getFormsFlowTaskId)
-          {
+
+          if (this.getFormsFlowTaskId && refreshedTaskId === this.getFormsFlowTaskId) {
             //condition to remove the form input when a user is typing in the form by task refresh
             if (this.task.assignee === this.userName) {
               this.getBPMTaskDetail(this.task.id!);
-            } 
+            }
             // If task is not being claimed, then reload the full task details
             else {
               this.fetchTaskDetails(this.getFormsFlowTaskId);
@@ -1110,8 +1328,12 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
 
   }
-  
-  beforeDestroy () {
+
+  getExactDate(date: Date) {
+    return getFormattedDateAndTime(date);
+  }
+
+  beforeDestroy() {
     SocketIOService.disconnect();
     this.$root.$off("call-fetchTaskDetails");
     this.$root.$off("call-fetchPaginatedTaskList");
@@ -1122,12 +1344,111 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     localStorage.removeItem("authToken");
     localStorage.removeItem("UserDetails");
   }
-  beforeCreate () {
+  beforeCreate() {
     localStorage.removeItem("authToken");
     localStorage.removeItem("UserDetails");
-    if (!this.$store.hasModule("serviceFlowModule")) {
+    if (!this.$store?.hasModule("serviceFlowModule")) {
       this.$store.registerModule("serviceFlowModule", serviceFlowModule);
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.task-details-empty {
+  background: #fff;
+  margin-left: 4px;
+}
+.ctf-task-details-container {
+  background: #fff;
+  margin-left: 4px;
+  border-radius: 0.5rem;
+  .task-title {
+    padding: 1rem 1.5rem;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    h3 {
+      color: #fff;
+    }
+  }
+  .task-details {
+    height: 100px;
+    overflow-y: auto;
+  }
+  .task-date-picker {
+    .input-group {
+      width: calc(100% - 24px);
+      .form-control {
+        border-radius: 0.5rem;
+      }
+      i {
+        margin-left: -24px !important;
+        margin-top: 12px;
+        z-index: 3;
+      }
+    }
+  }
+  .task-icon-btn {
+    min-height: unset !important;
+    padding-top: 0;
+    padding-bottom: 0px;
+  }
+  .task-assignee {
+    flex: 0.5;
+    .select-assignee {
+      width: 100%;
+      min-width: 180px;
+      height: 40px;
+    }
+    .assignee-name {
+      white-space: pre;
+    }
+    .btn {
+      min-height: 40px;
+    }
+  }
+  .task-groups {
+    .group-name {
+      white-space: normal;
+    }
+  }
+  .task-groups-modal {
+    .group-name-input {
+      margin-right: 1rem;
+    }
+    .add-group-btn {
+      min-width: 144px;
+    }
+    .added-group-chip {
+      background: #e7e7e7;
+      border-radius: 50rem;
+      padding: 0.25rem 0.75rem;
+      margin: 0.5rem 0.25rem;
+      cursor: pointer;
+      &:hover {
+        background: #ceeaf1;
+      }
+    }
+  }
+  .task-tabs {
+    .nav-link {
+      height: 40px;
+    }
+    .active {
+      background: var(--bs-primary);
+      color: #fff;
+      font-weight: 600;
+    }
+  }
+  .task-tab-content {
+    background: #fafafa;
+    padding: 1rem;
+    .form-tab-content {
+      &.disabled {
+        pointer-events: none;
+        opacity: 0.33;
+      }
+    }
+  }
+}
+</style>
