@@ -20,7 +20,6 @@ solution in your Vue.js based project.
 | disableComponents  | Object | `{filterList:false,  filterTask:false, sort:false, form:false}` | Prop to decide to disable the option from components. "filterList", "sort", "form": these are Header component. if you need to disable these option the value should be =true."filterTask" is on Left side. |
 | hideTaskDetails  | Object | ` {assignee:false, group:false, followUpDate:false, dueDate:false, createdDate:false}` | Prop to decide to hide the option from Task Details|
 | listItemCardStyle  | boolean |false |Prop to decide to make the list item in a card style |
-| taskDefaultFilterListNames | Array[string] | optional | Prop to set default filterNames to be available for the component and corresponding to it get the filtered Tasklist. `eg: ['Clerk Tasks', 'XYZ' ]|
 
 :triangular_flag_on_post: - mandatory props to be passed
 
