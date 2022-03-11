@@ -21,7 +21,6 @@ solution in your Vue.js based project.
 | hideTaskDetails  | Object | ` {assignee:false, group:false, followUpDate:false, dueDate:false, createdDate:false}` | Prop to decide to hide the option from Task Details|
 | listItemCardStyle  | boolean |false |Prop to decide to make the list item in a card style |
 
-
 :triangular_flag_on_post: - mandatory props to be passed
 
 ## Usage
@@ -48,6 +47,9 @@ import CamundaTasklist from "camunda-formio-tasklist-vue/src/components/TaskList
   :listItemCardStyle="true" 
   taskSortOrder="asc"
   taskDefaultFilterListNames=['Clerk Tasks', 'XYZ']
+<<<<<<< HEAD
+=======
 
+>>>>>>> a594a05eaacb0ba5f3635667d01cadf66e454e2a
 />
 
