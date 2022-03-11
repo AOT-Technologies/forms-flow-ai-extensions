@@ -3,9 +3,9 @@
         <div 
         v-for="(item, index) in variables"
         :key="index"
-        class="col-sm-12 col-lg-6"
+        class="col-sm-12 col-lg-6 p-0 px-1"
        >
-        <div class="col-lg-11 my-2" v-if="(showMore||index < 2) && item.value!==undefined">
+        <div class="my-2" v-if="(showMore||index < 2) && item.value!==undefined">
         <span style="font-weight:bold; font-size:0.9rem">
            {{filterTaskVariable[item.name]}}
         </span>
