@@ -6,11 +6,10 @@
 
 <style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  // font-family: inherit !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  // text-align: center;
 }
 
 #nav {
@@ -26,11 +25,13 @@
   }
 }
 .task-outer-container .row .v-select .vs__dropdown-toggle {
-    width: 100% !important;
-    height: 100% !important;
+  width: 100% !important;
+  height: 100% !important;
 }
-body, html {
+body,
+html {
   padding-right: 0px !important;
   overflow-y: auto !important;
+  // font-family: inherit !important;
 }
 </style>

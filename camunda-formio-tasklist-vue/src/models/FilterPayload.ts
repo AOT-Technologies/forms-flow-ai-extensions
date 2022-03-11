@@ -11,6 +11,7 @@ export interface FilterPayload {
         priority: number;
         refresh: boolean;
         showUndefinedVariable: boolean;
+        variables?: any;
     };
     query: {
         candidateUser?: string;
@@ -21,4 +22,11 @@ export interface FilterPayload {
         orQueries?: SearchQueryPayload[];
     };
     resourceType: string;
+}
+
+export interface DisableComponentPropPayload {
+    sort?: boolean ;
+    form?: boolean ;
+    filterList?: boolean ;
+    filterTask?: boolean ;
 }
