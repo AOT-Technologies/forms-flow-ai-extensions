@@ -47,5 +47,9 @@ import CamundaTasklist from "camunda-formio-tasklist-vue/src/components/TaskList
   :listItemCardStyle="true" 
   taskSortOrder="asc"
   taskDefaultFilterListNames=['Clerk Tasks', 'XYZ']
+<<<<<<< HEAD
+=======
+
+>>>>>>> a594a05eaacb0ba5f3635667d01cadf66e454e2a
 />
 
