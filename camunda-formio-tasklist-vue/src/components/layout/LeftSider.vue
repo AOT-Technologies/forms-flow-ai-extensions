@@ -299,6 +299,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
      }
     .cft-list-group-item {
       padding: 0.75rem 1rem;
+      border-top: 1px solid #eee;
       cursor: pointer;
       &.task-selected {
         background: #eff8ff;
