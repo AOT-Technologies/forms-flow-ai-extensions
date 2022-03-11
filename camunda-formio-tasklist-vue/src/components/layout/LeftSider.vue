@@ -1,12 +1,12 @@
 <template>
-  <div class="task-list-container">
+  <div class="cft-task-list-container">
     <TaskListSearch
       ref="taskListSearchRef"
       @update-task-list="onSearchUpdateTasklistResult"
        v-if="!disableOption.filterTask" 
     />
     <div
-      class="list-group"
+      class="cft-list-group"
       :style="{
           height: listHeight
         }"
@@ -26,14 +26,14 @@
         <div
           v-for="(task, idx) in tasks"
           :key="task.id"
-          class="list-group-item"
+          class="cft-list-group-item"
           aria-current="true"
          
           @click="
             toggle(idx);
             showTaskDetails(task.id);
           "
-          :class="{ 'task-selected': task.id == getFormsFlowTaskId , 'card-list-group-item':listItemCardStyle}"
+          :class="{ 'task-selected': task.id == getFormsFlowTaskId , 'cft-card-list-group-item':listItemCardStyle}"
         >
           <h6
             class="mb-1"
@@ -41,7 +41,7 @@
             title="Task Name"
           >{{ task.name }}</h6>
           <p
-            class="description mb-0"
+            class="cft-description mb-0"
             data-bs-toggle="tooltip"
             title="Process Name"
           >
@@ -54,11 +54,11 @@
             }}
           </p>
           <div
-            class="task-details assignee mb-1"
+            class="cft-task-details assignee mb-1"
             data-bs-toggle="tooltip"
             title="Task Assignee"
           >{{ task.assignee }}</div>
-          <div class="d-flex w-100 task-details mb-1">
+          <div class="d-flex w-100 cft-task-details mb-1">
             <div
               class="days-ago created-date"
               data-bs-toggle="tooltip"
@@ -100,7 +100,7 @@
     <Pagination
       v-if="tasks && tasks.length"
       ref="taskListPaginationRef"
-      class="py-2 px-3 task-list-pagination"
+      class="py-2 px-3 cft-task-list-pagination"
       :perPage="perPage"
       :totalRecords="getFormsFlowTaskLength"
       @go-to-page="onPageChange"
@@ -287,17 +287,17 @@ export default class LeftSider extends Mixins(BaseMixin) {
 </script>
 
 <style lang="scss" scoped>
-.task-list-container {
+.cft-task-list-container {
   background: #fff;
   border-radius: 0.5rem;
-  .list-group {
+  .cft-list-group {
     height: 100px;
     overflow-y: auto;
     border-radius: 0;
-     .card-list-group-item{
+     .cft-card-list-group-item{
        margin: 0.50rem 1rem;
      }
-    .list-group-item {
+    .cft-list-group-item {
       padding: 0.75rem 1rem;
       cursor: pointer;
       &.task-selected {
@@ -311,14 +311,14 @@ export default class LeftSider extends Mixins(BaseMixin) {
       }
     }
   }
-  .task-list-pagination {
+  .cft-task-list-pagination {
     border-top: 1px solid #eee;
   }
-  .description {
+  .cft-description {
     opacity: 0.6;
     font-size: 0.9rem;
   }
-  .task-details {
+  .cft-task-details {
     justify-content: space-between;
     align-items: center;
     .days-ago {
