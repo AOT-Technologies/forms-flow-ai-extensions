@@ -20,14 +20,14 @@
           <td class="fw-bold">{{ h.applicationStatus }}</td>
           <td>{{ getExactDate(h.created) }}</td>
           <td>
-            <button
+            <a
               class="btn btn-primary"
               :href="formatURL(h.formUrl)"
               target="_blank"
             >
               <i class="fa fa-eye"></i>
               View Submission
-            </button>
+            </a>
           </td>
         </tr>
       </tbody>
