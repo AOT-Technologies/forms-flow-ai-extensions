@@ -5,7 +5,7 @@
         :key="index"
         class="col-sm-12 col-lg-6"
        >
-        <div class="col-lg-11 my-2" v-if="(showMore||index < 2)||item.value!==undefined">
+        <div class="col-lg-11 my-2" v-if="(showMore||index < 2) && item.value!==undefined">
         <span style="font-weight:bold; font-size:0.9rem">
            {{filterTaskVariable[item.name]}}
         </span>
