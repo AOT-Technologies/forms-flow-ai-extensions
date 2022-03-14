@@ -1,0 +1,40 @@
+name: Publish Camunda Formio Task List
+
+on:
+  release:
+    types: [created]
+  push:
+    branches:
+      - master
+defaults:
+  run:
+    shell: bash
+    working-directory: ./camunda-formio-tasklist-vue
+
+jobs:
+  build:
+    if: github.repository == 'AOT-Technologies/forms-flow-ai-extensions'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: npm ci
+      # - run: npm test
+      - run: npm install
+      - run: npm run build
+
+  publish-npm:
+    if: github.repository == 'AOT-Technologies/forms-flow-ai-extensions'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
