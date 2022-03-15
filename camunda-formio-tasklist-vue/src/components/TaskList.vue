@@ -455,10 +455,15 @@
                       <span class="sr-only">Loading...</span>
                     </div>
                   </div>
-                  <div
-                    class="diagram-full-screen"
-                    id="canvas"
-                  ></div>
+                    <div
+                    v-show="!diagramLoading"
+                    class="cft-bpmn-viewer-container"
+                  >
+                    <div
+                      class="cft-bpm-container cft-grab-cursor"
+                      id="process-diagram-container"
+                    ></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -551,7 +556,7 @@ import bootstrap, {
   Toast,
   Tooltip
 } from 'bootstrap';
-import BpmnViewer from "bpmn-js";
+import BpmnViewer from "bpmn-js/dist/bpmn-navigated-viewer.production.min.js";
 import DatePicker from "v-calendar/lib/components/date-picker.umd";
 import ExpandContract from "./addons/ExpandContract.vue";
 import FormEdit from "./form/Edit.vue";
@@ -866,24 +871,23 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
     this.xmlData = getProcessResult.data.bpmn20Xml;
     const activityList = getActivity.data.childActivityInstances;
-    const div = document.getElementById("canvas");
+    const div = document.getElementById("process-diagram-container");
     if (div) {
       div.innerHTML = "";
     }
-    const viewer = new BpmnViewer({
-      container: "#canvas",
-    });
-
     this.diagramLoading = false;
+
+    const viewer = new BpmnViewer({
+      container: "#process-diagram-container",
+    });
     await viewer.importXML(this.xmlData);
-    viewer.get("canvas").zoom("fit-viewport");
-    for (let i: number = 0; i < activityList.length; i++) {
-      viewer.get("canvas").addMarker({
-        'id': activityList[i].activityId
-      }, 'highlight');
-    }
-
-
+    viewer.get("canvas").addMarker(
+      {
+        id: activityList[0].activityId,
+      },
+      "highlight"
+    );
+  
   }
 
   async getDiagramDetails() {
@@ -1450,5 +1454,30 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     }
   }
+}
+.cft-bpmn-viewer-container {
+  min-height: 400px;
+  position: relative;
+}
+.cft-bpm-container {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+}
+
+.cft-grab-cursor {
+  cursor: move;
+  cursor: grab;
+}
+.cft-btn_zoom{
+  position: absolute;
+  bottom: 10em;
+  right:5%;
+}
+</style>
+<style>
+.highlight:not(.djs-connection) > .djs-visual > :nth-child(1) {
+  fill: rgb(56, 89, 138) !important;
 }
 </style>
