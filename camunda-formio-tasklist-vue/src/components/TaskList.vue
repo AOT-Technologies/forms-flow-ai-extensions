@@ -217,12 +217,13 @@
                       <div class="modal-content">
                         <div class="modal-header">
                           <h5 class="modal-title">MANAGE GROUPS</h5>
-                          <button
+                          <i
                             type="button"
-                            class="btn-close mx-2"
+                            class="fa fa-times mx-2"
                             data-bs-dismiss="modal"
                             aria-label="Close"
-                          ></button>
+                            title="cancel"
+                          ></i>
                         </div>
                         <div class="modal-body px-4 pb-5">
                           <i class="fa fa-exclamation-circle"></i>
