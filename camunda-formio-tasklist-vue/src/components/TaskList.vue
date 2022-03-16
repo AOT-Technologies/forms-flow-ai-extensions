@@ -112,7 +112,7 @@
                         class="d-flex w-100 mt-1"
                       >
                         <v-select
-                          :label="selectSearchType!=='email'?selectSearchType:'firstName'"
+                          :label="selectSearchType!=='email'?selectSearchType:'code'"
                           :options="reviewerUsersList"
                           :filterable="false"
                           v-model="userSelected"
@@ -121,7 +121,7 @@
                           class="select-assignee"
                         >
                          <template v-if="selectSearchType==='email' " v-slot:option="option">
-                          <div>{{option.firstName}}</div>
+                          <div>{{option.code}}</div>
                           <div>({{option.email}})</div>
                          </template>
                           </v-select>
