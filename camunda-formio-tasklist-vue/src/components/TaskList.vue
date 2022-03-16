@@ -87,7 +87,7 @@
                 > <span class="mx-4">|</span>Application ID <strong>#{{ task.applicationId }}</strong>
                 </p>
               </div>
-              <div class="d-flex justify-content-between mb-4">
+              <div class="d-flex justify-content-start mb-4">
                 <section v-if="!hideTaskDetails.assignee" class="task-assignee">
                   <label class="fw-bold">Task assignee</label>
                   <button
@@ -194,7 +194,7 @@
                   </button>
                   <div class="d-flex align-items-baseline group-name">
                     <template v-if="groupListNames && groupListNames.length">
-                      {{ String(groupListNames) }}
+                     <p class="text-truncate" style="max-width: 250px;"> {{ String(groupListNames) }}</p>
                     </template>
                     <button
                       v-else
