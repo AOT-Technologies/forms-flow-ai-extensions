@@ -13,7 +13,6 @@ defaults:
 
 jobs:
   build:
-    if: github.repository == 'AOT-Technologies/forms-flow-ai-extensions'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
