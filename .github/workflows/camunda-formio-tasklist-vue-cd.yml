@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - master
+    paths:
+      - "camunda-formio-tasklist-vue/**"
 defaults:
   run:
     shell: bash
