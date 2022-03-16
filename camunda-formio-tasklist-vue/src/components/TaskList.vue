@@ -112,14 +112,19 @@
                         class="d-flex w-100 mt-1"
                       >
                         <v-select
-                          :label="selectSearchType"
+                          :label="selectSearchType!=='email'?selectSearchType:'code'"
                           :options="reviewerUsersList"
                           :filterable="false"
                           v-model="userSelected"
                           :placeholder="`Search by ${selectSearchType}`"
                           @search="onUserSearch"
                           class="select-assignee"
-                        />
+                        >
+                         <template v-if="selectSearchType==='email' " v-slot:option="option">
+                          <div>{{option.code}}</div>
+                          <div>({{option.email}})</div>
+                         </template>
+                          </v-select>
                         <div class="dropdown assignee-search-filter mx-2">
                           <button
                             class="btn btn-secondary dropdown-toggle"
