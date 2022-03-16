@@ -124,10 +124,7 @@
                           <div>{{option.firstName}}</div>
                           <div>({{option.email}})</div>
                          </template>
-                        
-                        
-                        
-                        </v-select>
+                          </v-select>
                         <div class="dropdown assignee-search-filter mx-2">
                           <button
                             class="btn btn-secondary dropdown-toggle"
