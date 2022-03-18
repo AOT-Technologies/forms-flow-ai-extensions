@@ -243,7 +243,6 @@ export default class TaskSearchItem extends Vue {
   }
 
   updateSearchQueryOperators(operator: string, index: number) {
-    console.log("reached here")
     this.$root.$emit("call-updateSearchQueryOperators", {
       operator: operator,
       index: index,
