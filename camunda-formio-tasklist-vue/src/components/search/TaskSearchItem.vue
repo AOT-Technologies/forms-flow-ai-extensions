@@ -97,6 +97,10 @@
         v-if="showSearchState[index] === 'i' && query.type === 'date'"
         v-model="selectedSearchQueries[index].value"
         :popover="{ visibility: 'click' }"
+         @input="
+                setSearchQueryValue(selectedSearchQueries, index);
+                showSearchValueItem(index);
+        "
       >
         <template v-slot="{ inputValue, inputEvents }">
           <div class="input-group">
@@ -104,10 +108,7 @@
               class="form-control"
               :value="inputValue"
               v-on="inputEvents"
-              @input="
-                setSearchQueryValue(selectedSearchQueries, index);
-                showSearchValueItem(index);
-              "
+             
               placeholder="dd/mm/yyyy"
             />
           </div>

@@ -297,6 +297,7 @@
                     v-else
                     v-model="task.followUp"
                     :popover="{ visibility: 'click' }"
+                    @input="updateFollowUpDate"
                   >
                     <template v-slot="{ inputValue, inputEvents }">
                       <div class="input-group">
@@ -304,7 +305,6 @@
                           class="form-control"
                           :value="inputValue"
                           v-on="inputEvents"
-                          @input="updateFollowUpDate"
                           placeholder="mm/dd/yyyy"
                         />
                         <i class="fa fa-calendar-alt"></i>
@@ -335,6 +335,7 @@
                     v-else
                     v-model="task.due"
                     :popover="{ visibility: 'click' }"
+                     @input="updateDueDate"
                   >
                     <template v-slot="{ inputValue, inputEvents }">
                       <div class="input-group">
@@ -342,7 +343,6 @@
                           class="form-control"
                           :value="inputValue"
                           v-on="inputEvents"
-                          @input="updateDueDate"
                           placeholder="mm/dd/yyyy"
                         />
                         <i class="fa fa-calendar-alt"></i>
@@ -1104,7 +1104,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const referenceobject = this.task;
     try {
       if (this.task?.due !== null) {
-        referenceobject["due"] = getISODateTime(this.task?.due);
+        referenceobject.due = getISODateTime(this.task.due);
         await this.updateTaskDatedetails(this.task.id!, referenceobject);
       }
     } catch {
