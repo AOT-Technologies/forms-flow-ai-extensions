@@ -82,7 +82,7 @@
         :filterable="false"
         :clearable="false"
         v-model="operator[index]"
-        @change="updateSearchQueryOperators(operator[index], index)"
+        @input="updateSearchQueryOperators(operator[index], index)"
         :options="query.compares"
         class="select-search-query"
       />
@@ -243,6 +243,7 @@ export default class TaskSearchItem extends Vue {
   }
 
   updateSearchQueryOperators(operator: string, index: number) {
+    console.log("reached here")
     this.$root.$emit("call-updateSearchQueryOperators", {
       operator: operator,
       index: index,
