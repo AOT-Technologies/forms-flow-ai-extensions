@@ -23,6 +23,8 @@ forms in a bundled solution.
 - Write a separate router in the integration project for defining routers for
 Application History `view submission` using our component to view
 the Form.
+- Define CSS variable in your file `--bs-primary` and give some color to your buttons. example
+ ` :root {  --bs-primary: #0d6efd;} `
 
 A sample project which was used for integration `camunda-formio-tasklist-vue`
 components can be found :point_right: [here](https://github.com/AOT-Technologies/service-flow-vue/).
