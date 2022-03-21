@@ -86,7 +86,7 @@
               v-if="task.followUp"
             >Follow up in {{ timedifference(task.followUp) }}</div>
           </div>
-          <task-variable :variables="task._embedded.variable" :filterTaskVariable="selectedFilterTaskVariable"/>
+          <task-variable v-if="task._embedded&& task._embedded.variable" :variables="task._embedded.variable" :filterTaskVariable="selectedFilterTaskVariable"/>
         </div>
       </template>
       <div
