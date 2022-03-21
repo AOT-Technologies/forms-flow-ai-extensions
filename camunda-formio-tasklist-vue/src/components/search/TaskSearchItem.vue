@@ -82,7 +82,7 @@
         :filterable="false"
         :clearable="false"
         v-model="operator[index]"
-        @change="updateSearchQueryOperators(operator[index], index)"
+        @input="updateSearchQueryOperators(operator[index], index)"
         :options="query.compares"
         class="select-search-query"
       />
