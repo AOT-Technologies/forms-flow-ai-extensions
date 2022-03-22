@@ -522,6 +522,7 @@
 import "font-awesome/scss/font-awesome.scss";
 import "../styles/user-styles.css";
 import "../styles/camundaFormIOTasklist.scss";
+import * as bootstrap from 'bootstrap';
 import {
   ALL_FILTER,
   CamundaRest,
@@ -558,7 +559,7 @@ import {
   UserPayload,
   UserSearchListLabelPayload,
 } from "../models";
-import bootstrap, {
+import  {
   Toast,
   Tooltip
 } from 'bootstrap';
