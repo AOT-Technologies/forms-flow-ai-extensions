@@ -16,8 +16,9 @@
         </div>
         </div>
        </div>
-       <div class="w-100 text-center" >
+       <div class="w-100 text-center "  v-if="index > 2" >
        <i
+      
        class="fa fa-angle-down"
        @click.stop="toggleShowMore"
        :style="{transform: `${showMore ? 'rotate(180deg)' : 'rotate(0deg)'}`}"
