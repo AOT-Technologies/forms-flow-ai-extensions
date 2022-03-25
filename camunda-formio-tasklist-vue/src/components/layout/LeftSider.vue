@@ -295,6 +295,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     overflow-y: auto;
     border-radius: 0;
      .cft-card-list-group-item{
+       box-shadow: 0 0 3px #b4b4b4;
        margin: 0.50rem 1rem;
      }
     .cft-list-group-item {
