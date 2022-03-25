@@ -51,13 +51,28 @@
       <div
         class="d-flex mb-2"
         v-if="showVariableValueState[index] === 'i'"
-      >
+      > <div>
         <input
           class="form-control"
           type="text"
           v-model="selectedSearchQueries[index].variable"
+          v-on:keyup="filterTaskVariableArray(index)"
           v-on:keyup.enter="showVariableValueItem(index)"
         >
+        <div class="filter-items variable-filter-item"  >
+         <div
+         v-for="(variable,idx) of filteredVariable"
+           :key="idx"
+           class="clickable p-0 mb-2 text-truncate"
+           @click="setTaskvariableValue(variable.name,index)"
+          data-bs-toggle="tooltip" data-bs-placement="top" :title="`${variable.name}  (${variable.label})`"
+                  >
+ 
+                 <span>{{variable.name}} <span class="text-muted"> ({{variable.label}})</span></span> 
+                 </div>           
+
+       </div>
+      </div>
         <button
           class="btn btn-outline-success btn-sm mx-2"
           @click="showVariableValueItem(index)"
@@ -69,13 +84,15 @@
         ><i class="fa fa-times"></i>
         </button>
       </div>
-      <p
-        class="cft-search-cursor"
+   
+      <div
+        class="cft-search-cursor text-truncate"
         v-if="showVariableValueState[index] === 's'"
         @click="updateVariableInput(index)"
       >
-        {{ selectedSearchQueries[index].variable }}
-      </p>
+       <span  data-bs-toggle="tooltip" data-bs-placement="top" :title="selectedSearchQueries[index].variable "> {{ selectedSearchQueries[index].variable }}</span>
+      </div>
+        
     </div>
     <div class="d-flex mb-2">
       <v-select
@@ -166,6 +183,7 @@ import {
   SearchOptionPayload
 } from "../../models";
 import vSelect from "vue-select";
+import TaskVariable from "../taskVariable/TaskVariable.vue";
 
 @Component({
   components: {
@@ -196,6 +214,16 @@ export default class TaskSearchItem extends Vue {
     default: [],
   })
   private operator!: string[];
+
+  @Prop({
+    default:()=>[]
+  }) private  taskVariableArray: any;
+
+  private filteredVariable =[]
+
+  mounted(){
+    this.filteredVariable = this.taskVariableArray
+  }
 
   private searchListElements: SearchOptionPayload[] = taskSearchFilters;
 
@@ -256,6 +284,17 @@ export default class TaskSearchItem extends Vue {
     });
   }
 
+  filterTaskVariableArray(index: any){
+    const value = this.selectedSearchQueries[index].variable
+    this.filteredVariable = this.taskVariableArray.filter(item=> item.name.includes(value));
+  }
+
+setTaskvariableValue(value, index){
+   this.selectedSearchQueries[index].variable= value;
+   this.showVariableValueItem(index);
+}
+  
+
   formatDate(date: Date) {
     return getFormattedDateAndTime(date);
   }
@@ -277,4 +316,27 @@ export default class TaskSearchItem extends Vue {
     margin-right: 0.5rem;
   }
 }
+.filter-items {
+  max-width: 250px;
+  max-height: 250px;
+  overflow: auto;
+  margin: 5px;
+  border: 1px solid rgb(185, 185, 185);
+  border-radius: 5px;
+  background-color: #fff;
+  background-clip: padding-box;
+    border-radius: 0px;
+    margin-top: 0px;
+    padding:0 5px;
+}
+.clickable {
+  cursor: pointer;
+  margin-bottom: 10px !important;
+  padding: 10px;
+  border-left: 2px solid transparent;
+}
+.clickable:hover {
+  border-left: 2px solid #155cb5;
+}
+
 </style>

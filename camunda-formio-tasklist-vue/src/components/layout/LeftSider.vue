@@ -4,6 +4,7 @@
       ref="taskListSearchRef"
       @update-task-list="onSearchUpdateTasklistResult"
        v-if="!disableOption.filterTask" 
+       :taskVariableArray="taskVariableArray"
     />
     <div
       class="cft-list-group"
@@ -148,7 +149,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   }) private containerHeight!: number;
   @Prop() private disableOption!: DisableComponentPropPayload;
   @Prop() private selectedFilterTaskVariable!: object;
-
+@Prop() private taskVariableArray;
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Getter("getFormsFlowTaskId")

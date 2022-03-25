@@ -37,6 +37,7 @@
             :disableOption="disableComponents"
             :listItemCardStyle="listItemCardStyle"
             :selectedFilterTaskVariable="selectedFilterTaskVariable"
+            :taskVariableArray="taskVariableArray"
           />
         </div>
         <div
@@ -643,6 +644,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   };
   public perPage: number = 10;
   private filterList: FilterPayload[] = [];
+  public taskVariableArray: any;
   private selectedFilterTaskVariable={
 
   };
@@ -1240,6 +1242,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       this.selectedfilterId = this.taskDefaultFilterListNames.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER);
       this.filterList.forEach(filterListItem=>{
         if(filterListItem.id===this.selectedfilterId){
+          this.taskVariableArray= filterListItem?.properties?.variables ||[]
           const newFilterVaribale= {
 
           };
