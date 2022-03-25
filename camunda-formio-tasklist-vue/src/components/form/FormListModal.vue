@@ -154,8 +154,9 @@ export default class FormListModal extends Mixins(BaseMixin) {
 
   formListItems() {
     this.formitems = [];
-    CamundaRest.listForms(this.token, this.bpmApiUrl).then(response => {
-      response.data.forEach((form: FormListItemsPayload) => {
+    const url: any= localStorage.getItem('formsflow.ai.api.url');
+    CamundaRest.listForms(this.token, url).then(response => {
+      response.data.forms.forEach((form: FormListItemsPayload) => {
         this.formitems.push(form);
       });
     });

@@ -1,5 +1,5 @@
 import {
-  bpmAxios, bpmAxiosWithHal, engine, formExt,
+  bpmAxios, bpmAxiosWithHal, engine, bpmAxiosGet,
 } from "../services";
 
 export const CamundaRest = {
@@ -274,7 +274,7 @@ export const CamundaRest = {
   },
 
   async listForms (bearerToken: string, CamundaUrl: string) {
-    return await bpmAxios(bearerToken, CamundaUrl).get(`/${formExt}/form`);
+    return await bpmAxiosGet(bearerToken, CamundaUrl).get(`/form`);
   },
 
   async getProcessDiagramXML (
