@@ -67,9 +67,10 @@ export default class FormList extends Vue {
   }
 
   formListItems () {
-    CamundaRest.listForms(this.token, this.bpmApiUrl).then((response) => {
-      this.formNumPages = Math.ceil(response.data.length / this.formperPage);
-      this.formList = response.data.splice(
+    const apiUrl: any = localStorage.getItem("formsflow.ai.api.url")
+    CamundaRest.listForms(this.token, apiUrl).then((response) => {
+      this.formNumPages = Math.ceil(response.data.forms.length / this.formperPage);
+      this.formList = response.data.forms.splice(
         (this.formcurrentPage - 1) * this.formperPage,
         this.formcurrentPage * this.formperPage
       );
@@ -77,8 +78,9 @@ export default class FormList extends Vue {
   }
 
   mounted () {
-    CamundaRest.listForms(this.token, this.bpmApiUrl).then((response) => {
-      this.formList = response.data;
+     const apiUrl: any = localStorage.getItem("formsflow.ai.api.url")
+    CamundaRest.listForms(this.token, apiUrl).then((response) => {
+      this.formList = response.data.forms;
     });
   }
 }

@@ -43,7 +43,7 @@ import {
 @Component
 export default class TaskVariable extends Vue {
     @Prop() private variables!: any[];
-    @Prop() private filterTaskVariable;
+    @Prop() private filterTaskVariable: any;
     private showMore: boolean = false;
 
     toggleShowMore(){

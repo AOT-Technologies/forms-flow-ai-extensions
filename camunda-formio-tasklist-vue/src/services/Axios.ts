@@ -11,6 +11,15 @@ export function bpmAxios (bearerToken: string, CamundaUrl: string) {
     },
   });
 }
+export function bpmAxiosGet (bearerToken: string, CamundaUrl: string) {
+  return axios.create({
+    baseURL: CamundaUrl,
+    withCredentials: false,
+    headers: {
+      Authorization: `Bearer ${bearerToken}`,
+    },
+  });
+}
 
 export function bpmAxiosWithHal (bearerToken: string, CamundaUrl: string) {
   return axios.create({
