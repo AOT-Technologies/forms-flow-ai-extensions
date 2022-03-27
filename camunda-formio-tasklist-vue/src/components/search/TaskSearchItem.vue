@@ -49,7 +49,7 @@
       v-if="query.type === 'variables'"
     >
       <div
-        class="d-flex mb-2"
+        class="d-flex mb-2" 
         v-if="showVariableValueState[index] === 'i'"
       > <div>
         <input
@@ -316,7 +316,7 @@ export default class TaskSearchItem extends Vue {
   }
 }
 .filter-items {
-  max-width: 250px;
+  max-width: 200px;
   max-height: 250px;
   overflow: auto;
   margin: 5px;
