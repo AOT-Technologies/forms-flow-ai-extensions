@@ -115,10 +115,10 @@ import {
   CamundaRest, cloneDeep, getFormattedDateAndTime, isEqual
 } from "../../services";
 import {
-  Component, Mixins, Prop
+  Component, Mixins, Prop , Watch
 } from "vue-property-decorator";
 import {
-  DisableComponentPropPayload,Payload,
+  DisableComponentPropPayload,Payload,FilterPayload
 } from "../../models";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import Pagination from "./Pagination.vue";
@@ -148,8 +148,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     default: 0
   }) private containerHeight!: number;
   @Prop() private disableOption!: DisableComponentPropPayload;
-  @Prop() private selectedFilterTaskVariable!: object;
-@Prop() private taskVariableArray;
+  @Prop() private filterList: FilterPayload[] = []
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Getter("getFormsFlowTaskId")
@@ -165,7 +164,10 @@ export default class LeftSider extends Mixins(BaseMixin) {
   public setFormsFlowTaskId: any;
   @serviceFlowModule.Mutation("setFormsFlowactiveIndex")
   public setFormsFlowactiveIndex: any;
+   private selectedFilterTaskVariable: object= {
 
+   };
+  private taskVariableArray: Array<any>= [] ;
   private getProcessDefinitions: Array<any> = [];
   private processDefinitionId = "";
   private currentPage = 1;
@@ -239,6 +241,22 @@ export default class LeftSider extends Mixins(BaseMixin) {
 
   updated() {
     this.calculateViewHeights();
+  }
+  @Watch("selectedfilterId")
+  settingTaskVariable (){
+    if(this.filterList.length&&this.selectedfilterId){
+      this.filterList.forEach(filterListItem=>{
+        if(filterListItem.id===this.selectedfilterId){
+          this.taskVariableArray= filterListItem?.properties?.variables ||[]
+          const newFilterVaribale= {
+          };
+          filterListItem.properties?.variables?.forEach(item => {
+            newFilterVaribale[item.name]=item.label;
+          });
+          this.selectedFilterTaskVariable= newFilterVaribale;
+        }
+      });
+    }
   }
 
   /*** to calculate the height and handling scroll views accordingly */
