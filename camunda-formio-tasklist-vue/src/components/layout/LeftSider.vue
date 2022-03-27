@@ -118,7 +118,7 @@ import {
   Component, Mixins, Prop , Watch
 } from "vue-property-decorator";
 import {
-  DisableComponentPropPayload,Payload,FilterPayload
+  DisableComponentPropPayload,FilterPayload,Payload
 } from "../../models";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import Pagination from "./Pagination.vue";
@@ -247,7 +247,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     if(this.filterList.length&&this.selectedfilterId){
       this.filterList.forEach(filterListItem=>{
         if(filterListItem.id===this.selectedfilterId){
-          this.taskVariableArray= filterListItem?.properties?.variables ||[]
+          this.taskVariableArray= filterListItem?.properties?.variables ||[];
           const newFilterVaribale= {
           };
           filterListItem.properties?.variables?.forEach(item => {

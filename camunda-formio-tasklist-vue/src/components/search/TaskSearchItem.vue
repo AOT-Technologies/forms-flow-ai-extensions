@@ -183,7 +183,6 @@ import {
   SearchOptionPayload
 } from "../../models";
 import vSelect from "vue-select";
-import TaskVariable from "../taskVariable/TaskVariable.vue";
 
 @Component({
   components: {
@@ -222,7 +221,7 @@ export default class TaskSearchItem extends Vue {
   private filteredVariable =[]
 
   mounted(){
-    this.filteredVariable = this.taskVariableArray
+    this.filteredVariable = this.taskVariableArray;
   }
 
   private searchListElements: SearchOptionPayload[] = taskSearchFilters;
@@ -285,14 +284,14 @@ export default class TaskSearchItem extends Vue {
   }
 
   filterTaskVariableArray(index: any){
-    const value = this.selectedSearchQueries[index].variable
+    const value = this.selectedSearchQueries[index].variable;
     this.filteredVariable = this.taskVariableArray.filter(item=> item.name.includes(value));
   }
 
-setTaskvariableValue(value, index){
-   this.selectedSearchQueries[index].variable= value;
-   this.showVariableValueItem(index);
-}
+  setTaskvariableValue(value, index){
+    this.selectedSearchQueries[index].variable= value;
+    this.showVariableValueItem(index);
+  }
   
 
   formatDate(date: Date) {
