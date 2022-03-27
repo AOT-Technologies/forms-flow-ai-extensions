@@ -119,7 +119,7 @@ import {
   CamundaRest, FORMLIST_FIELDS, formApplicationSubmit
 } from "../../services";
 import {
-  Component, Mixins
+  Component, Emit, Mixins
 } from "vue-property-decorator";
 import {
   CustomEventPayload,
@@ -201,7 +201,8 @@ export default class FormListModal extends Mixins(BaseMixin) {
       );
     }
     this.$bvModal.hide("modal-multi-2");
-    // this.$bvModal.show('modal-multi-1');
+     this.$bvModal.show('modal-multi-1');
+     this.$emit("update-task")
   }
 
   oncustomEventCallback = (customEvent: CustomEventPayload) => {
