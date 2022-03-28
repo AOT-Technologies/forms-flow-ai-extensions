@@ -614,7 +614,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
  
 
   @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
-  private getFormsFlowTaskCurrentPage: any;
+  private getFormsFlowTaskCurrentPage: number = 1;
   @StoreServiceFlowModule.Getter("getFormsFlowTaskId")
   private getFormsFlowTaskId: any;
   @StoreServiceFlowModule.Getter("getFormsFlowactiveIndex")
