@@ -36,7 +36,7 @@
             :containerHeight="containerHeight"
             :disableOption="disableComponents"
             :listItemCardStyle="listItemCardStyle"
-            :selectedFilterTaskVariable="selectedFilterTaskVariable"
+            :filterList="filterList"
           />
         </div>
         <div
@@ -87,7 +87,7 @@
                 > <span class="mx-4">|</span>Application ID <strong>#{{ task.applicationId }}</strong>
                 </p>
               </div>
-              <div class="d-flex justify-content-between mb-4">
+              <div class="d-flex justify-content-start mb-4">
                 <section v-if="!hideTaskDetails.assignee" class="task-assignee">
                   <label class="fw-bold">Task assignee</label>
                   <button
@@ -112,14 +112,19 @@
                         class="d-flex w-100 mt-1"
                       >
                         <v-select
-                          :label="selectSearchType"
+                          :label="selectSearchType!=='email'?selectSearchType:'code'"
                           :options="reviewerUsersList"
                           :filterable="false"
                           v-model="userSelected"
                           :placeholder="`Search by ${selectSearchType}`"
                           @search="onUserSearch"
                           class="select-assignee"
-                        />
+                        >
+                         <template v-if="selectSearchType==='email' " v-slot:option="option">
+                          <div>{{option.code}}</div>
+                          <div>({{option.email}})</div>
+                         </template>
+                          </v-select>
                         <div class="dropdown assignee-search-filter mx-2">
                           <button
                             class="btn btn-secondary dropdown-toggle"
@@ -194,7 +199,7 @@
                   </button>
                   <div class="d-flex align-items-baseline group-name">
                     <template v-if="groupListNames && groupListNames.length">
-                      {{ String(groupListNames) }}
+                     <p class="text-truncate"> {{ String(groupListNames) }}</p>
                     </template>
                     <button
                       v-else
@@ -217,12 +222,13 @@
                       <div class="modal-content">
                         <div class="modal-header">
                           <h5 class="modal-title">MANAGE GROUPS</h5>
-                          <button
+                          <i
                             type="button"
-                            class="btn-close mx-2"
+                            class="fa fa-times mx-2"
                             data-bs-dismiss="modal"
                             aria-label="Close"
-                          ></button>
+                            title="cancel"
+                          ></i>
                         </div>
                         <div class="modal-body px-4 pb-5">
                           <i class="fa fa-exclamation-circle"></i>
@@ -291,6 +297,7 @@
                     v-else
                     v-model="task.followUp"
                     :popover="{ visibility: 'click' }"
+                    @input="updateFollowUpDate"
                   >
                     <template v-slot="{ inputValue, inputEvents }">
                       <div class="input-group">
@@ -298,7 +305,6 @@
                           class="form-control"
                           :value="inputValue"
                           v-on="inputEvents"
-                          @input="updateFollowUpDate"
                           placeholder="mm/dd/yyyy"
                         />
                         <i class="fa fa-calendar-alt"></i>
@@ -329,6 +335,7 @@
                     v-else
                     v-model="task.due"
                     :popover="{ visibility: 'click' }"
+                     @input="updateDueDate"
                   >
                     <template v-slot="{ inputValue, inputEvents }">
                       <div class="input-group">
@@ -336,7 +343,6 @@
                           class="form-control"
                           :value="inputValue"
                           v-on="inputEvents"
-                          @input="updateDueDate"
                           placeholder="mm/dd/yyyy"
                         />
                         <i class="fa fa-calendar-alt"></i>
@@ -455,10 +461,15 @@
                       <span class="sr-only">Loading...</span>
                     </div>
                   </div>
-                  <div
-                    class="diagram-full-screen"
-                    id="canvas"
-                  ></div>
+                    <div
+                    v-show="!diagramLoading"
+                    class="cft-bpmn-viewer-container"
+                  >
+                    <div
+                      class="cft-bpm-container cft-grab-cursor"
+                      id="process-diagram-container"
+                    ></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -511,6 +522,7 @@
 import "font-awesome/scss/font-awesome.scss";
 import "../styles/user-styles.css";
 import "../styles/camundaFormIOTasklist.scss";
+import * as bootstrap from 'bootstrap';
 import {
   ALL_FILTER,
   CamundaRest,
@@ -547,11 +559,11 @@ import {
   UserPayload,
   UserSearchListLabelPayload,
 } from "../models";
-import bootstrap, {
+import  {
   Toast,
   Tooltip
 } from 'bootstrap';
-import BpmnViewer from "bpmn-js";
+import BpmnViewer from "bpmn-js/dist/bpmn-navigated-viewer.production.min.js";
 import DatePicker from "v-calendar/lib/components/date-picker.umd";
 import ExpandContract from "./addons/ExpandContract.vue";
 import FormEdit from "./form/Edit.vue";
@@ -866,24 +878,23 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
     this.xmlData = getProcessResult.data.bpmn20Xml;
     const activityList = getActivity.data.childActivityInstances;
-    const div = document.getElementById("canvas");
+    const div = document.getElementById("process-diagram-container");
     if (div) {
       div.innerHTML = "";
     }
-    const viewer = new BpmnViewer({
-      container: "#canvas",
-    });
-
     this.diagramLoading = false;
+
+    const viewer = new BpmnViewer({
+      container: "#process-diagram-container",
+    });
     await viewer.importXML(this.xmlData);
-    viewer.get("canvas").zoom("fit-viewport");
-    for (let i: number = 0; i < activityList.length; i++) {
-      viewer.get("canvas").addMarker({
-        'id': activityList[i].activityId
-      }, 'highlight');
-    }
-
-
+    viewer.get("canvas").addMarker(
+      {
+        id: activityList[0].activityId,
+      },
+      "highlight"
+    );
+  
   }
 
   async getDiagramDetails() {
@@ -1094,7 +1105,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     const referenceobject = this.task;
     try {
       if (this.task?.due !== null) {
-        referenceobject["due"] = getISODateTime(this.task?.due);
+        referenceobject.due = getISODateTime(this.task.due);
         await this.updateTaskDatedetails(this.task.id!, referenceobject);
       }
     } catch {
@@ -1226,21 +1237,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
 
     if(this.filterList.length>0){
-      this.selectedfilterId = this.taskDefaultFilterListNames.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER);
-      this.filterList.forEach(filterListItem=>{
-        if(filterListItem.id===this.selectedfilterId){
-          const newFilterVaribale= {
-
-          };
-          filterListItem.properties?.variables?.forEach(item => {
-            newFilterVaribale[item.name]=item.label;
-          });
-          this.selectedFilterTaskVariable= newFilterVaribale;
-
-        }
-      });
-      
-     
+      this.selectedfilterId = this.taskDefaultFilterListNames.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER); 
     }
 
     else {
@@ -1410,6 +1407,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   .task-groups {
     .group-name {
       white-space: normal;
+      max-width: 250px;
     }
   }
   .task-groups-modal {
@@ -1450,5 +1448,30 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     }
   }
+}
+.cft-bpmn-viewer-container {
+  min-height: 400px;
+  position: relative;
+}
+.cft-bpm-container {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+}
+
+.cft-grab-cursor {
+  cursor: move;
+  cursor: grab;
+}
+.cft-btn_zoom{
+  position: absolute;
+  bottom: 10em;
+  right:5%;
+}
+</style>
+<style>
+.highlight:not(.djs-connection) > .djs-visual > :nth-child(1) {
+  fill: rgb(56, 89, 138) !important;
 }
 </style>

@@ -4,6 +4,8 @@
       ref="taskListSearchRef"
       @update-task-list="onSearchUpdateTasklistResult"
        v-if="!disableOption.filterTask" 
+       :filterList="filterList"
+       :selectedfilterId="selectedfilterId"
     />
     <div
       class="cft-list-group"
@@ -86,7 +88,7 @@
               v-if="task.followUp"
             >Follow up in {{ timedifference(task.followUp) }}</div>
           </div>
-          <task-variable :variables="task._embedded.variable" :filterTaskVariable="selectedFilterTaskVariable"/>
+          <task-variable v-if="task._embedded&& task._embedded.variable" :variables="task._embedded.variable" :filterTaskVariable="selectedFilterTaskVariable"/>
         </div>
       </template>
       <div
@@ -114,10 +116,10 @@ import {
   CamundaRest, cloneDeep, getFormattedDateAndTime, isEqual
 } from "../../services";
 import {
-  Component, Mixins, Prop
+  Component, Mixins, Prop , Watch
 } from "vue-property-decorator";
 import {
-  DisableComponentPropPayload,Payload,
+  DisableComponentPropPayload,FilterPayload,Payload
 } from "../../models";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import Pagination from "./Pagination.vue";
@@ -147,8 +149,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     default: 0
   }) private containerHeight!: number;
   @Prop() private disableOption!: DisableComponentPropPayload;
-  @Prop() private selectedFilterTaskVariable!: object;
-
+  @Prop() private filterList: FilterPayload[] = []
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Getter("getFormsFlowTaskId")
@@ -164,7 +165,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
   public setFormsFlowTaskId: any;
   @serviceFlowModule.Mutation("setFormsFlowactiveIndex")
   public setFormsFlowactiveIndex: any;
+   private selectedFilterTaskVariable: object= {
 
+   };
   private getProcessDefinitions: Array<any> = [];
   private processDefinitionId = "";
   private currentPage = 1;
@@ -239,6 +242,21 @@ export default class LeftSider extends Mixins(BaseMixin) {
   updated() {
     this.calculateViewHeights();
   }
+  @Watch("selectedfilterId")
+  settingTaskVariable (){
+    if(this.filterList.length&&this.selectedfilterId){
+      this.filterList.forEach(filterListItem=>{
+        if(filterListItem.id===this.selectedfilterId){
+          const newFilterVaribale= {
+          };
+          filterListItem.properties?.variables?.forEach(item => {
+            newFilterVaribale[item.name]=item.label;
+          });
+          this.selectedFilterTaskVariable= newFilterVaribale;
+        }
+      });
+    }
+  }
 
   /*** to calculate the height and handling scroll views accordingly */
   calculateViewHeights() {
@@ -295,6 +313,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     overflow-y: auto;
     border-radius: 0;
      .cft-card-list-group-item{
+       box-shadow: 0 0 3px #b4b4b4;
        margin: 0.50rem 1rem;
      }
     .cft-list-group-item {

@@ -1,5 +1,22 @@
 # Changes for camunda-formio-tasklist-vue
 
+## v1.1.1, 2022-03-28
+
+#### Modified
+
+- Add process variable on filter task
+- Updated groups UI
+- Updated authorization API
+
+#### Fixes 
+
+- Highlighting Process Diagram
+- On submitting new forms, LHS of TaskList not being updated
+- Task variable null check
+- Buffer function 
+- Filter Task bugs 
+- Follow up date and Due date bugs on Task details
+
 ## v1.1.0, 2022-03-11
 
 #### Modified
