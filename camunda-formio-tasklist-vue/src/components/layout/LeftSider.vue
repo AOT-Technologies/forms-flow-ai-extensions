@@ -4,7 +4,8 @@
       ref="taskListSearchRef"
       @update-task-list="onSearchUpdateTasklistResult"
        v-if="!disableOption.filterTask" 
-       :taskVariableArray="taskVariableArray"
+       :filterList="filterList"
+       :selectedfilterId="selectedfilterId"
     />
     <div
       class="cft-list-group"
@@ -167,7 +168,6 @@ export default class LeftSider extends Mixins(BaseMixin) {
    private selectedFilterTaskVariable: object= {
 
    };
-  private taskVariableArray: Array<any>= [] ;
   private getProcessDefinitions: Array<any> = [];
   private processDefinitionId = "";
   private currentPage = 1;
@@ -247,7 +247,6 @@ export default class LeftSider extends Mixins(BaseMixin) {
     if(this.filterList.length&&this.selectedfilterId){
       this.filterList.forEach(filterListItem=>{
         if(filterListItem.id===this.selectedfilterId){
-          this.taskVariableArray= filterListItem?.properties?.variables ||[];
           const newFilterVaribale= {
           };
           filterListItem.properties?.variables?.forEach(item => {

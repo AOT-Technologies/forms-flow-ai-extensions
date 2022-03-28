@@ -173,7 +173,7 @@
 <script lang="ts">
 import "../../styles/camundaFormIOTasklistSearch.scss";
 import {
-  Component, Emit, Prop, Vue
+  Component, Emit, Prop, Vue, Watch
 } from "vue-property-decorator";
 import {
   getFormattedDateAndTime, taskSearchFilters
@@ -216,15 +216,29 @@ export default class TaskSearchItem extends Vue {
 
   @Prop({
     default:()=>[]
-  }) private  taskVariableArray: any;
+  }) private  filterList: any;
+ 
+  @Prop() private selectedfilterId ;
 
-  private filteredVariable =[]
-
-  mounted(){
-    this.filteredVariable = this.taskVariableArray;
-  }
-
+  private  taskVariableArray: any = [];
+  private filteredVariable =[];
   private searchListElements: SearchOptionPayload[] = taskSearchFilters;
+
+  @Watch("selectedfilterId")
+  settingTaskVariable (){
+    if(this.filterList.length&&this.selectedfilterId){
+      this.filterList.forEach(filterListItem=>{
+        if(filterListItem.id===this.selectedfilterId){
+          this.filteredVariable = filterListItem?.properties?.variables ||[];
+          this.taskVariableArray= filterListItem?.properties?.variables ||[];
+        }
+      });
+    }
+  }
+  mounted(){
+    this.settingTaskVariable();
+    
+  }
 
   deleteSearchQueryElement(query: SearchOptionPayload, index: number) {
     this.$root.$emit("call-deleteSearchQueryElement", {

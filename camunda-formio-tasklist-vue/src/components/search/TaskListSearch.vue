@@ -15,7 +15,8 @@
             :showVariableValueState="showVariableValueState"
             :operator="operator"
             :selectedSearchQueries="selectedSearchQueries"
-            :taskVariableArray="taskVariableArray"
+             :filterList="filterList"
+             :selectedfilterId="selectedfilterId"
             @updateVariableInput="updateVariableInput"
             @show-VariableValue-Item="showVariableValueItem"
             @reject-Search-Value-Item="rejectSearchValueItem"
@@ -69,7 +70,6 @@ const serviceFlowModule = namespace("serviceFlowModule");
   },
 })
 export default class TaskListSearch extends Mixins(BaseMixin) {
-  @Prop() private taskVariableArray;
   private selectedSearchQueries: SearchOptionPayload[] = [];
   private operator: string[] = [];
   private showSearchState: string[] = []; //States - a(?? state), i(enter input), s(show entered value)
@@ -79,7 +79,8 @@ export default class TaskListSearch extends Mixins(BaseMixin) {
     processVariables: [],
   };
   private isVariableTypeInSelectedSearchQuery: boolean = false;
-
+  @Prop() private  filterList: any;
+  @Prop() private selectedfilterId ;
   @serviceFlowModule.Getter("getFormsFlowTaskSearchType")
   private getFormsFlowTaskSearchType: any;
   @serviceFlowModule.Getter("getVariableNameIgnoreCase")
