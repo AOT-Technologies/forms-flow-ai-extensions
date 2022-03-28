@@ -15,6 +15,8 @@
             :showVariableValueState="showVariableValueState"
             :operator="operator"
             :selectedSearchQueries="selectedSearchQueries"
+             :filterList="filterList"
+             :selectedfilterId="selectedfilterId"
             @updateVariableInput="updateVariableInput"
             @show-VariableValue-Item="showVariableValueItem"
             @reject-Search-Value-Item="rejectSearchValueItem"
@@ -38,7 +40,7 @@
 <script lang="ts">
 import "../../styles/camundaFormIOTasklistSearch.scss";
 import {
-  Component, Emit, Mixins, Vue
+  Component, Emit, Mixins, Prop, Vue
 } from "vue-property-decorator";
 import {
   FilterSearchTypes,
@@ -68,7 +70,6 @@ const serviceFlowModule = namespace("serviceFlowModule");
   },
 })
 export default class TaskListSearch extends Mixins(BaseMixin) {
-
   private selectedSearchQueries: SearchOptionPayload[] = [];
   private operator: string[] = [];
   private showSearchState: string[] = []; //States - a(?? state), i(enter input), s(show entered value)
@@ -78,7 +79,8 @@ export default class TaskListSearch extends Mixins(BaseMixin) {
     processVariables: [],
   };
   private isVariableTypeInSelectedSearchQuery: boolean = false;
-
+  @Prop() private  filterList: any;
+  @Prop() private selectedfilterId ;
   @serviceFlowModule.Getter("getFormsFlowTaskSearchType")
   private getFormsFlowTaskSearchType: any;
   @serviceFlowModule.Getter("getVariableNameIgnoreCase")
