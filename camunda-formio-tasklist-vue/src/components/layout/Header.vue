@@ -36,6 +36,7 @@
       class="mx-1"
       :token="token"
       :bpmApiUrl="bpmApiUrl"
+      @update-task="updateCheck"
     />
     <TaskListSort
       v-if="!disableOption.sort"
@@ -84,7 +85,16 @@ export default class Header extends Mixins(BaseMixin) {
   @serviceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
   public setFormsFlowTaskCurrentPage: any;
 
-  private activefilter = NaN;
+  private activefilter = 0;
+
+  updateCheck(){
+    this.$root.$emit("call-fetchPaginatedTaskList", {
+      filterId: this.selectedfilterId,
+      requestData: this.payload,
+      firstResult: (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+      maxResults: this.perPage,
+    });
+  }
 
   togglefilter(filter: FilterPayload, index: number) {
     this.activefilter = index;

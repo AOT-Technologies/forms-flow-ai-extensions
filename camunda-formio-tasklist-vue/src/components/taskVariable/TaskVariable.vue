@@ -5,10 +5,12 @@
         :key="index"
         class="col-sm-12 col-lg-6 p-0 px-1"
        >
-        <div class="my-2" v-if="(showMore||index < 2) && item.value!==undefined">
+        <div class="my-2" v-if="(showMore||index < 2) && item.value!==undefined&&filterTaskVariable[item.name]">
+        <div class="text-truncate ">
         <span style="font-weight:bold; font-size:0.9rem">
            {{filterTaskVariable[item.name]}}
         </span>
+        </div>
         <div class="text-truncate ">
           <span data-toggle="tooltip"  class="ctf-description" data-placement="top" :title="checkVlaueIsDateOrNOt(item.value)">
          {{ checkVlaueIsDateOrNOt(item.value)}}  
@@ -16,11 +18,9 @@
         </div>
         </div>
        </div>
-       <div class="w-100 text-center "  v-if="index > 2" >
+       <div class="w-100 text-center btn-link"  v-if="variables.length > 2"  @click.stop="toggleShowMore" >
        <i
-      
        class="fa fa-angle-down"
-       @click.stop="toggleShowMore"
        :style="{transform: `${showMore ? 'rotate(180deg)' : 'rotate(0deg)'}`}"
          data-toggle="tooltip" 
          title="show more"
