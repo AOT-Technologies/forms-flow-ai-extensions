@@ -1,0 +1,25 @@
+name: Camunda formio tasklist CI
+
+on:
+  pull_request:
+    branches:
+      - master
+      - dev
+    paths:
+      - "camunda-formio-tasklist-vue/**"
+defaults:
+  run:
+    shell: bash
+    working-directory: ./camunda-formio-tasklist-vue
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: npm ci
+      # - run: npm test
+      - run: npm run build

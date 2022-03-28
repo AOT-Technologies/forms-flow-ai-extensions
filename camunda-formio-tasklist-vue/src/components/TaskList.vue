@@ -643,6 +643,9 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   };
   public perPage: number = 10;
   private filterList: FilterPayload[] = [];
+  private selectedFilterTaskVariable={
+
+  };
   private editAssignee: boolean = false;
   private groupList: GroupListPayload[] = [];
   private groupListNames?: string[] = [];
@@ -1234,8 +1237,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
 
     if(this.filterList.length>0){
-      this.selectedfilterId = this.taskDefaultFilterListNames.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER);
-     
+      this.selectedfilterId = this.taskDefaultFilterListNames.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER); 
     }
 
     else {

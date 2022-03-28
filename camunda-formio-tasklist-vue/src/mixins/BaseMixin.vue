@@ -73,7 +73,7 @@ export default class BaseMixin extends Vue {
       console.warn("WEBSOCKET_ENCRYPT_KEY prop not passed");
     }
 
-    const decodeToken = JSON.parse(atob(this.token.split(".")[1]));
+    const decodeToken = JSON.parse(Buffer.from(this.token.split(".")[1], 'base64').toString('utf8'));
     localStorage.setItem("bpmApiUrl", `${this.bpmApiUrl}/${engine}`);
     localStorage.setItem("authToken", this.token);
     const currentUrl = `${window.location.protocol}//${window.location.host}`;
