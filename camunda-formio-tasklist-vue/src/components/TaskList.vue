@@ -97,7 +97,8 @@
                     data-bs-toggle="tooltip"
                     title="Click to change assignee"
                   >
-                    <i
+                   <span v-if="loadingEditAssignee" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                    <i v-if="!loadingEditAssignee"
                       class="fa fa-pencil"
                       :class="{
                       'fa-times-circle-o':editAssignee,
@@ -165,8 +166,10 @@
                           @click="onUnClaim"
                           data-bs-toggle="tooltip"
                           title="Reset assignee"
-                        >
-                          <i class="fa fa-times-circle-o" />
+                        > 
+                         <span v-if="loadingClaimAndUnclaim" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+
+                          <i v-if="!loadingClaimAndUnclaim" class="fa fa-times-circle-o" />
                         </button>
                       </template>
                     </template>
@@ -177,7 +180,8 @@
                       data-bs-toggle="tooltip"
                       title="Claim task"
                     >
-                      <i class="fa fa-plus" />
+                     <span v-if="loadingClaimAndUnclaim" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                     <i v-if="!loadingClaimAndUnclaim" class="fa fa-plus" />
                       <span class="mx-1">Claim</span>
                     </button>
                   </div>
@@ -647,6 +651,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   };
   private editAssignee: boolean = false;
+  private loadingEditAssignee: boolean=  false;
+  private loadingClaimAndUnclaim: boolean = false;
   private groupList: GroupListPayload[] = [];
   private groupListNames?: string[] = [];
   private groupListItems: string[] = [];
@@ -699,6 +705,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async toggleassignee() {
+    this.loadingEditAssignee=true;
     const reviewerList = await CamundaRest.getUsersByMemberGroups(
       this.token,
       this.bpmApiUrl,
@@ -711,6 +718,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       });
       const userList = JSON.parse(JSON.stringify(this.reviewerUsersList));
       this.userSelected = userList.find(((user: any) => user.code?.includes(this.task.assignee)));
+      this.loadingEditAssignee=false;
       this.editAssignee = !this.editAssignee;
     }
   }
@@ -952,6 +960,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async onClaim() {
+    this.loadingClaimAndUnclaim= true;
     await CamundaRest.claim(
       this.token,
       this.task.id!,
@@ -960,19 +969,24 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       },
       this.bpmApiUrl
     );
+   
     if (!SocketIOService.isConnected()) {
       await this.getBPMTaskDetail(this.getFormsFlowTaskId);
       await this.reloadLHSTaskList();
     }
+    this.loadingClaimAndUnclaim= false;
+
   }
 
   async onUnClaim() {
+    this.loadingClaimAndUnclaim= true;
     await CamundaRest.unclaim(this.token, this.task.id!, this.bpmApiUrl);
 
     if (!SocketIOService.isConnected()) {
       await this.getBPMTaskDetail(this.getFormsFlowTaskId);
       await this.reloadLHSTaskList();
     }
+    this.loadingClaimAndUnclaim= false;
   }
 
   async onSetassignee() {
