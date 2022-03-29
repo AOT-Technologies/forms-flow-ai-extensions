@@ -119,7 +119,7 @@ import {
   Component, Mixins, Prop , Watch
 } from "vue-property-decorator";
 import {
-  DisableComponentPropPayload,FilterPayload,Payload
+  DisableComponentPropPayload,Payload
 } from "../../models";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import Pagination from "./Pagination.vue";
@@ -149,7 +149,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
     default: 0
   }) private containerHeight!: number;
   @Prop() private disableOption!: DisableComponentPropPayload;
-  @Prop() private filterList: FilterPayload[] = []
+  @Prop({
+    default:()=>[]
+  }) private filterList ;
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Getter("getFormsFlowTaskId")
