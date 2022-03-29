@@ -24,8 +24,8 @@ export const taskSearchFilters: SearchOptionPayload[] = [
   {
     label: "Task Variables",
     key: "taskVariables",
-    compares: ["=", ">", ">=", "!=", "<", "<="],
-    values: ["eq", "gt", "gte", "neq", "lt", "lte"],
+    compares: ["=", ">", ">=", "!=", "<", "<=","like"],
+    values: ["eq", "gt", "gte", "neq", "lt", "lte","like"],
     type: FilterSearchTypes.VARIABLES,
     variable: "",
     value: "",
@@ -34,8 +34,8 @@ export const taskSearchFilters: SearchOptionPayload[] = [
   {
     label: "Process Variables",
     key: "processVariables",
-    compares: ["=", ">", ">=", "!=", "<", "<="],
-    values: ["eq", "gt", "gte", "neq", "lt", "lte"],
+    compares: ["=", ">", ">=", "!=", "<", "<=","like"],
+    values: ["eq", "gt", "gte", "neq", "lt", "lte","like"],
     type: FilterSearchTypes.VARIABLES,
     variable: "",
     value: "",
@@ -160,6 +160,17 @@ export const FILTER_OPERATOR_TYPES = {
   AFTER: "after",
 };
 
+const convertingValueNumber =(value: any)=>{
+  let newValue: any ;
+  if(isNaN(value)){
+    newValue=value;
+  }else{
+    newValue= Number(value);
+  }
+  return newValue;
+};
+
+
 const getProcessedParamObject = (searchOption: SearchOptionPayload) =>
 {
   const option: any = {
@@ -219,7 +230,7 @@ export const getFormattedQueryListParams = (
         paramList[searchOption.key].push({
           name: searchOption.variable,
           operator: getVariableOperator(searchOption.operator),
-          value: searchOption.value,
+          value: convertingValueNumber(searchOption.value),
         });
       }
     }
@@ -256,3 +267,4 @@ export const getFormattedQueryListParams = (
   return isParamsHasValue ? resultList : {
   };
 };
+
