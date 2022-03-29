@@ -95,7 +95,6 @@ export default class TaskListSearch extends Mixins(BaseMixin) {
   }
 
   updateSearchInput(index: number) {
-    this.selectedSearchQueries[index].value = "";
     Vue.set(this.showSearchState, index, SEARCH_BOX_STATE.INSERT);
   }
 
