@@ -175,7 +175,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
     this.$bvModal.show("modal-multi-1");
   }
 
- async onSubmit(submission: FormioSubmissionPayload) {
+  async onSubmit(submission: FormioSubmissionPayload) {
     this.formId = submission.form;
     this.submissionId = submission._id;
 
@@ -190,7 +190,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
         + this.formId
         + "/submission/"
         + this.submissionId;
-     await formApplicationSubmit(
+      await formApplicationSubmit(
         formsflowAIApiUrl,
         {
           formId: this.formId,
