@@ -946,7 +946,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     await this.fetchPaginatedTaskList(
       this.selectedfilterId,
       this.payload,
-      (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+      (this.getFormsFlowTaskCurrentPage - 1||0) * this.perPage,
       this.perPage,
     );
   }
