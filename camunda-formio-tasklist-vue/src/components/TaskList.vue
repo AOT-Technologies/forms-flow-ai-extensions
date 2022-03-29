@@ -699,7 +699,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async toggleassignee() {
-    this.editAssignee = !this.editAssignee;
     const reviewerList = await CamundaRest.getUsersByMemberGroups(
       this.token,
       this.bpmApiUrl,
@@ -712,6 +711,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       });
       const userList = JSON.parse(JSON.stringify(this.reviewerUsersList));
       this.userSelected = userList.find(((user: any) => user.code?.includes(this.task.assignee)));
+      this.editAssignee = !this.editAssignee;
     }
   }
 
