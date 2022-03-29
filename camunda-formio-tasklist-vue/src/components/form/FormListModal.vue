@@ -175,7 +175,9 @@ export default class FormListModal extends Mixins(BaseMixin) {
     this.$bvModal.show("modal-multi-1");
   }
 
+ 
   async onSubmit(submission: FormioSubmissionPayload) {
+
     this.formId = submission.form;
     this.submissionId = submission._id;
 
