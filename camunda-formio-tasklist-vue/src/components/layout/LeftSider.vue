@@ -265,9 +265,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
   /*** to calculate the height and handling scroll views accordingly */
   calculateViewHeights() {
     const searchHeight = (this.$refs.taskListSearchRef as any)?.$el?.offsetHeight || 0;
-    const paginationHeight = (this.$refs.taskListPaginationRef as any)?.$el?.offsetHeight || 0;
+    // const paginationHeight = (this.$refs.taskListPaginationRef as any)?.$el?.offsetHeight || 0;
     if (this.containerHeight > 250) {
-      this.listHeight = `${this.containerHeight - (searchHeight + paginationHeight)}px`;
+      this.listHeight = `${this.containerHeight - (searchHeight + 45)}px`;
     }
   }
 
