@@ -979,10 +979,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async onUnClaim() {
-<<<<<<< HEAD
     this.loadingClaimAndUnclaim= true;
-=======
->>>>>>> origin/dev
     await CamundaRest.unclaim(this.token, this.task.id!, this.bpmApiUrl);
 
     if (!SocketIOService.isConnected()) {
