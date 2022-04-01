@@ -1265,7 +1265,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
     }
-    console.log(this.webSocketEncryptkey);
     SocketIOService.connect(
       this.webSocketEncryptkey,
       (refreshedTaskId: string, eventName: string, error: string) => {
