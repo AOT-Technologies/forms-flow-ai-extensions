@@ -1022,6 +1022,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     max: number,
     taskIdToRemove?: string
   ) {
+    this.taskLoading=true;
     this.selectedfilterId = filterId;
     const paginatedTaskResults = await CamundaRest.filterTaskListPagination(
       this.token,
@@ -1036,6 +1037,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.tasks = _embedded.task;
     this.taskLoading = false;
     this.setFormsFlowTaskLength(responseData.count);
+    this.taskLoading=false;
 
     if (taskIdToRemove) {
       //if the list has the task with taskIdToRemove remove that task and decrement

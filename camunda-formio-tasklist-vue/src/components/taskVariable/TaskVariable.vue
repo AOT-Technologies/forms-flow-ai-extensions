@@ -53,38 +53,38 @@ export default class TaskVariable extends Vue {
     }
 
     mounted(){
-      this.returningData()
+      this.returningData();
     }
 
     @Watch('showMore')
     updateData(){
-      this.returningData()
+      this.returningData();
       if(this.showMore){
-        this.variableCount=0
+        this.variableCount=0;
       }
     }
 
     returningData(){
       if(this.filterTaskVariable){
-        const newArray: any =[]
+        const newArray: any =[];
         this.filterTaskVariable.forEach((taskItem)=>{
-            const data = this.variables.find(variableItem=> variableItem.name===taskItem.name)
-            if(data&&data.value!==(undefined || null)){
-              if( this.variableCount<2){
-                   this.variableCount++;
-                newArray.push({
-                  label:taskItem.label,value:data.value
-                  })
-              }else if(this.showMore){
-                newArray.push({
-                  label:taskItem.label,value:data.value
-                  })
+          const data = this.variables.find(variableItem=> variableItem.name===taskItem.name);
+          if(data&&data.value!==(undefined || null)){
+            if( this.variableCount<2){
+              this.variableCount++;
+              newArray.push({
+                label:taskItem.label,value:data.value
+              });
+            }else if(this.showMore){
+              newArray.push({
+                label:taskItem.label,value:data.value
+              });
 
-              } 
             } 
-          })
-          this.valueLabelArray= newArray
-          }
+          } 
+        });
+        this.valueLabelArray= newArray;
+      }
     }
 
     checkVlaueIsDateOrNOt=(value: any)=>{

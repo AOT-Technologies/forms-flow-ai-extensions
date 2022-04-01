@@ -249,7 +249,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     if(this.filterList.length&&this.selectedfilterId){
       this.filterList.forEach(filterListItem=>{
         if(filterListItem.id===this.selectedfilterId){
-         this.selectedFilterTaskVariable= filterListItem.properties?.variables || []
+          this.selectedFilterTaskVariable= filterListItem.properties?.variables || [];
         }
       });
     }
