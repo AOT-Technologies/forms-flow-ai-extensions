@@ -162,7 +162,11 @@ export const FILTER_OPERATOR_TYPES = {
 
 const convertingValueNumber =(value: any)=>{
   let newValue: any ;
-  if(isNaN(value)){
+  if(value==='false'){
+    newValue=false;
+  }else if(value==='true'){
+    newValue= true;
+  }else if(isNaN(value)){
     newValue=value;
   }else{
     newValue= Number(value);
