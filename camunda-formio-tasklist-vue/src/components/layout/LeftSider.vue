@@ -169,9 +169,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   public setFormsFlowTaskId: any;
   @serviceFlowModule.Mutation("setFormsFlowactiveIndex")
   public setFormsFlowactiveIndex: any;
-   private selectedFilterTaskVariable: object= {
-
-   };
+  private selectedFilterTaskVariable: any;
   private getProcessDefinitions: Array<any> = [];
   private processDefinitionId = "";
   private currentPage = 1;
@@ -251,12 +249,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     if(this.filterList.length&&this.selectedfilterId){
       this.filterList.forEach(filterListItem=>{
         if(filterListItem.id===this.selectedfilterId){
-          const newFilterVaribale= {
-          };
-          filterListItem.properties?.variables?.forEach(item => {
-            newFilterVaribale[item.name]=item.label;
-          });
-          this.selectedFilterTaskVariable= newFilterVaribale;
+         this.selectedFilterTaskVariable= filterListItem.properties?.variables || []
         }
       });
     }
