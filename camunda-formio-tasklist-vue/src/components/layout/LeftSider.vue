@@ -1,5 +1,5 @@
 <template>
-  <div class="cft-task-list-container">
+  <div class="cft-task-list-container rounded border">
     <TaskListSearch
       ref="taskListSearchRef"
       @update-task-list="onSearchUpdateTasklistResult"
@@ -169,9 +169,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   public setFormsFlowTaskId: any;
   @serviceFlowModule.Mutation("setFormsFlowactiveIndex")
   public setFormsFlowactiveIndex: any;
-   private selectedFilterTaskVariable: object= {
-
-   };
+  private selectedFilterTaskVariable: any;
   private getProcessDefinitions: Array<any> = [];
   private processDefinitionId = "";
   private currentPage = 1;
@@ -251,12 +249,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     if(this.filterList.length&&this.selectedfilterId){
       this.filterList.forEach(filterListItem=>{
         if(filterListItem.id===this.selectedfilterId){
-          const newFilterVaribale= {
-          };
-          filterListItem.properties?.variables?.forEach(item => {
-            newFilterVaribale[item.name]=item.label;
-          });
-          this.selectedFilterTaskVariable= newFilterVaribale;
+          this.selectedFilterTaskVariable= filterListItem.properties?.variables || [];
         }
       });
     }
@@ -311,7 +304,6 @@ export default class LeftSider extends Mixins(BaseMixin) {
 <style lang="scss" scoped>
 .cft-task-list-container {
   background: #fff;
-  border-radius: 0.5rem;
   .cft-list-group {
     height: 100px;
     overflow-y: auto;

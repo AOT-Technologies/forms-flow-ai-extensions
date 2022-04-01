@@ -18,9 +18,9 @@
         :defaultTaskSortOrder="taskSortOrder"
         :disableOption="disableComponents"
       />
-      <div class="d-flex">
+      <div class="d-flex flex-md-row flex-column">
         <div
-          class="col-3"
+          class="col-md-3 col-12"
           v-if="maximize"
         >
           <LeftSider
@@ -40,8 +40,8 @@
           />
         </div>
         <div
-          class="col-9 ctf-task-details-container"
-          :class="{ 'col-12 mx-0': !maximize }"
+          class="ctf-task-details-container ms-md-2 rounded"
+          :class="{ 'col-12 mx-0': !maximize ,'col-md-9 col-12':maximize}"
         >
           <div
             v-if="singleTaskLoading"
@@ -1022,6 +1022,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     max: number,
     taskIdToRemove?: string
   ) {
+    this.taskLoading=true;
     this.selectedfilterId = filterId;
     const paginatedTaskResults = await CamundaRest.filterTaskListPagination(
       this.token,
@@ -1036,6 +1037,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.tasks = _embedded.task;
     this.taskLoading = false;
     this.setFormsFlowTaskLength(responseData.count);
+    this.taskLoading=false;
 
     if (taskIdToRemove) {
       //if the list has the task with taskIdToRemove remove that task and decrement
@@ -1371,9 +1373,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   margin-left: 4px;
 }
 .ctf-task-details-container {
+  // margin-left: 0.5rem;
   background: #fff;
-  margin-left: 4px;
-  border-radius: 0.5rem;
   .task-title {
     padding: 1rem 1.5rem;
     border-top-left-radius: 0.5rem;
