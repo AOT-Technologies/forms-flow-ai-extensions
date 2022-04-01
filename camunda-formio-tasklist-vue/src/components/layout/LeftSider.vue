@@ -1,5 +1,5 @@
 <template>
-  <div class="cft-task-list-container">
+  <div class="cft-task-list-container rounded border">
     <TaskListSearch
       ref="taskListSearchRef"
       @update-task-list="onSearchUpdateTasklistResult"
@@ -304,7 +304,6 @@ export default class LeftSider extends Mixins(BaseMixin) {
 <style lang="scss" scoped>
 .cft-task-list-container {
   background: #fff;
-  border-radius: 0.5rem;
   .cft-list-group {
     height: 100px;
     overflow-y: auto;
