@@ -18,9 +18,9 @@
         :defaultTaskSortOrder="taskSortOrder"
         :disableOption="disableComponents"
       />
-      <div class="d-flex">
+      <div class="d-flex flex-md-row flex-column">
         <div
-          class="col-3"
+          class="col-md-3 col-12"
           v-if="maximize"
         >
           <LeftSider
@@ -40,8 +40,8 @@
           />
         </div>
         <div
-          class="col-9 ctf-task-details-container"
-          :class="{ 'col-12 mx-0': !maximize }"
+          class="ctf-task-details-container ms-md-2 rounded"
+          :class="{ 'col-12 mx-0': !maximize ,'col-md-9 col-12':maximize}"
         >
           <div
             v-if="singleTaskLoading"
@@ -97,7 +97,8 @@
                     data-bs-toggle="tooltip"
                     title="Click to change assignee"
                   >
-                    <i
+                   <span v-if="loadingEditAssignee" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                    <i v-if="!loadingEditAssignee"
                       class="fa fa-pencil"
                       :class="{
                       'fa-times-circle-o':editAssignee,
@@ -165,8 +166,10 @@
                           @click="onUnClaim"
                           data-bs-toggle="tooltip"
                           title="Reset assignee"
-                        >
-                          <i class="fa fa-times-circle-o" />
+                        > 
+                         <span v-if="loadingClaimAndUnclaim" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+
+                          <i v-if="!loadingClaimAndUnclaim" class="fa fa-times-circle-o" />
                         </button>
                       </template>
                     </template>
@@ -177,7 +180,8 @@
                       data-bs-toggle="tooltip"
                       title="Claim task"
                     >
-                      <i class="fa fa-plus" />
+                     <span v-if="loadingClaimAndUnclaim" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                     <i v-if="!loadingClaimAndUnclaim" class="fa fa-plus" />
                       <span class="mx-1">Claim</span>
                     </button>
                   </div>
@@ -647,6 +651,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   };
   private editAssignee: boolean = false;
+  private loadingEditAssignee: boolean=  false;
+  private loadingClaimAndUnclaim: boolean = false;
   private groupList: GroupListPayload[] = [];
   private groupListNames?: string[] = [];
   private groupListItems: string[] = [];
@@ -699,7 +705,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
   async toggleassignee() {
-    this.editAssignee = !this.editAssignee;
+    this.loadingEditAssignee=true;
     const reviewerList = await CamundaRest.getUsersByMemberGroups(
       this.token,
       this.bpmApiUrl,
@@ -712,6 +718,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       });
       const userList = JSON.parse(JSON.stringify(this.reviewerUsersList));
       this.userSelected = userList.find(((user: any) => user.code?.includes(this.task.assignee)));
+      this.loadingEditAssignee=false;
+      this.editAssignee = !this.editAssignee;
     }
   }
 
@@ -946,12 +954,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     await this.fetchPaginatedTaskList(
       this.selectedfilterId,
       this.payload,
-      (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+      (this.getFormsFlowTaskCurrentPage - 1||0) * this.perPage,
       this.perPage,
     );
   }
 
   async onClaim() {
+    this.loadingClaimAndUnclaim= true;
     await CamundaRest.claim(
       this.token,
       this.task.id!,
@@ -960,19 +969,24 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       },
       this.bpmApiUrl
     );
+   
     if (!SocketIOService.isConnected()) {
       await this.getBPMTaskDetail(this.getFormsFlowTaskId);
       await this.reloadLHSTaskList();
     }
+    this.loadingClaimAndUnclaim= false;
+
   }
 
   async onUnClaim() {
+    this.loadingClaimAndUnclaim= true;
     await CamundaRest.unclaim(this.token, this.task.id!, this.bpmApiUrl);
 
     if (!SocketIOService.isConnected()) {
       await this.getBPMTaskDetail(this.getFormsFlowTaskId);
       await this.reloadLHSTaskList();
     }
+    this.loadingClaimAndUnclaim= false;
   }
 
   async onSetassignee() {
@@ -1008,6 +1022,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     max: number,
     taskIdToRemove?: string
   ) {
+    this.taskLoading=true;
     this.selectedfilterId = filterId;
     const paginatedTaskResults = await CamundaRest.filterTaskListPagination(
       this.token,
@@ -1022,6 +1037,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.tasks = _embedded.task;
     this.taskLoading = false;
     this.setFormsFlowTaskLength(responseData.count);
+    this.taskLoading=false;
 
     if (taskIdToRemove) {
       //if the list has the task with taskIdToRemove remove that task and decrement
@@ -1249,7 +1265,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
     }
-    console.log(this.webSocketEncryptkey);
     SocketIOService.connect(
       this.webSocketEncryptkey,
       (refreshedTaskId: string, eventName: string, error: string) => {
@@ -1357,9 +1372,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   margin-left: 4px;
 }
 .ctf-task-details-container {
+  // margin-left: 0.5rem;
   background: #fff;
-  margin-left: 4px;
-  border-radius: 0.5rem;
   .task-title {
     padding: 1rem 1.5rem;
     border-top-left-radius: 0.5rem;

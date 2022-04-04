@@ -1,5 +1,5 @@
 <template>
-  <div class="ctf-header-container">
+  <div class="ctf-header-container rounded">
     <div class="dropdown mx-1">
       <button
          v-if="!disableOption.filterList"
@@ -125,7 +125,6 @@ export default class Header extends Mixins(BaseMixin) {
   background-color: white;
   font-family: inherit;
   margin-right: -4px;
-  border-radius: 0.5rem;
   padding: 0.25rem 1rem;
 }
 </style>
