@@ -7,7 +7,7 @@
 - Fixed Boolean value accept in filter
 - Fixed Console errors
 - Updated UI responsiveness
-- Updated order of process variables in task list
+- Updated order of task variables in task list
 
 ## v1.1.1, 2022-03-28
 
