@@ -1,5 +1,5 @@
 <template>
-  <div class="cft-task-list-container">
+  <div class="cft-task-list-container rounded border">
     <TaskListSearch
       ref="taskListSearchRef"
       @update-task-list="onSearchUpdateTasklistResult"
@@ -119,7 +119,7 @@ import {
   Component, Mixins, Prop , Watch
 } from "vue-property-decorator";
 import {
-  DisableComponentPropPayload,FilterPayload,Payload
+  DisableComponentPropPayload,Payload
 } from "../../models";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import Pagination from "./Pagination.vue";
@@ -149,7 +149,11 @@ export default class LeftSider extends Mixins(BaseMixin) {
     default: 0
   }) private containerHeight!: number;
   @Prop() private disableOption!: DisableComponentPropPayload;
-  @Prop() private filterList: FilterPayload[] = []
+
+  @Prop({
+    default:()=>[]
+  }) private filterList ;
+
   @serviceFlowModule.Getter("getFormsFlowTaskCurrentPage")
   private getFormsFlowTaskCurrentPage: any;
   @serviceFlowModule.Getter("getFormsFlowTaskId")
@@ -165,9 +169,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   public setFormsFlowTaskId: any;
   @serviceFlowModule.Mutation("setFormsFlowactiveIndex")
   public setFormsFlowactiveIndex: any;
-   private selectedFilterTaskVariable: object= {
-
-   };
+  private selectedFilterTaskVariable: any;
   private getProcessDefinitions: Array<any> = [];
   private processDefinitionId = "";
   private currentPage = 1;
@@ -247,12 +249,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
     if(this.filterList.length&&this.selectedfilterId){
       this.filterList.forEach(filterListItem=>{
         if(filterListItem.id===this.selectedfilterId){
-          const newFilterVaribale= {
-          };
-          filterListItem.properties?.variables?.forEach(item => {
-            newFilterVaribale[item.name]=item.label;
-          });
-          this.selectedFilterTaskVariable= newFilterVaribale;
+          this.selectedFilterTaskVariable= filterListItem.properties?.variables || [];
         }
       });
     }
@@ -261,9 +258,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
   /*** to calculate the height and handling scroll views accordingly */
   calculateViewHeights() {
     const searchHeight = (this.$refs.taskListSearchRef as any)?.$el?.offsetHeight || 0;
-    const paginationHeight = (this.$refs.taskListPaginationRef as any)?.$el?.offsetHeight || 0;
+    // const paginationHeight = (this.$refs.taskListPaginationRef as any)?.$el?.offsetHeight || 0;
     if (this.containerHeight > 250) {
-      this.listHeight = `${this.containerHeight - (searchHeight + paginationHeight)}px`;
+      this.listHeight = `${this.containerHeight - (searchHeight + 45)}px`;
     }
   }
 
@@ -307,7 +304,6 @@ export default class LeftSider extends Mixins(BaseMixin) {
 <style lang="scss" scoped>
 .cft-task-list-container {
   background: #fff;
-  border-radius: 0.5rem;
   .cft-list-group {
     height: 100px;
     overflow-y: auto;

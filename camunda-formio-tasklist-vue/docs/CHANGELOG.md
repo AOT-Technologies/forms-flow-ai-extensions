@@ -1,5 +1,14 @@
 # Changes for camunda-formio-tasklist-vue
 
+## v1.1.2, 2022-04-05
+
+#### Modified
+
+- Fixed Boolean value accept in filter
+- Fixed Console errors
+- Updated UI responsiveness
+- Updated order of task variables in task list
+
 ## v1.1.1, 2022-03-28
 
 #### Modified

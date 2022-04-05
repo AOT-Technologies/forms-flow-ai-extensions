@@ -37,7 +37,7 @@
           <input
             class="form-check-input"
             type="checkbox"
-            v-model="getVariableNameIgnoreCase"
+            :value="getVariableNameIgnoreCase"
             @change="updateNameCase"
             id="filterNameCheckbox"
           >
@@ -52,7 +52,7 @@
           <input
             class="form-check-input"
             type="checkbox"
-            v-model="getVariableValueIgnoreCase"
+            :value="getVariableValueIgnoreCase"
             @change="updateValueCase"
             id="filterValueCheckbox"
           >
