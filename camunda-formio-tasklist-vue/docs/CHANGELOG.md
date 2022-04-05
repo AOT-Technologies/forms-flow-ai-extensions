@@ -1,6 +1,6 @@
 # Changes for camunda-formio-tasklist-vue
 
-## v1.1.2, 2022-04-04
+## v1.1.2, 2022-04-05
 
 #### Modified
 

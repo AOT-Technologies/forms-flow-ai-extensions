@@ -125,6 +125,10 @@ export default class Header extends Mixins(BaseMixin) {
   background-color: white;
   font-family: inherit;
   margin-right: -4px;
+<<<<<<< HEAD
+=======
+  border-radius: 0.5rem;
+>>>>>>> origin
   padding: 0.25rem 1rem;
 }
 </style>
