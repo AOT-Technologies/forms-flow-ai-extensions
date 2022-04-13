@@ -191,14 +191,14 @@
                             <input
                               class="form-control group-name-input"
                               type="text"
-                              v-model="setGroup"
-                              @keyup.enter="addGroup"
+                              v-model="groupText"
+                              @keyup.enter="addingGroup"
                               placeholder="Group ID"
                             />
                             <button
                               class="btn btn-primary add-group-btn"
-                              @click="addGroup"
-                              :disabled="!setGroup"
+                              @click="addingGroup"
+                              :disabled="!groupText"
                             >
                               <i class="fa fa-plus" />
                               <span class="mx-1">Add group</span>
@@ -209,14 +209,14 @@
                             class="d-flex flex-wrap"
                           >
                             <div
-                              class="d-flex align-items-baseline added-group-chip"
+                              class="d-flex align-items-baseline added-group-chip  text-truncate  "
                               v-for="g in groupList"
                               :key="g.groupId"
                               @click="deleteGroup(g.groupId)"
                               data-bs-toggle="tooltip"
                               title="Click to remove this group"
                             >
-                              <div class="mx-1">{{ g.groupId }}</div>
+                              <div class="mx-1 text-truncate ">{{ g.groupId }}</div>
                               <i class="fa fa-times-circle-o" />
                             </div>
                           </div>
@@ -438,7 +438,7 @@
 <script lang="ts">
 
 import {
-  Component, Mixins, Prop,
+  Component, Prop, Vue,
 } from "vue-property-decorator";
 
 import DatePicker from "v-calendar/lib/components/date-picker.umd";
@@ -446,7 +446,6 @@ import ExpandContract from "../addons/ExpandContract.vue";
 import FormEdit from "../form/Edit.vue";
 import FormView from "../form/View.vue";
 import TaskHistory from "../../components/addons/TaskHistory.vue";
-import TaskListMixin from "../../mixins/TaskListMixin.vue";
 import {
   getFormattedDateAndTime,
 } from "../../services";
@@ -463,8 +462,8 @@ import vSelect from "vue-select";
     VDatePicker: DatePicker,
   }
 })
-export default class RightSider extends Mixins(TaskListMixin) {
-
+export default class RightSider extends Vue {
+private groupText: any = null;
 @Prop() task;
 @Prop() taskScrollableHeight;
 @Prop() toggleassignee;
@@ -482,7 +481,6 @@ export default class RightSider extends Mixins(TaskListMixin) {
 @Prop() loadingClaimAndUnclaim;
 @Prop() groupListNames;
 @Prop() groupList;
-@Prop() setGroup;
 @Prop() addGroup;
 @Prop() deleteGroup;
 @Prop() getDiagramDetails;
@@ -492,7 +490,11 @@ export default class RightSider extends Mixins(TaskListMixin) {
 @Prop() taskHistoryList;
 @Prop() diagramLoading;
 @Prop() updateFollowUpDate;
-
+@Prop() updateDueDate;
+@Prop() private userName;
+@Prop() private hideTaskDetails;
+@Prop() removeDueDate;
+@Prop() removeFollowupDate;
 getExactDate(date: any) {
   return getFormattedDateAndTime(date);
 }
@@ -501,6 +503,10 @@ timedifference(date: Date) {
   return moment(date).fromNow();
 }
 
+addingGroup(){
+  this.addGroup(this.groupText);
+  this.groupText=null;
+}
 }
 </script>
 
@@ -571,6 +577,7 @@ timedifference(date: Date) {
     }
     .added-group-chip {
       background: #e7e7e7;
+      max-width: 20%;
       border-radius: 50rem;
       padding: 0.25rem 0.75rem;
       margin: 0.5rem 0.25rem;

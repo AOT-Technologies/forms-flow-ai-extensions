@@ -60,37 +60,40 @@
        <!-- single task loading end -->
 
       <!-- right side if not loading  -->
-      <RightSider v-else-if="getFormsFlowTaskId && task"
-      
-      :task="task"
-:taskScrollableHeight="taskScrollableHeight"
-:toggleassignee="toggleassignee"
-:loadingEditAssignee="loadingEditAssignee"
-:editAssignee="editAssignee"
-:reviewerUsersList="reviewerUsersList"
-:userSelected="userSelected"
-:selectSearchType="selectSearchType"
-:onUserSearch="onUserSearch"
-:UserSearchListLabel="UserSearchListLabel"
-:setSelectedUserSearchBy="setSelectedUserSearchBy"
-:activeUserSearchindex="activeUserSearchindex"
-:onUnClaim="onUnClaim"
-:loadingClaimAndUnclaim="loadingClaimAndUnclaim"
-:groupListNames="groupListNames"
-:groupList="groupList"
-:setGroup="setGroup"
-:addGroup="addGroup"
-:deleteGroup="deleteGroup"
-:getDiagramDetails="getDiagramDetails"
-:formioUrl="formioUrl"
-:onFormSubmitCallback="onFormSubmitCallback"
-:oncustomEventCallback="oncustomEventCallback"
-:taskHistoryList="taskHistoryList"
-:diagramLoading="diagramLoading"
-:onClaim="onClaim"
-      
-      
-      />
+    <RightSider
+  v-else-if="getFormsFlowTaskId && task"
+  :task="task"
+  :taskScrollableHeight="taskScrollableHeight"
+  :toggleassignee="toggleassignee"
+  :loadingEditAssignee="loadingEditAssignee"
+  :editAssignee="editAssignee"
+  :reviewerUsersList="reviewerUsersList"
+  :userSelected="userSelected"
+  :selectSearchType="selectSearchType"
+  :onUserSearch="onUserSearch"
+  :UserSearchListLabel="UserSearchListLabel"
+  :setSelectedUserSearchBy="setSelectedUserSearchBy"
+  :activeUserSearchindex="activeUserSearchindex"
+  :onUnClaim="onUnClaim"
+  :loadingClaimAndUnclaim="loadingClaimAndUnclaim"
+  :groupListNames="groupListNames"
+  :groupList="groupList"
+  :addGroup="addGroup"
+  :deleteGroup="deleteGroup"
+  :getDiagramDetails="getDiagramDetails"
+  :formioUrl="formioUrl"
+  :onFormSubmitCallback="onFormSubmitCallback"
+  :oncustomEventCallback="oncustomEventCallback"
+  :taskHistoryList="taskHistoryList"
+  :diagramLoading="diagramLoading"
+  :onClaim="onClaim"
+  :updateDueDate="updateDueDate"
+  :userName="userName"
+  :hideTaskDetails="hideTaskDetails"
+  :removeDueDate="removeDueDate"
+  :removeFollowupDate="removeFollowupDate"
+/>
+
       <!-- right side end  -->
 
       <!-- task not selected start -->
@@ -256,7 +259,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private formioUrl: string = "";
   private task: TaskPayload = {
   };
-  private setGroup = null;
+
   private userSelected: UserListPayload = {
   };
   public perPage: number = 10;
@@ -347,21 +350,20 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  addGroup() {
+  addGroup(text) {
     CamundaRest.createTaskGroupByID(
       this.token,
       this.task.id!,
       this.bpmApiUrl,
       {
         userId: null,
-        groupId: this.setGroup,
+        groupId: text,
         type: "candidate",
       }
     ).then(() => {
       this.getGroupDetails();
       this.reloadCurrentTask();
     });
-    this.setGroup = null;
   }
 
   async getGroupDetails() {
