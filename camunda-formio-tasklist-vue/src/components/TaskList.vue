@@ -91,6 +91,7 @@
   :userName="userName"
   :hideTaskDetails="hideTaskDetails"
   :removeDueDate="removeDueDate"
+  :updateFollowUpDate="updateFollowUpDate"
   :removeFollowupDate="removeFollowupDate"
 />
 
