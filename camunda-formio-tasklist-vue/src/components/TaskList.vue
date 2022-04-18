@@ -647,9 +647,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   };
   public perPage: number = 10;
   private filterList: FilterPayload[] = [];
-  private selectedFilterTaskVariable={
-
-  };
   private editAssignee: boolean = false;
   private loadingEditAssignee: boolean=  false;
   private loadingClaimAndUnclaim: boolean = false;
