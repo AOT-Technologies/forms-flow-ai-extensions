@@ -63,36 +63,20 @@
     <RightSider
   v-else-if="getFormsFlowTaskId && task"
   :task="task"
+  :bpmApiUrl="bpmApiUrl"
+  :token="token"
+  :getBPMTaskandReload="getBPMTaskandReload"
   :taskScrollableHeight="taskScrollableHeight"
-  :toggleassignee="toggleassignee"
-  :loadingEditAssignee="loadingEditAssignee"
-  :editAssignee="editAssignee"
-  :reviewerUsersList="reviewerUsersList"
-  :userSelected="userSelected"
-  :selectSearchType="selectSearchType"
-  :onUserSearch="onUserSearch"
   :UserSearchListLabel="UserSearchListLabel"
-  :setSelectedUserSearchBy="setSelectedUserSearchBy"
-  :activeUserSearchindex="activeUserSearchindex"
-  :onUnClaim="onUnClaim"
-  :loadingClaimAndUnclaim="loadingClaimAndUnclaim"
-  :groupListNames="groupListNames"
-  :groupList="groupList"
-  :addGroup="addGroup"
-  :deleteGroup="deleteGroup"
+  :reloadCurrentTask="reloadCurrentTask"
   :getDiagramDetails="getDiagramDetails"
   :formioUrl="formioUrl"
   :onFormSubmitCallback="onFormSubmitCallback"
   :oncustomEventCallback="oncustomEventCallback"
   :taskHistoryList="taskHistoryList"
   :diagramLoading="diagramLoading"
-  :onClaim="onClaim"
-  :updateDueDate="updateDueDate"
   :userName="userName"
   :hideTaskDetails="hideTaskDetails"
-  :removeDueDate="removeDueDate"
-  :updateFollowUpDate="updateFollowUpDate"
-  :removeFollowupDate="removeFollowupDate"
 />
 
       <!-- right side end  -->
@@ -155,17 +139,14 @@ import * as bootstrap from 'bootstrap';
 import {
   ALL_FILTER,
   CamundaRest,
-  SEARCH_USERS_BY,
   SocketIOService,
   authenticateFormio, 
   findFilterIdForDefaultFilterName,
   getFormDetails,
-  getISODateTime,
   getTaskFromList,
   getUserName,
   getformHistoryApi,
   isAllowedUser,
-  reviewerGroup,
   sortByPriorityList,
 } from "../services";
 import {
@@ -176,16 +157,10 @@ import {
   FilterPayload,
   FormRequestActionPayload,
   FormRequestPayload,
-  GroupListPayload,
   Payload,
-  SEARCH_OPTION_TYPE,
   TaskHistoryListPayload,
   TaskListSortType,
   TaskPayload,
-  UserListObject,
-  UserListPayload,
-  UserPayload,
-  UserSearchListLabelPayload,
 } from "../models";
 import  {
   Toast,
@@ -261,19 +236,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private task: TaskPayload = {
   };
 
-  private userSelected: UserListPayload = {
-  };
+ 
   public perPage: number = 10;
   private filterList: FilterPayload[] = [];
   private selectedFilterTaskVariable={
 
   };
-  private editAssignee: boolean = false;
-  private loadingEditAssignee: boolean=  false;
-  private loadingClaimAndUnclaim: boolean = false;
-  private groupList: GroupListPayload[] = [];
-  private groupListNames?: string[] = [];
-  private groupListItems: string[] = [];
+ 
+
+
+
   private userEmail: string = "external";
   private selectedfilterId: string = "";
   private xmlData!: string;
@@ -283,12 +255,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     maxResults: this.perPage,
   };
   private taskHistoryList: TaskHistoryListPayload[] = [];
-  private reviewerUsersList: UserListPayload[] = [];
-  private selectSearchType: string = "lastName";
+
   private taskIdValue: string = "";
   private taskId2: string = "";
   private activeUserSearchindex = 1;
-  private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
+
   private isUserAllowed: boolean = false
   private containerHeight: number = 0;
   private taskScrollableHeight: string = '100px';
@@ -320,29 +291,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
 
 
-  async toggleassignee() {
-    this.loadingEditAssignee=true;
-    const reviewerList = await CamundaRest.getUsersByMemberGroups(
-      this.token,
-      this.bpmApiUrl,
-      reviewerGroup
-    );
-    if (reviewerList) {
-      this.reviewerUsersList = [];
-      reviewerList.data.forEach((user: UserPayload) => {
-        this.reviewerUsersList.push(UserListObject(user));
-      });
-      const userList = JSON.parse(JSON.stringify(this.reviewerUsersList));
-      this.userSelected = userList.find(((user: any) => user.code?.includes(this.task.assignee)));
-      this.loadingEditAssignee=false;
-      this.editAssignee = !this.editAssignee;
-    }
-  }
 
-  setSelectedUserSearchBy(searchby: string, index: number) {
-    this.selectSearchType = searchby;
-    this.activeUserSearchindex = index;
-  }
+
 
   async onFormSubmitCallback(actionType = "") {
     if (this.task.id !== null) {
@@ -351,53 +301,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  addGroup(text) {
-    CamundaRest.createTaskGroupByID(
-      this.token,
-      this.task.id!,
-      this.bpmApiUrl,
-      {
-        userId: null,
-        groupId: text,
-        type: "candidate",
-      }
-    ).then(() => {
-      this.getGroupDetails();
-      this.reloadCurrentTask();
-    });
-  }
+ 
 
-  async getGroupDetails() {
-    const grouplist = await CamundaRest.getTaskGroupByID(
-      this.token,
-      this.task.id!,
-      this.bpmApiUrl
-    );
-    this.groupList = grouplist.data;
-    this.groupListItems = [];
-    this.groupListNames = undefined;
-    for (const group of grouplist.data) {
-      this.groupListItems.push(group.groupId);
-    }
-    if (this.groupListItems.length) {
-      this.groupListNames = this.groupListItems;
-    }
-  }
 
-  async deleteGroup(groupid: string) {
-    await CamundaRest.deleteTaskGroupByID(
-      this.token,
-      this.task.id!,
-      this.bpmApiUrl,
-      {
-        groupId: groupid,
-        type: "candidate",
-      }
-    ).then(async () => {
-      await this.getGroupDetails();
-      await this.reloadCurrentTask();
-    });
-  }
+
+
 
   async onBPMTaskFormSubmit(taskId: string, actionType: string) {
     let formRequestFormat: FormRequestPayload = {
@@ -447,7 +355,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.task = taskResult.data;
     this.task.taskProcess = processResult.data.name;
     this.task.applicationId = applicationIdResult.data.applicationId.value;
-    await this.getGroupDetails();
+    // await this.getGroupDetails();
   }
 
   async getTaskFormIODetails(taskId: string) {
@@ -574,51 +482,14 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     );
   }
 
-  async onClaim() {
-    this.loadingClaimAndUnclaim= true;
-    await CamundaRest.claim(
-      this.token,
-      this.task.id!,
-      {
-        userId: this.userName,
-      },
-      this.bpmApiUrl
-    );
-   
-    if (!SocketIOService.isConnected()) {
-      await this.getBPMTaskDetail(this.getFormsFlowTaskId);
-      await this.reloadLHSTaskList();
-    }
-    this.loadingClaimAndUnclaim= false;
 
+
+  async getBPMTaskandReload(){
+    await this.getBPMTaskDetail(this.getFormsFlowTaskId);
+    await this.reloadLHSTaskList();
   }
+  
 
-  async onUnClaim() {
-    this.loadingClaimAndUnclaim= true;
-    await CamundaRest.unclaim(this.token, this.task.id!, this.bpmApiUrl);
-
-    if (!SocketIOService.isConnected()) {
-      await this.getBPMTaskDetail(this.getFormsFlowTaskId);
-      await this.reloadLHSTaskList();
-    }
-    this.loadingClaimAndUnclaim= false;
-  }
-
-  async onSetassignee() {
-    await CamundaRest.setassignee(
-      this.token,
-      this.task.id!,
-      {
-        userId: this.userSelected?.code,
-      },
-      this.bpmApiUrl
-    );
-    await this.toggleassignee();
-    if (!SocketIOService.isConnected()) {
-      await this.getBPMTaskDetail(this.getFormsFlowTaskId);
-      await this.reloadLHSTaskList();
-    }
-  }
 
   async fetchFullTaskList(filterId: string, requestData: Payload) {
     const taskList = await CamundaRest.filterTaskList(
@@ -663,106 +534,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async onUserSearch(search: string, loading: any) {
-    if (search.length) {
-      loading(true);
-      this.reviewerUsersList = [];
-    }
 
-    if (this.selectSearchType === SEARCH_OPTION_TYPE.FIRST_NAME) {
-      const firstNameUserList = await CamundaRest.getUsersByFirstNameGroups(
-        this.token,
-        this.bpmApiUrl,
-        search,
-        reviewerGroup
-      );
-      this.reviewerUsersList = [];
-      firstNameUserList.data.map((user: UserPayload) => {
-        this.reviewerUsersList.push(UserListObject(user));
-      });
-      loading(false);
-    }
-
-    if (this.selectSearchType === SEARCH_OPTION_TYPE.LAST_NAME) {
-      const lastNameUserList = await CamundaRest.getUsersByLastNameGroups(
-        this.token,
-        this.bpmApiUrl,
-        search,
-        reviewerGroup
-      );
-      this.reviewerUsersList = [];
-      lastNameUserList.data.map((user: UserPayload) => {
-        this.reviewerUsersList.push(UserListObject(user));
-      });
-      loading(false);
-    }
-
-    if (this.selectSearchType === SEARCH_OPTION_TYPE.EMAIL) {
-      const emailUserList = await CamundaRest.getUsersByEmailGroups(
-        this.token,
-        this.bpmApiUrl,
-        search,
-        reviewerGroup
-      );
-      this.reviewerUsersList = [];
-      emailUserList.data.map((user: UserPayload) => {
-        this.reviewerUsersList.push(UserListObject(user));
-      });
-      loading(false);
-    }
-    loading(false);
-  }
-
-  async updateTaskDatedetails(taskId: string, task: TaskPayload) {
-    await CamundaRest.updateTasksByID(this.token, taskId, this.bpmApiUrl, task);
-    if (!SocketIOService.isConnected()) {
-      await this.reloadCurrentTask();
-    }
-  }
-
-  async updateFollowUpDate() {
-    const referenceobject = this.task;
-    try {
-      if (this.task?.followUp !== null) {
-        referenceobject.followUp = getISODateTime(this.task?.followUp);
-        await this.updateTaskDatedetails(this.task.id!, referenceobject);
-      }
-    } catch {
-      console.warn("Follow date error"); // eslint-disable-line no-console
-    }
-  }
-
-  async updateDueDate() {
-    const referenceobject = this.task;
-    try {
-      if (this.task?.due !== null) {
-        referenceobject.due = getISODateTime(this.task.due);
-        await this.updateTaskDatedetails(this.task.id!, referenceobject);
-      }
-    } catch {
-      console.warn("Due date error"); // eslint-disable-line no-console
-    }
-  }
-
-  async removeDueDate() {
-    const referenceobject = this.task;
-    try {
-      referenceobject["due"] = null;
-      await this.updateTaskDatedetails(this.task.id!, referenceobject);
-    } catch {
-      console.warn("Due date error"); // eslint-disable-line no-console
-    }
-  }
-
-  async removeFollowupDate() {
-    const referenceobject = this.task;
-    try {
-      referenceobject["followUp"] = null;
-      await this.updateTaskDatedetails(this.task.id!, referenceobject);
-    } catch {
-      console.warn("Follow up date error"); // eslint-disable-line no-console
-    }
-  }
 
   async fetchTaskDetails(taskId: string) {
     await Promise.all([
@@ -823,7 +595,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.setFormsFlowactiveIndex(NaN);
     this.taskLoading = true;
     this.$root.$on("call-fetchTaskDetails", async (para: any) => {
-      this.editAssignee = false;
       this.singleTaskLoading = true;
       this.setFormsFlowTaskId(para.selectedTaskId);
       await this.fetchTaskDetails(this.getFormsFlowTaskId);
@@ -981,3 +752,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
  
 
+<style>
+.highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
+    fill: rgb(56,89,138) !important;
+  }
+</style>

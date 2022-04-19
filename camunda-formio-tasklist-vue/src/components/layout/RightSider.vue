@@ -1,23 +1,21 @@
 <template>
    <div>
-            <ExpandContract />
-            <div
-              class="bg-primary task-title"
-              ref="taskTitleRef"
-            >
-              <h3
-                class="m-0"
-                data-bs-toggle="tooltip"
-                title="Task Name"
+      <ExpandContract />
+        <div class="bg-primary task-title"  ref="taskTitleRef"  >
+           <h3
+              class="m-0"
+              data-bs-toggle="tooltip"
+              title="Task Name"
               >{{ task.name }}</h3>
-            </div>
-            <div
-              class="d-flex flex-column w-100 px-4 py-2 task-details"
-              :style="{
+        </div>
+            
+        <div
+          class="d-flex flex-column w-100 px-4 py-2 task-details"
+          :style="{
                 height: taskScrollableHeight
               }"
-            >
-              <div class="d-flex mb-1">
+         >
+            <div class="d-flex mb-1">
                 <h4
                   class="mt-2 mb-3"
                   data-bs-toggle="tooltip"
@@ -31,7 +29,7 @@
                   title="Application Id"
                 > <span class="mx-4">|</span>Application ID <strong>#{{ task.applicationId }}</strong>
                 </p>
-              </div>
+            </div>
               <!-- assignee and group on one div -->
               <div class="d-flex justify-content-start mb-4">
                 <section v-if="!hideTaskDetails.assignee" class="task-assignee">
@@ -192,12 +190,12 @@
                               class="form-control group-name-input"
                               type="text"
                               v-model="groupText"
-                              @keyup.enter="addingGroup"
+                              @keyup.enter="addGroup"
                               placeholder="Group ID"
                             />
                             <button
                               class="btn btn-primary add-group-btn"
-                              @click="addingGroup"
+                              @click="addGroup"
                               :disabled="!groupText"
                             >
                               <i class="fa fa-plus" />
@@ -436,11 +434,28 @@
 
 
 <script lang="ts">
+import {
+  CamundaRest,
+  SEARCH_USERS_BY,
+  SocketIOService,
+  getISODateTime,
+  reviewerGroup,
+} from "../../services";
 
 import {
   Component, Prop, Vue,
 } from "vue-property-decorator";
 
+
+import {
+  GroupListPayload,
+  SEARCH_OPTION_TYPE,
+  TaskPayload,
+  UserListObject,
+  UserListPayload,
+  UserPayload,
+  UserSearchListLabelPayload,
+} from "../../models";
 import DatePicker from "v-calendar/lib/components/date-picker.umd";
 import ExpandContract from "../addons/ExpandContract.vue";
 import FormEdit from "../form/Edit.vue";
@@ -464,37 +479,42 @@ import vSelect from "vue-select";
 })
 export default class RightSider extends Vue {
 private groupText: any = null;
+private loadingEditAssignee: boolean = false;
+private reviewerUsersList: UserListPayload[] = [];
+private editAssignee: boolean = false;
+private selectSearchType: string = "lastName";
+private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
+  private groupList: GroupListPayload[] = [];
+  private groupListNames?: string[] = [];
+  private groupListItems: string[] = [];
+  private loadingClaimAndUnclaim: boolean = false;
+ private userSelected: UserListPayload = {
+ };
+@Prop() reloadCurrentTask;
+@Prop() token;
 @Prop() task;
+@Prop() getBPMTaskandReload;
+@Prop() bpmApiUrl;
 @Prop() taskScrollableHeight;
-@Prop() toggleassignee;
-@Prop() loadingEditAssignee;
-@Prop() editAssignee;
-@Prop() reviewerUsersList;
-@Prop() userSelected;
-@Prop() selectSearchType;
-@Prop() onUserSearch;
-@Prop() UserSearchListLabel;
-@Prop() setSelectedUserSearchBy;
 @Prop() activeUserSearchindex;
-@Prop() onUnClaim;
-@Prop() onClaim;
-@Prop() loadingClaimAndUnclaim;
-@Prop() groupListNames;
-@Prop() groupList;
-@Prop() addGroup;
-@Prop() deleteGroup;
 @Prop() getDiagramDetails;
 @Prop() formioUrl;
 @Prop() onFormSubmitCallback;
 @Prop() oncustomEventCallback;
 @Prop() taskHistoryList;
 @Prop() diagramLoading;
-@Prop() updateFollowUpDate;
-@Prop() updateDueDate;
+ 
 @Prop() private userName;
 @Prop() private hideTaskDetails;
-@Prop() removeDueDate;
-@Prop() removeFollowupDate;
+ 
+
+
+
+// mount
+mounted(){
+  this.getGroupDetails();
+}
+
 getExactDate(date: any) {
   return getFormattedDateAndTime(date);
 }
@@ -503,10 +523,249 @@ timedifference(date: Date) {
   return moment(date).fromNow();
 }
 
-addingGroup(){
-  this.addGroup(this.groupText);
-  this.groupText=null;
+ 
+// set assignee 
+async onSetassignee() {
+  await CamundaRest.setassignee(
+    this.token,
+      this.task.id!,
+      {
+        userId: this.userSelected?.code,
+      },
+      this.bpmApiUrl
+  );
+  await this.toggleassignee();
+  if (!SocketIOService.isConnected()) {
+    this.getBPMTaskandReload();
+  }
 }
+
+// toggle assignee
+async toggleassignee() {
+  this.loadingEditAssignee=true;
+  const reviewerList = await CamundaRest.getUsersByMemberGroups(
+    this.token,
+    this.bpmApiUrl,
+    reviewerGroup
+  );
+  if (reviewerList) {
+    this.reviewerUsersList = [];
+    reviewerList.data.forEach((user: UserPayload) => {
+      this.reviewerUsersList.push(UserListObject(user));
+    });
+    const userList = JSON.parse(JSON.stringify(this.reviewerUsersList));
+    this.userSelected = userList.find(((user: any) => user.code?.includes(this.task.assignee)));
+    this.loadingEditAssignee=false;
+    this.editAssignee = !this.editAssignee;
+  }
+}
+
+
+// user Search 
+async onUserSearch(search: string, loading: any) {
+  if (search.length) {
+    loading(true);
+    this.reviewerUsersList = [];
+  }
+
+  if (this.selectSearchType === SEARCH_OPTION_TYPE.FIRST_NAME) {
+    const firstNameUserList = await CamundaRest.getUsersByFirstNameGroups(
+      this.token,
+      this.bpmApiUrl,
+      search,
+      reviewerGroup
+    );
+    this.reviewerUsersList = [];
+    firstNameUserList.data.map((user: UserPayload) => {
+      this.reviewerUsersList.push(UserListObject(user));
+    });
+    loading(false);
+  }
+
+  if (this.selectSearchType === SEARCH_OPTION_TYPE.LAST_NAME) {
+    const lastNameUserList = await CamundaRest.getUsersByLastNameGroups(
+      this.token,
+      this.bpmApiUrl,
+      search,
+      reviewerGroup
+    );
+    this.reviewerUsersList = [];
+    lastNameUserList.data.map((user: UserPayload) => {
+      this.reviewerUsersList.push(UserListObject(user));
+    });
+    loading(false);
+  }
+
+  if (this.selectSearchType === SEARCH_OPTION_TYPE.EMAIL) {
+    const emailUserList = await CamundaRest.getUsersByEmailGroups(
+      this.token,
+      this.bpmApiUrl,
+      search,
+      reviewerGroup
+    );
+    this.reviewerUsersList = [];
+    emailUserList.data.map((user: UserPayload) => {
+      this.reviewerUsersList.push(UserListObject(user));
+    });
+    loading(false);
+  }
+  loading(false);
+}
+
+
+// selected user
+setSelectedUserSearchBy(searchby: string, index: number) {
+  this.selectSearchType = searchby;
+  this.activeUserSearchindex = index;
+}
+
+
+// on claim
+async onClaim() {
+  this.loadingClaimAndUnclaim= true;
+  await CamundaRest.claim(
+    this.token,
+      this.task.id!,
+      {
+        userId: this.userName,
+      },
+      this.bpmApiUrl
+  );
+   
+  if (!SocketIOService.isConnected()) {
+    this.getBPMTaskandReload();
+  }
+  this.loadingClaimAndUnclaim= false;
+
+}
+  
+
+// on unclaim
+async onUnClaim() {
+  this.loadingClaimAndUnclaim= true;
+  await CamundaRest.unclaim(this.token, this.task.id!, this.bpmApiUrl);
+
+  if (!SocketIOService.isConnected()) {
+    this.getBPMTaskandReload();
+  }
+  this.loadingClaimAndUnclaim= false;
+}
+
+
+// group details
+async getGroupDetails() {
+  const grouplist = await CamundaRest.getTaskGroupByID(
+    this.token,
+      this.task.id!,
+      this.bpmApiUrl
+  );
+  this.groupList = grouplist.data;
+  this.groupListItems = [];
+  this.groupListNames = undefined;
+  for (const group of grouplist.data) {
+    this.groupListItems.push(group.groupId);
+  }
+  if (this.groupListItems.length) {
+    this.groupListNames = this.groupListItems;
+  }
+}
+
+
+// add group
+addGroup() {
+  CamundaRest.createTaskGroupByID(
+    this.token,
+      this.task.id!,
+      this.bpmApiUrl,
+      {
+        userId: null,
+        groupId: this.groupText,
+        type: "candidate",
+      }
+  ).then(() => {
+    this.groupText=null;
+    this.getGroupDetails();
+    this.reloadCurrentTask();
+  });
+}
+
+// delete group
+async deleteGroup(groupid: string) {
+  await CamundaRest.deleteTaskGroupByID(
+    this.token,
+      this.task.id!,
+      this.bpmApiUrl,
+      {
+        groupId: groupid,
+        type: "candidate",
+      }
+  ).then(async () => {
+    this.getGroupDetails();
+    this.reloadCurrentTask();
+  });
+}
+
+
+// update data
+async updateTaskDatedetails(taskId: string, task: TaskPayload) {
+  await CamundaRest.updateTasksByID(this.token, taskId, this.bpmApiUrl, task);
+  if (!SocketIOService.isConnected()) {
+    await this.reloadCurrentTask();
+  }
+}
+
+
+// update follow update
+async updateFollowUpDate() {
+  const referenceobject = this.task;
+  try {
+    if (this.task?.followUp !== null) {
+      referenceobject.followUp = getISODateTime(this.task?.followUp);
+      await this.updateTaskDatedetails(this.task.id!, referenceobject);
+    }
+  } catch {
+    console.warn("Follow date error"); // eslint-disable-line no-console
+  }
+}
+
+// update due date
+async updateDueDate() {
+  const referenceobject = this.task;
+  try {
+    if (this.task?.due !== null) {
+      referenceobject.due = getISODateTime(this.task.due);
+      await this.updateTaskDatedetails(this.task.id!, referenceobject);
+    }
+  } catch {
+    console.warn("Due date error"); // eslint-disable-line no-console
+  }
+}
+
+
+// remove due date
+async removeDueDate() {
+  const referenceobject = this.task;
+  try {
+    referenceobject["due"] = null;
+    await this.updateTaskDatedetails(this.task.id!, referenceobject);
+  } catch {
+    console.warn("Due date error"); // eslint-disable-line no-console
+  }
+}
+
+
+// remove follow up date
+async removeFollowupDate() {
+  const referenceobject = this.task;
+  try {
+    referenceobject["followUp"] = null;
+    await this.updateTaskDatedetails(this.task.id!, referenceobject);
+  } catch {
+    console.warn("Follow up date error"); // eslint-disable-line no-console
+  }
+}
+
+
 }
 </script>
 
