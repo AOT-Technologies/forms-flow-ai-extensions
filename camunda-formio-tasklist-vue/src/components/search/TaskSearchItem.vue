@@ -146,7 +146,9 @@
                 setSearchQueryValue(selectedSearchQueries, index);
                 showSearchValueItem(index);"
         >
-        <button
+        <div>
+          <input type="date" >
+           <button
           class="btn btn-outline-success btn-sm mx-2"
           @click="
                   setSearchQueryValue(selectedSearchQueries, index);
@@ -158,6 +160,7 @@
           @click="rejectSearchValueItem(index)"
         ><i class="fa fa-times"></i>
         </button>
+        </div>
       </template>
       <div
         v-if="showSearchState[index] === 's' && query.type !== 'date'"
@@ -352,4 +355,12 @@ export default class TaskSearchItem extends Vue {
   border-left: 2px solid #155cb5;
 }
 
+</style>
+
+<style>
+::-webkit-datetime-edit-year-field:not([aria-valuenow]),
+::-webkit-datetime-edit-month-field:not([aria-valuenow]),
+::-webkit-datetime-edit-day-field:not([aria-valuenow]) {
+    color: transparent;
+}
 </style>
