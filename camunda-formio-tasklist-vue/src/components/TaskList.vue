@@ -235,16 +235,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private task: TaskPayload = {
   };
 
- 
   public perPage: number = 10;
   private filterList: FilterPayload[] = [];
-  private selectedFilterTaskVariable={
-
-  };
- 
-
-
-
   private userEmail: string = "external";
   private selectedfilterId: string = "";
   private xmlData!: string;
@@ -288,10 +280,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.userName = getUserName();
   }
 
-
-
-
-
+ 
 
   async onFormSubmitCallback(actionType = "") {
     if (this.task.id !== null) {
@@ -301,11 +290,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   }
 
  
-
-
-
-
-
+ 
   async onBPMTaskFormSubmit(taskId: string, actionType: string) {
     let formRequestFormat: FormRequestPayload = {
       variables: {
