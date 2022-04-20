@@ -148,8 +148,13 @@
                   >
                     <i class="fa fa-pencil" />
                   </button>
-                  <div class="d-flex align-items-baseline group-name">
-                    <template v-if="groupListNames && groupListNames.length">
+                      <div  v-if="groupLoading" class="d-flex justify-content-center">
+                               <div class="spinner-border" role="status"  >
+                                  <span class="sr-only">Loading...</span>
+                              </div>
+                           </div>
+                  <div  v-else class="d-flex align-items-baseline group-name">
+                    <template v-if="groupListNames && groupListNames.length&&!groupLoading">
                      <p class="text-truncate"> {{ String(groupListNames) }}</p>
                     </template>
                     <button
@@ -482,6 +487,7 @@ private groupText: any = null;
 private loadingEditAssignee: boolean = false;
 private reviewerUsersList: UserListPayload[] = [];
 private editAssignee: boolean = false;
+private groupLoading: boolean = false;
 private selectSearchType: string = "lastName";
 private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
   private groupList: GroupListPayload[] = [];
@@ -512,6 +518,7 @@ private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
 
 // mount
 mounted(){
+
   this.getGroupDetails();
 }
 
@@ -654,6 +661,7 @@ async onUnClaim() {
 
 // group details
 async getGroupDetails() {
+  this.groupLoading=true;
   const grouplist = await CamundaRest.getTaskGroupByID(
     this.token,
       this.task.id!,
@@ -668,6 +676,8 @@ async getGroupDetails() {
   if (this.groupListItems.length) {
     this.groupListNames = this.groupListItems;
   }
+  this.groupLoading=false;
+
 }
 
 

@@ -67,7 +67,6 @@
   :token="token"
   :getBPMTaskandReload="getBPMTaskandReload"
   :taskScrollableHeight="taskScrollableHeight"
-  :UserSearchListLabel="UserSearchListLabel"
   :reloadCurrentTask="reloadCurrentTask"
   :getDiagramDetails="getDiagramDetails"
   :formioUrl="formioUrl"
