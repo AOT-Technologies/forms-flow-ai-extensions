@@ -88,7 +88,9 @@
               v-if="task.followUp"
             >Follow up in {{ timedifference(task.followUp) }}</div>
           </div>
-          <task-variable v-if="task._embedded&& task._embedded.variable" :variables="task._embedded.variable" :filterTaskVariable="selectedFilterTaskVariable"/>
+          <task-variable v-if="task._embedded&& task._embedded.variable"
+           :variables="task._embedded.variable"
+           :filterTaskVariable="selectedFilterTaskVariable"/>
         </div>
       </template>
       <div
@@ -169,7 +171,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   public setFormsFlowTaskId: any;
   @serviceFlowModule.Mutation("setFormsFlowactiveIndex")
   public setFormsFlowactiveIndex: any;
-  private selectedFilterTaskVariable: any;
+  private selectedFilterTaskVariable: Array<any> = [];
   private getProcessDefinitions: Array<any> = [];
   private processDefinitionId = "";
   private currentPage = 1;
