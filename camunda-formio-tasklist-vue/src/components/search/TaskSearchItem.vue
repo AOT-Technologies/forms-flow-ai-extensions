@@ -147,7 +147,6 @@
                 showSearchValueItem(index);"
         >
         <div>
-          <input type="date" >
            <button
           class="btn btn-outline-success btn-sm mx-2"
           @click="
