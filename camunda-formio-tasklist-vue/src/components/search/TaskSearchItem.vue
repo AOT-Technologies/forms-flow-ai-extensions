@@ -138,7 +138,18 @@
         {{ formatDate(selectedSearchQueries[index].value) }}
       </div>
       <template v-if="showSearchState[index] === 'i' && query.type !== 'date'">
-        <input
+        <div v-if="showCalender">
+          <input 
+          class="form-control"
+          type="datetime-local"
+          v-model="selectedSearchQueries[index].value"
+          v-on:keyup.enter="
+                setSearchQueryValue(selectedSearchQueries, index);
+                showSearchValueItem(index);"
+          >
+        </div>
+        <div v-else >
+          <input 
           class="form-control"
           type="text"
           v-model="selectedSearchQueries[index].value"
@@ -146,18 +157,23 @@
                 setSearchQueryValue(selectedSearchQueries, index);
                 showSearchValueItem(index);"
         >
+        </div>
         <div>
-           <button
-          class="btn btn-outline-success btn-sm mx-2"
-          @click="
+          <button
+           class="btn btn-outline-success btn-sm "
+           @click="
                   setSearchQueryValue(selectedSearchQueries, index);
                   showSearchValueItem(index);"
-        ><i class="fa fa-check"></i>
-        </button>
-        <button
+         ><i class="fa fa-check" aria-hidden="true" ></i>
+         </button>
+         <button class="btn btn-outline-secondary btn-sm" v-if="query.type === 'variables'" 
+         @click="showCalender = true">
+          <i  class="fa fa-calendar" aria-hidden="true"  />
+         </button>
+         <button
           class="btn btn-outline-danger btn-sm"
           @click="rejectSearchValueItem(index)"
-        ><i class="fa fa-times"></i>
+         ><i class="fa fa-times" aria-hidden="true" ></i>
         </button>
         </div>
       </template>
@@ -225,6 +241,7 @@ export default class TaskSearchItem extends Vue {
   private  taskVariableArray: any = [];
   private filteredVariable =[];
   private searchListElements: SearchOptionPayload[] = taskSearchFilters;
+  private showCalender: boolean =false
 
   @Watch("selectedfilterId")
   settingTaskVariable (){
@@ -293,6 +310,7 @@ export default class TaskSearchItem extends Vue {
   }
 
   setSearchQueryValue(item: SearchOptionPayload[], index: number) {
+    this.showCalender=false;
     this.$root.$emit("call-setSearchQueryValue", {
       item: item,
       index: index,
