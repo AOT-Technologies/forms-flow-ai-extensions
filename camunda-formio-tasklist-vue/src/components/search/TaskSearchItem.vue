@@ -138,20 +138,10 @@
         {{ formatDate(selectedSearchQueries[index].value) }}
       </div>
       <template v-if="showSearchState[index] === 'i' && query.type !== 'date'">
-        <div v-if="showCalender">
+        <div>
           <input 
           class="form-control"
-          type="datetime-local"
-          v-model="selectedSearchQueries[index].value"
-          v-on:keyup.enter="
-                setSearchQueryValue(selectedSearchQueries, index);
-                showSearchValueItem(index);"
-          >
-        </div>
-        <div v-else >
-          <input 
-          class="form-control"
-          type="text"
+          :type="showCalender?'datetime-local':'text'"
           v-model="selectedSearchQueries[index].value"
           v-on:keyup.enter="
                 setSearchQueryValue(selectedSearchQueries, index);
