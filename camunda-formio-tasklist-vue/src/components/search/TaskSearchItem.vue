@@ -90,7 +90,8 @@
         v-if="showVariableValueState[index] === 's'"
         @click="updateVariableInput(index)"
       >
-       <span  data-bs-toggle="tooltip" data-bs-placement="top" :title="selectedSearchQueries[index].variable "> {{ selectedSearchQueries[index].variable }}</span>
+       <span v-if="selectedSearchQueries[index].variable== ''">0</span>
+       <span v-else data-bs-toggle="tooltip" data-bs-placement="top" :title="selectedSearchQueries[index].variable "> {{ selectedSearchQueries[index].variable }}</span>
       </div>
         
     </div>
@@ -171,7 +172,12 @@
         v-if="showSearchState[index] === 's' && query.type !== 'date'"
         @click="updateSearchInput(index)"
       >
+        <div v-if="selectedSearchQueries[index].value===''">
+        0
+      </div>
+      <div v-else >
         {{ selectedSearchQueries[index].value }}
+      </div>
       </div>
     </div>
 
