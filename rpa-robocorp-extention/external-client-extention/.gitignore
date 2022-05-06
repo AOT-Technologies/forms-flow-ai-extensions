@@ -5,6 +5,11 @@ src/main/resources/robots/background-check/output/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+*-db.mv
+*-db.trace
+*.iml
+.mvn
+mvnw*
 
 ### STS ###
 .apt_generated
