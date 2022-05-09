@@ -56,8 +56,7 @@ public class RobocorpCloudService implements IRobotService {
 	}
 
 	private boolean startRobotProcess(List<RobotInput> robotInputs, RobotHandlerConfig config) throws JSONException {
-	//	String response = invokeRobot(robotInputs, config);
-		String response = " {\"id\":\"8824d643-e215-4125-8cff-8c310f6ddcd1\",\"workItemIds\":[\"c5b4675a-0cb7-4eba-ad32-15aca7cb4cbd\"]}";
+		String response = invokeRobot(robotInputs, config);
 		JSONObject jsonObject = new JSONObject(response);
 		String robotRunId = jsonObject.getString("id");
 		String workItemId = new JSONArray(jsonObject.getString("workItemIds")).getString(0);
