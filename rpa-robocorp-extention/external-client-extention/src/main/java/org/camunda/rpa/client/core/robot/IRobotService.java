@@ -1,6 +1,7 @@
 package org.camunda.rpa.client.core.robot;
 
 import org.camunda.rpa.client.data.RobotInput;
+import org.camunda.rpa.client.data.entity.RobotHandlerAudit;
 import org.camunda.rpa.client.data.entity.RobotHandlerConfig;
 
 import java.util.List;
@@ -10,5 +11,5 @@ import java.util.List;
  */
 public interface IRobotService {
 
-    boolean runRobot(List<RobotInput> robotInputs, RobotHandlerConfig config);
+    boolean runRobot(List<RobotInput> robotInputs, RobotHandlerAudit audit);
 }

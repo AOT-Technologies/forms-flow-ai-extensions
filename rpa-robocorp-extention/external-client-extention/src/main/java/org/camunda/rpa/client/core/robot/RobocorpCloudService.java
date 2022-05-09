@@ -1,5 +1,6 @@
 package org.camunda.rpa.client.core.robot;
 
+import org.camunda.rpa.client.data.entity.RobotHandlerAudit;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -46,8 +47,9 @@ public class RobocorpCloudService implements IRobotService {
 	private String processApi;
 
 	@Override
-	public boolean runRobot(List<RobotInput> robotInputs, RobotHandlerConfig config) {
+	public boolean runRobot(List<RobotInput> robotInputs, RobotHandlerAudit audit) {
 		try {
+			RobotHandlerConfig config = audit.getHandlerConfig();
 			return startRobotProcess(robotInputs, config);
 		} catch (Exception e) {
 			e.printStackTrace();
