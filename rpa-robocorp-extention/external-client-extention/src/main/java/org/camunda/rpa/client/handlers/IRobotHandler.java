@@ -20,7 +20,7 @@ public interface IRobotHandler extends TaskHandler{
     RobotHandlerAudit startAudit(ExternalTask externalTask);
     List<RobotInput> buildInputWithAdditionalVariables(ExternalTask externalTask, RobotHandlerConfig config, Map<String, Object> additionalVariables);
     List<RobotInput> buildInput(ExternalTask externalTask, RobotHandlerConfig config);
-    boolean runRobot(List<RobotInput> robotInputs, RobotHandlerConfig config);
+    boolean runRobot(List<RobotInput> robotInputs, RobotHandlerAudit audit);
     VariableMap collectResponse(RobotHandlerAudit robotHandlerAudit, String formUrl);
     void completeAudit(RobotHandlerAudit audit, boolean status, String errorDetails);
     void handleFailure(ExternalTask externalTask, ExternalTaskService externalTaskService, RobotHandlerAudit robotHandlerAudit, String message);

@@ -6,6 +6,7 @@ import org.camunda.rpa.client.core.pipe.RobotDirectoryScanner;
 import org.camunda.rpa.client.data.RobotInput;
 import org.camunda.rpa.client.core.RobotPipelineManager;
 import org.camunda.rpa.client.data.constants.ExternalClientConstants;
+import org.camunda.rpa.client.data.entity.RobotHandlerAudit;
 import org.camunda.rpa.client.data.entity.RobotHandlerConfig;
 import org.camunda.rpa.client.exception.RobotClientRuntimeException;
 import org.slf4j.Logger;
@@ -39,7 +40,9 @@ public class RCCService implements IRobotService {
     private RobotOutputXMLParser xmlParser;
 
     @Override
-    public boolean runRobot(List<RobotInput> robotInputs, RobotHandlerConfig config) throws RobotClientRuntimeException{
+    public boolean runRobot(List<RobotInput> robotInputs, RobotHandlerAudit audit) throws RobotClientRuntimeException{
+
+        RobotHandlerConfig config = audit.getHandlerConfig();
         String[] scripts;
         String workingDirName = config.getWorkingDirName();
         if(robotInputs != null) {

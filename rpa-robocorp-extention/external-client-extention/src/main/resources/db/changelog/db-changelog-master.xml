@@ -19,6 +19,7 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="details" type="VARCHAR(5000)" />
+			<column name="response_uri" type="VARCHAR(500)" />
 			<column name="created_date" type="TIMESTAMP WITHOUT TIME ZONE" />
 			<column name="modified_date"
 				type="TIMESTAMP WITHOUT TIME ZONE" />

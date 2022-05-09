@@ -38,6 +38,10 @@ public class RobotHandlerAudit implements IEntity, Serializable {
 	@Column(name = "details")
 	private String details;
 
+	//In case of cloud & file response type - this link can be used to download remote response
+	@Column(name = "response_uri")
+	private String responseUri;
+
 	@OneToOne(optional=false)
 	@JoinColumn(name = "handler_id", nullable=false, updatable=false)
 	private RobotHandlerConfig handlerConfig;

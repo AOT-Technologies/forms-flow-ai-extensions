@@ -6,6 +6,7 @@ import org.camunda.rpa.client.data.RobotInput;
 import org.camunda.rpa.client.core.robot.RCCService;
 import org.camunda.rpa.client.core.robot.RobocorpCloudService;
 import org.camunda.rpa.client.data.constants.RobotType;
+import org.camunda.rpa.client.data.entity.RobotHandlerAudit;
 import org.camunda.rpa.client.data.entity.RobotHandlerConfig;
 import org.camunda.rpa.client.exception.RobotClientRuntimeException;
 import org.slf4j.Logger;
@@ -36,11 +37,11 @@ public class RobotManager {
     /**
      * runRobot run the robot service by using a user defined property to identify.
      * @param robotInputs
-     * @param config
+     * @param audit
      */
-    public boolean runRobot(List<RobotInput> robotInputs, RobotHandlerConfig config){
+    public boolean runRobot(List<RobotInput> robotInputs, RobotHandlerAudit audit){
         IRobotService robotService = getRobotService();
-        return robotService.runRobot(robotInputs, config);
+        return robotService.runRobot(robotInputs, audit);
     }
 
     // get robot services by using user defined {robotType} property - refer RobotType enum class

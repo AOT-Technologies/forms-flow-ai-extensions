@@ -64,7 +64,7 @@ public class WebScraperRobotHandler extends TaskHandlerManager implements IRobot
             List<RobotInput> robotInputs = buildInputWithAdditionalVariables(externalTask,
                     robotHandlerAudit.getHandlerConfig(), additionalVariables);
 
-            boolean status = runRobot(robotInputs, robotHandlerAudit.getHandlerConfig());
+            boolean status = runRobot(robotInputs, robotHandlerAudit);
 
             VariableMap variableMap = null;
             if(status) {
@@ -123,12 +123,12 @@ public class WebScraperRobotHandler extends TaskHandlerManager implements IRobot
     /**
      * This method invokes runRobot() to find out the robot type, build a script with input parameters and run using script manager
      * @param robotInputs
-     * @param config
+     * @param audit
      *
      */
     @Override
-    public boolean runRobot(List<RobotInput> robotInputs, RobotHandlerConfig config) {
-        return robotManager.runRobot(robotInputs, config);
+    public boolean runRobot(List<RobotInput> robotInputs, RobotHandlerAudit audit) {
+        return robotManager.runRobot(robotInputs, audit);
     }
 
     /**
