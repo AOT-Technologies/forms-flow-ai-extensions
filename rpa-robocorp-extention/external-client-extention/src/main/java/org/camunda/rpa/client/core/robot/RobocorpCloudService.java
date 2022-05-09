@@ -39,27 +39,24 @@ public class RobocorpCloudService implements IRobotService {
 	@Autowired
 	private RobotDirectoryScanner robotDirectoryScanner;
 
-	@Value("${robot.cloud-api.api-key}")
+	@Value("${robot.cloud.api-key}")
 	private String apiKey;
 
-	@Value("${robot.cloud-api.url}")
+	@Value("${robot.cloud.api-url}")
 	private String processApi;
 
 	@Override
 	public boolean runRobot(List<RobotInput> robotInputs, RobotHandlerConfig config) {
-		String workingDirName = config.getWorkingDirName();
-		String robotName = config.getRobotName();
 		try {
-			return startRobotProcess(robotInputs, workingDirName, robotName);
+			return startRobotProcess(robotInputs, config);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
 
-	private boolean startRobotProcess(List<RobotInput> robotInputs, String workingDirName, String robotName)
-			throws JSONException {
-		String response = invokeRobot(robotInputs);
+	private boolean startRobotProcess(List<RobotInput> robotInputs, RobotHandlerConfig config) throws JSONException {
+		String response = invokeRobot(robotInputs, config);
 		JSONObject jsonObject = new JSONObject(response);
 		String robotRunId = jsonObject.getString("id");
 		String workItemId = new JSONArray(jsonObject.getString("workItemIds")).getString(0);
@@ -67,17 +64,17 @@ public class RobocorpCloudService implements IRobotService {
 		boolean success = false;
 
 		String output;
-		for (; true; ) {
+		for (; true;) {
 
 			try {
-				output = getWorkItems(robotRunId);
+				output = getWorkItems(robotRunId, config);
 				Thread.sleep(5000);
 				if (output.contains("FAILED")) {
 					break;
 				}
 				success = isRobotCompleted(output);
 				if (success) {
-					collectResponseFile(output, workItemId, robotRunId, workingDirName, robotName);
+					collectResponseFile(output, workItemId, robotRunId, config);
 					break;
 				}
 			} catch (Exception e) {
@@ -87,9 +84,10 @@ public class RobocorpCloudService implements IRobotService {
 		return success;
 	}
 
-	private String invokeRobot(List<RobotInput> robotInputs) throws JSONException {
+	private String invokeRobot(List<RobotInput> robotInputs, RobotHandlerConfig config) throws JSONException {
 		String formattedInput = buildInput(robotInputs).toString();
-		ResponseEntity<String> response = webClient.method(HttpMethod.POST).uri(getRobotProcessUrl())
+		String uri = getRobotProcessUrl(config) + "/runs";
+		ResponseEntity<String> response = webClient.method(HttpMethod.POST).uri(uri)
 				.header("Authorization", getApiKey()).accept(MediaType.APPLICATION_JSON)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 				.body(Mono.just(formattedInput), String.class).retrieve().toEntity(String.class).block();
@@ -106,8 +104,8 @@ public class RobocorpCloudService implements IRobotService {
 		return formattedInput;
 	}
 
-	private String getWorkItems(String robotRunId) {
-		String uri = getRobotProcessUrl() + "/" + robotRunId + "/work-items";
+	private String getWorkItems(String robotRunId, RobotHandlerConfig config) {
+		String uri = getRobotProcessUrl(config) + "/runs/" + robotRunId + "/work-items";
 		ResponseEntity<String> response = webClient.method(HttpMethod.GET).uri(uri).header("Authorization", getApiKey())
 				.accept(MediaType.APPLICATION_JSON).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 				.body(Mono.empty(), String.class).retrieve().toEntity(String.class).block();
@@ -115,8 +113,8 @@ public class RobocorpCloudService implements IRobotService {
 		return response.getBody();
 	}
 
-	private void collectResponseFile(String output, String workItemId, String robotRunId, String workingDirName,
-			String robotName) throws JSONException, IOException {
+	private void collectResponseFile(String output, String workItemId, String robotRunId, RobotHandlerConfig config)
+			throws JSONException, IOException {
 		String jsonData = new JSONObject(output).getString("data");
 		String data = jsonData != null ? new JSONArray(jsonData).getString(0) : null;
 		String files = data != null ? new JSONObject(data).getString("files") : null;
@@ -126,22 +124,23 @@ public class RobocorpCloudService implements IRobotService {
 			String fileId = jsonObject.getString("id");
 			String fileName = jsonObject.getString("name");
 
-			String uri = processApi + "/work-items/" + workItemId + "/files/" + fileId + "/download";
+			String uri = getRobotProcessUrl(config) + "/work-items/" + workItemId + "/files/" + fileId + "/download";
 			ResponseEntity<String> response = webClient.method(HttpMethod.GET).uri(uri)
 					.header("Authorization", getApiKey()).accept(MediaType.APPLICATION_JSON)
 					.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).body(null).retrieve()
 					.toEntity(String.class).block();
 
 			LOG.error(response.getBody());
-			downloadResponseFile(response, fileId, fileName, workingDirName, robotName);
+			downloadResponseFile(response, fileId, fileName, config);
 		}
 	}
 
 	private void downloadResponseFile(ResponseEntity<String> response, String fileId, String fileName,
-			String workingDirName, String robotName) throws MalformedURLException, IOException, JSONException {
+			RobotHandlerConfig config) throws MalformedURLException, IOException, JSONException {
 		JSONObject jsonObject = new JSONObject(response.getBody());
 		String outputUrl = jsonObject.getString("url");
-		File outputDir = robotDirectoryScanner.getRobotFinalDirectory(robotName, workingDirName);
+		File outputDir = robotDirectoryScanner.getRobotFinalDirectory(config.getRobotName(),
+				config.getWorkingDirName());
 		FileUtils.copyURLToFile(new URL(outputUrl), new File(outputDir.getAbsolutePath() + File.separator + fileName));
 	}
 
@@ -153,7 +152,7 @@ public class RobocorpCloudService implements IRobotService {
 		return this.apiKey;
 	}
 
-	private String getRobotProcessUrl() {
-		return this.processApi + "/runs";
+	private String getRobotProcessUrl(RobotHandlerConfig config) {
+		return this.processApi + "/" + config.getWorkspaceId() + "/processes/" + config.getProcessId();
 	}
 }

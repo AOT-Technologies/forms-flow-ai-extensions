@@ -4,8 +4,6 @@ keycloak.url: ${KEYCLOAK_URL}
 keycloak.url.realm: ${KEYCLOAK_URL_REALM}
 keycloak.clientId: ${KEYCLOAK_CLIENTID}
 keycloak.clientSecret: ${KEYCLOAK_CLIENTSECRET}
-workspaceId: ${ROBOCORP_CLOUD_WORKSPACEID}
-processId: ${ROBOCORP_CLOUD_PROCESSID}
 apiKey: ${ROBOCORP_CLOUD_APIKEY}
 
 spring:
@@ -36,8 +34,8 @@ formsflow:
 robot:
   base-dir: ${ROBOT_BASE_DIR:}
   robot-type: ${ROBOT_TYPE:ROBOCORP_CLOUD}
-  cloud-api:
-     url: https://api.eu1.robocorp.com/process-v1/workspaces/${workspaceId}/processes/${processId}
+  cloud:
+     api-url: https://api.eu1.robocorp.com/process-v1/workspaces
      api-key: ${apiKey}
 
 

@@ -41,7 +41,7 @@ public class RobotHandlerConfig implements Serializable {
 	@Column(name = "is_active", nullable = false)
 	private Boolean isActive;
 
-	//topic name of the External Service Task
+	// topic name of the External Service Task
 	@Column(name = "topic_name", nullable = false)
 	private String topicName;
 
@@ -49,25 +49,31 @@ public class RobotHandlerConfig implements Serializable {
 	@Column(name = "task_file_name")
 	private String taskFileName;
 
-	//our business logic may need variables
+	// our business logic may need variables
 	@Column(name = "variable_names")
 	private String variableNames;
 
-	//only filter for External Tasks with this process definition key
+	// only filter for External Tasks with this process definition key
 	@Column(name = "process_definition_key", nullable = false)
 	private String processDefinitionKey;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "response_type", nullable = false, length = 20)
 	private RobotResponseType responseType;
-	
+
 	@Transient
 	private String workingDirName;
-	
+
 	@Column(name = "description", length = 500)
 	private String description;
 
 	@Column(name = "created_date")
 	@CreationTimestamp
 	private LocalDateTime createdDate;
+
+	@Column(name = "workspace_id")
+	private String workspaceId;
+
+	@Column(name = "process_id")
+	private String processId;
 }
