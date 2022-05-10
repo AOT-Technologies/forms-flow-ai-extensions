@@ -23,8 +23,8 @@ spring:
     max-buffer-size: 20
 
 formsflow:
+  formio-enabled: ${FORMIO_ENABLED:true}
   formio:
-    enabled: ${FORMIO_ENABLED:true}
     url: ${FORMIO_URL}
     security:
       access-token-uri: ${FORMIO_URL}/user/login

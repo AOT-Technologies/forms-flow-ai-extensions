@@ -33,7 +33,7 @@ There are multiple options for installing Camunda RPA Client Extension. They are
 
 - [>= JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - [Maven ](https://maven.apache.org)
-- [Robocorp RCC](https://robocorp.com/docs/rcc/installation) / [Robocorp Cloud](cloud.robocorp.com/) account
+- [Robocorp RCC](https://robocorp.com/docs/rcc/installation)
 
 ### Configuration Setup
  
@@ -69,7 +69,7 @@ There are multiple options for installing Camunda RPA Client Extension. They are
 
    Variable name | Meaning | Possible values | Default value |
  --- | --- | --- | ---
- `formsflow.formio.enabled`|||`true`
+ `formsflow.formio-enabled`|||`true`
  `formsflow.formio.url`|Formio URL||`https://{your ip address}:3001`
  `formsflow.security.username`|Formio Username||`admin@example.com`
  `formsflow.security.password`|Formio Password||`changeme`
@@ -82,8 +82,6 @@ There are multiple options for installing Camunda RPA Client Extension. They are
  --- | --- | --- | ---
  `robot.base-dir`|Base directory of robot||`/opt/robots`
  `robot.robot-type`|Type of robot||`ROBOCORP_RCC`
- `robot.cloud.api-url`|Robocorp Cloud base url||
- `robot.cloud.api-key`|Robocorp Cloud api key||
  `client.base-url`|Camunda Base URL||`https://localhost:8000`
  `client.max-tasks`|Specifies the maximum amount of tasks that can be fetched within one request.||`10`
  `disable-backoff-strategy`|||`true` 
@@ -163,8 +161,6 @@ The application should be up and available for use at port defaulted to 8090 in 
  --- | --- | --- | ---
  `ROBOT_BASE_DIR`|Base directory of robot||`/opt/robots`
  `ROBOT_TYPE`|Type of robot||`ROBOCORP_RCC`
- `ROBOCORP_CLOUD_BASE_URL`|Robocorp Cloud base url||
- `ROBOCORP_CLOUD_APIKEY`|Robocorp Cloud api key||
  `CAMUNDA_BPM_URL`|Camunda Base URL||`https://{your ip address}:8000`
  `MAX_TASKS`|Specifies the maximum amount of tasks that can be fetched within one request.||`10`
  `LOCK_DURATION`|Specifies the duration for the next task pull.||`3000` ms
@@ -178,7 +174,7 @@ The application should be up and available for use at port defaulted to 8090 in 
 
 Run
 ```       
-docker-compose up -d
+docker-compose -f docker-compose.yml up 
 ```  
 
 *NOTE: Use --build command with the start command to reflect any future **.env** changes eg : `docker-compose -f docker-compose.yml up --build -d`*
@@ -187,7 +183,7 @@ docker-compose up -d
 
 Run
 ```       
-docker-compose stop
+docker-compose -f docker-compose.yml stop
 ```  
 
 ## Health Check
