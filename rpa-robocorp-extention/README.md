@@ -46,7 +46,7 @@ Typical use cases are:
 
 ## Download and Installation
 
-For download and setup, follow the [installation guide](../external-client-extention/INSTALLATION.md), you will find step-by-step instructions to download and install.
+For download and setup, follow the [installation guide](./external-client-extention/INSTALLATION.md), you will find step-by-step instructions to download and install.
 
 ## System Architecture
 
@@ -66,7 +66,7 @@ Following instructions need to be followed to run this project.
 
 ## Usage
 
-For usage instructions, Please refer [here](../../../../../USAGE.md)
+For usage instructions, Please refer [here](./external-client-extention/USAGE.md)
  
 ## About External Client
 
