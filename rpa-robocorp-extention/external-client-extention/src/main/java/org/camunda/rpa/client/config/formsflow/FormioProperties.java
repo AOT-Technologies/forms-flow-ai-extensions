@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class FormioProperties {
 
-    private boolean enabled;
+    private Boolean enabled;
     private String url;
     private FormioSecurity security;
 }
