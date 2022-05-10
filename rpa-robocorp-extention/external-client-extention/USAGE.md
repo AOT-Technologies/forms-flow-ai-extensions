@@ -21,7 +21,8 @@ The following instructions can be followed to use camunda rpa client solution af
 
 ###  Designer Steps
   
- * Build a new robot using robot framework [Robocorp](https://robocorp.com/). 
+ * Build a new robot using robot framework [Robocorp](https://robocorp.com/).
+ * Robot can be deployed to cloud / place it under resources/robots to run it. 
  * Create a new Java handler to manage the robot and associate the robot with the handler using database configuration.  
  * Build a new process model using [Camunda Modeler](https://camunda.com/download/modeler/) with an External Service Task and deploy the process to formsflow.ai.
  * After the successful deployment, login to [forms-flow-web](http://localhost:3000) using designer credentials and associate the form with workflow. To learn more about how to associate the form with workflow, go to [link](https://github.com/AOT-Technologies/forms-flow-ai/blob/master/USAGE.md)
@@ -108,6 +109,10 @@ BackgroundCheckRobotHandler make use of Robot Handler Configuration to associate
 * **`processDefinitionKey`** - Filter for External Tasks with this process definition key
 
 * **`responseType`** - This is referred to the response type of robot. `eg: FILE, FILE_MULTI, KEY_VALUE`
+
+* **`workspace_id`** - If the robot is deployed in robocorp cloud provide the workspace id.
+  
+* **`processId`** - If the robot is deployed in robocorp cloud provide the robot process id.
 
 * **`description`** - Defines the description of robot.
 
