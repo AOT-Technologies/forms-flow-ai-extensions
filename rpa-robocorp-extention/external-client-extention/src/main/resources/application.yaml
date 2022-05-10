@@ -33,9 +33,9 @@ formsflow:
 
 robot:
   base-dir: ${ROBOT_BASE_DIR:}
-  robot-type: ${ROBOT_TYPE:ROBOCORP_RCC}
+  robot-type: ${ROBOT_TYPE:ROBOCORP_CLOUD}
   cloud:
-     api-url: ${ROBOCORP_CLOUD_BASE_URL}/process-v1/workspaces
+     api-url: https://api.eu1.robocorp.com/process-v1/workspaces
      api-key: ${apiKey}
 
 

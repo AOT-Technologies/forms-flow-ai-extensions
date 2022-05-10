@@ -8,5 +8,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "formsflow")
 public class FormsflowProperties {
 
+    private boolean formioEnabled;
     private FormioProperties formio;
 }
