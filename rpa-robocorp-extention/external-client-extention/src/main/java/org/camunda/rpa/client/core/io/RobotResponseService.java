@@ -93,7 +93,7 @@ public class RobotResponseService {
 					byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(output));
 					String encodedData = new String(encoded, StandardCharsets.US_ASCII);
 
-					if (formsflowProperties.getFormio().isEnabled()) {
+					if (formsflowProperties.getFormio().getEnabled()) {
 						patchResponse(formUrl, output.getName(), encodedData, output.length());
 					}
 				}
