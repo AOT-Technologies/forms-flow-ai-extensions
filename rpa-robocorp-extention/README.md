@@ -66,7 +66,7 @@ Following instructions need to be followed to run this project.
 
 ## Usage
 
-For usage instructions, Please refer [here](../external-client-extention/USAGE.md)
+For usage instructions, Please refer [here](../../../USAGE.md)
  
 ## About External Client
 
