@@ -19,10 +19,5 @@ public class RobotHandlerProperties {
      * In case of docker, this directory will be /opt/robots
      */
     private String baseDir;
-    /**
-     * Robot type will be based on the way how the robots run
-     * available options are rcc / cloud
-     */
-    private RobotType robotType;
 
 }

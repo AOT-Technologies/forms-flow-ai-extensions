@@ -1,13 +1,12 @@
 package org.camunda.rpa.client.core.io;
 
-import org.camunda.rpa.client.config.RobotHandlerProperties;
 import org.camunda.rpa.client.data.RobotInput;
 import org.camunda.rpa.client.data.TaskDataInput;
 import org.camunda.rpa.client.data.constants.RobotType;
+import org.camunda.rpa.client.data.entity.RobotHandlerConfig;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,8 +23,6 @@ import java.util.Map;
 public class RobotInputService {
 
     private static final Logger LOG = LoggerFactory.getLogger(RobotInputService.class);
-    @Autowired
-    private RobotHandlerProperties handlerProperties;
 
     /**
      * This function will build input variables for the robot.
@@ -33,7 +30,7 @@ public class RobotInputService {
      * @param input
      * @return
      */
-    public List<RobotInput> buildInputVariables(TaskDataInput input){
+    public List<RobotInput> buildInputVariables(TaskDataInput input, RobotHandlerConfig config){
 
         ExternalTask externalTask = input.getExternalTask();
         List<String> variableNames = input.getVariableNames();
@@ -42,18 +39,18 @@ public class RobotInputService {
 
         for (String field : variableNames) {
             Object value = externalTask.getVariable(field);
-            addRobotInputData(robotInputs, field, value);
+            addRobotInputData(robotInputs, config, field, value);
         }
         if(input.getAdditionalVariables() != null){
             for(Map.Entry<String, Object> entry : input.getAdditionalVariables().entrySet()){
-                addRobotInputData(robotInputs,entry.getKey(), entry.getValue());
+                addRobotInputData(robotInputs, config, entry.getKey(), entry.getValue());
             }
         }
         return robotInputs;
     }
 
-    private void addRobotInputData(List<RobotInput> robotInputs, String field, Object value){
-    	 RobotType robotType = handlerProperties.getRobotType();
+    private void addRobotInputData(List<RobotInput> robotInputs, RobotHandlerConfig config, String field, Object value){
+    	 RobotType robotType = config.getRobotType();
         if(value instanceof String && robotType != RobotType.ROBOCORP_CLOUD){
             String strValue = (String) value;
             strValue = "\""+strValue+"\"";

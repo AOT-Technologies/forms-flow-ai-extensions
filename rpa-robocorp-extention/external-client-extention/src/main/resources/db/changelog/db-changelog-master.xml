@@ -32,6 +32,9 @@
 					primaryKeyName="rpa_client_handler_config_pkey" />
 			</column>
 			<column name="robot_name" type="VARCHAR(250)" />
+			<column name="robot_type" type="VARCHAR(20)">
+				<constraints nullable="false" />
+			</column>
 			<column name="is_active" type="BOOLEAN">
 				<constraints nullable="false" />
 			</column>
@@ -71,13 +74,13 @@
 	</changeSet>
 	<changeSet author="shibin" id="1640608077035-5">
 		<sql>insert into rpa_client_handler_config values(1,
-			'background-check', true, 'FILE', 'background-check', 'tasks.robot',
+			'background-check', 'ROBOCORP_CLOUD', true, 'FILE', 'background-check', 'tasks.robot',
 			'businessOperatingName,businessWebsite,formUrl',
 			'two-step-approval-with-rpa', 'New Business Background checker
 			robot', CURRENT_DATE, '92ac4b6f-a891-4bab-9b8c-c3022d88d690',
 			'a52dd66a-fe47-4db7-aa3e-769ad09a83b4')
 		</sql>
-		<sql>insert into rpa_client_handler_config values(2, 'web-scraper',
+		<sql>insert into rpa_client_handler_config values(2, 'web-scraper', 'ROBOCORP_RCC',
 			true, 'FILE', 'web-scraper', 'tasks.robot',
 			'organizationName,formUrl', 'onestepapprovalwithrpa', 'Freedom Of
 			Information Background checker robot', CURRENT_DATE,

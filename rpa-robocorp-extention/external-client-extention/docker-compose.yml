@@ -30,7 +30,6 @@ services:
       - RPA_JDBC_PASSWORD=${RPA_JDBC_PASSWORD:-password}
       - RPA_JDBC_DRIVER=${RPA_JDBC_DRIVER:-org.postgresql.Driver}
       - ROBOT_BASE_DIR=${ROBOT_BASE_DIR:-/opt/robots}
-      - ROBOT_TYPE=${ROBOT_TYPE:-ROBOCORP_CLOUD}
       - RPA_APP_LOG_LEVEL=${RPA_APP_LOG_LEVEL:-error}
       - CAMUNDA_BPM_URL=${CAMUNDA_BPM_URL}
       - MAX_TASKS=${MAX_TASKS:-10}
