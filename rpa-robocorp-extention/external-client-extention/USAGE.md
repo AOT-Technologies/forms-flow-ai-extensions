@@ -110,6 +110,8 @@ BackgroundCheckRobotHandler make use of Robot Handler Configuration to associate
 
 * **`responseType`** - This is referred to the response type of robot. `eg: FILE, FILE_MULTI, KEY_VALUE`
 
+* **`robotType`** - This is referred to the type of robot. `eg: ROBOCORP_RCC, ROBOCORP_CLOUD`
+
 * **`workspace_id`** - If the robot is deployed in robocorp cloud provide the workspace id.
   
 * **`processId`** - If the robot is deployed in robocorp cloud provide the robot process id.

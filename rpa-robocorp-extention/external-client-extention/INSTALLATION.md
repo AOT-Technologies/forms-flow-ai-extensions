@@ -81,7 +81,6 @@ There are multiple options for installing Camunda RPA Client Extension. They are
    Variable name | Meaning | Possible values | Default value |
  --- | --- | --- | ---
  `robot.base-dir`|Base directory of robot||`/opt/robots`
- `robot.robot-type`|Type of robot||`ROBOCORP_RCC`
  `robot.cloud.api-url`|Robocorp Cloud base url||
  `robot.cloud.api-key`|Robocorp Cloud api key||
  `client.base-url`|Camunda Base URL||`https://localhost:8000`
@@ -162,7 +161,6 @@ The application should be up and available for use at port defaulted to 8090 in 
    Variable name | Meaning | Possible values | Default value |
  --- | --- | --- | ---
  `ROBOT_BASE_DIR`|Base directory of robot||`/opt/robots`
- `ROBOT_TYPE`|Type of robot||`ROBOCORP_RCC`
  `ROBOCORP_CLOUD_BASE_URL`|Robocorp Cloud base url||
  `ROBOCORP_CLOUD_APIKEY`|Robocorp Cloud api key||
  `CAMUNDA_BPM_URL`|Camunda Base URL||`https://{your ip address}:8000`
