@@ -40,9 +40,6 @@ public class RobotIOManager {
 	@Autowired
 	private ClientProperties clientProperties;
 
-	@Autowired
-	private RobotHandlerProperties handlerProperties;
-
 	public List<RobotInput> buildInput(ExternalTask externalTask, RobotHandlerConfig config,
 			Map<String, Object> additionalVariables) {
 
@@ -51,7 +48,7 @@ public class RobotIOManager {
 		TaskDataInput input = new TaskDataInput(externalTask, subscriptionConfiguration.getVariableNames(),
 				additionalVariables);
 
-		return robotInputService.buildInputVariables(input);
+		return robotInputService.buildInputVariables(input, config);
 	}
 
 	/**
@@ -79,7 +76,7 @@ public class RobotIOManager {
 
 		RobotHandlerConfig config = audit.getHandlerConfig();
 		VariableMap variableMap = null;
-		RobotType robotType = handlerProperties.getRobotType();
+		RobotType robotType = config.getRobotType();
 
 		if (RobotResponseType.FILE.equals(config.getResponseType()) && RobotType.ROBOCORP_RCC.equals(robotType)) {
 			variableMap = robotResponseService.readRCCRobotFileResponse(config.getRobotName(),

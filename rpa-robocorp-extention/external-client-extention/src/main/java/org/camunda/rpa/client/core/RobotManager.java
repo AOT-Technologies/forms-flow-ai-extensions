@@ -28,8 +28,6 @@ public class RobotManager {
     private static final Logger LOG = LoggerFactory.getLogger(RobotManager.class);
 
     @Autowired
-    private RobotHandlerProperties handlerProperties;
-    @Autowired
     private RCCService rccService;
     @Autowired
     private RobocorpCloudService robocorpCloudService;
@@ -40,15 +38,15 @@ public class RobotManager {
      * @param audit
      */
     public boolean runRobot(List<RobotInput> robotInputs, RobotHandlerAudit audit){
-        IRobotService robotService = getRobotService();
+        IRobotService robotService = getRobotService(audit);
         return robotService.runRobot(robotInputs, audit);
     }
 
     // get robot services by using user defined {robotType} property - refer RobotType enum class
-    private IRobotService getRobotService(){
+    private IRobotService getRobotService(RobotHandlerAudit audit){
 
         IRobotService robotService;
-        RobotType robotType = handlerProperties.getRobotType();
+        RobotType robotType = audit.getHandlerConfig().getRobotType();
 
         if (robotType == RobotType.ROBOCORP_CLOUD) {
             robotService = robocorpCloudService;

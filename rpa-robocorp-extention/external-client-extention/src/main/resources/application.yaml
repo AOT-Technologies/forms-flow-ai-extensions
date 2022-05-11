@@ -1,10 +1,10 @@
 # Set variables
 
-keycloak.url: ${KEYCLOAK_URL}
-keycloak.url.realm: ${KEYCLOAK_URL_REALM}
-keycloak.clientId: ${KEYCLOAK_CLIENTID}
-keycloak.clientSecret: ${KEYCLOAK_CLIENTSECRET}
-apiKey: ${ROBOCORP_CLOUD_APIKEY}
+keycloak.url: ${KEYCLOAK_URL:http://localhost:8080}
+keycloak.url.realm: ${KEYCLOAK_URL_REALM:forms-flow-ai}
+keycloak.clientId: ${KEYCLOAK_CLIENTID:forms-flow-bpm}
+keycloak.clientSecret: ${KEYCLOAK_CLIENTSECRET:e4bdbd25-1467-4f7f-b993-bc4b1944c943}
+
 
 spring:
   datasource:
@@ -23,24 +23,23 @@ spring:
     max-buffer-size: 20
 
 formsflow:
+  formio-enabled: ${FORMIO_ENABLED:true}
   formio:
-    enabled: ${FORMIO_ENABLED:true}
-    url: ${FORMIO_URL}
+    url: ${FORMIO_URL:http://localhost:3001}
     security:
-      access-token-uri: ${FORMIO_URL}/user/login
-      username: ${FORMIO_USERNAME}
-      password: ${FORMIO_PASSWORD}
+      access-token-uri: ${formsflow.formio.url}/user/login
+      username: ${FORMIO_USERNAME:admin@example.com}
+      password: ${FORMIO_PASSWORD:changeme}
 
 robot:
   base-dir: ${ROBOT_BASE_DIR:}
-  robot-type: ${ROBOT_TYPE:ROBOCORP_RCC}
   cloud:
-     api-url: ${ROBOCORP_CLOUD_BASE_URL}/process-v1/workspaces
-     api-key: ${apiKey}
+     api-url: https://api.eu1.robocorp.com/process-v1/workspaces
+     api-key: RC-WSKEY 7lJjKCgDoBAnRJ5ErYeShxJuO257yHHOemNOtmRoMTcwpT0dnZcwJ5dmWtpPjinO8TbqQP2EtPAN4zKAm5kCORylQgMqW
 
 
 client:
-  base-url: ${CAMUNDA_BPM_URL}/camunda/engine-rest # the URL pointing to the Camunda Platform Runtime REST API
+  base-url: ${CAMUNDA_BPM_URL:http://localhost:8000}/camunda/engine-rest # the URL pointing to the Camunda Platform Runtime REST API
   lock-duration: ${LOCK_DURATION:3000} # defines how many milliseconds the External Tasks are locked until they can be fetched again
   max-tasks: ${MAX_TASKS:10}
   disable-backoff-strategy: true

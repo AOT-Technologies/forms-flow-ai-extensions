@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.camunda.rpa.client.data.constants.RobotResponseType;
+import org.camunda.rpa.client.data.constants.RobotType;
 import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.AllArgsConstructor;
@@ -37,6 +38,10 @@ public class RobotHandlerConfig implements Serializable {
 
 	@Column(name = "robot_name", length = 250)
 	private String robotName;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "robot_type", nullable = false, length = 20)
+	private RobotType robotType;
 
 	@Column(name = "is_active", nullable = false)
 	private Boolean isActive;
