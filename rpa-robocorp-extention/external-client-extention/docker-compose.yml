@@ -1,0 +1,64 @@
+
+version: "3.6"
+services:
+  camunda-rpa-client-db:
+    container_name: camunda-rpa-client-db
+    image: 'postgres'
+    environment:
+      POSTGRES_USER: ${RPA_JDBC_USER:-postgres}
+      POSTGRES_PASSWORD: ${RPA_JDBC_PASSWORD:-password}
+      POSTGRES_DB: ${RPA_JDBC_DB_NAME:-rpa-client}
+    volumes:
+      - ./postgres/rpa:/data/postgres
+    ports:
+      - '7432:5432'
+    networks:
+      - camunda-rpa-client-network
+
+  camunda-rpa-client:
+    container_name: camunda-rpa-client
+    restart: always
+    depends_on:
+      - camunda-rpa-client-db
+    environment:
+      - KEYCLOAK_URL=${KEYCLOAK_URL}
+      - KEYCLOAK_URL_REALM=${KEYCLOAK_URL_REALM:-forms-flow-ai}
+      - KEYCLOAK_CLIENTID=${KEYCLOAK_BPM_CLIENT_ID:-forms-flow-bpm}
+      - KEYCLOAK_CLIENTSECRET=${KEYCLOAK_BPM_CLIENT_SECRET}
+      - RPA_JDBC_URL=${RPA_JDBC_URL:-jdbc:postgresql://camunda-rpa-client-db:5432/rpa-client}
+      - RPA_JDBC_USER=${RPA_JDBC_USER:-postgres}
+      - RPA_JDBC_PASSWORD=${RPA_JDBC_PASSWORD:-password}
+      - RPA_JDBC_DRIVER=${RPA_JDBC_DRIVER:-org.postgresql.Driver}
+      - ROBOT_BASE_DIR=${ROBOT_BASE_DIR:-/opt/robots}
+      - RPA_APP_LOG_LEVEL=${RPA_APP_LOG_LEVEL:-error}
+      - CAMUNDA_BPM_URL=${CAMUNDA_BPM_URL}
+      - MAX_TASKS=${MAX_TASKS:-10}
+      - LOCK_DURATION=${LOCK_DURATION:-3000}
+      - FORMIO_USERNAME=${FORMIO_USERNAME}
+      - FORMIO_PASSWORD=${FORMIO_PASSWORD}
+      - FORMIO_ENABLED=${FORMIO_ENABLED}
+      - FORMIO_URL=${FORMIO_URL}
+      - ROBOCORP_CLOUD_APIKEY=${ROBOCORP_CLOUD_APIKEY}
+      - ROBOCORP_CLOUD_BASE_URL=${ROBOCORP_CLOUD_BASE_URL}
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    links:
+      - camunda-rpa-client-db
+    ports:
+      - '8090:8090'
+    networks:
+      - camunda-rpa-client-network
+    
+
+networks:
+  camunda-rpa-client-network:
+    driver: "bridge"
+
+volumes:
+  postgres:
+     
+
+      
+          
+  

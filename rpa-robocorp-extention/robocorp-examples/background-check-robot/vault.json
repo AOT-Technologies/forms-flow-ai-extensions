@@ -1,0 +1,6 @@
+{
+    "my_vault": {
+        "search-engine-url" : "https://google.com",
+        "verify-bc-org-url" : "https://www.orgbook.gov.bc.ca/en/home"
+    }
+}

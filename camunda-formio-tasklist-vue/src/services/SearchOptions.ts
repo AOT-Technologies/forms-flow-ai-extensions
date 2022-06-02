@@ -160,18 +160,25 @@ export const FILTER_OPERATOR_TYPES = {
   AFTER: "after",
 };
 
-const convertingValueNumber =(value: any)=>{
-  let newValue: any ;
-  if(value==='false'){
-    newValue=false;
-  }else if(value==='true'){
-    newValue= true;
-  }else if(isNaN(value)){
-    newValue=value;
+const convertingValueNumber =(searchOption: any)=>{
+  // if it is not like operator
+  if(searchOption.operator===FILTER_OPERATOR_TYPES.LIKE){
+    return `%${searchOption.value}%`;
   }else{
-    newValue= Number(value);
+    const value = searchOption.value;
+    let newValue: any ;
+    if(value==='false'){
+      newValue=false;
+    }else if(value==='true'){
+      newValue= true;
+    }else if(isNaN(value)){
+      newValue=value;
+    }else{
+      newValue= Number(value);
+    }
+    return newValue;
   }
-  return newValue;
+ 
 };
 
 
@@ -234,7 +241,7 @@ export const getFormattedQueryListParams = (
         paramList[searchOption.key].push({
           name: searchOption.variable,
           operator: getVariableOperator(searchOption.operator),
-          value: convertingValueNumber(searchOption.value),
+          value: convertingValueNumber(searchOption),
         });
       }
     }
