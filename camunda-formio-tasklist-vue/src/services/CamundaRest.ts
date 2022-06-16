@@ -273,8 +273,8 @@ export const CamundaRest = {
     );
   },
 
-  async listForms (bearerToken: string, CamundaUrl: string) {
-    return await bpmAxiosGet(bearerToken, CamundaUrl).get(`/form`);
+  async listForms (bearerToken: string, CamundaUrl: string, query: any) {
+    return await bpmAxiosGet(bearerToken, CamundaUrl).get(`/form?pageNo=${query.page}&limit=${query.limit}`);
   },
 
   async getProcessDiagramXML (
