@@ -1,118 +1,141 @@
 <template>
   <div class="cftf-form-conatiner cft-text-font">
     <button
-      class="btn btn-primary"
-      variant="primary"
-      v-b-modal.modal-multi-1
       @click="formListItems"
+      type="button"
+      id="formsButton"
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#formListModal"
     >
-
-      <i class="fa fa-wpforms mx-1"></i>
       Forms
     </button>
-    <b-modal
-      ref="modal-1"
-      id="modal-multi-1"
-      size="xl"
-      no-close-on-backdrop
-      no-close-on-esc
-      :hide-footer="true"
-    >
-      <template #modal-header="{ close }">
-        <h5>FORM LIST</h5>
-        <b-button
-          size="sm"
-          variant="outline-danger"
-          @click="close()"
-        >
-          <h5>
-            Close
-            <i class="fa fa-times"></i>
-          </h5>
-        </b-button>
-      </template>
-      <div>
-        <b-table
-          v-if="formitems.length > 0"
-          sort-icon-left
-          bordered
-          hover
-          responsive
-          caption-top
-          :fields="formfields"
-          :items="formitems"
-          :per-page="formperPage"
-          :current-page="formcurrentPage"
-          id="formListTable"
-        >
-          <template #cell(formName)="data">
-            <span class="font-weight-bold text-justify">{{data.item.formName}}</span>
-          </template>
-          <template #cell(operations)="data">
-            <b-button
-              squared
-              variant="primary"
-              size="small"
-              v-b-modal.modal-multi-2
-              @click="storeFormValue(data.item.formId, data.item.formName)"
-            >Submit New</b-button>
-          </template>
-        </b-table>
 
-        <b-pagination
-          v-if="formitems.length > 0"
-          v-model="formcurrentPage"
-          :per-page="formperPage"
-          :total-rows="totalrows"
-          aria-controls="formListTable"
-          class="cft-form-list-paginate"
-        ></b-pagination>
-      </div>
-    </b-modal>
-    <b-modal
-      ref="modal-2"
-      id="modal-multi-2"
-      size="xl"
-      no-close-on-backdrop
-      no-close-on-esc
-      scrollable
-      :hide-footer="true"
+    <!-- Modal -->
+
+    <div
+      class="modal fade"
+      id="formListModal"
+      tabindex="-1"
+      aria-labelledby="formListModalTitle"
+      aria-hidden="true"
     >
-      <template #modal-header="{ close }">
-        <b-button
-          variant="link"
-          @click="backClickToFormList"
-        >
-          <h5>
-            <i class="fa fa-chevron-left"></i> Back
-          </h5>
-        </b-button>
-        <h5>SUBMIT FORM</h5>
-        <b-button
-          size="sm"
-          variant="outline-danger"
-          @click="close()"
-        >
-          <h5>
-            Close
-            <i class="fa fa-times"></i>
-          </h5>
-        </b-button>
-      </template>
-      <h4>{{ formTitle }}</h4>
-      <Form
-        :src="formValueId"
-        form=""
-        submission=""
-        options=""
-        v-on:submit="onSubmit"
-        v-on:customEvent="oncustomEventCallback"
-      ></Form>
-    </b-modal>
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5
+              class="modal-title"
+              id="formListModalTitle"
+            >FORM LIST</h5>
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              Close <i class="fa fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- normal table -->
+            <table
+              v-if="formitems.length > 0"
+              class="table table-bordered"
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Form Name</th>
+                  <th scope="col">Operations</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(item,index) in formitems"
+                  :key="index"
+                >
+                  <td>{{item.formName}}</td>
+                  <td>
+                    <button
+                      class="btn btn-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#formSubmitModal"
+                      @click="storeFormValue(item.formId,item.formName)"
+                    >Submit New</button>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+            <Pagination
+              v-if="formitems.length > 0 && totalrows > formitems.length"
+              ref="taskListPaginationRef"
+              :perPage="formperPage"
+              :totalRecords="totalrows"
+              @go-to-page="onPageChange"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form submit modal -->
+
+    <div
+      class="modal fade"
+      id="formSubmitModal"
+      tabindex="-1"
+      aria-labelledby="formSubmitModalTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button
+               id="backtoFormListButton"
+              class="btn btn-outline-dark"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              data-bs-toggle="modal"
+              data-bs-target="#formListModal"
+            >
+              <i class="fa fa-chevron-left"></i> Back
+            </button>
+            <h5>SUBMIT FORM</h5>
+            <button
+              type="button"
+              id="formSubmitClose"
+              class="btn btn-outline-danger"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              Close <i class="fa fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h4>{{ formTitle }}</h4>
+
+            <Form
+              v-if="formValueId"
+              :src="formValueId"
+              form=""
+              submission=""
+              options=""
+              v-on:submit="onSubmit"
+              v-on:customEvent="oncustomEventCallback"
+            />
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form submit end -->
+
   </div>
 </template>
 
 <script lang="ts">
+
 import "semantic-ui-css/semantic.min.css";
 import "../../styles/camundaFormIOFormList.scss";
 import {
@@ -131,10 +154,13 @@ import BaseMixin from "../../mixins/BaseMixin.vue";
 import {
   Form
 } from "vue-formio";
+import Pagination from "../layout/Pagination.vue";
+
 
 @Component({
   components: {
-    Form
+    Form,
+    Pagination
   }
 })
 export default class FormListModal extends Mixins(BaseMixin) {
@@ -147,32 +173,38 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private formioUrl?: string = undefined;
   private formTitle: string = "";
   private submissionId?: string = "";
-
-  get totalrows() {
-    return this.formitems.length;
-  }
+  private totalrows: number= 0;
 
   formListItems() {
-    this.formitems = [];
     const url: any= localStorage.getItem('formsflow.ai.api.url');
-    CamundaRest.listForms(this.token, url).then(response => {
-      response.data.forms.forEach((form: FormListItemsPayload) => {
-        this.formitems.push(form);
-      });
+    CamundaRest.listForms(this.token, url,{
+      page:this.formcurrentPage,limit:this.formperPage
+    }).then(response => {
+      if(response.data.forms&&response.data.totalCount){
+        this.formitems=response.data.forms;
+        this.totalrows=response.data.totalCount;
+      }
     });
   }
 
+  backToFormList(){
+    const btn = document.querySelector('#backtoFormListButton') as HTMLElement | null;
+    if(btn){
+      btn.click();
+    }
+    this.formValueId ="";
+  }
+
+  onPageChange(number){
+    this.formcurrentPage= number;
+    this.formListItems();
+  }
+
   storeFormValue(val: string, title: string) {
-    this.$bvModal.hide("modal-multi-1");
     const forms = localStorage.getItem("formioApiUrl") + "/form/";
     this.formId = val;
     this.formValueId = forms.concat(val);
     this.formTitle = title;
-  }
-
-  backClickToFormList() {
-    this.$bvModal.hide("modal-multi-2");
-    this.$bvModal.show("modal-multi-1");
   }
 
  
@@ -192,7 +224,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
         + this.formId
         + "/submission/"
         + this.submissionId;
-      await formApplicationSubmit(
+      formApplicationSubmit(
         formsflowAIApiUrl,
         {
           formId: this.formId,
@@ -200,20 +232,26 @@ export default class FormListModal extends Mixins(BaseMixin) {
           formUrl: this.formioUrl
         },
         this.token
-      );
+      ).then(()=>{
+        this.backToFormList();
+        this.$emit("update-task");
+      });
     }
-    this.$bvModal.hide("modal-multi-2");
-    this.$bvModal.show('modal-multi-1');
-    this.$emit("update-task");
+    // this.$bvModal.hide("modal-multi-2");
+    // this.$bvModal.show('modal-multi-1');
+    
   }
 
   oncustomEventCallback = (customEvent: CustomEventPayload) => {
     switch (customEvent.type) {
     case "customSubmitDone":
-      this.$bvModal.hide("modal-multi-2");
+      this.$emit("update-task");
+      break;
+    default: 
       break;
     }
   };
 
 }
 </script>
+
