@@ -12,8 +12,10 @@
         </span>
         </div>
         <div class="text-truncate ">
-          <span data-toggle="tooltip"  class="ctf-description" data-placement="top" :title="checkVlaueIsDateOrNOt(item.value)">
-         {{ checkVlaueIsDateOrNOt(item.value)}}  
+
+          <span data-toggle="tooltip"  class="ctf-description" data-placement="top" :title="item.value.toString()">
+         {{ item.value.toString()}}  
+
           </span>
         </div>
         </div>
@@ -38,9 +40,7 @@ import {
   Vue,
   Watch,
 } from "vue-property-decorator";
-import {
-  getFormattedDateAndTime
-} from "../../services";
+
 @Component
 export default class TaskVariable extends Vue {
     @Prop() private variables!: any[];
@@ -87,14 +87,7 @@ export default class TaskVariable extends Vue {
       }
     }
 
-    checkVlaueIsDateOrNOt=(value: any)=>{
-      const isValueNumber = isNaN(value);
-      if(isValueNumber){
-        return getFormattedDateAndTime(value)!=='Invalid Date'?getFormattedDateAndTime(value):value;
-      }else{
-        return value;
-      }
-    }
+
  
 }
 </script>

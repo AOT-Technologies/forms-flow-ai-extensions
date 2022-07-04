@@ -90,7 +90,10 @@
         v-if="showVariableValueState[index] === 's'"
         @click="updateVariableInput(index)"
       >
-       <span  data-bs-toggle="tooltip" data-bs-placement="top" :title="selectedSearchQueries[index].variable "> {{ selectedSearchQueries[index].variable }}</span>
+
+       <span v-if="selectedSearchQueries[index].variable== ''">0</span>
+       <span v-else data-bs-toggle="tooltip" data-bs-placement="top" :title="selectedSearchQueries[index].variable "> {{ selectedSearchQueries[index].variable }}</span>
+
       </div>
         
     </div>
@@ -138,33 +141,51 @@
         {{ formatDate(selectedSearchQueries[index].value) }}
       </div>
       <template v-if="showSearchState[index] === 'i' && query.type !== 'date'">
-        <input
+        <div>
+          <input 
           class="form-control"
-          type="text"
+          :type="showCalender?'datetime-local':'text'"
+
           v-model="selectedSearchQueries[index].value"
           v-on:keyup.enter="
                 setSearchQueryValue(selectedSearchQueries, index);
                 showSearchValueItem(index);"
         >
-        <button
-          class="btn btn-outline-success btn-sm mx-2"
-          @click="
+
+        </div>
+        <div>
+          <button
+           class="btn btn-outline-success btn-sm "
+           @click="
                   setSearchQueryValue(selectedSearchQueries, index);
                   showSearchValueItem(index);"
-        ><i class="fa fa-check"></i>
-        </button>
-        <button
+         ><i class="fa fa-check" aria-hidden="true" ></i>
+         </button>
+         <button class="btn btn-outline-secondary btn-sm" v-if="query.type === 'variables'" 
+         @click="showCalender = true">
+          <i  class="fa fa-calendar" aria-hidden="true"  />
+         </button>
+         <button
           class="btn btn-outline-danger btn-sm"
           @click="rejectSearchValueItem(index)"
-        ><i class="fa fa-times"></i>
+         ><i class="fa fa-times" aria-hidden="true" ></i>
         </button>
+        </div>
+
       </template>
       <div
         v-if="showSearchState[index] === 's' && query.type !== 'date'"
         @click="updateSearchInput(index)"
       >
+
+        <div v-if="selectedSearchQueries[index].value===''">
+        0
+      </div>
+      <div v-else >
         {{ selectedSearchQueries[index].value }}
       </div>
+      </div>
+
     </div>
 
   </div>
@@ -223,6 +244,23 @@ export default class TaskSearchItem extends Vue {
   private  taskVariableArray: any = [];
   private filteredVariable =[];
   private searchListElements: SearchOptionPayload[] = taskSearchFilters;
+  private showCalender: boolean =false
+
+  @Watch("selectedfilterId")
+  settingTaskVariable (){
+    if(this.filterList.length&&this.selectedfilterId){
+      this.filterList.forEach(filterListItem=>{
+        if(filterListItem.id===this.selectedfilterId){
+          this.filteredVariable = filterListItem?.properties?.variables ||[];
+          this.taskVariableArray= filterListItem?.properties?.variables ||[];
+        }
+      });
+    }
+  }
+  mounted(){
+    this.settingTaskVariable();
+    
+  }
 
   @Watch("selectedfilterId")
   settingTaskVariable (){
@@ -291,6 +329,7 @@ export default class TaskSearchItem extends Vue {
   }
 
   setSearchQueryValue(item: SearchOptionPayload[], index: number) {
+    this.showCalender=false;
     this.$root.$emit("call-setSearchQueryValue", {
       item: item,
       index: index,
@@ -353,3 +392,12 @@ export default class TaskSearchItem extends Vue {
 }
 
 </style>
+
+<style>
+::-webkit-datetime-edit-year-field:not([aria-valuenow]),
+::-webkit-datetime-edit-month-field:not([aria-valuenow]),
+::-webkit-datetime-edit-day-field:not([aria-valuenow]) {
+    color: transparent;
+}
+</style>
+
