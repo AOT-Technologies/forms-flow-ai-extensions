@@ -12,8 +12,10 @@
         </span>
         </div>
         <div class="text-truncate ">
+
           <span data-toggle="tooltip"  class="ctf-description" data-placement="top" :title="item.value.toString()">
          {{ item.value.toString()}}  
+
           </span>
         </div>
         </div>
@@ -38,7 +40,7 @@ import {
   Vue,
   Watch,
 } from "vue-property-decorator";
- 
+
 @Component
 export default class TaskVariable extends Vue {
     @Prop() private variables!: any[];
@@ -84,6 +86,7 @@ export default class TaskVariable extends Vue {
         this.valueLabelArray= newArray;
       }
     }
+
 
  
 }

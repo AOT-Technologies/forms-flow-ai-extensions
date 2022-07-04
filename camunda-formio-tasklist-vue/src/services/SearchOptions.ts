@@ -160,6 +160,7 @@ export const FILTER_OPERATOR_TYPES = {
   AFTER: "after",
 };
 
+
 const convertingValueNumber =(searchOption: any)=>{
   // if it is not like operator
   if(searchOption.operator===FILTER_OPERATOR_TYPES.LIKE){
@@ -177,9 +178,8 @@ const convertingValueNumber =(searchOption: any)=>{
       newValue= Number(value);
     }
     return newValue;
-  }
- 
-};
+  };
+
 
 
 const getProcessedParamObject = (searchOption: SearchOptionPayload) =>
@@ -242,6 +242,7 @@ export const getFormattedQueryListParams = (
           name: searchOption.variable,
           operator: getVariableOperator(searchOption.operator),
           value: convertingValueNumber(searchOption),
+
         });
       }
     }

@@ -93,6 +93,7 @@
            :variables="task._embedded.variable"
            :filterTaskVariable="selectedFilterTaskVariable"/>
  
+
         </div>
       </template>
       <div
@@ -174,6 +175,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   @serviceFlowModule.Mutation("setFormsFlowactiveIndex")
   public setFormsFlowactiveIndex: any;
   private selectedFilterTaskVariable: Array<any> = [];
+
   private getProcessDefinitions: Array<any> = [];
   private processDefinitionId = "";
   private currentPage = 1;

@@ -90,8 +90,10 @@
         v-if="showVariableValueState[index] === 's'"
         @click="updateVariableInput(index)"
       >
+
        <span v-if="selectedSearchQueries[index].variable== ''">0</span>
        <span v-else data-bs-toggle="tooltip" data-bs-placement="top" :title="selectedSearchQueries[index].variable "> {{ selectedSearchQueries[index].variable }}</span>
+
       </div>
         
     </div>
@@ -143,11 +145,13 @@
           <input 
           class="form-control"
           :type="showCalender?'datetime-local':'text'"
+
           v-model="selectedSearchQueries[index].value"
           v-on:keyup.enter="
                 setSearchQueryValue(selectedSearchQueries, index);
                 showSearchValueItem(index);"
         >
+
         </div>
         <div>
           <button
@@ -167,11 +171,13 @@
          ><i class="fa fa-times" aria-hidden="true" ></i>
         </button>
         </div>
+
       </template>
       <div
         v-if="showSearchState[index] === 's' && query.type !== 'date'"
         @click="updateSearchInput(index)"
       >
+
         <div v-if="selectedSearchQueries[index].value===''">
         0
       </div>
@@ -179,6 +185,7 @@
         {{ selectedSearchQueries[index].value }}
       </div>
       </div>
+
     </div>
 
   </div>
@@ -238,6 +245,22 @@ export default class TaskSearchItem extends Vue {
   private filteredVariable =[];
   private searchListElements: SearchOptionPayload[] = taskSearchFilters;
   private showCalender: boolean =false
+
+  @Watch("selectedfilterId")
+  settingTaskVariable (){
+    if(this.filterList.length&&this.selectedfilterId){
+      this.filterList.forEach(filterListItem=>{
+        if(filterListItem.id===this.selectedfilterId){
+          this.filteredVariable = filterListItem?.properties?.variables ||[];
+          this.taskVariableArray= filterListItem?.properties?.variables ||[];
+        }
+      });
+    }
+  }
+  mounted(){
+    this.settingTaskVariable();
+    
+  }
 
   @Watch("selectedfilterId")
   settingTaskVariable (){
@@ -377,3 +400,4 @@ export default class TaskSearchItem extends Vue {
     color: transparent;
 }
 </style>
+
