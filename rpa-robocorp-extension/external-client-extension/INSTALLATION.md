@@ -17,7 +17,7 @@ In the following document, we’ll describe about the different project dependen
 
 ## Download the Camunda RPA Client Extension
 
-* Clone this github repo:  https://github.com/shibin-aot/formsflow-ai-extensions.git
+* Clone this github repo:  https://github.com/AOT-Technologies/forms-flow-ai-extensions.git
 
 ## Installation
 
