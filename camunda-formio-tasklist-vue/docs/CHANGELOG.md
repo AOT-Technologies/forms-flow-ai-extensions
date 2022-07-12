@@ -1,5 +1,21 @@
 # Changes for camunda-formio-tasklist-vue
 
+## v1.1.3, 2022-07-12
+
+#### Modified
+
+- Component optimized
+- Lazy loading implemented
+- Bootstrap-vue dependencies removed
+- Added Robocorp cloud
+
+#### Fixes 
+
+- Fixed UI 
+- Fixed date inputs 
+- Updated UI responsiveness
+
+
 ## v1.1.2, 2022-04-05
 
 #### Modified
