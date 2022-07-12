@@ -230,8 +230,8 @@
                 </section>
                 <!-- end group section -->
               </div>
-              <!-- end sassignee and group div -->
-
+              <!-- end assignee and group div -->
+              <!-- followUp date starts here -->
               <div class="d-flex justify-content-between mb-2">
                 <section class="task-date-picker" v-if="!hideTaskDetails.followUpDate" >
                   <label class="fw-bold mb-1">Follow up</label>
@@ -241,9 +241,39 @@
                   >
                     <p
                       data-bs-toggle="tooltip"
+                      v-if="!showCalenderFollowup"
                       :title="getExactDate(task.followUp)"
+                      @click="showCalenderFollowup=true"
+                      
                     >{{ timedifference(task.followUp) }}</p>
+                    <v-date-picker
+                    v-if="showCalenderFollowup"
+                    v-model="task.followUp"
+                    :popover="{ visibility: 'click' }"
+                    @input="updateFollowUpDate"
+                  >
+                    <template v-slot="{ inputValue, inputEvents }">
+                      <div class="input-group">
+                        <input
+                          class="form-control"
+                          :value="inputValue"
+                          v-on="inputEvents"
+                          placeholder="mm/dd/yyyy"
+                        />
+                        <i class="fa fa-calendar-alt"></i>
+                      </div>
+                    </template>
+                  </v-date-picker>
+                  <button
+                      class="btn task-icon-btn"
+                      data-bs-toggle="tooltip"
+                      v-if="showCalenderFollowup"
+                      @click="showCalenderFollowup=false"
+                    >
+                    <i class="fa fa-check-circle"></i>
+                    </button>
                     <button
+                      v-if="!showCalenderFollowup"
                       class="btn task-icon-btn"
                       @click="removeFollowupDate"
                       data-bs-toggle="tooltip"
@@ -271,6 +301,8 @@
                     </template>
                   </v-date-picker>
                 </section>
+                <!------- FollowUp date ends here ----->
+                <!------- Due  date starts here ----->
                 <section class="task-date-picker" v-if="!hideTaskDetails.dueDate" >
                   <label class="fw-bold mb-1">Due date</label>
                   <div
@@ -278,10 +310,39 @@
                     v-if="task.due"
                   >
                     <p
+                     v-if="!showCalenderDue"
                       data-bs-toggle="tooltip"
                       :title="getExactDate(task.due)"
+                      @click="showCalenderDue=true"
                     >{{ timedifference(task.due) }}</p>
+                    <v-date-picker
+                    v-if="showCalenderDue"
+                    v-model="task.due"
+                    :popover="{ visibility: 'click' }"
+                     @input="updateDueDate"
+                  >
+                    <template v-slot="{ inputValue, inputEvents }">
+                      <div class="input-group">
+                        <input
+                          class="form-control"
+                          :value="inputValue"
+                          v-on="inputEvents"
+                          placeholder="mm/dd/yyyy"
+                        />
+                        <i class="fa fa-calendar-alt"></i>
+                      </div>
+                    </template>
+                  </v-date-picker>
+                  <button
+                      class="btn task-icon-btn"
+                      data-bs-toggle="tooltip"
+                      v-if="showCalenderDue"
+                      @click="showCalenderDue=false"
+                    >
+                    <i class="fa fa-check-circle"></i>
+                    </button>
                     <button
+                      v-if="!showCalenderDue"
                       class="btn task-icon-btn"
                       @click="removeDueDate"
                       data-bs-toggle="tooltip"
@@ -309,6 +370,7 @@
                     </template>
                   </v-date-picker>
                 </section>
+                <!------- Due date ends here ----->
                 <section v-if="!hideTaskDetails.createdDate" >
                   <label class="fw-bold mb-1">Created</label>
                   <p
@@ -484,6 +546,8 @@ import vSelect from "vue-select";
 })
 export default class RightSider extends Vue {
 private groupText: any = null;
+private showCalenderFollowup: boolean = false;
+private showCalenderDue: boolean= false;
 private loadingEditAssignee: boolean = false;
 private reviewerUsersList: UserListPayload[] = [];
 private editAssignee: boolean = false;
@@ -811,6 +875,9 @@ async removeFollowupDate() {
         z-index: 3;
       }
     }
+    p {
+        cursor: pointer;
+      }
   }
   .task-icon-btn {
     min-height: unset !important;
