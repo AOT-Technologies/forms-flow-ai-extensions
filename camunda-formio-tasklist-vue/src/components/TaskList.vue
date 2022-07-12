@@ -39,7 +39,6 @@
             :filterList="filterList"
           />
         </div>
-
        <!-- need to bring here right side -->
         <div
           class="ctf-task-details-container ms-md-2 rounded"
@@ -47,7 +46,6 @@
         >
 
        <!-- single taks loading -->
-
           <div
             v-if="singleTaskLoading"
             class="d-flex justify-content-center align-items-center"
@@ -57,18 +55,7 @@
               role="status"
             >
               <span class="sr-only">Loading...</span>
-
             </div>
-          </template>
-          <div
-            v-else
-            class="d-flex align-items-center justify-content-center task-details-empty"
-            :style="{
-              height: taskScrollableHeight
-            }"
-          >
-            <i class="fa fa-exclamation-circle"></i>
-            <h4 class="mt-0 mx-2">Please select a task from the list</h4>
           </div>
        <!-- single task loading end -->
 
@@ -204,7 +191,6 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
     BpmnViewer,
     RightSider,
  
-
   },
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
@@ -251,7 +237,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   public perPage: number = 10;
   private filterList: FilterPayload[] = [];
-
   private userEmail: string = "external";
   private selectedfilterId: string = "";
   private xmlData!: string;
@@ -295,7 +280,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.userName = getUserName();
   }
 
-
+ 
 
   async onFormSubmitCallback(actionType = "") {
     if (this.task.id !== null) {
@@ -304,7 +289,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-
+ 
+ 
   async onBPMTaskFormSubmit(taskId: string, actionType: string) {
     let formRequestFormat: FormRequestPayload = {
       variables: {
@@ -482,14 +468,11 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
 
 
-
   async getBPMTaskandReload(){
     await this.getBPMTaskDetail(this.getFormsFlowTaskId);
     await this.reloadLHSTaskList();
-
   }
   
-
 
 
   async fetchFullTaskList(filterId: string, requestData: Payload) {
@@ -534,6 +517,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       }
     }
   }
+
 
 
   async fetchTaskDetails(taskId: string) {
@@ -595,7 +579,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.setFormsFlowactiveIndex(NaN);
     this.taskLoading = true;
     this.$root.$on("call-fetchTaskDetails", async (para: any) => {
-
       this.singleTaskLoading = true;
       this.setFormsFlowTaskId(para.selectedTaskId);
       await this.fetchTaskDetails(this.getFormsFlowTaskId);
@@ -728,7 +711,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   }
 
-
+ 
 
   beforeDestroy() {
     SocketIOService.disconnect();
@@ -751,12 +734,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 }
 </script>
 
-
  
 
 <style>
 .highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
     fill: rgb(56,89,138) !important;
   }
-
 </style>
