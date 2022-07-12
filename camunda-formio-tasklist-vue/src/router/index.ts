@@ -1,24 +1,25 @@
 import VueRouter, {
   RouteConfig 
 } from 'vue-router';
-import FormViewSubmission from '@/components/FormViewSubmission.vue';
-import Tasklist from '@/views/TaskList.vue';
+
 
 import Vue from 'vue';
 
 Vue.use(VueRouter);
 
+
+
 const routes: Array<RouteConfig> = [
   {
     path: '/:getTaskId?',
     name: 'Tasklist',
-    component: Tasklist,
+    component: () => import('@/views/TaskList.vue'),
     props: true
   },
   {
     path: '/form/:formId/submission/:submissionId',
     name: 'Formio forms list',
-    component: FormViewSubmission
+    component: () => import('@/components/FormViewSubmission.vue')
   }
 ];
 
