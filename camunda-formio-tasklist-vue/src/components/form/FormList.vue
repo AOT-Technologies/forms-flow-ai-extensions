@@ -57,6 +57,10 @@ export default class FormList extends Vue {
   private formperPage: number = 10;
   private formNumPages: number = 1;
   private formcurrentPage: number = 1;
+  private query ={
+    page:this.formNumPages,
+    limit:this.formperPage
+  }
 
   @Prop({
   }) private token!: string;
@@ -68,7 +72,7 @@ export default class FormList extends Vue {
 
   formListItems () {
     const apiUrl: any = localStorage.getItem("formsflow.ai.api.url");
-    CamundaRest.listForms(this.token, apiUrl).then((response) => {
+    CamundaRest.listForms(this.token, apiUrl,this.query).then((response) => {
       this.formNumPages = Math.ceil(response.data.forms.length / this.formperPage);
       this.formList = response.data.forms.splice(
         (this.formcurrentPage - 1) * this.formperPage,
@@ -79,7 +83,7 @@ export default class FormList extends Vue {
 
   mounted () {
     const apiUrl: any = localStorage.getItem("formsflow.ai.api.url");
-    CamundaRest.listForms(this.token, apiUrl).then((response) => {
+    CamundaRest.listForms(this.token, apiUrl,this.query).then((response) => {
       this.formList = response.data.forms;
     });
   }
