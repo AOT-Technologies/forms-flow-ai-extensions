@@ -262,21 +262,6 @@ export default class TaskSearchItem extends Vue {
     
   }
 
-  @Watch("selectedfilterId")
-  settingTaskVariable (){
-    if(this.filterList.length&&this.selectedfilterId){
-      this.filterList.forEach(filterListItem=>{
-        if(filterListItem.id===this.selectedfilterId){
-          this.filteredVariable = filterListItem?.properties?.variables ||[];
-          this.taskVariableArray= filterListItem?.properties?.variables ||[];
-        }
-      });
-    }
-  }
-  mounted(){
-    this.settingTaskVariable();
-    
-  }
 
   deleteSearchQueryElement(query: SearchOptionPayload, index: number) {
     this.$root.$emit("call-deleteSearchQueryElement", {
