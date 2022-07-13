@@ -50,7 +50,7 @@ For download and setup, follow the [installation guide](./external-client-extent
 
 ## System Architecture
 
-![Architecture](https://user-images.githubusercontent.com/85665463/150078528-f05637b5-ae37-48c1-b4e4-501fb11c08d9.png)
+![Architecture](https://user-images.githubusercontent.com/85665463/178727164-171b125e-cb26-4f6f-bee6-cda0e5a795d7.png)
 
 ## Quick Start
 
