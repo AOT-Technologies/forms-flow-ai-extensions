@@ -3,7 +3,8 @@ name: Publish Camunda Formio Task List
 on:
   release:
     types: [created]
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - master
     paths:
@@ -26,7 +27,7 @@ jobs:
       - run: npm run build
 
   publish-npm:
-    if: github.repository == 'AOT-Technologies/forms-flow-ai-extensions'
+    if: github.repository == 'AOT-Technologies/forms-flow-ai-extensions' && github.head_ref == 'Vue-dev'
     needs: build
     runs-on: ubuntu-latest
     steps:
