@@ -65,7 +65,12 @@ export default class Pagination extends Vue {
   get totalPageNumbers() {
     return Math.ceil(this.totalRecords / this.perPage);
   }
+  mounted(){
+    this.$parent.$on("resetValue",(value: number)=>{
+      this.currentPageNumber = value; 
+    });
 
+  }
   @Emit()
   goToPage(page: number) {
     this.currentPageNumber = page;
