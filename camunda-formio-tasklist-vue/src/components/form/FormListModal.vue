@@ -32,6 +32,7 @@
               class="btn btn-outline-danger"
               data-bs-dismiss="modal"
               aria-label="Close"
+              @click="closeModal()"
             >
               Close <i class="fa fa-times"></i>
             </button>
@@ -39,16 +40,22 @@
           <div class="modal-body">
             <!-- normal table -->
             <table
-              v-if="formitems.length > 0"
               class="table table-bordered"
             >
               <thead>
                 <tr>
-                  <th scope="col">Form Name</th>
+                  <th scope="col">Form Name 
+                    <input class=" form-control w-50 "  
+                             v-model="searchValue" 
+                             @keyup="handleSearch()" 
+                             type="text" 
+                             placeholder="Search by form name"
+                             id="example-search-input">
+                  </th>
                   <th scope="col">Operations</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody v-if="formitems.length>0">
                 <tr
                   v-for="(item,index) in formitems"
                   :key="index"
@@ -63,7 +70,15 @@
                     >Submit New</button>
                   </td>
                 </tr>
-
+              </tbody>
+              <tbody v-else>             
+                <tr>
+                  <td>
+                    <h5>
+                      No results have been found for &nbsp;"{{searchValue}}"
+                    </h5>
+                  </td>
+                </tr>
               </tbody>
             </table>
             <Pagination
@@ -174,16 +189,24 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private formTitle: string = "";
   private submissionId?: string = "";
   private totalrows: number= 0;
+  private searchValue: any='';
+  private searchTimer;
+
+  closeModal(){
+    this.searchValue='';
+  }
+  handleSearch(){
+    clearTimeout(this.searchTimer);
+    this.searchTimer=setTimeout(this.formListItems);
+  }
 
   formListItems() {
     const url: any= localStorage.getItem('formsflow.ai.api.url');
     CamundaRest.listForms(this.token, url,{
-      page:this.formcurrentPage,limit:this.formperPage
-    }).then(response => {
-      if(response.data.forms&&response.data.totalCount){
+      page:this.formcurrentPage,limit:this.formperPage,formName:this.searchValue
+    }).then(response => { 
         this.formitems=response.data.forms;
         this.totalrows=response.data.totalCount;
-      }
     });
   }
 
@@ -254,4 +277,9 @@ export default class FormListModal extends Mixins(BaseMixin) {
 
 }
 </script>
-
+<style>
+ input{
+  margin-right: 10px;
+  float: right;
+}
+</style>
