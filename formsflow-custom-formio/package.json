@@ -1,0 +1,47 @@
+{
+  "name": "formsflow-formio-custom-elements",
+  "description": "Custom FORMIO elements for Formsflow project.",
+  "version": "1.0.0",
+  "private": false,
+  "main": "./dist/customformio.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AOT-Technologies/forms-flow-ai-extensions.git"
+  },
+  "scripts": {
+    "build": "npx webpack --mode=production",
+    "prepublish": "npm run build"
+  },
+  "author": "support@aot-technologies.com",
+  "contributors": [
+    "Ratheesh kumar R <ratheesh.kumar@aot-technologies.com> (https://github.com/ratheesh-aot)"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-react": "^7.18.6",
+    "babel-loader": "^8.2.5",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^4.10.0"
+  },
+  "peerDependencies": {
+    "formiojs": "^4.14.8"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-formio": "^4.3.0",
+    "react-router-dom": "^5.1.2"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "files": [
+    "dist/*",
+    "*.js"
+  ]
+}

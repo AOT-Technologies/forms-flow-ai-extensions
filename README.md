@@ -15,3 +15,10 @@ There is a Vue.js based web user interface for easy integration of formsflow.ai 
 This extension provides components for easily using Forms, Tasklist by installing as a npm package. Checkout more
 about [the package in README](./camunda-formio-tasklist-vue/README.md) and to :inbox_tray:
 install package [go here](https://www.npmjs.com/package/camunda-formio-tasklist-vue).
+
+### formsflow-custom-formio
+
+This is a collection of custom FORMIO components and templates for Formsflow.ai project.
+This extension provides custom components for easily using Formsflow forms by installing as a npm package. Checkout more
+about [the package in README](./formsflow-custom-formio/README.md) and to :inbox_tray:
+install package [go here](https://www.npmjs.com/package/formsflow-formio-custom-elements).
