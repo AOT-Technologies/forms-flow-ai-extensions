@@ -24,6 +24,7 @@ jobs:
           node-version: 14
       - run: npm ci --include=dev
       - run: npm run build
+      - run: npm run buildExcludeFormio
 
   publish-npm:
     if: github.repository == 'AOT-Technologies/forms-flow-ai-extensions' && github.head_ref == 'Formsflow-dev'

@@ -1,16 +1,17 @@
 {
   "name": "formsflow-formio-custom-elements",
   "description": "Custom FORMIO elements for Formsflow project.",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "private": false,
-  "main": "./dist/customformio.min.js",
+  "main": "./dist/customformio-ex.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/AOT-Technologies/forms-flow-ai-extensions.git"
   },
   "scripts": {
     "build": "npx webpack --mode=production",
-    "prepublish": "npm run build"
+    "buildExcludeFormio" : "npx webpack --mode=production --env exclude=react-formio",
+    "prepublish": "npm run build && npm run buildExcludeFormio"
   },
   "author": "support@aot-technologies.com",
   "contributors": [
@@ -22,6 +23,8 @@
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-react": "^7.18.6",
     "babel-loader": "^8.2.5",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "lodash-webpack-plugin": "^0.11.6",
     "webpack": "^4.42.1",
     "webpack-cli": "^4.10.0"
   },
