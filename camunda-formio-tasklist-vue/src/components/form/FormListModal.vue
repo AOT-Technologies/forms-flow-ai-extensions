@@ -32,7 +32,7 @@
               class="btn btn-outline-danger"
               data-bs-dismiss="modal"
               aria-label="Close"
-              @click="closeModal()"
+              @click="onClose"
             >
               Close <i class="fa fa-times"></i>
             </button>
@@ -105,6 +105,7 @@
               </tbody>
             </table>
             <Pagination
+
               v-if="formitems.length > 0 && totalrows > formitems.length"
               ref="taskListPaginationRef"
               :perPage="formperPage"
@@ -145,6 +146,7 @@
               class="btn btn-outline-danger"
               data-bs-dismiss="modal"
               aria-label="Close"
+              @click="onClose"
             >
               Close <i class="fa fa-times"></i>
             </button>
@@ -226,9 +228,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
     }
     this.formListItems();
   }
-  closeModal(){
-    this.searchValue='';
-  }
+
   handleSearch(){
     clearTimeout(this.searchTimer);
     this.searchTimer=setTimeout(this.formListItems);
@@ -296,6 +296,13 @@ export default class FormListModal extends Mixins(BaseMixin) {
     }
     // this.$bvModal.hide("modal-multi-2");
     // this.$bvModal.show('modal-multi-1');
+    
+  }
+
+  onClose(){
+    this.searchValue='';
+    this.formcurrentPage = 1;
+    this.$emit("resetValue",1);
     
   }
 
