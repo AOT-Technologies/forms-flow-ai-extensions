@@ -45,12 +45,35 @@
               <thead>
                 <tr>
                   <th scope="col">Form Name 
-                    <input class=" form-control w-50 "  
-                             v-model="searchValue" 
-                             @keyup="handleSearch()" 
-                             type="text" 
-                             placeholder="Search by form name"
-                             id="example-search-input">
+                    <button
+                       class="btn  btn-sm"
+                       v-if="sortValue==='desc'"
+                       @click="updateSort()"
+                       title="Ascending"
+                     >
+                       <i
+                         class="fa fa-arrow-up"
+                         aria-hidden="true"
+                       ></i>
+                     </button>
+                     <button
+                       class="btn btn-sm"
+                       v-else
+                       @click="updateSort()"
+                       title="Descending"
+                     >
+                       <i
+                         class="fa fa-arrow-down"
+                         aria-hidden="true"
+                       ></i>
+                     </button>
+                     <input 
+                        class=" form-control w-50 "  
+                        v-model="searchValue" 
+                        @keyup="handleSearch()" 
+                        type="text" 
+                        placeholder="Search by form name"
+                        id="example-search-input">
                   </th>
                   <th scope="col">Operations</th>
                 </tr>
@@ -157,7 +180,7 @@ import {
   CamundaRest, FORMLIST_FIELDS, formApplicationSubmit
 } from "../../services";
 import {
-  Component, Mixins
+  Component,Mixins
 } from "vue-property-decorator";
 import {
   CustomEventPayload,
@@ -191,7 +214,18 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private totalrows: number= 0;
   private searchValue: any='';
   private searchTimer;
+  private sortValue: string='asc';
+  private sortBy: string="formName" ;
 
+  updateSort(){
+    if(this.sortValue==="asc"){
+      this.sortValue="desc";
+    }
+    else{
+      this.sortValue="asc";
+    }
+    this.formListItems();
+  }
   closeModal(){
     this.searchValue='';
   }
@@ -203,10 +237,10 @@ export default class FormListModal extends Mixins(BaseMixin) {
   formListItems() {
     const url: any= localStorage.getItem('formsflow.ai.api.url');
     CamundaRest.listForms(this.token, url,{
-      page:this.formcurrentPage,limit:this.formperPage,formName:this.searchValue
+      page:this.formcurrentPage,limit:this.formperPage,formName:this.searchValue,sortBy:this.sortBy,sortOrder:this.sortValue
     }).then(response => { 
-        this.formitems=response.data.forms;
-        this.totalrows=response.data.totalCount;
+      this.formitems=response.data.forms;
+      this.totalrows=response.data.totalCount;
     });
   }
 
