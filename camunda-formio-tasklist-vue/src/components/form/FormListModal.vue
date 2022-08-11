@@ -40,16 +40,45 @@
           <div class="modal-body">
             <!-- normal table -->
             <table
-              v-if="formitems.length > 0"
               class="table table-bordered"
             >
               <thead>
                 <tr>
-                  <th scope="col">Form Name</th>
+                  <th scope="col">Form Name 
+                    <button
+                       class="btn  btn-sm"
+                       v-if="sortValue==='desc'"
+                       @click="updateSort()"
+                       title="Ascending"
+                     >
+                       <i
+                         class="fa fa-arrow-up"
+                         aria-hidden="true"
+                       ></i>
+                     </button>
+                     <button
+                       class="btn btn-sm"
+                       v-else
+                       @click="updateSort()"
+                       title="Descending"
+                     >
+                       <i
+                         class="fa fa-arrow-down"
+                         aria-hidden="true"
+                       ></i>
+                     </button>
+                     <input 
+                        class=" form-control w-50 "  
+                        v-model="searchValue" 
+                        @keyup="handleSearch()" 
+                        type="text" 
+                        placeholder="Search by form name"
+                        id="example-search-input">
+                  </th>
                   <th scope="col">Operations</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody v-if="formitems.length>0">
                 <tr
                   v-for="(item,index) in formitems"
                   :key="index"
@@ -64,7 +93,15 @@
                     >Submit New</button>
                   </td>
                 </tr>
-
+              </tbody>
+              <tbody v-else>             
+                <tr>
+                  <td>
+                    <h5>
+                      No results have been found for &nbsp;"{{searchValue}}"
+                    </h5>
+                  </td>
+                </tr>
               </tbody>
             </table>
             <Pagination
@@ -145,7 +182,7 @@ import {
   CamundaRest, FORMLIST_FIELDS, formApplicationSubmit
 } from "../../services";
 import {
-  Component, Mixins
+  Component,Mixins
 } from "vue-property-decorator";
 import {
   CustomEventPayload,
@@ -177,16 +214,33 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private formTitle: string = "";
   private submissionId?: string = "";
   private totalrows: number= 0;
+  private searchValue: any='';
+  private searchTimer;
+  private sortValue: string='asc';
+  private sortBy: string="formName" ;
+
+  updateSort(){
+    if(this.sortValue==="asc"){
+      this.sortValue="desc";
+    }
+    else{
+      this.sortValue="asc";
+    }
+    this.formListItems();
+  }
+
+  handleSearch(){
+    clearTimeout(this.searchTimer);
+    this.searchTimer=setTimeout(this.formListItems);
+  }
 
   formListItems() {
     const url: any= localStorage.getItem('formsflow.ai.api.url');
     CamundaRest.listForms(this.token, url,{
-      page:this.formcurrentPage,limit:this.formperPage
-    }).then(response => {
-      if(response.data.forms&&response.data.totalCount){
-        this.formitems=response.data.forms;
-        this.totalrows=response.data.totalCount;
-      }
+      page:this.formcurrentPage,limit:this.formperPage,formName:this.searchValue,sortBy:this.sortBy,sortOrder:this.sortValue
+    }).then(response => { 
+      this.formitems=response.data.forms;
+      this.totalrows=response.data.totalCount;
     });
   }
 
@@ -246,8 +300,10 @@ export default class FormListModal extends Mixins(BaseMixin) {
   }
 
   onClose(){
+    this.searchValue='';
     this.formcurrentPage = 1;
     this.$emit("resetValue",1);
+    
   }
 
   oncustomEventCallback = (customEvent: CustomEventPayload) => {
@@ -262,4 +318,9 @@ export default class FormListModal extends Mixins(BaseMixin) {
 
 }
 </script>
-
+<style>
+ input{
+  margin-right: 10px;
+  float: right;
+}
+</style>
