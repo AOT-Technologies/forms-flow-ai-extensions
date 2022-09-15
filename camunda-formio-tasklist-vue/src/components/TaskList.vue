@@ -8,7 +8,7 @@
         class="mb-2"
         ref="presetSortFiltersRef"
         v-if="token && bpmApiUrl && maximize&&(!disableComponents.sort||!disableComponents.form||!disableComponents.filterList)"
-        :token="token"
+        :token="token" 
         :bpmApiUrl="bpmApiUrl"
         :filterList="filterList"
         :perPage="perPage"
@@ -139,7 +139,7 @@ import {
   ALL_FILTER,
   CamundaRest,
   SocketIOService,
-  authenticateFormio, 
+  // authenticateFormio, 
   findFilterIdForDefaultFilterName,
   getFormDetails,
   getTaskFromList,
@@ -147,6 +147,7 @@ import {
   getformHistoryApi,
   isAllowedUser,
   sortByPriorityList,
+  getFormioToken,
 } from "../services";
 import {
   Component, Mixins, Prop,
@@ -195,6 +196,8 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
+  @Prop() private reviewer!: string;
+  @Prop() private userRoles!: string;
   @Prop({
     default: "created",
   })
@@ -356,7 +359,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         formioUrl, formId, submissionId
       } = getFormDetails(
         formUrlPattern,
-        this.formIO.apiUrl
+        this.formioServerUrl
       );
 
       this.formioUrl = formioUrl;
@@ -571,9 +574,16 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async mounted() {
     this.containerHeight = (this.$refs.taskListContainerRef as any).clientHeight;
     this.toastMsg = new Toast(this.$refs?.toastMsgRef as any);
-    Formio.setBaseUrl(this.formIO.apiUrl);
-    Formio.setProjectUrl(this.formIO.apiUrl);
-    this.isUserAllowed = isAllowedUser(this.formIO.reviewer, this.formIO.userRoles);
+    Formio.setBaseUrl(this.formioServerUrl);
+    Formio.setProjectUrl(this.formioServerUrl);
+    this.isUserAllowed = isAllowedUser(this.reviewer, this.userRoles);
+    getFormioToken(this.formsflowaiApiUrl,this.token, (err: any,formioToken: any)=>{
+      if(err){
+        console.error(err)
+      }else{
+        localStorage.setItem("formioToken",formioToken);
+      }
+    });
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
     this.setFormsFlowactiveIndex(NaN);
@@ -602,14 +612,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     this.checkProps();
     this.checkforTaskID();
-    authenticateFormio(
-      this.formIO.resourceId,
-      this.formIO.reviewerId,
-      this.formIO.reviewer,
-      this.userEmail,
-      this.formIO.userRoles,
-      this.formIOJwtSecret
-    );
+    
     const filterListResult = await CamundaRest.filterList(
       this.token,
       this.bpmApiUrl
