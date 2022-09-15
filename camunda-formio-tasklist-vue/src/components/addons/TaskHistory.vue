@@ -18,7 +18,7 @@
           :key="h.created"
         >
           <td class="fw-bold">{{ h.applicationStatus }}</td>
-          <td>{{ getExactDate(h.created) }}</td>
+          <td>{{h.created ? getExactDate(h.created) : '' }}</td>
           <td>
             <a
               class="btn btn-primary"
@@ -89,9 +89,8 @@ export default class TaskHistory extends Vue {
         token
       ).then((res)=>{
         this.applicationHistory =res.data.applications;
-        console.log(this.applicationHistory);
       }).catch((err)=>{
-        console.log(err);
+        console.error(err);
       });
       
     }
