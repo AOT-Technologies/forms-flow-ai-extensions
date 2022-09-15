@@ -54,11 +54,11 @@
 import {
   Component, Prop, Vue
 } from "vue-property-decorator";
-import FormViewSubmission from "../FormViewSubmission.vue";
 import {
-  getformHistoryApi,
-  getLocalDateTime
+  getLocalDateTime,
+  getformHistoryApi
 } from "../../services";
+import FormViewSubmission from "../FormViewSubmission.vue";
 
 @Component({
   components: {
@@ -79,11 +79,11 @@ export default class TaskHistory extends Vue {
     this.getTaskHistoryDetails();
   }
   
-async getTaskHistoryDetails() {
+  async getTaskHistoryDetails() {
     const url = localStorage.getItem("formsflow.ai.api.url") || "";
     const token = localStorage.getItem("authToken") || "";
     if (this.applicationId) {
-        getformHistoryApi(
+      getformHistoryApi(
         url,
         this.applicationId,
         token

@@ -139,14 +139,13 @@ import {
   ALL_FILTER,
   CamundaRest,
   SocketIOService,
-  // authenticateFormio, 
   findFilterIdForDefaultFilterName,
   getFormDetails,
+  getFormioToken,
   getTaskFromList,
   getUserName,
   isAllowedUser,
   sortByPriorityList,
-  getFormioToken,
 } from "../services";
 import {
   Component, Mixins, Prop,
@@ -331,7 +330,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl),
       CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl),
     ]);
-    const process = this.getProcessDefinitions.find(process => process.id === taskResult.data.processDefinitionId)
+    const process = this.getProcessDefinitions.find(process => process.id === taskResult.data.processDefinitionId);
     const processResult = await CamundaRest.getProcessDefinitionById(
       this.token,
       process.key,
@@ -369,7 +368,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
  
   async getTaskProcessDiagramDetails() {
     this.diagramLoading = true; 
-    const process = this.getProcessDefinitions.find(process => process.id === this.task.processDefinitionId)
+    const process = this.getProcessDefinitions.find(process => process.id === this.task.processDefinitionId);
     const getProcessResult = await CamundaRest.getProcessDiagramXML(
       this.token,
       process.key,
@@ -517,7 +516,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     ]);
     /*await is not used for this promise, as if a user doesn't want to wait for
      the history and process diagram to load */
-     this.getTaskProcessDiagramDetails();
+    this.getTaskProcessDiagramDetails();
   }
 
   async findTaskIdDetailsFromURLrouter(
@@ -569,7 +568,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     this.isUserAllowed = isAllowedUser(this.reviewer, this.userRoles);
     getFormioToken(this.formsflowaiApiUrl,this.token, (err: any,formioToken: any)=>{
       if(err){
-        console.error(err)
+        console.error(err);
       }else{
         localStorage.setItem("formioToken",formioToken);
       }

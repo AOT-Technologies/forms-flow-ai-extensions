@@ -19,21 +19,21 @@ export const getFormDetails = (formioUrl: string, formIOProjectUrl: string) => {
 };
 
 export const getFormioToken = (url: string, token: string, done: Function) => {
-   axios.get(`${url}/formio/roles`,{
+  axios.get(`${url}/formio/roles`,{
     headers:{
       Authorization: `Bearer ${token}` 
     }
-   }).then(res=>{
-      if(res.headers['x-jwt-token']){
-        const formioToken = res.headers['x-jwt-token']
-        done(null,formioToken)
-      }else{
-        done('no token found',null)
-      }
-   }).catch(err=>{
-    done(err,null)
-   })
-}
+  }).then(res=>{
+    if(res.headers['x-jwt-token']){
+      const formioToken = res.headers['x-jwt-token'];
+      done(null,formioToken);
+    }else{
+      done('no token found',null);
+    }
+  }).catch(err=>{
+    done(err,null);
+  });
+};
 
 
 

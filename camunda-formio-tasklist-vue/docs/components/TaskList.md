@@ -31,15 +31,11 @@ import CamundaTasklist from "camunda-formio-tasklist-vue/src/components/TaskList
 <CamundaTasklist
   bpmApiUrl="https://somewebsite.com/camunda/engine-rest"
   token="eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJrYTFKalB6Vy1EaHNFSE9vd2NZVHRJdW9sR3FqT0NhN1NYV0RFc"
-  :formIO="{ 
-      apiUrl:'https://random.com/api', 
-      resourceId:'3242affds123adfa',
-      reviewerId:'123adsf123dafd1a', 
-      reviewer:'reviewer',
-      userRoles:["forms-flow"] 
-    }",
   formsflowaiUrl="https://yourwebsite.com"
   formsflowaiApiUrl="https://yourwebsite.com/api"
+  reviewer="reviewer"
+  userRoles="['forms-flow']"
+  formioServerUrl="https://example-formio.com"
   taskSortBy="priority"
   taskSortOrder="asc",
   :disableComponents="{filterList:false,  filterTask:false, sort:false, form:false}"

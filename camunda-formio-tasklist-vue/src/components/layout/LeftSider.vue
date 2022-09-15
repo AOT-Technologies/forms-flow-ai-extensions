@@ -118,14 +118,15 @@
 
 <script lang="ts">
 import {
-  CamundaRest, cloneDeep, getFormattedDateAndTime, isEqual
-} from "../../services";
-import {
   Component, Mixins, Prop , Watch
 } from "vue-property-decorator";
 import {
   DisableComponentPropPayload,Payload
 } from "../../models";
+
+import {
+  cloneDeep, getFormattedDateAndTime, isEqual
+} from "../../services";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import Pagination from "./Pagination.vue";
 
@@ -155,7 +156,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   }) private containerHeight!: number;
   @Prop() private disableOption!: DisableComponentPropPayload;
  @Prop({
-  default: () => []
+   default: () => []
  }) private processDefinitions;
   @Prop({
     default:()=>[]
