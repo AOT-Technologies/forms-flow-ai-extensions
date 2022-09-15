@@ -3,7 +3,7 @@
     <h3 class="mb-4"><i class="fa fa-list-alt"></i> Application History</h3>
     <table
       class="table task-history-table"
-      v-if="applicationId && taskHistoryList.length"
+      v-if="applicationId && applicationHistory.length"
     >
       <thead class="table-dark">
         <tr>
@@ -14,7 +14,7 @@
       </thead>
       <tbody>
         <tr
-          v-for="h in taskHistoryList"
+          v-for="h in applicationHistory"
           :key="h.created"
         >
           <td class="fw-bold">{{ h.applicationStatus }}</td>
@@ -56,9 +56,7 @@ import {
 } from "vue-property-decorator";
 import FormViewSubmission from "../FormViewSubmission.vue";
 import {
-  TaskHistoryListPayload
-} from "../../models";
-import {
+  getformHistoryApi,
   getLocalDateTime
 } from "../../services";
 
@@ -68,16 +66,35 @@ import {
   },
 })
 export default class TaskHistory extends Vue {
-  @Prop({
-    default: []
-  }) private taskHistoryList!: TaskHistoryListPayload[];
   @Prop() private applicationId!: string;
-
+  applicationHistory: any[]=[];
   private fId: string = "";
   private sId: string = "";
 
   getExactDate(date: Date) {
     return getLocalDateTime(date);
+  }
+  
+  mounted(){
+    this.getTaskHistoryDetails();
+  }
+  
+async getTaskHistoryDetails() {
+    const url = localStorage.getItem("formsflow.ai.api.url") || "";
+    const token = localStorage.getItem("authToken") || "";
+    if (this.applicationId) {
+        getformHistoryApi(
+        url,
+        this.applicationId,
+        token
+      ).then((res)=>{
+        this.applicationHistory =res.data.applications;
+        console.log(this.applicationHistory);
+      }).catch((err)=>{
+        console.log(err);
+      });
+      
+    }
   }
 
   // viewSubmission(url: string) {

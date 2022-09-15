@@ -1,9 +1,10 @@
 import {
-  httpGETRequest, httpPOSTRequest 
+   httpPOSTRequest 
 } from "./Axios";
 import {
   ApplicationCreatePayload
 } from "../models/ApplicationCreatePayload";
+import axios from "axios";
 
 export const formApplicationSubmit = (
   Apiurl: string,
@@ -18,10 +19,10 @@ export const getformHistoryApi = async (
   applicationId: string,
   token: string
 ) => {
-  return httpGETRequest(
-    ApiUrl + "/application/" + applicationId + "/history",
-    {
-    },
-    token
-  );
+  return axios.get(
+    ApiUrl + "/application/" + applicationId + "/history",{
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    });
 };
