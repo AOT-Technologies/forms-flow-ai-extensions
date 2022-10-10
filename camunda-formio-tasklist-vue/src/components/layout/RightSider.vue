@@ -461,7 +461,6 @@
                   aria-labelledby="history-tab"
                 >
                   <TaskHistory
-                    :taskHistoryList="taskHistoryList"
                     :applicationId="task.applicationId"
                   />
                 </div>
@@ -571,9 +570,7 @@ private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
 @Prop() formioUrl;
 @Prop() onFormSubmitCallback;
 @Prop() oncustomEventCallback;
-@Prop() taskHistoryList;
 @Prop() diagramLoading;
- 
 @Prop() private userName;
 @Prop() private hideTaskDetails;
  
@@ -582,7 +579,6 @@ private UserSearchListLabel: UserSearchListLabelPayload[] = SEARCH_USERS_BY;
 
 // mount
 mounted(){
-
   this.getGroupDetails();
 }
 

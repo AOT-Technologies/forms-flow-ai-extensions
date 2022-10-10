@@ -8,7 +8,7 @@
         class="mb-2"
         ref="presetSortFiltersRef"
         v-if="token && bpmApiUrl && maximize&&(!disableComponents.sort||!disableComponents.form||!disableComponents.filterList)"
-        :token="token"
+        :token="token" 
         :bpmApiUrl="bpmApiUrl"
         :filterList="filterList"
         :perPage="perPage"
@@ -37,6 +37,7 @@
             :disableOption="disableComponents"
             :listItemCardStyle="listItemCardStyle"
             :filterList="filterList"
+            :processDefinitions="getProcessDefinitions"
           />
         </div>
        <!-- need to bring here right side -->
@@ -72,7 +73,6 @@
   :formioUrl="formioUrl"
   :onFormSubmitCallback="onFormSubmitCallback"
   :oncustomEventCallback="oncustomEventCallback"
-  :taskHistoryList="taskHistoryList"
   :diagramLoading="diagramLoading"
   :userName="userName"
   :hideTaskDetails="hideTaskDetails"
@@ -139,12 +139,11 @@ import {
   ALL_FILTER,
   CamundaRest,
   SocketIOService,
-  authenticateFormio, 
   findFilterIdForDefaultFilterName,
   getFormDetails,
+  getFormioToken,
   getTaskFromList,
   getUserName,
-  getformHistoryApi,
   isAllowedUser,
   sortByPriorityList,
 } from "../services";
@@ -157,7 +156,6 @@ import {
   FormRequestActionPayload,
   FormRequestPayload,
   Payload,
-  TaskHistoryListPayload,
   TaskListSortType,
   TaskPayload,
 } from "../models";
@@ -195,6 +193,8 @@ const StoreServiceFlowModule = namespace("serviceFlowModule");
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
+  @Prop() private reviewer!: string;
+  @Prop() private userRoles!: string;
   @Prop({
     default: "created",
   })
@@ -232,6 +232,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   private diagramLoading: boolean = false;
   private submissionId: string = "";
   private formioUrl: string = "";
+  public getProcessDefinitions: Array<any> = [];
   private task: TaskPayload = {
   };
 
@@ -245,7 +246,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     firstResult: 0,
     maxResults: this.perPage,
   };
-  private taskHistoryList: TaskHistoryListPayload[] = [];
 
   private taskIdValue: string = "";
   private taskId2: string = "";
@@ -330,10 +330,10 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl),
       CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl),
     ]);
-
+    const process = this.getProcessDefinitions.find(process => process.id === taskResult.data.processDefinitionId);
     const processResult = await CamundaRest.getProcessDefinitionById(
       this.token,
-      taskResult.data.processDefinitionId,
+      process.key,
       this.bpmApiUrl
     );
     this.task = taskResult.data;
@@ -356,7 +356,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
         formioUrl, formId, submissionId
       } = getFormDetails(
         formUrlPattern,
-        this.formIO.apiUrl
+        this.formioServerUrl
       );
 
       this.formioUrl = formioUrl;
@@ -365,24 +365,13 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     }
   }
 
-  async getTaskHistoryDetails() {
-    this.taskHistoryList = [];
-
-    if (this.task?.applicationId) {
-      const applicationHistoryList = await getformHistoryApi(
-        this.formsflowaiApiUrl,
-        this.task.applicationId,
-        this.token
-      );
-      this.taskHistoryList = applicationHistoryList.applications;
-    }
-  }
-
-  async getTaskProcessDiagramDetails(processDefinitionId: string) {
-    this.diagramLoading = true;
+ 
+  async getTaskProcessDiagramDetails() {
+    this.diagramLoading = true; 
+    const process = this.getProcessDefinitions.find(process => process.id === this.task.processDefinitionId);
     const getProcessResult = await CamundaRest.getProcessDiagramXML(
       this.token,
-      processDefinitionId,
+      process.key,
       this.bpmApiUrl
     );
     const processInstanceId = this.task.processInstanceId || '';
@@ -414,7 +403,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   async getDiagramDetails() {
 
-    await this.getTaskProcessDiagramDetails(this.task.processDefinitionId!);
+    await this.getTaskProcessDiagramDetails();
 
   }
 
@@ -527,10 +516,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
     ]);
     /*await is not used for this promise, as if a user doesn't want to wait for
      the history and process diagram to load */
-    Promise.all([
-      this.getTaskHistoryDetails(),
-      this.getTaskProcessDiagramDetails(this.task.processDefinitionId!),
-    ]);
+    this.getTaskProcessDiagramDetails();
   }
 
   async findTaskIdDetailsFromURLrouter(
@@ -571,9 +557,22 @@ export default class Tasklist extends Mixins(TaskListMixin) {
   async mounted() {
     this.containerHeight = (this.$refs.taskListContainerRef as any).clientHeight;
     this.toastMsg = new Toast(this.$refs?.toastMsgRef as any);
-    Formio.setBaseUrl(this.formIO.apiUrl);
-    Formio.setProjectUrl(this.formIO.apiUrl);
-    this.isUserAllowed = isAllowedUser(this.formIO.reviewer, this.formIO.userRoles);
+    Formio.setBaseUrl(this.formioServerUrl);
+    Formio.setProjectUrl(this.formioServerUrl);
+    
+    CamundaRest.getProcessDefinitions(this.token, this.bpmApiUrl).then(
+      (response) => {
+        this.getProcessDefinitions = response.data;
+      }
+    );
+    this.isUserAllowed = isAllowedUser(this.reviewer, this.userRoles);
+    getFormioToken(this.formsflowaiApiUrl,this.token, (err: any,formioToken: any)=>{
+      if(err){
+        console.error(err);
+      }else{
+        localStorage.setItem("formioToken",formioToken);
+      }
+    });
     this.setFormsFlowTaskCurrentPage(1);
     this.setFormsFlowTaskId("");
     this.setFormsFlowactiveIndex(NaN);
@@ -602,14 +601,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     this.checkProps();
     this.checkforTaskID();
-    authenticateFormio(
-      this.formIO.resourceId,
-      this.formIO.reviewerId,
-      this.formIO.reviewer,
-      this.userEmail,
-      this.formIO.userRoles,
-      this.formIOJwtSecret
-    );
+    
     const filterListResult = await CamundaRest.filterList(
       this.token,
       this.bpmApiUrl

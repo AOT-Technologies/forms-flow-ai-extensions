@@ -49,7 +49,7 @@
           >
             {{
               getProcessDataFromList(
-                getProcessDefinitions,
+                processDefinitions,
                 task.processDefinitionId,
                 "name"
               )
@@ -118,14 +118,15 @@
 
 <script lang="ts">
 import {
-  CamundaRest, cloneDeep, getFormattedDateAndTime, isEqual
-} from "../../services";
-import {
   Component, Mixins, Prop , Watch
 } from "vue-property-decorator";
 import {
   DisableComponentPropPayload,Payload
 } from "../../models";
+
+import {
+  cloneDeep, getFormattedDateAndTime, isEqual
+} from "../../services";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import Pagination from "./Pagination.vue";
 
@@ -154,7 +155,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
     default: 0
   }) private containerHeight!: number;
   @Prop() private disableOption!: DisableComponentPropPayload;
-
+ @Prop({
+   default: () => []
+ }) private processDefinitions;
   @Prop({
     default:()=>[]
   }) private filterList ;
@@ -176,7 +179,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   public setFormsFlowactiveIndex: any;
   private selectedFilterTaskVariable: Array<any> = [];
 
-  private getProcessDefinitions: Array<any> = [];
+  
   private processDefinitionId = "";
   private currentPage = 1;
   private listHeight: string = '360px';
@@ -279,12 +282,6 @@ export default class LeftSider extends Mixins(BaseMixin) {
     });
 
     this.currentPage = this.getFormsFlowTaskCurrentPage;
-
-    CamundaRest.getProcessDefinitions(this.token, this.bpmApiUrl).then(
-      (response) => {
-        this.getProcessDefinitions = response.data;
-      }
-    );
   }
 
   resetPaginationStore() {
