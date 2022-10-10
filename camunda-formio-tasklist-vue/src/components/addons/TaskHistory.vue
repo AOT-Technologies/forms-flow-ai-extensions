@@ -106,7 +106,7 @@ export default class TaskHistory extends Vue {
     const currentUrl = window.location.protocol + "//" + window.location.host;
     const a = document.createElement("a");
     a.href = url;
-    const processedUrl = url.replace(a.protocol + "//" + a.host, currentUrl);
+    const processedUrl = url.replace(a.protocol + "//" + a.host+"/formio", currentUrl);
     return processedUrl;
   }
 }
