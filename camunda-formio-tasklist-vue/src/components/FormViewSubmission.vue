@@ -1,7 +1,7 @@
 <template>
-  <b-container fluid class="cft-form-submission">
-    <div id="formio"></div>
-  </b-container>
+<div class="container-fluid cft-form-submission p-3">
+ <div  id="formio"></div>
+</div>
 </template>
 
 <script lang="ts">
