@@ -110,6 +110,7 @@
       class="py-2 px-3 cft-task-list-pagination"
       :perPage="perPage"
       :totalRecords="getFormsFlowTaskLength"
+      :currentPageNumber="currentPage"
       @go-to-page="onPageChange"
     />
   </div>

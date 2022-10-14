@@ -109,6 +109,7 @@
               v-if="formitems.length > 0 && totalrows > formitems.length"
               ref="taskListPaginationRef"
               :perPage="formperPage"
+              :currentPageNumber="formcurrentPage"
               :totalRecords="totalrows"
               @go-to-page="onPageChange"
             />
@@ -151,18 +152,25 @@
               Close <i class="fa fa-times"></i>
             </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body h-100">
             <h4>{{ formTitle }}</h4>
-
+            <div class="alert alert-danger" role="alert" v-if="formError">
+              {{formError}}
+            </div>
+            <div v-else>
             <Form
-              v-if="formValueId"
-              :src="formValueId"
-              form=""
+              v-if="Object.keys(formData).length > 0"
+              ref="formio-form"
+              :form="formData"
               submission=""
               options=""
               v-on:submit="onSubmit"
               v-on:customEvent="oncustomEventCallback"
             />
+            </div>
+            <div class="alert alert-danger" role="alert" v-if="submissionError">
+              {{submissionError}}
+            </div>
 
           </div>
         </div>
@@ -190,11 +198,13 @@ import {
   FormListItemsPayload,
   FormioSubmissionPayload
 } from "../../models";
-import BaseMixin from "../../mixins/BaseMixin.vue";
 import {
-  Form
+  Form,Formio
 } from "vue-formio";
+
+import BaseMixin from "../../mixins/BaseMixin.vue";
 import Pagination from "../layout/Pagination.vue";
+import axios from "axios";
 
 
 @Component({
@@ -206,19 +216,22 @@ import Pagination from "../layout/Pagination.vue";
 export default class FormListModal extends Mixins(BaseMixin) {
   private formfields: FormListFieldsPayload[] = FORMLIST_FIELDS;
   private formitems: FormListItemsPayload[] = [];
+  public formioUrl = localStorage.getItem("formioApiUrl") + "/form/"
   private formperPage: number = 10;
-  private formcurrentPage: number = 1;
-  private formValueId?: string = "";
+  public formcurrentPage: number = 1;
   private formId?: string = undefined;
-  private formioUrl?: string = undefined;
   private formTitle: string = "";
-  private submissionId?: string = "";
   private totalrows: number= 0;
   private searchValue: any='';
   private searchTimer;
   private sortValue: string='asc';
   private sortBy: string="formName" ;
+  private formError: string="";
+  public submissionError: string= "";
+  public formData = {
+  };
 
+  // update sort
   updateSort(){
     if(this.sortValue==="asc"){
       this.sortValue="desc";
@@ -229,11 +242,15 @@ export default class FormListModal extends Mixins(BaseMixin) {
     this.formListItems();
   }
 
+
+  // handle search
   handleSearch(){
     clearTimeout(this.searchTimer);
+    this.formcurrentPage=1;
     this.searchTimer=setTimeout(this.formListItems);
   }
 
+  // formslist
   formListItems() {
     const url: any= localStorage.getItem('formsflow.ai.api.url');
     CamundaRest.listForms(this.token, url,{
@@ -243,13 +260,17 @@ export default class FormListModal extends Mixins(BaseMixin) {
       this.totalrows=response.data.totalCount;
     });
   }
-
+  // click on back button
   backToFormList(){
+    Formio.clearCache();
+    this.formData = {
+    };
+    this.formError="";
     const btn = document.querySelector('#backtoFormListButton') as HTMLElement | null;
     if(btn){
       btn.click();
     }
-    this.formValueId ="";
+
   }
 
   onPageChange(number){
@@ -258,42 +279,84 @@ export default class FormListModal extends Mixins(BaseMixin) {
   }
 
   storeFormValue(val: string, title: string) {
-    const forms = localStorage.getItem("formioApiUrl") + "/form/";
-    this.formId = val;
-    this.formValueId = forms.concat(val);
+    Formio.clearCache();
     this.formTitle = title;
+    this.formError="";
+    this.formData={
+    };
+    this.formId = val;
+    const url = this.formioUrl.concat(val);
+    axios.get(url, {
+      headers:{
+        "x-jwt-token": localStorage.getItem("formioToken")
+      }
+    }).then((res)=>{
+      if(res.data){
+        this.formData = res.data;
+      }else{
+        this.formData = {
+        };
+        this.formError="No data found";
+      }
+    }).catch((err)=>{
+      this.formData = {
+      };
+      if(err.response?.data){
+        this.formError= err.response.data;
+      }else{
+        this.formError= err;
+      }
+     
+    });
+    
   }
 
  
   async onSubmit(submission: FormioSubmissionPayload) {
-
-    this.formId = submission.form;
-    this.submissionId = submission._id;
-
-    const formsflowAIApiUrl = localStorage.getItem("formsflow.ai.api.url");
-    if (
-      typeof formsflowAIApiUrl !== "undefined"
+    const submissionUrl = `${this.formioUrl}${this.formId}/submission`;
+    axios.post(submissionUrl, submission,{
+      headers:{
+        "x-jwt-token":localStorage.getItem("formioToken")||""
+      }
+    }).then((res)=>{
+      if(res.data){
+        const submissionDetails = res.data;
+        const formsflowAIApiUrl = localStorage.getItem("formsflow.ai.api.url");
+        if (
+          typeof formsflowAIApiUrl !== "undefined"
       && formsflowAIApiUrl !== null
-    ) {
-      this.formioUrl
-        = localStorage.getItem("formsflow.ai.url")
-        + "/form/"
-        + this.formId
-        + "/submission/"
-        + this.submissionId;
-      formApplicationSubmit(
-        formsflowAIApiUrl,
-        {
-          formId: this.formId,
-          formSubmissionId: this.submissionId,
-          formUrl: this.formioUrl
-        },
-        this.token
-      ).then(()=>{
-        this.backToFormList();
-        this.$emit("update-task");
-      });
-    }
+        ) {
+          const webFormUrl= `${window.location.origin}/form/${this.formId}/submission/${submissionDetails._id}`;
+          formApplicationSubmit(
+            formsflowAIApiUrl,
+            {
+              formId: this.formId,
+              submissionId: submissionDetails._id,
+              webFormUrl,
+              formUrl: `${submissionUrl}/${submissionDetails._id}`
+            },
+            this.token
+          ).then(()=>{
+            this.backToFormList();
+            this.$emit("update-task");
+          }).catch((err)=>{
+            if(err.response?.data){
+              this.submissionError= err.response.data?.message;
+            }else{
+              this.submissionError= err;
+            }
+          });
+        }
+      
+      }
+    }).catch(err=>{
+      if(err.response?.data){
+        this.submissionError= err.response.data;
+      }
+      console.log(err);
+    });
+    
+    
     // this.$bvModal.hide("modal-multi-2");
     // this.$bvModal.show('modal-multi-1');
     
