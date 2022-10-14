@@ -124,6 +124,7 @@
               v-if="formitems.length > 0 && totalrows > formitems.length"
               ref="taskListPaginationRef"
               :perPage="formperPage"
+              :currentPageNumber="formcurrentPage"
               :totalRecords="totalrows"
               @go-to-page="onPageChange"
             />
