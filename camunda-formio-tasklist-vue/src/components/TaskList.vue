@@ -284,8 +284,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
   async onFormSubmitCallback(actionType = "") {
     if (this.task.id !== null) {
-      await this.onBPMTaskFormSubmit(this.task.id!, actionType);
-      await this.reloadTasks();
+      this.onBPMTaskFormSubmit(this.task.id!, actionType);
+      this.reloadTasks();
     }
   }
 

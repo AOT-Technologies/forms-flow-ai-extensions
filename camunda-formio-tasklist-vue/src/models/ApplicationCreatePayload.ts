@@ -1,5 +1,6 @@
 export interface ApplicationCreatePayload {
     formId?: string;
-    formSubmissionId?: string;
+    submissionId?: string;
+    webFormUrl?: string;
     formUrl?: string;
 }

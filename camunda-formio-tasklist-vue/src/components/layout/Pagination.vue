@@ -59,7 +59,7 @@ export default class Pagination extends Vue {
 
   @Prop(Number)
   perPage!: number;
-
+  @Prop(Number)
   currentPageNumber = 1;
 
   get totalPageNumbers() {
