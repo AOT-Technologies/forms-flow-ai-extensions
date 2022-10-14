@@ -44,8 +44,13 @@
             >
               <thead>
                 <tr>
-                  <th scope="col">Form Name 
-                    <button
+                  <th scope="col"> 
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <span>
+                        Form Name
+                      </span>
+                      <button
                        class="btn  btn-sm"
                        v-if="sortValue==='desc'"
                        @click="updateSort()"
@@ -67,13 +72,23 @@
                          aria-hidden="true"
                        ></i>
                      </button>
-                     <input 
-                        class=" form-control w-50 "  
+                      </div>
+                     <div class="d-flex align-items-center">
+                      <input 
+                        class=" form-control"  
                         v-model="searchValue" 
-                        @keyup="handleSearch()" 
                         type="text" 
+                        @keypress.enter="handleSearch"
                         placeholder="Search by form name"
                         id="example-search-input">
+                        <button v-if="searchValue" @click="clearSearch" class="btn btn-sm btn-outline-primary mx-1">
+                          <i class="fa fa-times"></i>
+                       </button>
+                        <button @click="handleSearch"  class="btn btn-sm btn-outline-primary">
+                          <i class="fa fa-search" aria-hidden="true"></i>
+                       </button>
+                     </div>
+                    </div>
                   </th>
                   <th scope="col">Operations</th>
                 </tr>
@@ -228,6 +243,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private sortBy: string="formName" ;
   private formError: string="";
   public submissionError: string= "";
+  public isSearch: boolean= false;
   public formData = {
   };
 
@@ -245,11 +261,25 @@ export default class FormListModal extends Mixins(BaseMixin) {
 
   // handle search
   handleSearch(){
-    clearTimeout(this.searchTimer);
+    if(this.searchValue){
+    this.isSearch= true;
+    this.$emit("resetValue",1);
     this.formcurrentPage=1;
-    this.searchTimer=setTimeout(this.formListItems);
+    this.formListItems()
+    }
   }
 
+  clearSearch(){
+    this.searchValue=""
+    if(this.isSearch){
+      this.$emit("resetValue",1);
+      this.formcurrentPage=1;
+      this.formListItems()
+    }
+
+    this.isSearch=false;
+    
+  }
   // formslist
   formListItems() {
     const url: any= localStorage.getItem('formsflow.ai.api.url');
@@ -353,7 +383,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
       if(err.response?.data){
         this.submissionError= err.response.data;
       }
-      console.log(err);
+      console.error(err);
     });
     
     

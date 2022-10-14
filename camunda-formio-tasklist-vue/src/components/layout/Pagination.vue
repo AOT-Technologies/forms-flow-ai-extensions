@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import {
-  Component, Emit, Prop, Vue,
+  Component, Emit, Prop, Vue
 } from 'vue-property-decorator';
 
 @Component({
@@ -59,7 +59,7 @@ export default class Pagination extends Vue {
 
   @Prop(Number)
   perPage!: number;
-  @Prop(Number)
+ 
   currentPageNumber = 1;
 
   get totalPageNumbers() {
