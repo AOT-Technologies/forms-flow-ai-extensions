@@ -382,7 +382,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
       if(err.response?.data){
         this.submissionError= err.response.data;
       }
-      console.log(err);
+      console.error(err);
     });
     
     
