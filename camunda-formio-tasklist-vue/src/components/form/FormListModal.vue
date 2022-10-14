@@ -393,6 +393,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
   }
 
   onClose(){
+    this.formitems=[]
     this.searchValue='';
     this.formcurrentPage = 1;
     this.$emit("resetValue",1);
