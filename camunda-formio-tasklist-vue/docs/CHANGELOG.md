@@ -12,7 +12,6 @@
 
 #### Fixes 
 - Fixed null value accept in filter 
-- 
 
 ## v1.1.3, 2022-07-12
 
