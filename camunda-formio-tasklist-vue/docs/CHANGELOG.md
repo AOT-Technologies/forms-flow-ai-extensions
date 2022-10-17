@@ -1,5 +1,18 @@
 # Changes for camunda-formio-tasklist-vue
 
+
+## v1.1.4, 2022-10-17
+
+#### Modified
+- Added Form search and Form sorting
+- Removed formio token generation mechanism
+- Added Pagination from server side
+- Reduced props
+- Exported FormList component
+
+#### Fixes 
+- Fixed null value accept in filter 
+
 ## v1.1.3, 2022-07-12
 
 #### Modified
