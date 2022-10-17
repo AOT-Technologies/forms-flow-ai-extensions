@@ -81,10 +81,10 @@
                         @keypress.enter="handleSearch"
                         placeholder="Search by form name"
                         id="example-search-input">
-                        <button v-if="searchValue" @click="clearSearch" class="btn btn-sm btn-outline-primary mx-1">
+                        <button v-if="searchValue" @click="clearSearch" title="Cancel" class="btn btn-sm btn-outline-primary mx-1">
                           <i class="fa fa-times"></i>
                        </button>
-                        <button @click="handleSearch"  class="btn btn-sm btn-outline-primary">
+                        <button @click="handleSearch" title="Click to search" class="btn btn-sm btn-outline-primary">
                           <i class="fa fa-search" aria-hidden="true"></i>
                        </button>
                      </div>
@@ -262,19 +262,19 @@ export default class FormListModal extends Mixins(BaseMixin) {
   // handle search
   handleSearch(){
     if(this.searchValue){
-    this.isSearch= true;
-    this.$emit("resetValue",1);
-    this.formcurrentPage=1;
-    this.formListItems()
+      this.isSearch= true;
+      this.$emit("resetValue",1);
+      this.formcurrentPage=1;
+      this.formListItems();
     }
   }
 
   clearSearch(){
-    this.searchValue=""
+    this.searchValue="";
     if(this.isSearch){
       this.$emit("resetValue",1);
       this.formcurrentPage=1;
-      this.formListItems()
+      this.formListItems();
     }
 
     this.isSearch=false;
@@ -393,6 +393,8 @@ export default class FormListModal extends Mixins(BaseMixin) {
   }
 
   onClose(){
+    this.formitems=[];
+    this.sortValue="asc";
     this.searchValue='';
     this.formcurrentPage = 1;
     this.$emit("resetValue",1);
