@@ -23,7 +23,7 @@
             :key="filter.id"
             href="#"
             @click="togglefilter(filter, idx)"
-            :class="{'active': idx === activefilter}"
+            :class="{'active': filter.id === selectedfilterId}"
           >{{ filter.name }}</a>
         </li>
         <li v-if="!filterList.length">
