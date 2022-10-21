@@ -49,7 +49,7 @@
        <!-- single taks loading -->
           <div
             v-if="singleTaskLoading"
-            class="d-flex justify-content-center align-items-center"
+            class="d-flex justify-content-center align-items-center m-5"
           >
             <div
               class="spinner-grow text-primary"

@@ -93,7 +93,14 @@
                   <th scope="col">Operations</th>
                 </tr>
               </thead>
-              <tbody v-if="formitems.length>0">
+              <tbody v-if="isFormloading">
+                <div  class="d-flex justify-content-center w-100">
+                  <div  class="spinner-border text-primary m-5 formspinner" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>  
+              </tbody>
+              <tbody v-else-if="formitems.length>0 && !isFormloading">            
                 <tr
                   v-for="(item,index) in formitems"
                   :key="index"
@@ -109,8 +116,8 @@
                   </td>
                 </tr>
               </tbody>
-              <tbody v-else>             
-                <tr>
+              <tbody v-else>
+                <tr v-if="!isFormloading" >
                   <td>
                     <h5>
                       No results have been found for &nbsp;"{{searchValue}}"
@@ -120,7 +127,6 @@
               </tbody>
             </table>
             <Pagination
-
               v-if="formitems.length > 0 && totalrows > formitems.length"
               ref="taskListPaginationRef"
               :perPage="formperPage"
@@ -244,6 +250,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private formError: string="";
   public submissionError: string= "";
   public isSearch: boolean= false;
+  private isFormloading: boolean=true;
   public formData = {
   };
 
@@ -282,13 +289,18 @@ export default class FormListModal extends Mixins(BaseMixin) {
   }
   // formslist
   formListItems() {
+    this.isFormloading=true;
     const url: any= localStorage.getItem('formsflow.ai.api.url');
     CamundaRest.listForms(this.token, url,{
       page:this.formcurrentPage,limit:this.formperPage,formName:this.searchValue,sortBy:this.sortBy,sortOrder:this.sortValue
     }).then(response => { 
       this.formitems=response.data.forms;
       this.totalrows=response.data.totalCount;
-    });
+      this.isFormloading=false;
+    }).catch(err=>{
+      console.log(err);
+      this.isFormloading=false;
+    });  
   }
   // click on back button
   backToFormList(){
@@ -417,5 +429,9 @@ export default class FormListModal extends Mixins(BaseMixin) {
  input{
   margin-right: 10px;
   float: right;
+}
+.formspinner{
+  width: 3rem; 
+  height: 3rem
 }
 </style>
