@@ -407,10 +407,11 @@
                   id="taskForm"
                   role="tabpanel"
                   aria-labelledby="form-tab"
-                  :class="{'disabled': task.assignee !== userName}"
                 >
-                  <div v-if="task.assignee === userName">
-                    <transition name="fade">
+                  <div :class="{'disabled': task.assignee !== userName}" >
+                    <div v-if="task.assignee === userName">
+                    <transition name="fade"
+                      >
                       <FormEdit
                         :formioUrl="formioUrl"
                         @onformsubmit="onFormSubmitCallback"
@@ -420,6 +421,7 @@
                   </div>
                   <div v-else>
                     <FormView :formioUrl="formioUrl" />
+                  </div>
                   </div>
                 </div>
                 <!-- Form tab content end -->
