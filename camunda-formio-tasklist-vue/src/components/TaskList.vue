@@ -597,7 +597,6 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     this.$root.$on("call-managerScreen", (para: any) => {
       this.maximize = para.maxi;
-      // this.reloadLHSTaskList();
     });
 
     this.checkProps();
