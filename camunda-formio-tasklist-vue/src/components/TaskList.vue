@@ -20,8 +20,8 @@
       />
       <div class="d-flex flex-md-row flex-column">
         <div
-          class="col-md-3 col-12"
-          v-if="maximize"
+          class="col-md-3 col-12"      
+          :style="{display : `${maximize ? 'block':'none'}`}"
         >
           <LeftSider
             :taskLoading="taskLoading"
@@ -597,6 +597,7 @@ export default class Tasklist extends Mixins(TaskListMixin) {
 
     this.$root.$on("call-managerScreen", (para: any) => {
       this.maximize = para.maxi;
+      // this.reloadLHSTaskList();
     });
 
     this.checkProps();
