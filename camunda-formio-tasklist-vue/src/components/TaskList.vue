@@ -20,8 +20,8 @@
       />
       <div class="d-flex flex-md-row flex-column">
         <div
-          class="col-md-3 col-12"
-          v-if="maximize"
+          class="col-md-3 col-12"      
+          :style="{display : `${maximize ? 'block':'none'}`}"
         >
           <LeftSider
             :taskLoading="taskLoading"
