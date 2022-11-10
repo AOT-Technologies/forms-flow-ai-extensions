@@ -42,7 +42,7 @@
         </div>
        <!-- need to bring here right side -->
         <div
-          class="ctf-task-details-container ms-md-2 rounded"
+          class="ctf-task-details-container ms-md-2 rounded mt-3 mt-md-0"
           :class="{ 'mx-0': !maximize ,'col-md-9':maximize}"
         >
 
