@@ -1,5 +1,21 @@
 import axios from "axios";
 export const getFormDetails = (formioUrl: string, formIOProjectUrl: string) => {
+
+  let formId: any;
+  let submissionId: any;
+  if (formioUrl) {
+    let formString = "/form/";
+    let submissionString = "/submission/";
+    let firstPositionOfString = formioUrl.indexOf("/form/");
+    let lastPositionOfString = formioUrl.indexOf("/submission");
+    formId = formioUrl.substring(
+      firstPositionOfString + formString.length,
+      lastPositionOfString
+    );
+    let firstPositionOfSubmissionString =
+    formioUrl.indexOf(submissionString) + submissionString.length;
+    submissionId = formioUrl.substring(firstPositionOfSubmissionString);
+  }
   const a = document.createElement("a");
   const b = document.createElement("a");
   a.href = formioUrl;
@@ -9,10 +25,7 @@ export const getFormDetails = (formioUrl: string, formIOProjectUrl: string) => {
     b.protocol + "//" + b.host + b.pathname
   );
 
-  // Regex Extracts formId from */form/formId/submission/*
-  const formId = formioUrl.match(/(?<=\/form\/)(.*)(?=\/submission)/)?.[0] || "";
-  // Regex Extracts submissionId from */submission/submissionId
-  const submissionId = formioUrl.match(/(?<=\/submission\/)(.*)(?=)/)?.[0] || "";
+   
   return {
     formioUrl, formId, submissionId
   };

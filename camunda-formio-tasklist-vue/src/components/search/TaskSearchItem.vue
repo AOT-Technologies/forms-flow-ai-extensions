@@ -110,30 +110,28 @@
         v-if="showSearchState[index] === 'a'"
         @click="updateSearchInput(index)"
         class="btn btn-outline-primary btn-sm"
+        title="value"
       >
         ??
       </button>
-      <v-date-picker
-        v-if="showSearchState[index] === 'i' && query.type === 'date'"
-        v-model="selectedSearchQueries[index].value"
-        :popover="{ visibility: 'click' }"
-         @input="
-                setSearchQueryValue(selectedSearchQueries, index);
-                showSearchValueItem(index);
-        "
-      >
-        <template v-slot="{ inputValue, inputEvents }">
-          <div class="input-group">
-            <input
-              class="form-control"
-              :value="inputValue"
-              v-on="inputEvents"
-             
-              placeholder="dd/mm/yyyy"
-            />
-          </div>
-        </template>
-      </v-date-picker>
+       <template v-if="showSearchState[index] === 'i' && query.type === 'date'">
+        <div class="col-lg-6 ms-2">
+          <input 
+          class="form-control"
+          type="datetime-local"
+          v-model="selectedSearchQueries[index].value"
+        >
+        </div>
+        <button
+          class="btn task-icon-btn"
+          data-bs-toggle="tooltip"
+          @click="setSearchQueryValue(selectedSearchQueries, index);
+                  showSearchValueItem(index);"
+          title="click to apply filter"
+        >
+         <i class="fa fa-check-circle "></i>
+        </button>
+      </template>
       <div
         v-if="showSearchState[index] === 's' && query.type === 'date'"
         @click="updateSearchInput(index)"
@@ -143,7 +141,7 @@
       <template v-if="showSearchState[index] === 'i' && query.type !== 'date'">
         <div class="col-lg-6">
           <input 
-          class="form-control "
+          class="form-control"
           :type="showCalender?'datetime-local':'text'"
 
           v-model="selectedSearchQueries[index].value"
@@ -177,8 +175,7 @@
         v-if="showSearchState[index] === 's' && query.type !== 'date'"
         @click="updateSearchInput(index)"
       >
-
-        <div v-if="selectedSearchQueries[index].value===''">
+      <div v-if="selectedSearchQueries[index].value===''">
         0
       </div>
       <div v-else >
