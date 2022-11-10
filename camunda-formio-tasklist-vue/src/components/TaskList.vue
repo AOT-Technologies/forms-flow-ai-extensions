@@ -20,7 +20,7 @@
       />
       <div class="d-flex flex-md-row flex-column">
         <div
-          class="col-md-3 col-12"
+          class="col-md-3"
           v-if="maximize"
         >
           <LeftSider
@@ -43,7 +43,7 @@
        <!-- need to bring here right side -->
         <div
           class="ctf-task-details-container ms-md-2 rounded"
-          :class="{ 'col-12 mx-0': !maximize ,'col-md-9 col-12':maximize}"
+          :class="{ 'mx-0': !maximize ,'col-md-9':maximize}"
         >
 
        <!-- single taks loading -->
