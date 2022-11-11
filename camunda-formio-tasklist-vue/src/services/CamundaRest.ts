@@ -11,11 +11,11 @@ export const CamundaRest = {
 
   async getProcessDefinitionById (
     bearerToken: string,
-    processDefinitionId: string,
+    processDefinitionKey: string,
     CamundaUrl: string
   ) {
     return await bpmAxios(bearerToken, CamundaUrl).get(
-      `/${engine}/process-definition/${processDefinitionId}`
+      `/${engine}/process-definition/key/${processDefinitionKey}`
     );
   },
 
@@ -274,16 +274,16 @@ export const CamundaRest = {
   },
 
   async listForms (bearerToken: string, CamundaUrl: string, query: any) {
-    return await bpmAxiosGet(bearerToken, CamundaUrl).get(`/form?pageNo=${query.page}&limit=${query.limit}`);
+    return await bpmAxiosGet(bearerToken, CamundaUrl).get(`/form?pageNo=${query.page}&limit=${query.limit}&formName=${query.formName}&sortBy=${query.sortBy}&sortOrder=${query.sortOrder}`);
   },
 
   async getProcessDiagramXML (
     bearerToken: string,
-    processDefinitionId: string,
+    processDefinitionkey: string,
     CamundaUrl: string
   ) {
     return await bpmAxios(bearerToken, CamundaUrl).get(
-      `/${engine}/process-definition/${processDefinitionId}/xml`
+      `/${engine}/process-definition/key/${processDefinitionkey}/xml`
     );
   },
 

@@ -49,7 +49,7 @@
           >
             {{
               getProcessDataFromList(
-                getProcessDefinitions,
+                processDefinitions,
                 task.processDefinitionId,
                 "name"
               )
@@ -80,13 +80,13 @@
               data-bs-toggle="tooltip"
               :title="getExactDate(task.due)"
               v-if="task.due"
-            >Due in {{ timedifference(task.due) }}</div>
+            >Due {{ timedifference(task.due) }},</div>
             <div
               class="days-ago"
               data-bs-toggle="tooltip"
               :title="getExactDate(task.followUp)"
               v-if="task.followUp"
-            >Follow up in {{ timedifference(task.followUp) }}</div>
+            > &nbsp; Follow up {{ timedifference(task.followUp) }}</div>
           </div>
 
           <task-variable v-if="task._embedded&& task._embedded.variable"
@@ -110,6 +110,7 @@
       class="py-2 px-3 cft-task-list-pagination"
       :perPage="perPage"
       :totalRecords="getFormsFlowTaskLength"
+      :currentPageNumber="currentPage"
       @go-to-page="onPageChange"
     />
   </div>
@@ -118,14 +119,15 @@
 
 <script lang="ts">
 import {
-  CamundaRest, cloneDeep, getFormattedDateAndTime, isEqual
-} from "../../services";
-import {
   Component, Mixins, Prop , Watch
 } from "vue-property-decorator";
 import {
   DisableComponentPropPayload,Payload
 } from "../../models";
+
+import {
+  cloneDeep, getFormattedDateAndTime, isEqual
+} from "../../services";
 import BaseMixin from "../../mixins/BaseMixin.vue";
 import Pagination from "./Pagination.vue";
 
@@ -154,7 +156,9 @@ export default class LeftSider extends Mixins(BaseMixin) {
     default: 0
   }) private containerHeight!: number;
   @Prop() private disableOption!: DisableComponentPropPayload;
-
+ @Prop({
+   default: () => []
+ }) private processDefinitions;
   @Prop({
     default:()=>[]
   }) private filterList ;
@@ -176,7 +180,7 @@ export default class LeftSider extends Mixins(BaseMixin) {
   public setFormsFlowactiveIndex: any;
   private selectedFilterTaskVariable: Array<any> = [];
 
-  private getProcessDefinitions: Array<any> = [];
+  
   private processDefinitionId = "";
   private currentPage = 1;
   private listHeight: string = '360px';
@@ -279,12 +283,6 @@ export default class LeftSider extends Mixins(BaseMixin) {
     });
 
     this.currentPage = this.getFormsFlowTaskCurrentPage;
-
-    CamundaRest.getProcessDefinitions(this.token, this.bpmApiUrl).then(
-      (response) => {
-        this.getProcessDefinitions = response.data;
-      }
-    );
   }
 
   resetPaginationStore() {

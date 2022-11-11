@@ -16,13 +16,10 @@ export default class BaseMixin extends Vue {
   @Prop() protected readonly bpmApiUrl!: string;
   @Prop() protected readonly token!: string;
   @Prop() protected readonly formsflowaiApiUrl!: string;
-  @Prop() protected readonly formIOJwtSecret!: string;
+  @Prop() protected readonly formioServerUrl!: string;
   @Prop({
     default: "formflowai"
   }) public webSocketEncryptkey!: string;
-   @Prop({
-     type:Object
-   }) public formIO!: any;
   @Prop ({
     default:()=>{
       return {
@@ -57,13 +54,7 @@ export default class BaseMixin extends Vue {
     if (!this.token || this.token === "") {
       console.warn("token prop not Passed");
     }
-    if (!this.formIO.resourceId || this.formIO.resourceId === "") {
-      console.warn("formIOResourceId prop not passed");
-    }
-    if (!this.formIO.reviewerId || this.formIO.reviewerId === "") {
-      console.warn("formIOReviewerId prop not passed");
-    }
-    if (!this.formIO.apiUrl || this.formIO.apiUrl === "") {
+    if (!this.formioServerUrl || this.formioServerUrl === "") {
       console.warn("formIOApiUrl prop not passed");
     }
     if (!this.formsflowaiApiUrl || this.formsflowaiApiUrl === "") {
@@ -79,7 +70,7 @@ export default class BaseMixin extends Vue {
     const currentUrl = `${window.location.protocol}//${window.location.host}`;
     localStorage.setItem("formsflow.ai.url", currentUrl);
     localStorage.setItem("formsflow.ai.api.url", this.formsflowaiApiUrl);
-    localStorage.setItem("formioApiUrl", this.formIO.apiUrl);
+    localStorage.setItem("formioApiUrl", this.formioServerUrl);
     localStorage.setItem("UserDetails", JSON.stringify(decodeToken));
   }
 }
