@@ -1,5 +1,5 @@
 <template>
-   <div>
+   <div class="cft-wrapper-div">
       <ExpandContract />
         <div class="bg-primary task-title"  ref="taskTitleRef"  >
            <h3
@@ -811,6 +811,9 @@ async removeFollowupDate() {
 </script>
 
 <style lang="scss">
+.cft-wrapper-div{
+  position: relative;
+}
 .task-details-empty {
   background: #fff;
   margin-left: 4px;
