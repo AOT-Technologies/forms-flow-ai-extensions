@@ -32,6 +32,7 @@
               class="btn btn-outline-danger"
               data-bs-dismiss="modal"
               aria-label="Close"
+              @click="onClose"
             >
               Close <i class="fa fa-times"></i>
             </button>
@@ -39,16 +40,67 @@
           <div class="modal-body">
             <!-- normal table -->
             <table
-              v-if="formitems.length > 0"
               class="table table-bordered"
             >
               <thead>
                 <tr>
-                  <th scope="col">Form Name</th>
+                  <th scope="col"> 
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <span>
+                        Form Name
+                      </span>
+                      <button
+                       class="btn  btn-sm"
+                       v-if="sortValue==='desc'"
+                       @click="updateSort()"
+                       title="Ascending"
+                     >
+                       <i
+                         class="fa fa-arrow-up"
+                         aria-hidden="true"
+                       ></i>
+                     </button>
+                     <button
+                       class="btn btn-sm"
+                       v-else
+                       @click="updateSort()"
+                       title="Descending"
+                     >
+                       <i
+                         class="fa fa-arrow-down"
+                         aria-hidden="true"
+                       ></i>
+                     </button>
+                      </div>
+                     <div class="d-flex align-items-center">
+                      <input 
+                        class=" form-control"  
+                        v-model="searchValue" 
+                        type="text" 
+                        @keypress.enter="handleSearch"
+                        placeholder="Search by form name"
+                        id="example-search-input">
+                        <button v-if="searchValue" @click="clearSearch" title="Cancel" class="btn btn-sm btn-outline-primary mx-1">
+                          <i class="fa fa-times"></i>
+                       </button>
+                        <button @click="handleSearch" title="Click to search" class="btn btn-sm btn-outline-primary">
+                          <i class="fa fa-search" aria-hidden="true"></i>
+                       </button>
+                     </div>
+                    </div>
+                  </th>
                   <th scope="col">Operations</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody v-if="isFormloading">
+                <div  class="d-flex justify-content-center w-100">
+                  <div  class="spinner-border text-primary m-5 formspinner" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>  
+              </tbody>
+              <tbody v-else-if="formitems.length>0 && !isFormloading">            
                 <tr
                   v-for="(item,index) in formitems"
                   :key="index"
@@ -63,13 +115,22 @@
                     >Submit New</button>
                   </td>
                 </tr>
-
+              </tbody>
+              <tbody v-else>
+                <tr v-if="!isFormloading" >
+                  <td>
+                    <h5>
+                      No results have been found for &nbsp;"{{searchValue}}"
+                    </h5>
+                  </td>
+                </tr>
               </tbody>
             </table>
             <Pagination
               v-if="formitems.length > 0 && totalrows > formitems.length"
               ref="taskListPaginationRef"
               :perPage="formperPage"
+              :currentPageNumber="formcurrentPage"
               :totalRecords="totalrows"
               @go-to-page="onPageChange"
             />
@@ -87,7 +148,7 @@
       aria-labelledby="formSubmitModalTitle"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-xl">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
             <button
@@ -107,22 +168,30 @@
               class="btn btn-outline-danger"
               data-bs-dismiss="modal"
               aria-label="Close"
+              @click="onClose"
             >
               Close <i class="fa fa-times"></i>
             </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body h-100">
             <h4>{{ formTitle }}</h4>
-
+            <div class="alert alert-danger" role="alert" v-if="formError">
+              {{formError}}
+            </div>
+            <div v-else>
             <Form
-              v-if="formValueId"
-              :src="formValueId"
-              form=""
+              v-if="Object.keys(formData).length > 0"
+              ref="formio-form"
+              :form="formData"
               submission=""
               options=""
               v-on:submit="onSubmit"
               v-on:customEvent="oncustomEventCallback"
             />
+            </div>
+            <div class="alert alert-danger" role="alert" v-if="submissionError">
+              {{submissionError}}
+            </div>
 
           </div>
         </div>
@@ -142,7 +211,7 @@ import {
   CamundaRest, FORMLIST_FIELDS, formApplicationSubmit
 } from "../../services";
 import {
-  Component, Mixins
+  Component,Mixins
 } from "vue-property-decorator";
 import {
   CustomEventPayload,
@@ -150,11 +219,13 @@ import {
   FormListItemsPayload,
   FormioSubmissionPayload
 } from "../../models";
-import BaseMixin from "../../mixins/BaseMixin.vue";
 import {
-  Form
+  Form,Formio
 } from "vue-formio";
+
+import BaseMixin from "../../mixins/BaseMixin.vue";
 import Pagination from "../layout/Pagination.vue";
+import axios from "axios";
 
 
 @Component({
@@ -166,33 +237,82 @@ import Pagination from "../layout/Pagination.vue";
 export default class FormListModal extends Mixins(BaseMixin) {
   private formfields: FormListFieldsPayload[] = FORMLIST_FIELDS;
   private formitems: FormListItemsPayload[] = [];
+  public formioUrl = localStorage.getItem("formioApiUrl") + "/form/"
   private formperPage: number = 10;
-  private formcurrentPage: number = 1;
-  private formValueId?: string = "";
+  public formcurrentPage: number = 1;
   private formId?: string = undefined;
-  private formioUrl?: string = undefined;
   private formTitle: string = "";
-  private submissionId?: string = "";
   private totalrows: number= 0;
+  private searchValue: any='';
+  private searchTimer;
+  private sortValue: string='asc';
+  private sortBy: string="formName" ;
+  private formError: string="";
+  public submissionError: string= "";
+  public isSearch: boolean= false;
+  private isFormloading: boolean=true;
+  public formData = {
+  };
 
-  formListItems() {
-    const url: any= localStorage.getItem('formsflow.ai.api.url');
-    CamundaRest.listForms(this.token, url,{
-      page:this.formcurrentPage,limit:this.formperPage
-    }).then(response => {
-      if(response.data.forms&&response.data.totalCount){
-        this.formitems=response.data.forms;
-        this.totalrows=response.data.totalCount;
-      }
-    });
+  // update sort
+  updateSort(){
+    if(this.sortValue==="asc"){
+      this.sortValue="desc";
+    }
+    else{
+      this.sortValue="asc";
+    }
+    this.formListItems();
   }
 
+
+  // handle search
+  handleSearch(){
+    if(this.searchValue){
+      this.isSearch= true;
+      this.$emit("resetValue",1);
+      this.formcurrentPage=1;
+      this.formListItems();
+    }
+  }
+
+  clearSearch(){
+    this.searchValue="";
+    if(this.isSearch){
+      this.$emit("resetValue",1);
+      this.formcurrentPage=1;
+      this.formListItems();
+    }
+
+    this.isSearch=false;
+    
+  }
+  // formslist
+  formListItems() {
+    this.isFormloading=true;
+    const url: any= localStorage.getItem('formsflow.ai.api.url');
+    CamundaRest.listForms(this.token, url,{
+      page:this.formcurrentPage,limit:this.formperPage,formName:this.searchValue,sortBy:this.sortBy,sortOrder:this.sortValue
+    }).then(response => { 
+      this.formitems=response.data.forms;
+      this.totalrows=response.data.totalCount;
+      this.isFormloading=false;
+    }).catch(err=>{
+      console.log(err);
+      this.isFormloading=false;
+    });  
+  }
+  // click on back button
   backToFormList(){
+    Formio.clearCache();
+    this.formData = {
+    };
+    this.formError="";
     const btn = document.querySelector('#backtoFormListButton') as HTMLElement | null;
     if(btn){
       btn.click();
     }
-    this.formValueId ="";
+
   }
 
   onPageChange(number){
@@ -201,44 +321,95 @@ export default class FormListModal extends Mixins(BaseMixin) {
   }
 
   storeFormValue(val: string, title: string) {
-    const forms = localStorage.getItem("formioApiUrl") + "/form/";
-    this.formId = val;
-    this.formValueId = forms.concat(val);
+    Formio.clearCache();
     this.formTitle = title;
+    this.formError="";
+    this.formData={
+    };
+    this.formId = val;
+    const url = this.formioUrl.concat(val);
+    axios.get(url, {
+      headers:{
+        "x-jwt-token": localStorage.getItem("formioToken")
+      }
+    }).then((res)=>{
+      if(res.data){
+        this.formData = res.data;
+      }else{
+        this.formData = {
+        };
+        this.formError="No data found";
+      }
+    }).catch((err)=>{
+      this.formData = {
+      };
+      if(err.response?.data){
+        this.formError= err.response.data;
+      }else{
+        this.formError= err;
+      }
+     
+    });
+    
   }
 
  
   async onSubmit(submission: FormioSubmissionPayload) {
-
-    this.formId = submission.form;
-    this.submissionId = submission._id;
-
-    const formsflowAIApiUrl = localStorage.getItem("formsflow.ai.api.url");
-    if (
-      typeof formsflowAIApiUrl !== "undefined"
+    const submissionUrl = `${this.formioUrl}${this.formId}/submission`;
+    axios.post(submissionUrl, submission,{
+      headers:{
+        "x-jwt-token":localStorage.getItem("formioToken")||""
+      }
+    }).then((res)=>{
+      if(res.data){
+        const submissionDetails = res.data;
+        const formsflowAIApiUrl = localStorage.getItem("formsflow.ai.api.url");
+        if (
+          typeof formsflowAIApiUrl !== "undefined"
       && formsflowAIApiUrl !== null
-    ) {
-      this.formioUrl
-        = localStorage.getItem("formsflow.ai.url")
-        + "/form/"
-        + this.formId
-        + "/submission/"
-        + this.submissionId;
-      formApplicationSubmit(
-        formsflowAIApiUrl,
-        {
-          formId: this.formId,
-          formSubmissionId: this.submissionId,
-          formUrl: this.formioUrl
-        },
-        this.token
-      ).then(()=>{
-        this.backToFormList();
-        this.$emit("update-task");
-      });
-    }
+        ) {
+          const webFormUrl= `${window.location.origin}/form/${this.formId}/submission/${submissionDetails._id}`;
+          formApplicationSubmit(
+            formsflowAIApiUrl,
+            {
+              formId: this.formId,
+              submissionId: submissionDetails._id,
+              webFormUrl,
+              formUrl: `${submissionUrl}/${submissionDetails._id}`
+            },
+            this.token
+          ).then(()=>{
+            this.backToFormList();
+            this.$emit("update-task");
+          }).catch((err)=>{
+            if(err.response?.data){
+              this.submissionError= err.response.data?.message;
+            }else{
+              this.submissionError= err;
+            }
+          });
+        }
+      
+      }
+    }).catch(err=>{
+      if(err.response?.data){
+        this.submissionError= err.response.data;
+      }
+      console.error(err);
+    });
+    
+    
     // this.$bvModal.hide("modal-multi-2");
     // this.$bvModal.show('modal-multi-1');
+    
+  }
+
+  onClose(){
+    this.formitems=[];
+    this.sortValue="asc";
+    this.searchValue='';
+    this.formcurrentPage = 1;
+    this.$emit("resetValue",1);
     
   }
 
@@ -254,4 +425,13 @@ export default class FormListModal extends Mixins(BaseMixin) {
 
 }
 </script>
-
+<style>
+ input{
+  margin-right: 10px;
+  float: right;
+}
+.formspinner{
+  width: 3rem; 
+  height: 3rem
+}
+</style>

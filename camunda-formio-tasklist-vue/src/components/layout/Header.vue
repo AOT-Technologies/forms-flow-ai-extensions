@@ -10,7 +10,7 @@
         aria-expanded="false"
       >
         <i class="fa fa-wpforms mx-1"></i>
-        Filters
+        {{ filterName }}
       </button>
       <ul
         class="dropdown-menu"
@@ -23,7 +23,7 @@
             :key="filter.id"
             href="#"
             @click="togglefilter(filter, idx)"
-            :class="{'active': idx === activefilter}"
+            :class="{'active': filter.id === selectedfilterId}"
           >{{ filter.name }}</a>
         </li>
         <li v-if="!filterList.length">
@@ -86,6 +86,7 @@ export default class Header extends Mixins(BaseMixin) {
   public setFormsFlowTaskCurrentPage: any;
 
   private activefilter = 0;
+  private filterName: string= "Filters";
 
   updateCheck(){
     this.$root.$emit("call-fetchPaginatedTaskList", {
@@ -96,8 +97,20 @@ export default class Header extends Mixins(BaseMixin) {
     });
   }
 
+  setFilterName(){
+    const filter = this.filterList.find((item)=> item.id === this.selectedfilterId);
+    if(filter){
+      this.filterName = filter.name;
+    }
+  }
+  
+  mounted(){
+    this.setFilterName();
+  }
+
   togglefilter(filter: FilterPayload, index: number) {
     this.activefilter = index;
+    this.filterName=filter.name;
     this.$root.$emit("call-fetchTaskListCount", {
       filterId: filter.id,
       requestData: this.payload,
