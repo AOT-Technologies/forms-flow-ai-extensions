@@ -66,3 +66,11 @@
 .cft-actionable-container .tab-content {
   overflow: hidden;
 }
+
+.choices__list--dropdown .choices__list{
+  overflow: unset !important;
+}
+
+.is-open .choices__list--dropdown{
+  overflow-y: auto !important;
+}

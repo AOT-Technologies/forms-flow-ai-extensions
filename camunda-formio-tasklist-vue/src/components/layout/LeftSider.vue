@@ -80,13 +80,13 @@
               data-bs-toggle="tooltip"
               :title="getExactDate(task.due)"
               v-if="task.due"
-            >Due in {{ timedifference(task.due) }}</div>
+            >Due in {{ timedifference(task.due) }},</div>
             <div
               class="days-ago"
               data-bs-toggle="tooltip"
               :title="getExactDate(task.followUp)"
               v-if="task.followUp"
-            >Follow up in {{ timedifference(task.followUp) }}</div>
+            > &nbsp; Follow up in {{ timedifference(task.followUp) }}</div>
           </div>
 
           <task-variable v-if="task._embedded&& task._embedded.variable"
