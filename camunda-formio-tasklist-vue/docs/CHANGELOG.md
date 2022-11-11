@@ -1,7 +1,7 @@
 # Changes for camunda-formio-tasklist-vue
 
 
-## v1.1.4, 2022-10-17
+## v1.1.4, 2022-11-11
 
 #### Modified
 - Added Form search and Form sorting
@@ -9,9 +9,13 @@
 - Added Pagination from server side
 - Reduced props
 - Exported FormList component
+- Vue-formio package Upgraded
+- Chosen Filter will display now
 
 #### Fixes 
-- Fixed null value accept in filter 
+- Fixed null value accept in the filter 
+- Fixed forms showing under the history tab
+- Fixed tasklist when expanding a task
 
 ## v1.1.3, 2022-07-12
 
