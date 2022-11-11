@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import {
-  Component, Emit, Prop, Vue,
+  Component, Emit, Prop, Vue
 } from 'vue-property-decorator';
 
 @Component({
@@ -59,13 +59,18 @@ export default class Pagination extends Vue {
 
   @Prop(Number)
   perPage!: number;
-
+ 
   currentPageNumber = 1;
 
   get totalPageNumbers() {
     return Math.ceil(this.totalRecords / this.perPage);
   }
+  mounted(){
+    this.$parent.$on("resetValue",(value: number)=>{
+      this.currentPageNumber = value; 
+    });
 
+  }
   @Emit()
   goToPage(page: number) {
     this.currentPageNumber = page;

@@ -3,7 +3,7 @@
     <div class="col my-2">
       <div v-if="selectedSearchQueries.length">
         <TaskListSearchType />
-        <b-col
+        <div
           class="cftf-search-item-box mt-2"
           v-for="(query, index) in selectedSearchQueries"
           :key="query.label + index"
@@ -24,7 +24,7 @@
             @update-search-value="updateSearchInput"
             @show-search-value="showSearchValueItem"
           />
-        </b-col>
+        </div>
       </div>
       <TaskListAddSearchIgnoreCase
         :isVariableTypeInSelectedSearchQuery="

@@ -3,7 +3,7 @@
     <h3 class="mb-4"><i class="fa fa-list-alt"></i> Application History</h3>
     <table
       class="table task-history-table"
-      v-if="applicationId && taskHistoryList.length"
+      v-if="applicationId && applicationHistory.length"
     >
       <thead class="table-dark">
         <tr>
@@ -14,11 +14,11 @@
       </thead>
       <tbody>
         <tr
-          v-for="h in taskHistoryList"
+          v-for="h in applicationHistory"
           :key="h.created"
         >
           <td class="fw-bold">{{ h.applicationStatus }}</td>
-          <td>{{ getExactDate(h.created) }}</td>
+          <td>{{h.created ? getExactDate(h.created) : '' }}</td>
           <td>
             <a
               class="btn btn-primary"
@@ -54,13 +54,11 @@
 import {
   Component, Prop, Vue
 } from "vue-property-decorator";
-import FormViewSubmission from "../FormViewSubmission.vue";
 import {
-  TaskHistoryListPayload
-} from "../../models";
-import {
-  getLocalDateTime
+  getLocalDateTime,
+  getformHistoryApi
 } from "../../services";
+import FormViewSubmission from "../FormViewSubmission.vue";
 
 @Component({
   components: {
@@ -68,16 +66,34 @@ import {
   },
 })
 export default class TaskHistory extends Vue {
-  @Prop({
-    default: []
-  }) private taskHistoryList!: TaskHistoryListPayload[];
   @Prop() private applicationId!: string;
-
+  applicationHistory: any[]=[];
   private fId: string = "";
   private sId: string = "";
 
   getExactDate(date: Date) {
     return getLocalDateTime(date);
+  }
+  
+  mounted(){
+    this.getTaskHistoryDetails();
+  }
+  
+  async getTaskHistoryDetails() {
+    const url = localStorage.getItem("formsflow.ai.api.url") || "";
+    const token = localStorage.getItem("authToken") || "";
+    if (this.applicationId) {
+      getformHistoryApi(
+        url,
+        this.applicationId,
+        token
+      ).then((res)=>{
+        this.applicationHistory =res.data.applications;
+      }).catch((err)=>{
+        console.error(err);
+      });
+      
+    }
   }
 
   // viewSubmission(url: string) {
@@ -90,7 +106,7 @@ export default class TaskHistory extends Vue {
     const currentUrl = window.location.protocol + "//" + window.location.host;
     const a = document.createElement("a");
     a.href = url;
-    const processedUrl = url.replace(a.protocol + "//" + a.host, currentUrl);
+    const processedUrl = url.replace(a.protocol + "//" + a.host+"/formio", currentUrl);
     return processedUrl;
   }
 }
