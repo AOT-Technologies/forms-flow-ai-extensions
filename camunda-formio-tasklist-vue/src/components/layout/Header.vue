@@ -97,6 +97,17 @@ export default class Header extends Mixins(BaseMixin) {
     });
   }
 
+  setFilterName(){
+    const filter = this.filterList.find((item)=> item.id === this.selectedfilterId);
+    if(filter){
+      this.filterName = filter.name;
+    }
+  }
+  
+  mounted(){
+    this.setFilterName();
+  }
+
   togglefilter(filter: FilterPayload, index: number) {
     this.activefilter = index;
     this.filterName=filter.name;
