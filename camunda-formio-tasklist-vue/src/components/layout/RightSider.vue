@@ -232,7 +232,7 @@
               </div>
               <!-- end assignee and group div -->
               <!-- followUp date starts here -->
-              <div class="d-flex justify-content-between mb-2">
+              <div class="d-flex justify-content-between mb-2 flex-wrap">
                 <section class="task-date-picker" v-if="!hideTaskDetails.followUpDate" >
                   <label class="fw-bold mb-1">Follow up</label>
                   <div
