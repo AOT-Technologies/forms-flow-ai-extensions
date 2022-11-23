@@ -51,7 +51,7 @@
 
 <script lang="ts">
 import {
-  Component, Mixins, Prop
+  Component, Mixins, Prop, Watch
 } from "vue-property-decorator";
 import {
   DisableComponentPropPayload, FilterPayload, Payload,
@@ -97,17 +97,15 @@ export default class Header extends Mixins(BaseMixin) {
     });
   }
 
+ 
+  @Watch("selectedfilterId")
   setFilterName(){
-    const filter = this.filterList.find((item)=> item.id === this.selectedfilterId);
+    const filter = this.filterList.find((item) => item.id === this.selectedfilterId);
     if(filter){
       this.filterName = filter.name;
     }
   }
-  
-  mounted(){
-    this.setFilterName();
-  }
-
+ 
   togglefilter(filter: FilterPayload, index: number) {
     this.activefilter = index;
     this.filterName=filter.name;
