@@ -398,6 +398,8 @@ export default class Tasklist extends Mixins(TaskListMixin) {
       },
       "highlight"
     );
+    await viewer.get("canvas").zoom('fit-viewport');
+  
   
   }
 
