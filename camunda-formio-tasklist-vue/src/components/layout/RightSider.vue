@@ -252,6 +252,7 @@
                        class="form-control"
                        type="datetime-local"
                        v-model="task.followUp"
+                       name="date"
                        @change="updateFollowUpDate" />
                     </div>
                   </template>
@@ -280,6 +281,7 @@
                        class="form-control"
                        type="datetime-local"
                        v-model="task.followUp"
+                       name="date"
                        @change="updateFollowUpDate" />
                     </div>
                   </template>
@@ -305,7 +307,8 @@
                        class="form-control"
                        type="datetime-local"
                        v-model="task.due"
-                       @input="updateDueDate" />
+                       name="date"
+                       @change="updateDueDate" />
                       
                     </div>
                   </template>
@@ -334,7 +337,8 @@
                        class="form-control"
                        type="datetime-local"
                        v-model="task.due"
-                       @input="updateDueDate" />
+                       name="date"
+                       @change="updateDueDate" />
                       
                     </div>
                   </template>
@@ -838,6 +842,7 @@ async removeFollowupDate() {
       width: calc(100% - 24px);
       .form-control {
         border-radius: 0.5rem;
+        cursor: pointer;
       }
       i {
         margin-left: -24px !important;
