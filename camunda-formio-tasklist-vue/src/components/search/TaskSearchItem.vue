@@ -116,13 +116,24 @@
       </button>
        <template v-if="showSearchState[index] === 'i' && query.type === 'date'">
         <div class="col-lg-6 ms-2">
-          <input 
+          <!-- <input 
           class="form-control"
           type="datetime-local"
           v-model="selectedSearchQueries[index].value"
-        >
+        > -->
+        <v-date-picker v-model="selectedSearchQueries[index].value" mode="datetime" 
+        @input="setSearchQueryValue(selectedSearchQueries, index);
+                  showSearchValueItem(index);" >
+          <template v-slot="{ inputValue, inputEvents }">
+            <input
+              class="form-control"
+              :value="inputValue"
+              v-on="inputEvents"
+             />
+          </template>
+        </v-date-picker>
         </div>
-        <button
+        <!-- <button
           class="btn task-icon-btn"
           data-bs-toggle="tooltip"
           @click="setSearchQueryValue(selectedSearchQueries, index);
@@ -130,7 +141,7 @@
           title="click to apply filter"
         >
          <i class="fa fa-check-circle "></i>
-        </button>
+        </button> -->
       </template>
       <div
         v-if="showSearchState[index] === 's' && query.type === 'date'"
@@ -140,7 +151,7 @@
       </div>
       <template v-if="showSearchState[index] === 'i' && query.type !== 'date'">
         <div class="col-lg-6">
-          <input 
+          <!-- <input 
           class="form-control"
           :type="showCalender?'datetime-local':'text'"
 
@@ -148,8 +159,29 @@
           v-on:keyup.enter="
                 setSearchQueryValue(selectedSearchQueries, index);
                 showSearchValueItem(index);"
-        >
-
+        > -->
+        <v-date-picker v-if="showCalender" mode="datetime" 
+         v-model="selectedSearchQueries[index].value"
+         v-on:keyup.enter="
+                setSearchQueryValue(selectedSearchQueries, index);
+                showSearchValueItem(index);"
+                 >
+          <template v-slot="{ inputValue, inputEvents }">
+            <input
+              class="form-control ml-1"
+              :value="inputValue"
+              v-on="inputEvents"
+            />
+          </template>
+        </v-date-picker>
+        <div v-else>
+          <input type="text"
+          class="form-control"
+          v-model="selectedSearchQueries[index].value"
+          v-on:keyup.enter="
+                setSearchQueryValue(selectedSearchQueries, index);
+                showSearchValueItem(index);">
+        </div>
         </div>
         <div>
           <button
@@ -160,7 +192,8 @@
          ><i class="fa fa-check" aria-hidden="true" ></i>
          </button>
          <button class="btn btn-outline-secondary btn-sm" v-if="query.type === 'variables'" 
-         @click="showCalender = true">
+         @click="isShowCalender"
+         :style="{color: `${ showCalender ? '#0d6efd' :'black'}`}" >
           <i  class="fa fa-calendar" aria-hidden="true"  />
          </button>
          <button
@@ -168,8 +201,7 @@
           @click="rejectSearchValueItem(index)"
          ><i class="fa fa-times" aria-hidden="true" ></i>
         </button>
-        </div>
-
+        </div>    
       </template>
       <div
         v-if="showSearchState[index] === 's' && query.type !== 'date'"
@@ -253,6 +285,9 @@ export default class TaskSearchItem extends Vue {
         }
       });
     }
+  }
+  isShowCalender(){
+    this.showCalender=!this.showCalender;
   }
   mounted(){
     this.settingTaskVariable();
@@ -380,6 +415,9 @@ export default class TaskSearchItem extends Vue {
 ::-webkit-datetime-edit-month-field:not([aria-valuenow]),
 ::-webkit-datetime-edit-day-field:not([aria-valuenow]) {
     color: transparent;
+}
+.showDate{
+  background-color: blue;
 }
 </style>
 
