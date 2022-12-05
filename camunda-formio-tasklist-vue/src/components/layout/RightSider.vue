@@ -246,25 +246,6 @@
                       @click="showCalenderFollowup=true"
                       
                     >{{ timedifference(task.followUp) }}</p>
-                  <template v-if="showCalenderFollowup">
-                    <div class="input-group">
-                      <input 
-                       class="form-control"
-                       type="datetime-local"
-                       v-model="task.followUp"
-                       name="date"
-                       @change="updateFollowUpDate" />
-                    </div>
-                  </template>
-                  <button
-                      class="btn task-icon-btn"
-                      data-bs-toggle="tooltip"
-                      v-if="showCalenderFollowup"
-                      @click="showCalenderFollowup=false"
-                      title="click to update FollowUp date"
-                    >
-                    <i class="fa fa-check-circle"></i>
-                    </button>
                     <button
                       v-if="!showCalenderFollowup"
                       class="btn task-icon-btn"
@@ -274,18 +255,40 @@
                     >
                       <i class="fa fa-times-circle-o" />
                     </button>
+                    <div v-if="showCalenderFollowup">
+                      <v-date-picker v-model="task.followUp" mode="datetime" @input="updateFollowUpDate" >
+                        <template v-slot="{ inputValue, inputEvents }">
+                          <input
+                            class="bg-white border px-2 py-1 rounded"
+                            :value="inputValue"
+                            v-on="inputEvents"
+                            
+                          />
+                        </template>
+                      </v-date-picker>
+                    </div>
                   </div>
                   <template v-else>
-                    <div class="input-group">
-                      <input 
-                       class="form-control"
-                       type="datetime-local"
-                       v-model="task.followUp"
-                       name="date"
-                       @change="updateFollowUpDate" />
+                    <div>
+                      <a
+                      class="fw-bold"
+                      title="Click to set a follow-up date"
+                      v-if="!task.followUp && !showCalenderFollowup "
+                      @click="showCalenderFollowup=true"> 
+                        Set a Follow up date</a>
+                    </div>
+                    <div v-if="showCalenderFollowup" class="input-group">
+                        <v-date-picker v-model="task.followUp" mode="datetime" @input="updateFollowUpDate" >
+                        <template v-slot="{ inputValue, inputEvents }">
+                          <input
+                            class="bg-white border px-2 py-1 rounded"
+                            :value="inputValue"
+                            v-on="inputEvents"
+                          />
+                        </template>
+                      </v-date-picker>
                     </div>
                   </template>
-
                 </section>
                 <!------- FollowUp date ends here ----->
                 <!------- Due  date starts here ----->
@@ -301,27 +304,7 @@
                       :title="getExactDate(task.due)"
                       @click="showCalenderDue=true"
                     >{{ timedifference(task.due) }}</p>
-                  <template v-if="showCalenderDue">
-                    <div class="input-group">
-                      <input 
-                       class="form-control"
-                       type="datetime-local"
-                       v-model="task.due"
-                       name="date"
-                       @change="updateDueDate" />
-                      
-                    </div>
-                  </template>
                   <button
-                      class="btn task-icon-btn"
-                      data-bs-toggle="tooltip"
-                      v-if="showCalenderDue"
-                      @click="showCalenderDue=false"
-                      title="click to update Due date"
-                    >
-                    <i class="fa fa-check-circle"></i>
-                    </button>
-                    <button
                       v-if="!showCalenderDue"
                       class="btn task-icon-btn"
                       @click="removeDueDate"
@@ -330,16 +313,37 @@
                     >
                       <i class="fa fa-times-circle-o" />
                     </button>
+                    <div v-if="showCalenderDue">
+                      <v-date-picker v-model="task.due" mode="datetime" @input="updateDueDate" >
+                        <template v-slot="{ inputValue, inputEvents }">
+                          <input
+                            class="bg-white border px-2 py-1 rounded"
+                            :value="inputValue"
+                            v-on="inputEvents"
+                          />
+                        </template>
+                      </v-date-picker>
+                    </div>  
                   </div>
                   <template v-else>
-                    <div class="input-group">
-                      <input 
-                       class="form-control"
-                       type="datetime-local"
-                       v-model="task.due"
-                       name="date"
-                       @change="updateDueDate" />
-                      
+                    <div>
+                      <a
+                      class="fw-bold"
+                      title="Click to set a follow-up date"
+                      v-if="!task.dueDate && !showCalenderDue "
+                      @click="showCalenderDue=true"> 
+                        Set a Due date</a>
+                    </div>
+                    <div v-if="showCalenderDue" class="input-group">
+                     <v-date-picker v-model="task.due" mode="datetime" @input="updateDueDate" >
+                        <template v-slot="{ inputValue, inputEvents }">
+                          <input
+                            class="bg-white border px-2 py-1 rounded"
+                            :value="inputValue"
+                            v-on="inputEvents"
+                          />
+                        </template>
+                      </v-date-picker>
                     </div>
                   </template>
                 </section>
@@ -762,6 +766,7 @@ async updateTaskDatedetails(taskId: string, task: TaskPayload) {
 
 // update follow update
 async updateFollowUpDate() {
+  this.showCalenderFollowup=false;
   const referenceobject = this.task;
   try {
     if (this.task?.followUp !== null) {
@@ -775,6 +780,7 @@ async updateFollowUpDate() {
 
 // update due date
 async updateDueDate() {
+  this.showCalenderDue=false;
   const referenceobject = this.task;
   try {
     if (this.task?.due !== null) {
@@ -850,7 +856,7 @@ async removeFollowupDate() {
         z-index: 3;
       }
     }
-    p {
+    p ,a{
         cursor: pointer;
       }
   }
