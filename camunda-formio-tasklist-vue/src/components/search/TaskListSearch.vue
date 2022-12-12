@@ -1,291 +1,234 @@
 <template>
-  <div class="cft-input-search-filter">
-    <b-col
-      class="cft-filter-container"
-      xl="12"
-      lg="12"
-      md="12"
-      sm="12"
-    >
+  <div class="row mx-0 task-list-search">
+    <div class="col my-2">
       <div v-if="selectedSearchQueries.length">
-        <TaskListSearchType/>
-        <b-col
-          class="cftf-search-item-box mr-2"
+        <TaskListSearchType />
+        <div
+          class="cftf-search-item-box mt-2"
           v-for="(query, index) in selectedSearchQueries"
           :key="query.label + index"
         >
           <TaskSearchItem
-            :query='query'
-            :index='index'
-            :searchListElements='searchListElements'
-            :setDate='setDate'
-            :searchValueItem='searchValueItem '
-            :searchVariableValue='searchVariableValue'
-            :showSearchs='showSearchs'
-            :showVariableValue='showVariableValue'
-            :operator='operator'
-            @updatevariableinput='updatevariableinput'
-            @show-VariableValue-Item='showVariableValueItem'
-            @update-search-value='updatesearchinput'
-            @show-search-value='showsearchValueItem'
+            :query="query"
+            :index="index"
+            :showSearchState="showSearchState"
+            :showVariableValueState="showVariableValueState"
+            :operator="operator"
+            :selectedSearchQueries="selectedSearchQueries"
+             :filterList="filterList"
+             :selectedfilterId="selectedfilterId"
+            @updateVariableInput="updateVariableInput"
+            @show-VariableValue-Item="showVariableValueItem"
+            @reject-Search-Value-Item="rejectSearchValueItem"
+            @reject-Variable-Item="rejectVariableItem"
+            @update-search-value="updateSearchInput"
+            @show-search-value="showSearchValueItem"
           />
-
-        </b-col>
+        </div>
       </div>
       <TaskListAddSearchIgnoreCase
-        :queryList="queryList"
-        :tasklength="tasklength"
-        :isVariableTypeInSelectedSearchQuery="isVariableTypeInSelectedSearchQuery"
-        :searchListElements="searchListElements"
+        :isVariableTypeInSelectedSearchQuery="
+          isVariableTypeInSelectedSearchQuery
+        "
         @add-to-selected-search-query="addToSelectedSearchQuery"
       />
-    </b-col>
+    </div>
   </div>
 </template>
 
+
 <script lang="ts">
-import '../../styles/camundaFormIOTasklistSearch.scss'
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
-import { 
+import "../../styles/camundaFormIOTasklistSearch.scss";
+import {
+  Component, Emit, Mixins, Prop, Vue
+} from "vue-property-decorator";
+import {
   FilterSearchTypes,
-  getDeletedVariableIndex,
-  getVariableOperator,
-  searchValueObject,
-  taskSearchFilters,
-} from "../../services/search-constants";
-import TaskListAddSearchIgnoreCase from './TaskListAddSearchIgnoreCase.vue';
-import TaskListSearchType from './TaskListSearchType.vue';
-import TaskSearchItem from './TaskSearchItem.vue';
-import {getISODateTime} from '../../services/format-time';
+  SEARCH_BOX_STATE,
+  getFormattedQueryListParams,
+  getISODateTime,
+} from "../../services";
+import {
+  SearchOptionPayload,
+  SearchQueryPayload,
+} from "../../models";
+import BaseMixin from "../../mixins/BaseMixin.vue";
+import TaskListAddSearchIgnoreCase from "./TaskListAddSearchIgnoreCase.vue";
+import TaskListSearchType from "./TaskListSearchType.vue";
+import TaskSearchItem from "./TaskSearchItem.vue";
+import {
+  namespace
+} from "vuex-class";
+
+const serviceFlowModule = namespace("serviceFlowModule");
 
 @Component({
   components: {
     TaskListAddSearchIgnoreCase,
     TaskListSearchType,
-    TaskSearchItem
-  }
+    TaskSearchItem,
+  },
 })
-export default class TaskListSearch extends Vue {
-  @Prop({default: 0}) private tasklength!: number;
-
-  private searchListElements: any = taskSearchFilters;
-  private queryType = "ALL";
-  private selectedSearchQueries: any = [];
-  private searchValueItem: any = [];
-  private searchVariableValue: any = [];
-  private operator: Array<string> = [];
-  private showSearchs: Array<string> = []; //3 states - a, i, s
-  private showVariableValue: Array<string> = [];
-  private queryList: any = {
-    "taskVariables": [],
-    "processVariables": []
+export default class TaskListSearch extends Mixins(BaseMixin) {
+  private selectedSearchQueries: SearchOptionPayload[] = [];
+  private operator: string[] = [];
+  private showSearchState: string[] = []; //States - a(?? state), i(enter input), s(show entered value)
+  private showVariableValueState: string[] = [];
+  private queryList: SearchQueryPayload = {
+    taskVariables: [],
+    processVariables: [],
   };
-  private isVariableTypeInSelectedSearchQuery = false;
-  private setDate: Array<string> = [];
+  private isVariableTypeInSelectedSearchQuery: boolean = false;
+  @Prop() private  filterList: any;
+  @Prop() private selectedfilterId ;
+  @serviceFlowModule.Getter("getFormsFlowTaskSearchType")
+  private getFormsFlowTaskSearchType: any;
+  @serviceFlowModule.Getter("getVariableNameIgnoreCase")
+  private getVariableNameIgnoreCase: any;
+  @serviceFlowModule.Getter("getVariableValueIgnoreCase")
+  private getVariableValueIgnoreCase: any;
 
-  updateSearchQueryOperators (operator: any, index: number) {
-    this.operator[index] = operator;
-    if(this.searchValueItem[index] || this.setDate[index]) {
-      delete this.queryList[
-        searchValueObject(this.selectedSearchQueries[index].key, this.operator[index])
-      ];
-      if(this.selectedSearchQueries[index].type==='date'){
-        this.setSearchQueryValue(this.setDate[index], this.selectedSearchQueries[index], this.operator[index], index);
-      }
-      else{
-        this.setSearchQueryValue(this.searchValueItem[index], this.selectedSearchQueries[index], this.operator[index], index);
-      }
-    }
+  updateSearchQueryOperators(operator: any, index: number) {
+    this.selectedSearchQueries[index].operator = this.operator[index];
+    this.queryList = getFormattedQueryListParams(this.selectedSearchQueries, this.getFormsFlowTaskSearchType, this.getVariableNameIgnoreCase, this.getVariableValueIgnoreCase);
+    this.onSearchUpdateTaskListResult();
   }
 
-  updatesearchinput (index: number) {
-    this.searchValueItem[index] = '';
-    Vue.set(this.showSearchs, index, "i");
+  updateSearchInput(index: number) {
+ 
+    Vue.set(this.showSearchState, index, SEARCH_BOX_STATE.INSERT);
   }
 
-  showsearchValueItem (index: number) {
-    Vue.set(this.showSearchs, index, "s");
+  showSearchValueItem(index: number) {
+    Vue.set(this.showSearchState, index, SEARCH_BOX_STATE.SHOW);
   }
 
-  makeInputNull (index: number) {
-    Vue.set(this.showSearchs, index, "a");
+  rejectSearchValueItem(index: number) {
+    Vue.set(this.showSearchState, index, SEARCH_BOX_STATE.START);
   }
 
-  updatevariableinput (index: number) {
-    this.searchVariableValue[index] = '';
-    Vue.set(this.showVariableValue, index, "i");
+  makeInputNull(index: number) {
+    Vue.set(this.showSearchState, index, SEARCH_BOX_STATE.START);
   }
 
-  showVariableValueItem (index: number) {
-    Vue.set(this.showVariableValue, index, "s")
+  updateVariableInput(index: number) {
+    Vue.set(this.showVariableValueState, index, SEARCH_BOX_STATE.INSERT);
   }
 
+  showVariableValueItem(index: number) {
+    Vue.set(this.showVariableValueState, index, SEARCH_BOX_STATE.SHOW);
+  }
 
-  addToSelectedSearchQuery (item: any) {
-    this.selectedSearchQueries.push(item);
+  rejectVariableItem(index: number) {
+    Vue.set(this.showVariableValueState, index, SEARCH_BOX_STATE.START);
+  }
+
+  addToSelectedSearchQuery(item: SearchOptionPayload) {
+    item.index = this.selectedSearchQueries.length + 1;
+    this.selectedSearchQueries = [...this.selectedSearchQueries, {
+      ...item
+    }];
     if (this.selectedSearchQueries === []) {
-      this.operator[0] = item["compares"][0];
-      this.showSearchs[0] = "a";
-      this.showVariableValue[0] = "a";
-      if(item.type==="variables"){
+      this.operator[0] = item.operator;
+      this.showSearchState[0] = SEARCH_BOX_STATE.START;
+      this.showVariableValueState[0] = SEARCH_BOX_STATE.START;
+      if (item.type === FilterSearchTypes.VARIABLES) {
         this.isVariableTypeInSelectedSearchQuery = true;
       }
-    } 
-    else {
-      this.operator[this.selectedSearchQueries.length - 1] = item["compares"][0];
-      this.showSearchs[this.selectedSearchQueries.length - 1] = "a";
-      this.showVariableValue[this.selectedSearchQueries.length - 1] = "a";
-      if(item.type==="variables"){
+    } else {
+      this.operator[this.selectedSearchQueries.length - 1] = item.operator;
+      this.showSearchState[this.selectedSearchQueries.length - 1] = SEARCH_BOX_STATE.START;
+      this.showVariableValueState[this.selectedSearchQueries.length - 1] = SEARCH_BOX_STATE.START;
+      if (item.type === FilterSearchTypes.VARIABLES) {
         this.isVariableTypeInSelectedSearchQuery = true;
       }
     }
   }
-  
-  deleteSearchQueryElement (query: any, index: number) {
-    this.searchValueItem.splice(index, 1);
-    this.setDate.splice(index, 1);
-    if(query.type==='variables'){
-      this.searchVariableValue.splice(index, 1);
-      this.queryList = getDeletedVariableIndex(
-        query,
-        this.selectedSearchQueries,
-        this.selectedSearchQueries[index]["key"], 
-        this.queryList
-      );
-    }
-    else {
-      delete this.queryList[
-        searchValueObject(this.selectedSearchQueries[index].key, this.operator[index])
-      ];
-    }
+
+  deleteSearchQueryElement(query: SearchOptionPayload, index: number) {
     this.selectedSearchQueries.splice(index, 1);
     this.operator.splice(index, 1);
+    this.showSearchState.splice(index, 1);
+    this.showVariableValueState.splice(index, 1);
 
+    /*To check if anymore selectedSearchSearchQueries with Variable type exists. If yes,
+    show the variable type dropdown else hide it*/
     this.isVariableTypeInSelectedSearchQuery = false;
     for (const idx in this.selectedSearchQueries) {
-      if(this.selectedSearchQueries[idx]["type"]=== "variables") {
+      if (this.selectedSearchQueries[idx]?.type === FilterSearchTypes.VARIABLES) {
         this.isVariableTypeInSelectedSearchQuery = true;
       }
     }
-    this.onSearchUpdateTasklistResult()
+
+    this.queryList = getFormattedQueryListParams(this.selectedSearchQueries, this.getFormsFlowTaskSearchType,
+      this.getVariableNameIgnoreCase, this.getVariableValueIgnoreCase);
+    this.onSearchUpdateTaskListResult();
   }
 
-  updateSearchQueryElement (searchitem: any, index: number) {
-    if(searchitem.type === 'date' && this.selectedSearchQueries[index].type!=='date') {
+  updateSearchQueryElement(searchitem: SearchOptionPayload, index: number) {
+    if (
+      searchitem.type === FilterSearchTypes.DATE
+      && this.selectedSearchQueries[index].type !== FilterSearchTypes.DATE
+    ) {
       this.makeInputNull(index);
     }
-    if(this.selectedSearchQueries[index].type==='date' && searchitem.type !== 'date') {
-      this.makeInputNull(index);
-    }
-    if(this.selectedSearchQueries[index].type==='variables'){
-      this.queryList = getDeletedVariableIndex(this.selectedSearchQueries[index] ,
-        this.selectedSearchQueries,
-        this.selectedSearchQueries[index]["key"],
-        this.queryList
-      );
-    }
-    else {
-      delete this.queryList[
-        searchValueObject(this.selectedSearchQueries[index].key, this.operator[index])
-      ];
-    }
+    searchitem.value = this.selectedSearchQueries[index].value;
     Vue.set(this.selectedSearchQueries, index, searchitem);
-    this.operator[index] = this.selectedSearchQueries[index].compares[0];
-    if(this.showSearchs[index]!=='a')
-    {
-      if(this.selectedSearchQueries[index].type==='date'){
-        this.setSearchQueryValue(this.setDate[index], this.selectedSearchQueries[index], this.operator[index], index);
-      }
-      else{
-        this.setSearchQueryValue(this.searchValueItem[index], this.selectedSearchQueries[index], this.operator[index], index);
-      }
+    this.operator[index] = this.selectedSearchQueries[index].operator;
+    if (this.showSearchState[index] !== SEARCH_BOX_STATE.START) {
+      this.setSearchQueryValue(this.selectedSearchQueries, index);
     }
   }
 
-  setSearchQueryValue (item: any, query: any, operator: string, idx: number) {
-    const Vindex = searchValueObject(this.selectedSearchQueries[idx].key, this.operator[idx]);
-    this.selectedSearchQueries[idx]["name"] = item;
-    switch(query.type) {
-    case FilterSearchTypes.VARIABLES: {
-      this.selectedSearchQueries[idx]["name"] = this.searchVariableValue[idx];
-      this.selectedSearchQueries[idx]["variable"] = this.searchValueItem[idx];
-      if(this.searchValueItem[idx] && this.searchVariableValue[idx]){
-        this.queryList[query.key].push({
-          "name": this.searchVariableValue[idx],
-          "operator": getVariableOperator(operator),
-          "value": this.searchValueItem[idx]
-        })
-        this.onSearchUpdateTasklistResult();
-      }
-      break;
+  setSearchQueryValue(selectedSearchQueries: SearchOptionPayload[], index: number) {
+    /*Dates should be in ISO format for request object*/
+    if (this.selectedSearchQueries[index].type === FilterSearchTypes.DATE) {
+      this.selectedSearchQueries[index].value = getISODateTime(this.selectedSearchQueries[index].value);
     }
-    case FilterSearchTypes.DATE: {
-      this.queryList[Vindex] = getISODateTime(item);
-      this.onSearchUpdateTasklistResult();
-      break;
-    }
-    case FilterSearchTypes.STRING:
-    case FilterSearchTypes.NORMAL:{
-      if (this.operator[idx] === "like") {
-        this.queryList[Vindex] = "%" + item + "%";
-      } else {
-        this.queryList[Vindex] = item;
-      }
-      this.onSearchUpdateTasklistResult();
-      break;
-    }
-    default:
-    }
+    this.queryList = getFormattedQueryListParams(this.selectedSearchQueries, this.getFormsFlowTaskSearchType, this.getVariableNameIgnoreCase, this.getVariableValueIgnoreCase);
+    this.onSearchUpdateTaskListResult();
   }
 
-  @Emit('update-task-list')
-  onSearchUpdateTasklistResult (){
-    if(this.queryType === "ALL") {
-      return this.queryList
-    }
-    else {
-      return {orQueries: [this.queryList]}
-    }
+  @Emit("update-task-list")
+  onSearchUpdateTaskListResult() {
+    return this.queryList;
   }
 
-  mounted () {
-    this.onSearchUpdateTasklistResult();
-    
-    this.$root.$on('call-deleteSearchQueryElement', (para: any) => {
+  mounted() {
+    this.$root.$on("call-deleteSearchQueryElement", (para: any) => {
       this.deleteSearchQueryElement(para.query, para.index);
-    })
+    });
 
-    this.$root.$on('call-updateSearchQueryType', (para: any) => {
-      this.queryType = para.queryType;
-      this.onSearchUpdateTasklistResult();
-    })
+    this.$root.$on("call-updateTaskList", () => {
+      this.queryList = getFormattedQueryListParams(this.selectedSearchQueries, this.getFormsFlowTaskSearchType, this.getVariableNameIgnoreCase, this.getVariableValueIgnoreCase);
+      this.onSearchUpdateTaskListResult();
+    });
 
-    this.$root.$on('call-updateTaskList', (para: any) => {
-      this.queryList = para.queryList;
-      this.onSearchUpdateTasklistResult();
-    })
-
-    this.$root.$on('call-updateSearchQueryElement', (para: any) => {
+    this.$root.$on("call-updateSearchQueryElement", (para: any) => {
       this.updateSearchQueryElement(para.updateSearch, para.index);
-    })
+    });
 
-    this.$root.$on('call-updateSearchQueryOperators', (para: any) => {
+    this.$root.$on("call-updateSearchQueryOperators", (para: any) => {
       this.updateSearchQueryOperators(para.operator, para.index);
-    })
+    });
 
-    this.$root.$on('call-setSearchQueryValue', (para: any) => {
-      this.setSearchQueryValue(para.item, para.query, para.operator, para.idx);
-    })
-
+    this.$root.$on("call-setSearchQueryValue", (para: any) => {
+      this.setSearchQueryValue(para.item, para.index);
+    });
   }
 
-  beforeDestroy () {
-    this.$root.$off('call-deleteSearchQueryElement');
-    this.$root.$off('call-updateSearchQueryElement');
-    this.$root.$off('call-updateSearchQueryType');
-    this.$root.$off('call-updateSearchQueryOperators');
-    this.$root.$off('call-updateTaskList');
-    this.$root.$off('call-setSearchQueryValue');
+  beforeDestroy() {
+    this.$root.$off("call-deleteSearchQueryElement");
+    this.$root.$off("call-updateSearchQueryElement");
+    this.$root.$off("call-updateSearchQueryOperators");
+    this.$root.$off("call-updateTaskList");
+    this.$root.$off("call-setSearchQueryValue");
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.task-list-search {
+  border-bottom: 1px solid #eee;
+}
+</style>

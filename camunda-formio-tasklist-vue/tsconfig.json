@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
@@ -25,7 +25,12 @@
       "dom",
       "dom.iterable",
       "scripthost"
-    ]
+    ],
+    "typeRoots": [
+      "./typings",
+      "./node_modules/@types/",
+    ],
+    "noImplicitAny": false,
   },
   "include": [
     "src/**/*.ts",

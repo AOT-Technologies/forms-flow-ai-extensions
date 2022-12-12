@@ -1,0 +1,26 @@
+name: Formsflow Custom Formio Elements CI
+
+on:
+  pull_request:
+    branches:
+      - master
+      - dev
+    paths:
+      - "formsflow-custom-formio/**"
+defaults:
+  run:
+    shell: bash
+    working-directory: ./formsflow-custom-formio
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: npm ci
+      # - run: npm test
+      - run: npm run build
+      - run: npm run buildExcludeFormio

@@ -1,7 +1,16 @@
-import { FormsFlowStateModelIF } from '../../interfaces'
+import {
+  FormsFlowStateModelIF 
+} from '../../models';
+import {
+  QUERY_TYPES
+} from '../../services';
 
 export const FormsFlowstateModel: FormsFlowStateModelIF = {
   formsFlowTaskCurrentPage: 1,
   formsFlowTaskId: '',
-  formsFlowactiveIndex: 0
-}
+  formsFlowactiveIndex: NaN,
+  searchQueryType: QUERY_TYPES.ALL,
+  variableNameIgnoreCase: false,
+  variableValueIgnoreCase: false,
+  taskLength: 0,
+};

@@ -1,6 +1,6 @@
 
-import * as serviceFlowModule from './serviceFlow-module'
+import * as serviceFlowModule from './serviceFlow-module';
 
 export {
   serviceFlowModule
-}
+};

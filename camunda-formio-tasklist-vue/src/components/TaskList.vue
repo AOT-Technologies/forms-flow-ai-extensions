@@ -1,794 +1,735 @@
-<template> 
-<b-container fluid class="task-outer-container">
-  <Header
-  v-if="token  && bpmApiUrl && maximize"
-  :token="token"
-  :bpmApiUrl="bpmApiUrl"
-  :filterList="filterList"
-  :perPage="perPage"
-  :selectedfilterId="selectedfilterId"
-  :payload="payload"
-  />
-    <b-row class="cft-service-task-list mt-1">
-      <b-col xl="3" lg="3" md="12" class="cft-first" v-if="maximize">
-        <LeftSider
-          v-if="token  && bpmApiUrl"
-          :token="token"
-          :formsflowaiApiUrl="formsflowaiApiUrl"
-          :formIOApiUrl="formIOApiUrl"
-          :bpmApiUrl="bpmApiUrl"
-          :tasks='tasks'
-          :Lentask='tasklength'
-          :perPage="perPage"
-          :selectedfilterId="selectedfilterId"
-          :payload="payload"
-        />
-      </b-col>
-      <b-col v-if="(getFormsFlowTaskId && task)" :lg="maximize ? 9 : 12" md="12">
-        <ExpandContract/>
-        <div class="cft-service-task-details">
-          <b-row class="ml-0 task-header task-header-title" data-title="Task Name">
-            {{ task.name }}</b-row
+<template>
+  <div
+    class="d-flex flex-column"
+    ref="taskListContainerRef"
+  >
+    <template v-if="isUserAllowed">
+      <Header
+        class="mb-2"
+        ref="presetSortFiltersRef"
+        v-if="token && bpmApiUrl && maximize&&(!disableComponents.sort||!disableComponents.form||!disableComponents.filterList)"
+        :token="token" 
+        :bpmApiUrl="bpmApiUrl"
+        :filterList="filterList"
+        :perPage="perPage"
+        :selectedfilterId="selectedfilterId"
+        :payload="payload"
+        :defaultTaskSortBy="taskSortBy"
+        :defaultTaskSortOrder="taskSortOrder"
+        :disableOption="disableComponents"
+      />
+      <div class="d-flex flex-md-row flex-column">
+        <div
+           class="col-md-3 col-12"      
+          :style="{display : `${maximize ? 'block':'none'}`}"
+        >
+          <LeftSider
+            :taskLoading="taskLoading"
+            v-if="token && bpmApiUrl"
+            :token="token"
+            :formsflowaiApiUrl="formsflowaiApiUrl"
+            :bpmApiUrl="bpmApiUrl"
+            :tasks="tasks"
+            :perPage="perPage"
+            :selectedfilterId="selectedfilterId"
+            :payload="payload"
+            :containerHeight="containerHeight"
+            :disableOption="disableComponents"
+            :listItemCardStyle="listItemCardStyle"
+            :filterList="filterList"
+            :processDefinitions="getProcessDefinitions"
+          />
+        </div>
+       <!-- need to bring here right side -->
+        <div
+          class="ctf-task-details-container ms-md-2 col-12 mt-md-0 mt-3 rounded"
+          :class="{ 'mx-0': !maximize ,'col-md-9 ':maximize}"
+        >
+
+       <!-- single taks loading -->
+          <div
+            v-if="singleTaskLoading"
+            class="d-flex justify-content-center align-items-center m-5"
           >
-          <br />
-          <b-row class="ml-0 task-name">
-            <span class="cft-process-name" data-title="Process Name">{{ taskProcess }}</span></b-row
-          >
-          <br />
-          <b-row class="ml-0 cft-application-id" data-title="application ID"
-            >Application ID # {{ applicationId }}</b-row
-          >
-          <div class="cft-actionable-container">
-            <b-row class="cft-actionable">
-              <b-col v-if='task.followUp' cols="12" md="3">
-                <span>
-                  <i class="fa fa-calendar"></i>
-                  {{timedifference(task.followUp)}}
-                  <i class="bi bi-x-circle" @click="removeFollowupDate"></i>
-                </span>
-              </b-col>
-              <b-col v-else cols="12" md="3">
-                <DatePicker
-                  type="datetime"
-                  placeholder="Set Follow-up date"
-                  v-model="setFollowup[
-                  (getFormsFlowTaskCurrentPage-1)*perPage + getFormsFlowactiveIndex
-                  ]"
-                  @change="updateFollowUpDate"
-                ></DatePicker>
-              </b-col>
-              <b-col v-if='task.due' cols="12" md="3">
-                <span>
-                  <i class="fa fa-calendar"></i>
-                  {{timedifference(task.due)}}
-                  <i class="bi bi-x-circle" @click="removeDueDate"></i>
-                </span>
-              </b-col>
-              <b-col v-else cols="12" md="3">
-                <DatePicker
-                  type="datetime"
-                  placeholder="Set Due Date"
-                  v-model="setDue[
-                  (getFormsFlowTaskCurrentPage-1)*perPage + getFormsFlowactiveIndex
-                  ]"
-                  @change="updateDueDate"
-                ></DatePicker>
-              </b-col>
-              <b-col cols="12" md="3">
-                <div
-                    id='groups'
-                    v-b-modal.AddGroupModal
-                >
-                  <i class="bi bi-grid-3x3-gap-fill"></i>
-                    <span v-if="groupListNames">
-                        {{ String(groupListNames) }}
-                    </span>
-                    <span v-else>Add Groups</span>
-                  <b-tooltip target="groups" triggers="hover">
-                    <b>Groups</b>
-                  </b-tooltip>
-                </div>
-                <b-modal
-                  id="AddGroupModal"
-                  ref="modal"
-                  title="Manage Groups"
-                  :hide-footer=true
-                >
-                  <div class="modal-text">
-                    <i class="bi bi-exclamation-circle"></i>
-                    You can add a group by typing a group ID into the input
-                    field and afterwards clicking the button with the plus sign.
-                    <b-row class="mt-3 mb-3">
-                      <b-col>
-                        <b-button
-                          variant="primary"
-                          @click="addGroup"
-                          :disabled='!setGroup'
-                        >
-                          <span>Add a group</span>
-                          <span>
-                            <i class="bi bi-plus"></i>
-                          </span>
-                        </b-button>
-                      </b-col>
-                      <b-col>
-                        <b-form-input
-                          type="text"
-                          placeholder="Group ID"
-                          v-model="setGroup"
-                          v-on:keyup.enter="addGroup"
-                        ></b-form-input>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col v-if="groupList.length">
-                        <ul v-for="g in groupList" :key="g.groupId">
-                          <div class="mt-1">
-                            <i
-                              class="fa fa-times mr-2 click-element"
-                              @click="deleteGroup(g.groupId)"
-                            ></i>
-                            <span>{{ g.groupId }}</span>
-                          </div>
-                        </ul>
-                      </b-col>
-                    </b-row>
-                  </div>
-                </b-modal>
-              </b-col>
-              <b-col v-if="task.assignee" cols="12" :md="editAssignee ? 3: 2">
-                <div>
-                  <div v-if="editAssignee" class="cft-user-edit">
-                    <div class='cft-assignee-change-box row'>
-                      <v-select @search="fetchOptions" :options="autoUserList" v-model="userSelected" class="col-9 col-md-9"/>
-                      <span @click="onSetassignee" class="col-9 col-md-1">
-                        <i class="bi bi-check"></i>
-                      </span>
-                      <span @click="toggleassignee" class="col-9 col-md-1">
-                        <i class="fa fa-times ml-1"></i>
-                      </span>
-                    </div>
-                  </div>
-                  <div class="cft-user-details" v-else>
-                  <b-tooltip target="setAssignee" triggers="hover">
-                    Click to change <b>assignee</b>
-                  </b-tooltip>
-                  <span id='setAssignee'>
-                    <i class="bi bi-person-fill cft-person-fill" />
-                    <span class="cft-user-span" @click="toggleassignee">
-                    {{task.assignee}}
-                    </span>
-                  </span>
-                  <b-tooltip target="resetAssignee" triggers="hover">
-                    Reset <b>Assignee</b>
-                  </b-tooltip>
-                  <span id="resetAssignee">
-                    <i class="fa fa-times ml-1" @click="onUnClaim" />
-                  </span>
-                  </div>
-                </div>
-              </b-col>
-              <b-col v-else cols="12" md="2">
-                <div @click="onClaim">
-                  <span id='claimAssignee'>
-                    <i class="bi bi-person-fill" />
-                    Claim
-                  </span>
-                </div>
-                <b-tooltip target="claimAssignee" triggers="hover">
-                    Claim a <b>task</b>
-                </b-tooltip>
-              </b-col>
-            </b-row>
-            <div class="height-100">
-              <b-tabs pills class="height-100" content-class="mt-3">
-                <b-tab title="Form" active>
-                  <div v-if="showfrom" class="ml-4 mr-4">
-                    <b-overlay
-                      :show="task.assignee !== userName"
-                      variant="light"
-                      opacity="0.75"
-                      spinner-type="none"
-                      aria-busy="true"
-                    >
-                      <formio
-                        :src="formioUrl"
-                        :options="
-                          task.assignee === userName ? options : { readOnly: true }
-                        "
-                        v-on:submit="onFormSubmitCallback"
-                        v-on:customEvent="oncustomEventCallback"
-                      ></formio>
-                    </b-overlay>
-                  </div>
-                </b-tab>
-                <b-tab title="History">
-                  <TaskHistory :taskHistoryList='taskHistoryList' :applicationId="applicationId"/>
-                </b-tab>
-                <b-tab
-                  class="cft-diagram-container"
-                  id="diagramContainer"
-                  title="Diagram"
-                >
-                  <div class="diagram-full-screen" id="canvas"></div>
-                </b-tab>
-              </b-tabs>
+            <div
+              class="spinner-grow text-primary"
+              role="status"
+            >
+              <span class="sr-only">Loading...</span>
             </div>
           </div>
+       <!-- single task loading end -->
+
+      <!-- right side if not loading  -->
+    <RightSider
+  v-else-if="getFormsFlowTaskId && task"
+  :task="task"
+  :bpmApiUrl="bpmApiUrl"
+  :token="token"
+  :getBPMTaskandReload="getBPMTaskandReload"
+  :taskScrollableHeight="taskScrollableHeight"
+  :reloadCurrentTask="reloadCurrentTask"
+  :getDiagramDetails="getDiagramDetails"
+  :formioUrl="formioUrl"
+  :onFormSubmitCallback="onFormSubmitCallback"
+  :oncustomEventCallback="oncustomEventCallback"
+  :diagramLoading="diagramLoading"
+  :userName="userName"
+  :hideTaskDetails="hideTaskDetails"
+/>
+
+      <!-- right side end  -->
+
+      <!-- task not selected start -->
+          <div
+            v-else
+            class="d-flex align-items-center justify-content-center task-details-empty"
+            :style="{
+              height: taskScrollableHeight
+            }"
+          >
+            <i class="fa fa-exclamation-circle"></i>
+            <h4 class="mt-0 mx-2">Please select a task from the list</h4>
+          </div>
+      <!-- task not selected end -->
+
+
         </div>
-      </b-col>
-      <b-col v-else>
-        <ExpandContract/>
-        <b-row class="cft-not-selected mt-2 ml-1 row">
-          <i
-            class="bi bi-exclamation-circle-fill"
-            variant="secondary"
-            scale="1"
-          ></i>
-          <p>Select a task in the list.</p>
-        </b-row>
-      </b-col>
-    </b-row>
-  </b-container>
+       <!-- end  right side -->
+
+      </div>
+    </template>
+    <div v-else>
+      <div
+        class="alert alert-danger mt-4"
+        role="alert"
+      >
+        You don't have access. Contact your administrator.
+      </div>
+    </div>
+    <div class="toast-container position-absolute bottom-0 end-0 py-5 px-4">
+      <div
+        class="toast align-items-center text-white bg-dark border-0"
+        role="alert"
+        ref="toastMsgRef"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="d-flex">
+          <div class="toast-body">
+            {{ toastMsgTxt }}
+          </div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
-
 <script lang="ts">
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import 'font-awesome/scss/font-awesome.scss';
-import 'formiojs/dist/formio.full.min.css'
-import 'vue2-datepicker/index.css';
-import 'vue-select/src/scss/vue-select.scss';
-import 'semantic-ui-css/semantic.min.css';
-import '../styles/user-styles.css';
-import '../styles/camundaFormIOTasklist.scss';
-import { Component, Mixins, Prop } from 'vue-property-decorator'
+import "font-awesome/scss/font-awesome.scss";
+import "../styles/user-styles.css";
+import "../styles/camundaFormIOTasklist.scss";
+import * as bootstrap from 'bootstrap';
 import {
-  TASK_FILTER_LIST_DEFAULT_PARAM,
-  findFilterKeyOfAllTask,
+  ALL_FILTER,
+  CamundaRest,
+  SocketIOService,
+  findFilterIdForDefaultFilterName,
+  getFormDetails,
+  getFormioToken,
   getTaskFromList,
-  getUserName
-} from '../services/utils';
-import BpmnViewer from 'bpmn-js';
-import CamundaRest from '../services/camunda-rest';
-import DatePicker from 'vue2-datepicker';
-import ExpandContract from './addons/ExpandContract.vue';
-import { Form } from 'vue-formio';
-import Header from './layout/Header.vue';
-import LeftSider from './layout/LeftSider.vue';
-import {Payload} from '../services/TasklistTypes';
-import SocketIOService from '../services/SocketIOServices';
-import TaskHistory from '../components/TaskHistory.vue';
-import TaskListMixin from './mixins/TaskListMixin.vue';
-import {authenticateFormio} from '../services/formio-token';
-import {getFormDetails} from '../services/get-formio';
-import {getISODateTime} from '../services/format-time';
-import {getformHistoryApi} from '../services/formsflowai-api';
-import moment from 'moment';
-import { namespace } from 'vuex-class';
-import vSelect from 'vue-select';
+  getUserName,
+  isAllowedUser,
+  sortByPriorityList,
+} from "../services";
+import {
+  Component, Mixins, Prop,
+} from "vue-property-decorator";
+import {
+  CustomEventPayload,
+  FilterPayload,
+  FormRequestActionPayload,
+  FormRequestPayload,
+  Payload,
+  TaskListSortType,
+  TaskPayload,
+} from "../models";
+import  {
+  Toast,
+  Tooltip
+} from 'bootstrap';
+import BpmnViewer from "bpmn-js/dist/bpmn-navigated-viewer.production.min.js";
+import ExpandContract from "./addons/ExpandContract.vue";
 
-const serviceFlowModule = namespace('serviceFlowModule')
+import {
+  Formio
+} from 'vue-formio';
+import Header from "./layout/Header.vue";
+import LeftSider from "./layout/LeftSider.vue";
+import RightSider from "../components/layout/RightSider.vue";
+import TaskListMixin from "../mixins/TaskListMixin.vue";
 
+import {
+  namespace
+} from "vuex-class";
+import serviceFlowModule from "../store/modules/serviceFlow-module";
+
+const StoreServiceFlowModule = namespace("serviceFlowModule");
 
 @Component({
   components: {
-    formio: Form,
-    DatePicker,
-    TaskHistory,
     Header,
     LeftSider,
-    vSelect,
     ExpandContract,
-    BpmnViewer
+    BpmnViewer,
+    RightSider,
+ 
   },
 })
 export default class Tasklist extends Mixins(TaskListMixin) {
   @Prop() private getTaskId!: string;
+  @Prop() private reviewer!: string;
+  @Prop() private userRoles!: string;
+  @Prop({
+    default: "created",
+  })
+  public taskSortBy!: string;
+  @Prop({
+    default: "desc",
+  })
+  public taskSortOrder!: string;
+  @Prop({
+    default: () => [],
+  }) 
+  protected taskDefaultFilterListNames !: string[];
+ 
 
-  @serviceFlowModule.Getter('getFormsFlowTaskCurrentPage') private getFormsFlowTaskCurrentPage: any;
-  @serviceFlowModule.Getter('getFormsFlowTaskId') private getFormsFlowTaskId: any;
-  @serviceFlowModule.Getter('getFormsFlowactiveIndex') private getFormsFlowactiveIndex: any;
+  @StoreServiceFlowModule.Getter("getFormsFlowTaskCurrentPage")
+  private getFormsFlowTaskCurrentPage: any;
+  @StoreServiceFlowModule.Getter("getFormsFlowTaskId")
+  private getFormsFlowTaskId: any;
+  @StoreServiceFlowModule.Getter("getFormsFlowactiveIndex")
+  private getFormsFlowactiveIndex: any;
+  @StoreServiceFlowModule.Mutation("setFormsFlowTaskCurrentPage")
+  public setFormsFlowTaskCurrentPage: any;
+  @StoreServiceFlowModule.Mutation("setFormsFlowTaskId")
+  public setFormsFlowTaskId: any;
+  @StoreServiceFlowModule.Mutation("setFormsFlowactiveIndex")
+  public setFormsFlowactiveIndex: any;
+  @StoreServiceFlowModule.Mutation("setFormsFlowTaskLength")
+  public setFormsFlowTaskLength: any;
 
-  @serviceFlowModule.Mutation('setFormsFlowTaskCurrentPage') public setFormsFlowTaskCurrentPage: any
-  @serviceFlowModule.Mutation('setFormsFlowTaskId') public setFormsFlowTaskId: any
-  @serviceFlowModule.Mutation('setFormsFlowactiveIndex') public setFormsFlowactiveIndex: any
-
-
-  private tasks: Array<object> = [];
-  private fulltasks: Array<object> = [];
-  private taskProcess = null;
-  private processDefinitionId = '';
-  private formId = '';
-  private submissionId = '';
-  private formioUrl = '';
-  private task: any;
-  private setFollowup: any = [];
-  private setDue: any = [];
-  private setGroup = null;
-  private userSelected: any = {};
-  private showfrom = false;
-  public perPage = 10;
-  private tasklength = 0;
-  private options = {noAlerts: false,i18n: {
-    en: {error: "Please fix the errors before submitting again.",},},
+  private tasks: TaskPayload[] = [];
+  private fulltasks: TaskPayload[] = [];
+  private formId: string = "";
+  private taskLoading!: boolean;
+  private singleTaskLoading: boolean = false;
+  private diagramLoading: boolean = false;
+  private submissionId: string = "";
+  private formioUrl: string = "";
+  public getProcessDefinitions: Array<any> = [];
+  private task: TaskPayload = {
   };
-  private filterList = [];
-  private editAssignee = false;
-  private applicationId = '';
-  private groupList = [];
-  private groupListNames: Array<string> | null = null;
-  private groupListItems: string[] = [];
-  private userEmail = 'external';
-  private selectedfilterId = '';
+
+  public perPage: number = 10;
+  private filterList: FilterPayload[] = [];
+  private userEmail: string = "external";
+  private selectedfilterId: string = "";
   private xmlData!: string;
   private payload: Payload = {
-    active: true,
-    sorting: TASK_FILTER_LIST_DEFAULT_PARAM,
+    sorting: [] as TaskListSortType[],
     firstResult: 0,
-    maxResults: this.perPage
+    maxResults: this.perPage,
   };
-  private taskHistoryList: Array<object> = [];
-  private autoUserList: any = []
-  private taskIdValue = '';
-  private taskId2 = '';
-  private userName: any = ''
-  
-  checkPropsIsPassedAndSetValue () {
-    if(this.getTaskId) {
+
+  private taskIdValue: string = "";
+  private taskId2: string = "";
+  private activeUserSearchindex = 1;
+
+  private isUserAllowed: boolean = false
+  private containerHeight: number = 0;
+  private taskScrollableHeight: string = '100px';
+  private isHeightViewUpdated: boolean = false;
+  private toastMsg;
+  private toastMsgTxt: string = '';
+
+  created() {
+    Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"]'))
+      .forEach(tooltipNode => new Tooltip(tooltipNode));
+    const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    toastElList.map(function (toastEl) {
+      return new bootstrap.Toast(toastEl);
+    });
+  }
+
+  checkforTaskID() {
+    if (this.getTaskId) {
       this.taskIdValue = this.getTaskId;
     }
-    if(!this.getTaskId) {
+    if (!this.getTaskId) {
       const routeparams = this.$route?.query?.taskId;
-      if(typeof(routeparams) ==='string' && this.$route.query.taskId) {
+      if (typeof routeparams === "string" && this.$route.query.taskId) {
         this.taskIdValue = routeparams;
       }
     }
-    this.userName = getUserName()
+    this.userName = getUserName();
   }
 
-  timedifference (date: Date) {
-    return moment(date).fromNow();
-  }
+ 
 
-  toggleassignee ()  {
-    this.editAssignee = ! this.editAssignee;
-    this.userSelected['code'] = this.task.assignee;
-  }
-
-  onFormSubmitCallback () {
-    if (this.task.id) {
-      this.onBPMTaskFormSubmit(this.task.id);
-      this.reloadTasks();					   
-    }					  
-  }
-
-  addGroup () {
-    CamundaRest.createTaskGroupByID(
-      this.token,
-      this.task.id,
-      this.bpmApiUrl,
-      { userId: null, groupId: this.setGroup, type: "candidate" }
-    ).then(() => {
-      this.getGroupDetails();
-      this.reloadCurrentTask();
-      this.setGroup = null;
-    });
-  }
-  
-  async getGroupDetails () {
-    const grouplist = await CamundaRest.getTaskGroupByID(this.token, this.task.id, this.bpmApiUrl);
-    this.groupList = grouplist.data;
-    this.groupListItems = [];
-    this.groupListNames = null;
-    for (const group of grouplist.data) {
-      this.groupListItems.push(group.groupId);
-    }
-    if (this.groupListItems.length) {
-      this.groupListNames = this.groupListItems;
+  async onFormSubmitCallback(actionType = "") {
+    if (this.task.id !== null) {
+      this.onBPMTaskFormSubmit(this.task.id!, actionType);
+      this.reloadTasks();
     }
   }
-  
-  deleteGroup (groupid: string) {		 
-    CamundaRest.deleteTaskGroupByID(this.token, this.task.id, this.bpmApiUrl, {
-      groupId: groupid,
-      type: "candidate",
-    }).then(() => {
-      this.getGroupDetails();
-      this.reloadCurrentTask();
-    });
-  }
 
-  onBPMTaskFormSubmit (taskId: string) {
-    const formRequestFormat = {
+ 
+ 
+  async onBPMTaskFormSubmit(taskId: string, actionType: string) {
+    let formRequestFormat: FormRequestPayload = {
       variables: {
         formUrl: {
           value: this.formioUrl,
         },
         applicationId: {
-          value: this.applicationId,
+          value: this.task.applicationId!,
         },
-      },
+      }
     };
-    CamundaRest.formTaskSubmit(
+    if (actionType !== "") {
+      const newformRequestFormat: FormRequestActionPayload = Object.assign(
+        formRequestFormat.variables,
+        {
+          action: {
+            value: actionType,
+          },
+        }
+      );
+      formRequestFormat = {
+        variables: newformRequestFormat,
+      };
+    }
+
+    await CamundaRest.formTaskSubmit(
       this.token,
       taskId,
       formRequestFormat,
       this.bpmApiUrl
-    )
-      .then(() => {
-        this.reloadCurrentTask();
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
-  }
-
-  getBPMTaskDetail (taskId: string) {
-    CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl).then(
-      (result) => {
-        this.task = result.data;
-        CamundaRest.getProcessDefinitionById(
-          this.token,
-          this.task.processDefinitionId,
-          this.bpmApiUrl
-        ).then((res) => {
-          this.taskProcess = res.data.name;
-        });
-      }		   
     );
-    this.getGroupDetails();
   }
 
+  async getBPMTaskDetail(taskId: string) {
 
-  getTaskFormIODetails (taskId: string) {
-    this.showfrom = false;
-    CamundaRest.getVariablesByTaskId(
+    const [taskResult, applicationIdResult] = await Promise.all([
+      CamundaRest.getTaskById(this.token, taskId, this.bpmApiUrl),
+      CamundaRest.getVariablesByTaskId(this.token, taskId, this.bpmApiUrl),
+    ]);
+    const process = this.getProcessDefinitions.find(process => process.id === taskResult.data.processDefinitionId);
+    const processResult = await CamundaRest.getProcessDefinitionById(
+      this.token,
+      process.key,
+      this.bpmApiUrl
+    );
+    this.task = taskResult.data;
+    this.task.taskProcess = processResult.data.name;
+    this.task.applicationId = applicationIdResult.data.applicationId.value;
+    // await this.getGroupDetails();
+  }
+
+  async getTaskFormIODetails(taskId: string) {
+    const formResult = await CamundaRest.getVariablesByTaskId(
       this.token,
       taskId,
       this.bpmApiUrl
-    ).then((result) => {
-      if(result.data["formUrl"]?.value)
+    );
+
+
+    if (formResult.data.formUrl?.value) {
+      const formUrlPattern = formResult.data.formUrl?.value;
+      const {
+        formioUrl, formId, submissionId
+      } = getFormDetails(
+        formUrlPattern,
+        this.formioServerUrl
+      );
+
+      this.formioUrl = formioUrl;
+      this.submissionId = submissionId;
+      this.formId = formId;
+    }
+  }
+
+ 
+  async getTaskProcessDiagramDetails() {
+    this.diagramLoading = true; 
+    const process = this.getProcessDefinitions.find(process => process.id === this.task.processDefinitionId);
+    const getProcessResult = await CamundaRest.getProcessDiagramXML(
+      this.token,
+      process.key,
+      this.bpmApiUrl
+    );
+    const processInstanceId = this.task.processInstanceId || '';
+    const getActivity = await CamundaRest.getProcessActivity(
+      this.token,
+      processInstanceId,
+      this.bpmApiUrl
+    );
+    this.xmlData = getProcessResult.data.bpmn20Xml;
+    const activityList = getActivity.data.childActivityInstances;
+    const div = document.getElementById("process-diagram-container");
+    if (div) {
+      div.innerHTML = "";
+    }
+    this.diagramLoading = false;
+
+    const viewer = new BpmnViewer({
+      container: "#process-diagram-container",
+    });
+    await viewer.importXML(this.xmlData);
+    viewer.get("canvas").addMarker(
       {
-        this.formioUrl = result.data["formUrl"].value;
-        const { formioUrl, formId, submissionId } = getFormDetails(
-          this.formioUrl,
-          this.formIOApiUrl
-        );
-
-        this.formioUrl = formioUrl;
-        this.submissionId = submissionId;
-        this.formId = formId;
-      }
-      this.showfrom = true;
-    });
+        id: activityList[0].activityId,
+      },
+      "highlight"
+    );
+  
   }
 
+  async getDiagramDetails() {
 
-  getTaskHistoryDetails (taskId: string) {
-    this.applicationId = '';
-    this.taskHistoryList = [];
-    CamundaRest.getVariablesByTaskId(
-      this.token,
-      taskId,
-      this.bpmApiUrl
-    ).then((result) => {
-      if(result.data && result.data["applicationId"]?.value) {
-        this.applicationId = result.data["applicationId"].value;
-        getformHistoryApi(this.formsflowaiApiUrl, result.data["applicationId"].value, this.token)
-          .then((r)=> {
-            this.taskHistoryList = r.data.applications;
-          })
-      }
-    })
+    await this.getTaskProcessDiagramDetails();
+
   }
 
-  getTaskProcessDiagramDetails (task: any) {
-    CamundaRest.getProcessDiagramXML(
-      this.token,
-      task.processDefinitionId,
-      this.bpmApiUrl
-    ).then(async (res) => {
-      this.xmlData = res.data.bpmn20Xml;
-      const div = document.getElementById('canvas');
-      if(div){
-        div.innerHTML = ""
-      }
-      const viewer = new BpmnViewer({
-        container: '#canvas'
-      });
-
-      try {
-        const { warnings } = await viewer.importXML(this.xmlData);
-        viewer.get('canvas').zoom('fit-viewport');
-      } catch (err) {
-        console.error('error rendering process diagram', err);
-      }
-    });
-  }
-
-  oncustomEventCallback = (customEvent: any) => {
+  oncustomEventCallback = async (customEvent: CustomEventPayload) => {
     switch (customEvent.type) {
     case "reloadTasks":
-      this.reloadTasks();
+      await this.reloadTasks();
       break;
     case "reloadCurrentTask":
-      this.reloadCurrentTask();
+      await this.reloadCurrentTask();
       break;
+    case "actionComplete":
+      this.onFormSubmitCallback(customEvent.actionType);
+      break;
+    default:
+      // this call is for formio
+      this.$root.$emit(customEvent.type, {
+        customEvent
+      });
     }
   };
 
-  reloadTasks () {
+  async reloadTasks() {
     this.setFormsFlowTaskId("");
-    this.fetchPaginatedTaskList(this.selectedfilterId, this.payload, (this.getFormsFlowTaskCurrentPage-1)*this.perPage, this.perPage);
+    await this.fetchPaginatedTaskList(
+      this.selectedfilterId,
+      this.payload,
+      (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+      this.perPage
+    );
   }
 
-  reloadCurrentTask () {
-    this.getBPMTaskDetail(this.task.id);
-    this.fetchPaginatedTaskList(this.selectedfilterId, this.payload, (this.getFormsFlowTaskCurrentPage-1)*this.perPage, this.perPage);
+  async reloadCurrentTask() {
+    await this.getBPMTaskDetail(this.task.id!);
+    await this.fetchPaginatedTaskList(
+      this.selectedfilterId,
+      this.payload,
+      (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+      this.perPage
+    );
   }
 
-  onClaim () {
-    CamundaRest.claim(
-      this.token,
-      this.task.id,
-      { userId: this.userName },
-      this.bpmApiUrl
-    )
-      .then(() => {
-        this.fetchTaskData(this.getFormsFlowTaskId);
-        this.fetchPaginatedTaskList(this.selectedfilterId, this.payload, (this.getFormsFlowTaskCurrentPage-1)*this.perPage, this.perPage);
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
+  async reloadLHSTaskList() {
+    await this.fetchPaginatedTaskList(
+      this.selectedfilterId,
+      this.payload,
+      (this.getFormsFlowTaskCurrentPage - 1||0) * this.perPage,
+      this.perPage,
+    );
   }
 
-  onUnClaim () {		  
-    CamundaRest.unclaim(this.token, this.task.id, this.bpmApiUrl)
-      .then(() => {
-        this.reloadCurrentTask();
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
-  }
 
-  onSetassignee () {
-    CamundaRest.setassignee(this.token, this.task.id,
-      {"userId": this.userSelected?.code },
-      this.bpmApiUrl)
-      .then(() => {
-        this.fetchTaskData(this.getFormsFlowTaskId);
-        this.fetchPaginatedTaskList(this.selectedfilterId, this.payload, (this.getFormsFlowTaskCurrentPage-1)*this.perPage, this.perPage);
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      })
-    this.toggleassignee();
-  }
 
-  fetchTaskList (filterId: string, requestData: object) {
-    CamundaRest.filterTaskList(
+  async getBPMTaskandReload(){
+    await this.getBPMTaskDetail(this.getFormsFlowTaskId);
+    await this.reloadLHSTaskList();
+  }
+  
+
+
+  async fetchFullTaskList(filterId: string, requestData: Payload) {
+    const taskList = await CamundaRest.filterTaskList(
       this.token,
       filterId,
       requestData,
       this.bpmApiUrl
-    ).then((result) => {
-      this.fulltasks = result.data;
-      this.tasklength = result.data.length;
-    });
+    );
+    this.fulltasks = taskList.data;
   }
 
-  fetchPaginatedTaskList (filterId: string, requestData: object, first: number, max: number) {
+  async fetchPaginatedTaskList(
+    filterId: string,
+    requestData: any,
+    first: number,
+    max: number,
+    taskIdToRemove?: string
+  ) {
+    this.taskLoading=true;
     this.selectedfilterId = filterId;
-    CamundaRest.filterTaskListPagination(
+    const paginatedTaskResults = await CamundaRest.filterTaskListPagination(
       this.token,
       filterId,
       requestData,
       first,
       max,
       this.bpmApiUrl
-    ).then((result) =>{
-      this.tasks = result.data;
+    );
+    const responseData = paginatedTaskResults.data;
+    const _embedded = responseData._embedded; // data._embedded.task is where the task list is.
+    this.tasks = _embedded.task;
+    this.taskLoading = false;
+    this.setFormsFlowTaskLength(responseData.count);
+    this.taskLoading=false;
+
+    if (taskIdToRemove) {
+      //if the list has the task with taskIdToRemove remove that task and decrement
+      if (this.tasks.find((task: TaskPayload) => task.id === taskIdToRemove)) {
+        this.tasks = _embedded.task.filter((task: TaskPayload) => task.id !== taskIdToRemove);
+        this.setFormsFlowTaskLength(responseData.count--); // Count has to be decreased since one task id is removed.
+      }
+    }
+  }
+
+
+
+  async fetchTaskDetails(taskId: string) {
+    await Promise.all([
+      this.getBPMTaskDetail(taskId),
+      this.getTaskFormIODetails(taskId),
+    ]);
+    /*await is not used for this promise, as if a user doesn't want to wait for
+     the history and process diagram to load */
+    this.getTaskProcessDiagramDetails();
+  }
+
+  async findTaskIdDetailsFromURLrouter(
+    taskId: string,
+    fulltasks: TaskPayload[]
+  ) {
+    this.task = getTaskFromList(fulltasks, taskId)!;
+    this.setFormsFlowTaskId(this.taskIdValue);
+    const pos = fulltasks
+      .map(function (e: TaskPayload) {
+        return e.id;
+      })
+      .indexOf(this.taskIdValue);
+    this.setFormsFlowactiveIndex(pos % this.perPage);
+    this.setFormsFlowTaskCurrentPage(Math.floor(pos / this.perPage) + 1);
+    this.$root.$emit("update-pagination-currentpage", {
+      page: this.getFormsFlowTaskCurrentPage,
     });
   }
 
-  updateTaskDatedetails (taskId: string, task: any) {
-    CamundaRest.updateTasksByID(
-      this.token,
-      taskId,
-      this.bpmApiUrl,
-      task
-    )
-      .then(() => {
-        this.reloadCurrentTask();
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
+  updated() {
+    this.calculateViewHeights();
   }
 
-  updateFollowUpDate () {
-    const referenceobject = this.task;
-    try{
-      referenceobject['followUp'] = getISODateTime(this.setFollowup[
-        (this.getFormsFlowTaskCurrentPage-1)*this.perPage + this.getFormsFlowactiveIndex
-      ]);
-      this.updateTaskDatedetails(this.task.id, referenceobject);
+  /*** to calculate the height and handling scroll views accordingly */
+  calculateViewHeights() {
+    // add 8px to the headerHeight since the margin mb-2 applied to it
+    const headerHeight = ((this.$refs.presetSortFiltersRef as any)?.$el?.offsetHeight || 0) + 8;
+    const titleHeight = (this.$refs.taskTitleRef as any)?.offsetHeight || 0;
+    if (!this.isHeightViewUpdated && headerHeight) {
+      this.containerHeight = this.containerHeight - headerHeight;
+      this.isHeightViewUpdated = true;
     }
-    catch {
-      console.warn("Follow date error");
-    }
+    this.taskScrollableHeight = `${this.containerHeight - (titleHeight + 1)}px`;
   }
 
-  updateDueDate () {
-    const referenceobject = this.task;
-    try{
-      referenceobject['due'] = getISODateTime(this.setDue[
-        ((this.getFormsFlowTaskCurrentPage-1)*this.perPage) + this.getFormsFlowactiveIndex
-      ]);
-      this.updateTaskDatedetails(this.task.id, referenceobject);
-    }
-    catch {
-      console.warn("Due date error");
-    }
-  }
-
-  removeDueDate () {
-    const referenceobject = this.task;
-    try{
-      this.setDue[
-        (this.getFormsFlowTaskCurrentPage-1)*this.perPage + this.getFormsFlowactiveIndex
-      ] = null
-      referenceobject["due"] = null;
-      this.updateTaskDatedetails(this.task.id, referenceobject);
-    }
-    catch {
-      console.warn("Due date error");
-    }
-  }
-
-  removeFollowupDate () {
-    const referenceobject = this.task;
-    try{
-      referenceobject["followUp"] = null;
-      this.setFollowup[
-        (this.getFormsFlowTaskCurrentPage-1)*this.perPage + this.getFormsFlowactiveIndex
-      ] = null;
-      this.updateTaskDatedetails(this.task.id, referenceobject);
-    }
-    catch {
-      console.warn("Follow up date error")
-    }
-  }
-
-  fetchTaskData (taskId: string) {
-    this.task = getTaskFromList(this.tasks, taskId);
-    this.getBPMTaskDetail(taskId);
-    CamundaRest.getVariablesByProcessId(
-      this.token,
-      this.task.processInstanceId,
-      this.bpmApiUrl
-    )
-    this.getTaskFormIODetails(taskId);
-    this.getTaskHistoryDetails(taskId);
-    this.getTaskProcessDiagramDetails(this.task);
-  }
-
-  mounted () {
-    this.setFormsFlowTaskCurrentPage(1)
-    this.setFormsFlowTaskId('')
-    this.setFormsFlowactiveIndex(0)
-    this.$root.$on('call-fetchData', (para: any) => {
-      this.editAssignee = false
+  
+  async mounted() {
+    this.containerHeight = (this.$refs.taskListContainerRef as any).clientHeight;
+    this.toastMsg = new Toast(this.$refs?.toastMsgRef as any);
+    Formio.setBaseUrl(this.formioServerUrl);
+    Formio.setProjectUrl(this.formioServerUrl);
+    
+    CamundaRest.getProcessDefinitions(this.token, this.bpmApiUrl).then(
+      (response) => {
+        this.getProcessDefinitions = response.data;
+      }
+    );
+    this.isUserAllowed = isAllowedUser(this.reviewer, this.userRoles);
+    getFormioToken(this.formsflowaiApiUrl,this.token, (err: any,formioToken: any)=>{
+      if(err){
+        console.error(err);
+      }else{
+        localStorage.setItem("formioToken",formioToken);
+      }
+    });
+    this.setFormsFlowTaskCurrentPage(1);
+    this.setFormsFlowTaskId("");
+    this.setFormsFlowactiveIndex(NaN);
+    this.taskLoading = true;
+    this.$root.$on("call-fetchTaskDetails", async (para: any) => {
+      this.singleTaskLoading = true;
       this.setFormsFlowTaskId(para.selectedTaskId);
-      this.fetchTaskData(this.getFormsFlowTaskId)
-    })
+      await this.fetchTaskDetails(this.getFormsFlowTaskId);
+      this.singleTaskLoading = false;
+    });
 
-    this.$root.$on('call-fetchPaginatedTaskList', (para: any) => {
+    this.$root.$on("call-fetchPaginatedTaskList", async (para: any) => {
       this.selectedfilterId = para.filterId;
       this.payload = para.requestData;
-      this.fetchPaginatedTaskList(para.filterId, para.requestData, para.firstResult, para.maxResults);
-    })
-
-    this.$root.$on('call-fetchTaskList', (para: any) => {
-      this.fetchTaskList(para.filterId, para.requestData)
-    })
-
-    this.$root.$on('call-managerScreen', (para: any) => {
-      this.maximize = para.maxi
-    })
-
-    this.checkPropsIsPassedAndSetValue();
-    authenticateFormio(
-      this.formIOResourceId,
-      this.formIOReviewerId,
-      this.formIOReviewer,
-      this.userEmail,
-      this.formIOUserRoles
-    );
-    CamundaRest.filterList(this.token, this.bpmApiUrl).then((response) => {
-      this.filterList = response.data;
-      this.selectedfilterId = findFilterKeyOfAllTask(this.filterList, "name", "All tasks");
-      this.fetchTaskList(this.selectedfilterId, this.payload);
-      this.fetchPaginatedTaskList(this.selectedfilterId, this.payload, (this.getFormsFlowTaskCurrentPage-1)*this.perPage, this.perPage);
+      await this.fetchPaginatedTaskList(
+        para.filterId,
+        para.requestData,
+        para.firstResult,
+        para.maxResults
+      );
     });
 
-    if(SocketIOService.isConnected()) {
+    this.$root.$on("call-managerScreen", (para: any) => {
+      this.maximize = para.maxi;
+    });
+
+    this.checkProps();
+    this.checkforTaskID();
+    
+    const filterListResult = await CamundaRest.filterList(
+      this.token,
+      this.bpmApiUrl
+    );
+    this.filterList = sortByPriorityList(filterListResult.data);
+
+    if(this.taskDefaultFilterListNames.length > 0){
+      this.filterList = this.filterList.filter(FilterList => { 
+        return this.taskDefaultFilterListNames.some(filter=>FilterList.name.includes(filter));
+      });
+    }
+
+    if(this.filterList.length>0){
+      this.selectedfilterId = this.taskDefaultFilterListNames.length ? this.filterList[0].id : findFilterIdForDefaultFilterName(this.filterList, ALL_FILTER); 
+    }
+
+    else {
+      this.tasks = [];
+      this.taskLoading=false;
+    }
+
+    await this.reloadLHSTaskList();
+    if (SocketIOService.isConnected()) {
       SocketIOService.disconnect();
     }
-    SocketIOService.connect(this.webSocketEncryptkey, (refreshedTaskId: any, eventName: any)=> {
-      if(this.selectedfilterId){
-        this.fetchPaginatedTaskList(this.selectedfilterId, this.payload, (this.getFormsFlowTaskCurrentPage-1)*this.perPage, this.perPage);
-        this.fetchTaskData(this.getFormsFlowTaskId);
-        if (eventName === "create") {
-          this.$root.$emit('call-pagination')
-          this.fetchTaskList(this.selectedfilterId, this.payload);
+    SocketIOService.connect(
+      this.webSocketEncryptkey,
+      (refreshedTaskId: string, eventName: string, error: string) => {
+        // this.taskIdWebsocket = refreshedTaskId;
+        if (error) {
+          this.toastMsgTxt = `WebSocket is not connected which will cause
+            some inconsistency. System is trying to reconnect,
+            if you see this message for more than 10sec,
+            please refresh the page and try`;
+          this.toastMsg.show();
+        }
+
+        if (eventName === "complete") {
+          this.fetchPaginatedTaskList(
+            this.selectedfilterId,
+            this.payload,
+            (this.getFormsFlowTaskCurrentPage - 1) * this.perPage,
+            this.perPage,
+            refreshedTaskId
+          );
+
+          if (this.getFormsFlowTaskId && refreshedTaskId === this.getFormsFlowTaskId) {
+            this.setFormsFlowTaskId("");
+          }
+        }
+        else {
+          if (this.selectedfilterId) {
+            /* in case of update event update TaskList if the updated taskId is in
+            the current paginated taskList for the user only refresh */
+            if (eventName === "update") {
+              if (getTaskFromList(this.tasks, refreshedTaskId)) {
+                this.reloadLHSTaskList();
+              }
+            }
+
+            // In case of a new task is being created
+            else if (eventName === "create") {
+              this.reloadLHSTaskList();
+              this.$root.$emit("call-pagination");
+            }
+            else {
+              this.reloadLHSTaskList();
+            }
+          }
+
+          if (this.getFormsFlowTaskId && refreshedTaskId === this.getFormsFlowTaskId) {
+            //condition to remove the form input when a user is typing in the form by task refresh
+            if (this.task.assignee === this.userName) {
+              this.getBPMTaskDetail(this.task.id!);
+            }
+            // If task is not being claimed, then reload the full task details
+            else {
+              this.fetchTaskDetails(this.getFormsFlowTaskId);
+            }
+          }
         }
       }
-      if((this.getFormsFlowTaskId) && (refreshedTaskId===this.getFormsFlowTaskId)){
-        this.fetchTaskData(this.getFormsFlowTaskId);
-        this.reloadCurrentTask();
-      } 
-    })
+    );
 
-    CamundaRest.getUsers(this.token, this.bpmApiUrl).then((response) => {
-      this.autoUserList = []
-      response.data.forEach((element: any) => {
-        this.autoUserList.push({ "code" : element.id, "label" : element.email })
-         
-      });
-    });
-    //We used two variables - taskId2 and taskIdValue because the router value from gettaskId is always constant,so after calling the required task details from router to use other tasks in list we need to set taskId2 value as ''
-    if((this.taskId2 !== this.taskIdValue)) {
+    //We used two variables - taskId2 and taskIdValue because the router value from gettaskId
+    // is always constant,so after calling the required task details from router to use other
+    // tasks in list we need to set taskId2 value as ''
+    if (this.taskId2 !== this.taskIdValue) {
       this.taskId2 = this.taskIdValue;
+    } else {
+      this.taskId2 = "";
     }
-    else {
-      this.taskId2 = '';
+    if (this.taskId2 !== "") {
+      await this.fetchFullTaskList(this.selectedfilterId, this.payload);
+      await this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
+      await this.fetchTaskDetails(this.taskId2);
+      this.taskId2 = "";
     }
+
   }
 
-  fetchOptions (search: any) {
-    CamundaRest.getUsersByEmail(this.token, this.bpmApiUrl, search).then((response) => {
-      this.autoUserList = []
-      response.data.forEach((element: any) => {
-        this.autoUserList.push({ "code" : element.id, "label" : element.email })
-         
-      });
-    });
-  }
-
-  findTaskIdDetailsFromURLrouter (taskId: string, tasks: any) {
-    this.task = getTaskFromList(tasks, taskId);
-    this.setFormsFlowTaskId(this.taskIdValue);
-    const pos = tasks.map(function (e: any) {
-      return e.id;
-    }).indexOf(this.taskIdValue)
-    this.setFormsFlowactiveIndex(pos%this.perPage);
-    this.$root.$emit('update-activeIndex-pagination', {activeindex: this.getFormsFlowactiveIndex})
-    this.setFormsFlowTaskCurrentPage(Math.floor(pos/this.perPage)+1);
-    this.$root.$emit('update-pagination-currentpage', {page: this.getFormsFlowTaskCurrentPage});
-    
-  }
  
-  updated () {
-    if((this.fulltasks.length) && (this.taskId2 !== '')){
-      this.findTaskIdDetailsFromURLrouter(this.taskId2, this.fulltasks);
-      this.getBPMTaskDetail(this.taskId2);
-      this.getTaskFormIODetails(this.taskId2);
-      this.getTaskHistoryDetails(this.taskId2);
-      this.getTaskProcessDiagramDetails(this.task);
-      this.taskId2='';
-    }
-  }
 
-  beforeDestroy () {
+  beforeDestroy() {
     SocketIOService.disconnect();
-    this.$root.$off('call-fetchData')
-    this.$root.$off('call-fetchPaginatedTaskList')
-    this.$root.$off('call-fetchTaskList')
-    this.$root.$off('call-managerScreen')
-
+    this.$root.$off("call-fetchTaskDetails");
+    this.$root.$off("call-fetchPaginatedTaskList");
+    this.$root.$off("call-managerScreen");
+    if (this.$store.hasModule("serviceFlowModule")) {
+      this.$store.unregisterModule("serviceFlowModule");
+    }
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("UserDetails");
+  }
+  beforeCreate() {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("UserDetails");
+    if (!this.$store?.hasModule("serviceFlowModule")) {
+      this.$store.registerModule("serviceFlowModule", serviceFlowModule);
+    }
   }
 }
 </script>
+
+ 
+
+<style>
+.highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
+    fill: rgb(56,89,138) !important;
+  }
+</style>

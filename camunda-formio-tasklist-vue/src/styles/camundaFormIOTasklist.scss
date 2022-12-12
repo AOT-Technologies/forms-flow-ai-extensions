@@ -1,21 +1,43 @@
-.task-outer-container{
+@import "vue-select/src/scss/vue-select.scss";
+
+:root {
+  --h100: 100px;
+  --h120: 120px;
+  --h140: 140px;
+  --h160: 160px;
+  --h180: 180px;
+  --h200: 200px;
+  --h220: 220px;
+  --h240: 240px;
+  --h260: 260px;
+  --h280: 280px;
+  --h300: 300px;
+  --h320: 320px;
+  --h340: 340px;
+  --h360: 360px;
+  --h380: 380px;
+  --h400: 400px;
+}
+
+.task-outer-container {
   max-width: 100vw;
   background-color: white;
   text-align: left;
   font-size: 16px;
-  font-family: Nunito Sans, SemiBold;
-  
+  font-family: inherit;
+
   .bg-default {
     background-color: #38598a !important;
     border: #38598a !important;
     color: white !important;
   }
 
-  .cft-not-selected{
+  .cft-not-selected {
     border: 3px solid #b3b3b3;
     padding: 10px;
     color: #b3b3b3;
-    width: 100%;
+    width: 98%;
+    margin-bottom: 2%;
   }
 
   .cft-task-filter-length {
@@ -23,13 +45,14 @@
     font-size: 16px;
   }
 
-  .cft-filter:focus{
+  .cft-filter:focus {
     outline: none;
   }
 
   .cft-task-row-2 {
     font-size: 15px;
   }
+
   .cft-task-row-3 {
     font-size: 11px;
   }
@@ -41,22 +64,19 @@
     border-top: 1px solid #ced4da !important;
     padding-right: 25px;
     border-right: 2px solid #D0D0D0;
-  } 
+  }
 
   .cft-service-task-details {
     min-height: 80vh;
   }
 
-  .task-header {
+  .cft-task-header {
     font-size: 30px;
     font-weight: 600;
     color: #212529;
     padding-top: 5px;
-  }
-  .task-name {
-    font-size: 20px;
-    font-weight: 400;
-    color: #212529;
+    cursor: pointer;
+    width: auto;
   }
 
   .cft-selected {
@@ -64,23 +84,29 @@
   }
 
   .cft-filter-selected {
+    font-size: medium;
     border-left: 2px solid #003366 !important;
   }
-  .cft-diagram-container{
+
+  .cft-diagram-container {
     height: 100%;
   }
-  .cft-canvas-container{
+
+  .cft-canvas-container {
     height: 100%;
   }
-  .cft-actionable-container{
-    height:100%;
+
+  .cft-actionable-container {
+    height: 100%;
   }
+
   .cft-actionable {
     color: #1a5a96;
     background-color: transparent;
     cursor: pointer;
     margin: 10px 0;
     font-size: 16px;
+    height: 25%;
   }
 
   .cft-select-task {
@@ -95,8 +121,7 @@
     justify-content: flex-end;
   }
 
-  .cft-filter-dropbtn 
-  {
+  .cft-filter-dropbtn {
     background-color: #1a5a96;
     color: white;
     font-size: 20px;
@@ -104,13 +129,13 @@
     cursor: pointer;
     padding: 5px 9px;
   }
-  .cft-input-filter{
+
+  .cft-input-filter {
     display: flex;
     justify-content: space-between;
   }
 
-  .cft-filter-dropdown 
-  {
+  .cft-filter-dropdown {
     position: relative;
   }
 
@@ -127,7 +152,7 @@
   }
 
   .cft-search-items {
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     border: 1px solid #949494;
     border-radius: 3%;
     position: absolute;
@@ -160,104 +185,120 @@
   .cftf-search-item-box {
     margin-top: 5px;
     background-color: #f2dede;
-    border-color: #ebccd1;
-    color: #0b2d5f;;
+    border-color: #f2dede;
+    color: #0b2d5f;
+    ;
   }
 
-  .cft-filter-dropdown-content 
-  {
+  .cft-filter-dropdown-content {
     font-size: large;
     display: block;
     position: fixed;
     cursor: pointer;
     background-color: #f9f9f9;
     min-width: 250px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 2;
   }
+
   .cft-list-container {
     margin-top: 5px;
   }
-  
-  .cft-task-details-assign{
+
+  .cft-task-details-assign {
     display: flex;
     justify-content: space-between;
   }
-  .font-11{
+
+  .font-11 {
     font-size: 11px;
   }
-  .assigne-details{
+
+  .assigne-details {
     font-size: 15px;
     font-weight: 500;
     margin-top: 10px;
 
   }
-  .cft-filter-sort{
+
+  .cft-filter-sort {
     display: flex;
     justify-content: space-between;
   }
+
   .tabs {
     display: block;
   }
+
   [aria-busy=true] {
     cursor: unset !important;
   }
-  .cft-paginate{
-      display: flex;
-      justify-content: center;
-      margin-top: 15px;
+
+  .cft-paginate {
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+    margin-bottom: 2%;
   }
 
-  #cftf-dpdown-container {
+  #cftf-sort-container {
     display: flex;
     flex-wrap: wrap;
-    padding: calc(6px + 2px) 15px calc(6px - 2px) 15px;
+    // padding: calc(6px + 2px) 15px calc(6px - 2px) 15px;
     box-shadow: 0 2px 6px -4px #555;
     background-color: #fafafa;
+    font-size: 14px !important;
+
     .nav-link {
       padding: 0px;
     }
+
     span {
-    color: #212529;
+      color: #212529;
     }
   }
-  
-  .cftf-dpdown-box {
+
+  .cftf-sort-box {
     margin-top: 5px;
+    margin-bottom: 5px;
+
     .fa-chevron-down {
-        color: #212529;
+      color: #212529;
     }
 
     .fa-chevron-up {
-        color: #212529;
+      color: #212529;
     }
 
     .fa-plus {
-        color: #212529;
+      color: #212529;
     }
 
     .nav-link {
-        color: #212529;
+      color: #212529;
     }
 
   }
-  .cft-dpdown-inner-container{
-    display: flex;
-  }
-  .cft-selection-box  {
+
+  // .cft-dpdown-inner-container {
+  //   display: flex;
+  // }
+
+  .cft-selection-box {
     width: 60%;
-      margin-left: 4px;
-  }
-  @media(max-width: 300px) {
-    .cftf-dpdown-box {
-       width: 100%;
-     }
+    margin-left: 4px;
   }
 
+  // @media(max-width: 300px) {
+  //   .cftf-dpdown-box {
+  //     width: 100%;
+  //   }
+  // }
+
   .tab-content {
-    height:100%;
+    height: 100%;
   }
-  
+
   .vue-bpmn-diagram-container {
     height: 100%;
     width: 100%;
@@ -274,11 +315,10 @@
     cursor: pointer;
     margin-right: 0.25rem;
   }
-  
+
   .cftf-add-sorting {
     color: #212529;
-    padding: 5px;
-    margin-top: 5px;
+    padding-top: 68%;
     position: relative;
 
     .nav-link {
@@ -286,152 +326,375 @@
     }
   }
 
-  .cft-sort-element {
-    cursor: pointer;
-  }
-
-  p{
+  p {
     white-space: normal;
   }
 
-  .cft-form-title{
+  .cft-form-title {
     cursor: pointer;
     color: #4d61fc;
     border-bottom: 1px solid #4d61fc;
     background-color: transparent;
   }
 
-  .main-filters{
+  .main-filters {
     display: flex;
     justify-content: flex-start;
     align-items: center;
   }
-  .cft-task-title{
+
+  .cft-task-title {
     font-size: 16px;
     margin: 0;
   }
 
-  .cft-process-title{
+  .cft-process-title {
     font-size: 16px;
     font-weight: 500;
   }
 
-  .created-details{
+  .created-details {
     display: flex;
     width: 100%;
     justify-content: space-between;
   }
-  .height-100{
+
+  .height-100 {
     min-height: 100%;
+    overflow-x: hidden;
   }
 
-  .cft-priority{
+  .cft-priority {
     text-align: right;
   }
 
-.cft-process-title[data-title]:hover:after,
-.cft-task-title[data-title]:hover:after,
-.cft-priority[data-title]:hover:after,
-.cft-task-assignee[data-title]:hover:after,
-.cft-process-name[data-title]:hover:after,
-.task-header-title[data-title]:hover:after {
-  font-size: 12px;
-  content: attr(data-title);
-  padding: 4px 8px;
-  color: rgb(255, 255, 255);
-  position: absolute;
-  background-color: rgb(0, 0, 0);
-  right: 3rem;
-  top: 100%;
-  white-space: nowrap;
-  z-index: 1;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  -moz-box-shadow: 0px 0px 4px #222;
-  -webkit-box-shadow: 0px 0px 4px #222;
-  box-shadow: 0px 0px 4px #222;
-  background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #eeeeee),color-stop(1, #cccccc));
-  background-image: -webkit-linear-gradient(top, #eeeeee, #cccccc);
-  background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
-  background-image: -ms-linear-gradient(top, #eeeeee, #cccccc);
-  background-image: -o-linear-gradient(top, #eeeeee, #cccccc);
-}
-.cft-application-id{
-  display: block;
-  height: auto;
-  width:40%;
-}
-.task-name{
-  height: 20px;
-}
+  .cft-process-title[data-title]:hover:after,
+  .cft-task-title[data-title]:hover:after,
+  .cft-priority[data-title]:hover:after,
+  .cft-task-assignee[data-title]:hover:after {
+    font-size: 12px;
+    content: attr(data-title);
+    padding: 4px 8px;
+    color: rgb(255, 255, 255);
+    position: absolute;
+    background-color: rgb(0, 0, 0);
+    right: 3rem;
+    top: 100%;
+    white-space: nowrap;
+    z-index: 1;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0px 0px 4px #222;
+    -webkit-box-shadow: 0px 0px 4px #222;
+    box-shadow: 0px 0px 4px #222;
+    background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eeeeee), color-stop(1, #cccccc));
+    background-image: -webkit-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -ms-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -o-linear-gradient(top, #eeeeee, #cccccc);
+  }
 
-.cft-task-assignee[data-title]:hover:after {
-  width: 80%;
-}
+  .cft-application-id {
+    display: block;
+    height: auto;
+    width: 20%;
+    cursor: pointer;
+  }
 
-.cftf-form-conatiner{
-  background-color: white;
-  .cftf-taskhead{
+  .cft-task-name {
+    height: 20px;
+    width: 30%;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 400;
+    color: #212529;
+  }
+
+  .cft-task-assignee[data-title]:hover:after {
+    width: 80%;
+  }
+
+  .cftf-form-conatiner {
+    background-color: white;
+
+    .cftf-taskhead {
+      font-weight: bold;
+      font-size: 30px;
+      margin-left: 10px;
+      display: flex;
+    }
+
+    .cftf-table-align {
+      text-align: left;
+    }
+  }
+
+
+  .cft-user-select {
+    width: 70%;
+    height: none;
+    color: #01060a;
+    font-weight: 500;
+    font-size: 14px;
+    border: 3px solid #b3b3b3;
+  }
+
+  .cft-user-close {
+    position: relative;
+    color: #1a5a96;
+    font-family: inherit;
     font-weight: bold;
-    font-size: 30px;
-    margin-left: 10px;
-    display: flex;
   }
-  .cftf-table-align{
-    text-align: left;
-  }
-}
 
-.cft-form-list-paginate{
-  display: flex;
-  justify-content: center;
-  margin-top: 15px;
-  padding: 0px;
-}
-.cft-user-select{
-  width: 70%;
-  height: none;
-  color: #01060a;
-  font-weight: 500;
-  font-size: 14px;
-  border: 3px solid #b3b3b3;
-}
-.cft-user-close{
-  position: relative;
-  color: #1a5a96;
-  font-family: Nunito Sans, SemiBold;
-  font-weight: bold;
-}
-.cft-person-fill{
-  padding-right: 3px;
-}
-.cft-user-details {
-  position: absolute;
-}
-.custom-select {
-  height: auto;
-  vertical-align: top;
-  width: 80% !important;
-}
-.custom-select:focus{
-  border-color: none !important;
-  box-shadow: none;
-}
-.diagram-full-screen {
-  height:  100vh;
-  min-height: 100vh;
-}
-.card{
-  white-space: normal;
-}
-li {
-  list-style-type: none;
-}
-.cft-nav-backgroup, .cft-nav-backgroup:hover
-{
-  background-color: #1a5a96;
-  color: white;
-}
+  .cft-person-fill {
+    padding-right: 3px;
+  }
+
+  .cft-user-details {
+    position: absolute;
+  }
+
+  .custom-select {
+    height: auto;
+    vertical-align: top;
+    width: 80% !important;
+  }
+
+  .custom-select:focus {
+    border-color: none !important;
+    box-shadow: none;
+  }
+
+  .diagram-full-screen {
+    height: 100vh;
+    min-height: 100vh;
+  }
+
+  .card {
+    white-space: normal;
+  }
+
+  li {
+    list-style-type: none;
+  }
+
+  .cft-nav-backgroup,
+  .cft-nav-backgroup:hover {
+    background-color: #1a5a96;
+    border: #38598a !important;
+  }
+
+  .cft-filter-header {
+    color: white;
+  }
+
+  .cft-assignee-tickmark-icon {
+    font-size: 1.7em;
+  }
+
+  .cft-assignee-cancel-icon {
+    font-size: 1.7em;
+  }
+
+  .cft-assignee-filter-icon {
+    font-size: 1.7em;
+  }
+
+  //TODO Remove this when Semantic UI css is removed. Semantic UI css override formio css tooltip
+
+  [data-tooltip]:before {
+    visibility: unset !important;
+    position: initial !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+    // content is overiding as  empty string in integrated system,
+    // below coded added to fix the issue in integrated system
+    content: "\f059" !important;
+    color: #2780e3;
+  }
+
+  [data-tooltip]:after {
+    opacity: 0 !important;
+  }
+
+  .icon-right-side {
+    left: 8.3em;
+  }
+
+  .cft-icon-border {
+    padding: 0.20rem 0.15rem !important;
+    border: 1px solid rgb(184, 184, 184) !important;
+  }
+
+  .tooltip-inner {
+    background-color: white;
+    color: black;
+    box-shadow: 1px 1px 1px 1px #272727;
+  }
+
+  .tooltip-inner a {
+    color: #2780e3;
+  }
+
+  .cft-actionable-container .form-tab-conatiner a {
+    color: #2780e3;
+    border-bottom-style: none;
+  }
+
+  .row .v-select .vs__dropdown-toggle {
+    width: 100%;
+  }
+
+  .task-outer-container .row .v-select .vs__dropdown-toggle {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .cft-group-align {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    width: 100%;
+  }
+
+  .assignee-align {
+    width: 50% !important;
+    height: 34px !important;
+    border: 1px solid #000000;
+    border-radius: 4px;
+  }
+
+  .cft-assignee-change-box .assignee-align .vs__selected {
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  .word-break {
+    word-break: break-all;
+  }
+
+  .mx-datepicker {
+    width: 100%;
+  }
+
+  .tasklist-container {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  .cft-user-select {
+    width: 70%;
+    height: none;
+    color: #01060a;
+    font-weight: 500;
+    font-size: 14px;
+    border: 3px solid #b3b3b3;
+  }
+
+  .cft-user-close {
+    position: relative;
+    color: #1a5a96;
+    font-family: inherit;
+    font-weight: bold;
+  }
+
+  .cft-select-generic-search {
+    padding-bottom: 2%;
+  }
+
+  .cft-height {
+    overflow: auto !important;
+    height: calc(100vh);
+  }
+
+  .cft-height-h100 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h100));
+  }
+
+  .cft-height-h120 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h120));
+  }
+
+  .cft-height-h140 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h140));
+  }
+
+  .cft-height-h160 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h160));
+  }
+
+  .cft-height-h180 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h180));
+  }
+
+  .cft-height-h200 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h200));
+  }
+
+  .cft-height-h220 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h220));
+  }
+
+  .cft-height-h240 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h240));
+  }
+
+  .cft-height-h260 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h260));
+  }
+
+  .cft-height-h280 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h280));
+  }
+
+  .cft-height-h300 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h300));
+  }
+
+  .cft-height-h320 {
+    overflow: scroll !important;
+    height: calc(100vh - var(--h320));
+  }
+
+  .cft-height-h340 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h340));
+  }
+
+  .cft-height-h360 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h360));
+  }
+
+  .cft-height-h380 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h380));
+  }
+
+  .cft-height-h400 {
+    overflow: auto !important;
+    height: calc(100vh - var(--h400));
+  }
+
+  .highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
+    fill: rgb(56,89,138) !important;
+  }
 }

@@ -1,75 +1,147 @@
 <template>
-    <div>
-      <b-row>
-        <b-col cols="10">
-          <b-nav-item-dropdown split text="Filter Tasks" class="cft-search-item-nav">
-            <b-dropdown-item-button v-for="(s, idx) in searchList"
-              :key="s.label" 
-              @click="
-                addToSelectedSearchQuery(s);
-                setActiveSearchItem(idx);"
-              :class="{ 'cft-search-item-selected': idx == activeSearchItem }"
-            > {{s.label}}
-            </b-dropdown-item-button>
-          </b-nav-item-dropdown>
-        </b-col>
-        <b-col cols="2">
-          <span class="cft-search-total" title="Total number of tasks.">
-          {{ tasklength }}
-          </span>
-        </b-col>
-      </b-row>
-      <span v-if="isVariableTypeInSelectedSearchQuery">
-        <span>
-      <b-form-checkbox-group
-        id="checkbox-group-2"
-        v-model="variablesEndType"
-        name="flavour-2"
-      >
-        <span class="cft-name-value-container">For Variables, ignore case of
-        <b-form-checkbox value="variableNamesIgnoreCase" @change="callTaskVariablesEndApi">name</b-form-checkbox>
-        <b-form-checkbox value="variableValuesIgnoreCase" @change="callTaskVariablesEndApi">value.</b-form-checkbox>
-        </span>
-      </b-form-checkbox-group>
-        </span>
-      </span>
+  <div>
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="dropdown">
+        <button
+          class="btn btn-sm dropdown-toggle"
+          type="button"
+          id="filterTasks"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Filter Tasks
+        </button>
+        <ul
+          class="dropdown-menu"
+          aria-labelledby="filterTasks"
+        >
+          <li
+            class="dropdown-item"
+            v-for="(s, idx) in searchList"
+            :key="s.label"
+            @click="
+              addToSelectedSearchQuery(s);
+              setActiveSearchItem(idx);
+            "
+            :class="{ 'active': idx == activeSearchItem }"
+          >
+            {{ s.label }}
+          </li>
+        </ul>
+      </div>
     </div>
+    <div v-if="isVariableTypeInSelectedSearchQuery">
+      <div class="search-query-extent mx-2">
+        For Variables, ignore case of
+        <div class="form-check mx-2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            :value="getVariableNameIgnoreCase"
+            @change="updateNameCase"
+            id="filterNameCheckbox"
+          >
+          <label
+            class="form-check-label"
+            for="filterNameCheckbox"
+          >
+            name
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            :value="getVariableValueIgnoreCase"
+            @change="updateValueCase"
+            id="filterValueCheckbox"
+          >
+          <label
+            class="form-check-label"
+            for="filterValueCheckbox"
+          >
+            value.
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import '../../styles/camundaFormIOTasklistSearch.scss'
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
+import "../../styles/camundaFormIOTasklistSearch.scss";
+import {
+  Component, Emit, Prop, Vue
+} from "vue-property-decorator";
+import {
+  SearchOptionPayload,
+} from "../../models";
+import {
+  namespace
+} from "vuex-class";
+import {
+  taskSearchFilters
+} from "../../services";
 
-@Component
+
+const serviceFlowModule = namespace("serviceFlowModule");
+
+@Component({
+})
 export default class TaskListAddSearchIgnoreCase extends Vue {
-    @Prop() private isVariableTypeInSelectedSearchQuery !: string;
-    @Prop() private queryList !: any;
-    @Prop() private tasklength !: number;
-    @Prop() private searchListElements !: any;
+  @Prop() private isVariableTypeInSelectedSearchQuery!: string;
 
-    private variablesEndType = [];
-    private QList = this.queryList;
-    private activeSearchItem = 0;
-    private searchList = this.searchListElements;
 
-    setActiveSearchItem (index: number) {
-      this.activeSearchItem = index;
-    }
+  @serviceFlowModule.Getter("getFormsFlowTaskLength")
+  private getFormsFlowTaskLength: any;
+  @serviceFlowModule.Getter("getVariableNameIgnoreCase")
+  private getVariableNameIgnoreCase: any;
+  @serviceFlowModule.Getter("getVariableValueIgnoreCase")
+  private getVariableValueIgnoreCase: any;
 
-    @Emit()
-    addToSelectedSearchQuery (item: any) {
-      return item
-    }
+  @serviceFlowModule.Mutation("setVariableNameIgnoreCase")
+  public setVariableNameIgnoreCase: any;
+  @serviceFlowModule.Mutation("setVariableValueIgnoreCase")
+  public setVariableValueIgnoreCase: any;
 
-    callTaskVariablesEndApi () {
-      this.QList['variableNamesIgnoreCase'] = false;
-      this.QList['variableValuesIgnoreCase'] = false;
-      for(const variablevalue in this.variablesEndType) {
-        this.QList[this.variablesEndType[variablevalue]] = true;
-        this.$root.$emit('call-updateTaskList', {queryList: this.QList})
-      }
-      this.$root.$emit('call-updateTaskList', {queryList: this.QList});
-    }
+  private activeSearchItem: number = 0;
+  private searchList: SearchOptionPayload[] = taskSearchFilters;
 
+  setActiveSearchItem(index: number) {
+    this.activeSearchItem = index;
+  }
+
+  @Emit()
+  addToSelectedSearchQuery(item: SearchOptionPayload) {
+    return item;
+  }
+
+  updateNameCase() {
+    this.setVariableNameIgnoreCase();
+    this.$root.$emit("call-updateTaskList");
+  }
+
+  updateValueCase() {
+    this.setVariableValueIgnoreCase();
+    this.$root.$emit("call-updateTaskList");
+  }
 }
 </script>
+
+<style lang="scss" scoped>
+.dropdown {
+  .btn {
+    line-height: 1;
+    min-height: 36px;
+  }
+  .dropdown-item {
+    padding: 0.5rem 0.75rem;
+  }
+}
+.search-query-extent {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+</style>
