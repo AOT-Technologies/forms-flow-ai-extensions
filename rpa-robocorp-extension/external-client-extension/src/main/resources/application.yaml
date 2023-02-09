@@ -39,7 +39,7 @@ robot:
 
 
 client:
-  base-url: ${CAMUNDA_BPM_URL}/camunda/engine-rest # the URL pointing to the Camunda Platform Runtime REST API
+  base-url: ${CAMUNDA_BPM_URL}/camunda/engine-rest-ext # the URL pointing to the Camunda Platform Runtime REST API
   lock-duration: ${LOCK_DURATION:3000} # defines how many milliseconds the External Tasks are locked until they can be fetched again
   max-tasks: ${MAX_TASKS:10}
   disable-backoff-strategy: true
