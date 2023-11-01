@@ -27,7 +27,6 @@ jobs:
       - run: npm run build
 
   publish-npm:
-    if: github.repository == 'AOT-Technologies/forms-flow-ai-extensions' && github.head_ref == 'Vue-dev'
     needs: build
     runs-on: ubuntu-latest
     steps:
