@@ -28,12 +28,12 @@
     "build-report": "vue-cli-service build --report"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^1.6.0",
     "bootstrap": "^5.1.3",
     "bpmn-js": "^8.6.0",
-    "crypto-js": "4.0.0",
+    "crypto-js": "4.2.0",
     "font-awesome": "^4.7.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "semantic-ui-css": "^2.4.1",
     "sockjs-client": "^1.5.1",
     "stompjs": "^2.3.3",
