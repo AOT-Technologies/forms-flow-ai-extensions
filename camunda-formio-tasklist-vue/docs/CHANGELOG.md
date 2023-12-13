@@ -1,5 +1,9 @@
 # Changes for camunda-formio-tasklist-vue
 
+## v1.1.5, 2023-10-31
+
+#### Fixes
+- Removed v-calender package
 
 ## v1.1.4, 2022-11-11
 

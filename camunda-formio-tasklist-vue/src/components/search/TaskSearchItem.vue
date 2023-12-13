@@ -196,7 +196,7 @@ import {
 import {
   getFormattedDateAndTime, taskSearchFilters
 } from "../../services";
-import DatePicker from "v-calendar/lib/components/date-picker.umd";
+
 import {
   SearchOptionPayload
 } from "../../models";
@@ -205,8 +205,6 @@ import vSelect from "vue-select";
 @Component({
   components: {
     vSelect,
-    DatePicker,
-    VDatePicker: DatePicker,
   }
 })
 export default class TaskSearchItem extends Vue {

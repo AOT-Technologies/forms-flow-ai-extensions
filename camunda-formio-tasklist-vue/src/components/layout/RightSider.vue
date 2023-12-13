@@ -493,7 +493,6 @@ import {
   UserPayload,
   UserSearchListLabelPayload,
 } from "../../models";
-import DatePicker from "v-calendar/lib/components/date-picker.umd";
 import ExpandContract from "../addons/ExpandContract.vue";
 import FormEdit from "../form/Edit.vue";
 import FormView from "../form/View.vue";
@@ -511,7 +510,6 @@ import vSelect from "vue-select";
     FormEdit,
     FormView,
     vSelect,
-    VDatePicker: DatePicker,
   }
 })
 export default class RightSider extends Vue {
