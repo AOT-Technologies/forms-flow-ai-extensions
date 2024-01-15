@@ -698,3 +698,11 @@
     fill: rgb(56,89,138) !important;
   }
 }
+
+
+.formio-form, 
+.formio-builder-form {
+    .form-group {
+      margin-bottom: 1rem;
+    }
+  }
