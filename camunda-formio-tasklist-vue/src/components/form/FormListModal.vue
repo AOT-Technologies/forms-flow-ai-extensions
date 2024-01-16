@@ -75,7 +75,7 @@
                       </div>
                      <div class="d-flex align-items-center">
                       <input 
-                        class=" form-control"  
+                        class="me-2 form-control"  
                         v-model="searchValue" 
                         type="text" 
                         @keypress.enter="handleSearch"
@@ -182,6 +182,7 @@
             <Form
               v-if="Object.keys(formData).length > 0"
               ref="formio-form"
+              :src="currentFormUrl"
               :form="formData"
               submission=""
               options=""
@@ -249,6 +250,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
   private sortBy: string="formName" ;
   private formError: string="";
   public submissionError: string= "";
+  public currentFormUrl: string= "";
   public isSearch: boolean= false;
   private isFormloading: boolean=true;
   public formData = {
@@ -328,6 +330,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
     };
     this.formId = val;
     const url = this.formioUrl.concat(val);
+   
     axios.get(url, {
       headers:{
         "x-jwt-token": localStorage.getItem("formioToken")
@@ -335,6 +338,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
     }).then((res)=>{
       if(res.data){
         this.formData = res.data;
+        this.currentFormUrl = url;
       }else{
         this.formData = {
         };
@@ -426,10 +430,7 @@ export default class FormListModal extends Mixins(BaseMixin) {
 }
 </script>
 <style>
- input{
-  margin-right: 10px;
-  float: right;
-}
+ 
 .formspinner{
   width: 3rem; 
   height: 3rem
