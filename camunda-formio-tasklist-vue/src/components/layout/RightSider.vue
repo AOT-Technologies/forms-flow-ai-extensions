@@ -474,7 +474,7 @@
 import {
   CamundaRest,
   SEARCH_USERS_BY,
-  SocketIOService,
+  // SocketIOService,
   getISODateTime,
   reviewerGroup,
 } from "../../services";
@@ -571,9 +571,10 @@ async onSetassignee() {
       this.bpmApiUrl
   );
   await this.toggleassignee();
-  if (!SocketIOService.isConnected()) {
-    this.getBPMTaskandReload();
-  }
+  // if (!SocketIOService.isConnected()) {
+  //   this.getBPMTaskandReload();
+  // }
+  this.getBPMTaskandReload();
 }
 
 // toggle assignee
@@ -668,9 +669,10 @@ async onClaim() {
       this.bpmApiUrl
   );
    
-  if (!SocketIOService.isConnected()) {
-    this.getBPMTaskandReload();
-  }
+  // if (!SocketIOService.isConnected()) {
+  //   this.getBPMTaskandReload();
+  // }
+  this.getBPMTaskandReload();
   this.loadingClaimAndUnclaim= false;
 
 }
@@ -681,9 +683,10 @@ async onUnClaim() {
   this.loadingClaimAndUnclaim= true;
   await CamundaRest.unclaim(this.token, this.task.id!, this.bpmApiUrl);
 
-  if (!SocketIOService.isConnected()) {
-    this.getBPMTaskandReload();
-  }
+  // if (!SocketIOService.isConnected()) {
+  //   this.getBPMTaskandReload();
+  // }
+  this.getBPMTaskandReload();
   this.loadingClaimAndUnclaim= false;
 }
 
@@ -748,9 +751,9 @@ async deleteGroup(groupid: string) {
 // update data
 async updateTaskDatedetails(taskId: string, task: TaskPayload) {
   await CamundaRest.updateTasksByID(this.token, taskId, this.bpmApiUrl, task);
-  if (!SocketIOService.isConnected()) {
-    await this.reloadCurrentTask();
-  }
+  // if (!SocketIOService.isConnected()) {
+  await this.reloadCurrentTask();
+  // }
 }
 
 

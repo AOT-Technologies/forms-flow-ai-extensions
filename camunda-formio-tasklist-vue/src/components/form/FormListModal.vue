@@ -420,12 +420,17 @@ export default class FormListModal extends Mixins(BaseMixin) {
   oncustomEventCallback = (customEvent: CustomEventPayload) => {
     switch (customEvent.type) {
     case "customSubmitDone":
+      this.backToFormList();
       this.$emit("update-task");
+      break;
+    case "cancelSubmission":
+      this.backToFormList();
       break;
     default: 
       break;
     }
   };
+ 
 
 }
 </script>
