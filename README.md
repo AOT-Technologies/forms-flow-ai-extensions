@@ -21,4 +21,4 @@ install package [go here](https://www.npmjs.com/package/camunda-formio-tasklist-
 This is a collection of custom FORMIO components and templates for Formsflow.ai project.
 This extension provides custom components for easily using Formsflow forms by installing as a npm package. Checkout more
 about [the package in README](./formsflow-custom-formio/README.md) and to :inbox_tray:
-install package [go here](https://www.npmjs.com/package/formsflow-formio-custom-elements).
+install package [go here](https://www.npmjs.com/package/@aot-technologies/formsflow-formio-custom-elements).
