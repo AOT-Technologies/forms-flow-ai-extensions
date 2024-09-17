@@ -15,7 +15,8 @@
   },
   "author": "support@aot-technologies.com",
   "contributors": [
-    "Ratheesh kumar R <ratheesh.kumar@aot-technologies.com> (https://github.com/ratheesh-aot)"
+    "Ratheesh kumar R <ratheesh.kumar@aot-technologies.com> (https://github.com/ratheesh-aot)",
+    "Arun S <arun.s@aot-technologies.com> (https://github.com/arun-s-aot)"
   ],
   "license": "MIT",
   "devDependencies": {
