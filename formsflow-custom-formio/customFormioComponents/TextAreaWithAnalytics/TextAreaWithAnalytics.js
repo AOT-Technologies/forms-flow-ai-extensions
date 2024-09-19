@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { ReactComponent } from "react-formio";
+import { ReactComponent } from "@aot-technologies/formio-react";
 import settingsForm from "./TextAreaWithAnalytics.settingsForm";
 import SentimentAnalytics from "./TextAreaWithAnalyticsInputComponent";
 

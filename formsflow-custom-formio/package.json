@@ -1,7 +1,7 @@
 {
-  "name": "formsflow-formio-custom-elements",
+  "name": "@aot-technologies/formsflow-formio-custom-elements",
   "description": "Custom FORMIO elements for Formsflow project.",
-  "version": "1.0.3",
+  "version": "1.0.2",
   "private": false,
   "main": "./dist/customformio-ex.js",
   "repository": {
@@ -10,12 +10,13 @@
   },
   "scripts": {
     "build": "npx webpack --mode=production",
-    "buildExcludeFormio" : "npx webpack --mode=production --env exclude=react-formio",
+    "buildExcludeFormio": "npx webpack --mode=production --env exclude=@aot-technologies/formio-react",
     "prepublish": "npm run build && npm run buildExcludeFormio"
   },
   "author": "support@aot-technologies.com",
   "contributors": [
-    "Ratheesh kumar R <ratheesh.kumar@aot-technologies.com> (https://github.com/ratheesh-aot)"
+    "Ratheesh kumar R <ratheesh.kumar@aot-technologies.com> (https://github.com/ratheesh-aot)",
+    "Arun S <arun.s@aot-technologies.com> (https://github.com/arun-s-aot)"
   ],
   "license": "MIT",
   "devDependencies": {
@@ -29,12 +30,13 @@
     "webpack-cli": "^4.10.0"
   },
   "peerDependencies": {
-    "formiojs": "^4.14.8"
+    "@aot-technologies/formiojs": "^1.0.0"
   },
   "dependencies": {
+    "@aot-technologies/formio-react": "^1.0.2",
+    "@aot-technologies/formiojs": "^1.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-formio": "^4.3.0",
     "react-router-dom": "^5.1.2"
   },
   "browserslist": [

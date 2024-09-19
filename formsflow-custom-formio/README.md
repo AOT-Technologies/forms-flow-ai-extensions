@@ -28,14 +28,14 @@ Including direct js
 
 ## Formsflow.ai WEB in forms-flow-ai\forms-flow-web\src\index.js
 ```
-npm install formsflow-formio-custom-elements --save
+npm install @aot-technologies/formsflow-formio-custom-elements --save
 ```
 
 ```Javascript
 import { Components } from "react-formio";
 
 // Set custom formio elements - Code splitted
-import("formsflow-formio-custom-elements/dist/customformio-ex").then(
+import("@aot-technologies/formsflow-formio-custom-elements/dist/customformio-ex").then(
   (FormioCustomEx) => {
     Components.setComponents(FormioCustomEx.components);
   }

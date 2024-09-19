@@ -56,11 +56,11 @@ module.exports = (env, argv) => {
     //...
   }
 
-  // Will take dependency from consumer project. Use --env exclude=react-formio
-  if (env.exclude === 'react-formio') {
+  // Will take dependency from consumer project. Use --env exclude=@aot-technologies/formio-react
+  if (env.exclude === '@aot-technologies/formio-react') {
     config.externals = {
-      'formiojs' : 'formiojs',
-      'react-formio': 'react-formio',
+      '@aot-technologies/formiojs' : '@aot-technologies/formiojs',
+      '@aot-technologies/formio-react': '@aot-technologies/formio-react',
     }
     config.output.filename = 'customformio-ex.js'
   }

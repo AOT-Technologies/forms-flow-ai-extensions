@@ -1,4 +1,4 @@
-import baseEditForm from "formiojs/components/_classes/component/Component.form";
+import baseEditForm from "@aot-technologies/formiojs/lib/components/_classes/component/Component.form";
 
 const settingsForm = (...extend) => {
   return baseEditForm(
